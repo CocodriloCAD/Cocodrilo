@@ -1,0 +1,1009 @@
+using Rhino;
+using Rhino.DocObjects;
+using System.Collections.Generic;
+using System.Linq;
+using Rhino.Geometry;
+using Cocodrilo.ElementProperties;
+using Cocodrilo.UserData;
+using System;
+
+namespace Cocodrilo.IO
+{
+    public static class GeometryUtilities
+    {
+        public static void AssignBrepIds(List<Brep> rBreps, List<Curve> rCurves, List<Point> rPoints, ref int rBrepId)
+        {
+            foreach (var brep in rBreps)
+            {
+                var user_data_brep = UserDataUtilities.GetOrCreateUserDataBrep(brep);
+                user_data_brep.BrepId = rBrepId;
+                rBrepId++;
+            }
+            foreach (var brep in rBreps)
+            {
+                foreach (var surface in brep.Surfaces)
+                {
+                    var user_data_surface = UserDataUtilities.GetOrCreateUserDataSurface(surface);
+                    user_data_surface.BrepId = rBrepId;
+                    rBrepId++;
+                }
+            }
+            foreach (var brep in rBreps)
+            {
+                foreach (var edge in brep.Edges)
+                {
+                    if (edge.TrimIndices().Count() < 1)
+                        continue;
+
+                    var trimIndex = edge.TrimIndices()[0];
+                    var trim = edge.Brep.Trims[trimIndex];
+                    var curve = edge.Brep.Curves2D[trim.TrimCurveIndex];
+                    var user_data_edge = UserDataUtilities.GetOrCreateUserDataEdge(curve);
+                    user_data_edge.BrepId = rBrepId;
+                    rBrepId++;
+                }
+            }
+            foreach (var curve in rCurves)
+            {
+                var user_data_curve = curve.UserData.Find(typeof(UserDataCurve)) as UserDataCurve;
+                var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
+                if (user_data_curve != null)
+                {
+                    user_data_curve.BrepId = rBrepId;
+                    rBrepId++;
+                }
+                if (user_data_edge != null)
+                {
+                    user_data_edge.BrepId = rBrepId;
+                    rBrepId++;
+                }
+                if (user_data_curve == null && user_data_edge == null)
+                {
+                    user_data_curve = new UserData.UserDataCurve();
+                    user_data_curve.BrepId = rBrepId;
+                    rBrepId++;
+                    curve.UserData.Add(user_data_curve);
+                    RhinoApp.WriteLine("New curve user data is added with brep id: " + user_data_curve.BrepId);
+                }
+            }
+            foreach (var brep in rBreps)
+            {
+                foreach (var surface in brep.Surfaces)
+                {
+                    var user_data_surface = UserDataUtilities.GetOrCreateUserDataSurface(surface);
+                    var vertices = user_data_surface.GetBrepElementSurfaceVertices();
+                    foreach (var vertex in vertices)
+                    {
+                        vertex.mUserDataPoint.BrepId = rBrepId;
+                        rBrepId++;
+                    }
+                }
+            }
+            foreach (var curve in rCurves)
+            {
+                var user_data_curve = UserDataUtilities.GetOrCreateUserDataCurve(curve);
+                var vertices = user_data_curve.GetBrepElementCurveVertices();
+                foreach (var vertex in vertices)
+                {
+                    vertex.mUserDataPoint.BrepId = rBrepId;
+                    rBrepId++;
+                }
+            }
+            foreach (var point in rPoints)
+            {
+                var user_data_point = UserDataUtilities.GetOrCreateUserDataPoint(point);
+                user_data_point
+                    .BrepId = rBrepId;
+                rBrepId++;
+            }
+        }
+
+        /// <summary>
+        /// This function obtains all active Rhino Brep objects which have at least one
+        /// UserDataSurface or UserDataEdge
+        /// </summary>
+        /// <returns></returns>
+        public static List<Brep> GetActiveBrepList()
+        {
+            //get the active Objects
+            Rhino.DocObjects.Tables.ObjectTable obj = RhinoDoc.ActiveDoc.Objects;
+            var object_enumerator_settings = new ObjectEnumeratorSettings {NormalObjects = true};
+            //all elements that are not deleted and visible
+            var active_elements = obj.FindByFilter(object_enumerator_settings);
+            //all brep elements
+            var brep_elements = active_elements.Where(
+                element => element.Geometry.HasBrepForm).ToList();
+
+            var elements_with_user_data = new List<Brep>();
+            foreach (var active_brep_element in brep_elements)
+            {
+                if ((active_brep_element.Geometry as Brep) == null)
+                    continue;
+
+                if ((active_brep_element.Geometry as Brep).Surfaces.Any(
+                    surface => surface.UserData.Find(typeof(UserDataSurface)) != null))
+                {
+                    elements_with_user_data.Add((Brep) active_brep_element.Geometry);
+                }
+                else if ((active_brep_element.Geometry as Brep).Curves2D.Any(
+                    curve => curve.UserData.Find(typeof(UserDataEdge)) != null))
+                {
+                    elements_with_user_data.Add((Brep) active_brep_element.Geometry);
+                }
+            }
+
+            return elements_with_user_data;
+        }
+
+
+        public static List<Brep> GetBrepList()
+        {
+            //get the active Objects
+            Rhino.DocObjects.Tables.ObjectTable obj = RhinoDoc.ActiveDoc.Objects;
+            var object_enumerator_settings = new ObjectEnumeratorSettings { NormalObjects = true };
+            //all elements that are not deleted and visible
+            var active_elements = obj.FindByFilter(object_enumerator_settings);
+            //all brep elements
+            var brep_elements = active_elements.Where(
+                element => element.Geometry.HasBrepForm).ToList();
+
+            var elements = new List<Brep>();
+            foreach (var active_brep_element in brep_elements)
+            {
+                elements.Add((Brep) active_brep_element.Geometry);
+            }
+
+            return elements;
+        }
+
+        public static List<Curve> GetActiveCurveList()
+        {
+            //get the active Objects
+            Rhino.DocObjects.Tables.ObjectTable obj = RhinoDoc.ActiveDoc.Objects;
+            var object_enumerator_settings = new ObjectEnumeratorSettings {NormalObjects = true};
+
+            //all elements that are not deleted and visible
+            var active_elements = obj.FindByFilter(object_enumerator_settings);
+
+            //all brep elements
+            var Elements = active_elements.Where(
+                element => !element.Geometry.HasBrepForm).ToList();
+
+            var elements_with_user_data = new List<Curve>();
+            foreach (var element in Elements)
+            {
+                if (element.Geometry as Curve != null)
+                {
+                    if ((element.Geometry as Curve).UserData.Find(typeof(UserDataEdge)) != null)
+                        elements_with_user_data.Add(element.Geometry as Curve);
+
+                    else if ((element.Geometry as Curve).UserData.Find(typeof(UserDataCurve)) != null)
+                        elements_with_user_data.Add(element.Geometry as Curve);
+                }
+            }
+
+            return elements_with_user_data;
+        }
+
+        public static List<Curve> GetCurveList()
+        {
+            //get the active Objects
+            Rhino.DocObjects.Tables.ObjectTable obj = RhinoDoc.ActiveDoc.Objects;
+            var object_enumerator_settings = new ObjectEnumeratorSettings {NormalObjects = true};
+
+            //all elements that are not deleted and visible
+            var active_elements = obj.FindByFilter(object_enumerator_settings);
+
+            //all brep elements
+            var curve_elements = active_elements.Where(
+                element => !element.Geometry.HasBrepForm && element.Geometry is Curve).ToList();
+
+            var curves = new List<Curve>(curve_elements.Count);
+            for (int i = 0; i < curve_elements.Count; i++)
+            {
+                curves.Add(curve_elements[i].Geometry as Curve);
+            }
+
+            return curves;
+        }
+
+        public static void GetIntersection(
+            List<Brep> Breps,
+            List<Curve> Curves,
+            List<Point> PointList,
+            ref List<Curve> IntersectionCurveList,
+            ref List<Point> IntersectionPointList,
+            List<Curve> PreviousIntersectionCurveList,
+            List<Point> PreviousIntersectionPointList)
+        {
+            /// Brep - Brep intersection
+            if (Breps.Count > 1)
+            {
+                for (int i = 0; i < Breps.Count; i++)
+                {
+                    for (int j = i + 1; j < Breps.Count; j++)
+                    {
+                        GetBrepBrepIntersections(
+                            Breps[i],
+                            Breps[j],
+                            ref IntersectionCurveList,
+                            ref IntersectionPointList,
+                            PreviousIntersectionCurveList,
+                            PreviousIntersectionPointList);
+                    }
+                }
+            }
+
+            /// Brep - Curve intersection
+            for (int i = 0; i < Breps.Count; i++)
+            {
+                for (int j = 0; j < Curves.Count; j++)
+                {
+                    GetBrepCurveIntersections(
+                        Breps[i],
+                        Curves[j],
+                        ref IntersectionCurveList,
+                        ref IntersectionPointList,
+                        PreviousIntersectionCurveList,
+                        PreviousIntersectionPointList);
+                }
+            }
+
+            /// Brep - Point intersection
+            if (Breps.Count > 0)
+            {
+                for (int i = 0; i < Breps.Count; i++)
+                {
+                    GetBrepPointIntersections(
+                        Breps[i],
+                        PointList);
+                }
+            }
+
+            /// Curve - Curve intersection
+            if (Curves.Count > 1)
+            {
+                for (int i = 0; i < Curves.Count; i++)
+                {
+                    for (int j = i + 1; j < Curves.Count; j++)
+                    {
+                        GetCurveCurveIntersections(
+                            Curves[i],
+                            Curves[j],
+                            ref IntersectionCurveList,
+                            ref IntersectionPointList,
+                            PreviousIntersectionPointList);
+                    }
+                }
+            }
+
+            /// Edge - Edge intersection (Join)
+            //if (Panels.UserControlCocodriloPanel.Instance.getIsEdgeCoupling())
+            //{
+            //    foreach (var brep in Breps)
+            //    {
+            //        Rhino.Geometry.Collections.BrepEdgeList edges = brep.Edges;
+            //        foreach (var edge in edges)
+            //        {               
+            //            if (edge.TrimIndices().Count() > 1)
+            //            {
+            //                GeometryUtilties.GetEdgeEdgeIntersection(edge, brep, brep, ref IntersectionPointList, PreviousIntersectionPointList);                      
+            //                IntersectionCurveList.Add(edge);
+            //            }
+            //        }
+            //    }
+            //}   
+        }
+
+        public static void GetBrepBrepIntersections(
+            Brep Brep1,
+            Brep Brep2,
+            ref List<Curve> IntersectionCurveList,
+            ref List<Point> IntersectionPointList,
+            List<Curve> PreviousIntersectionCurveList,
+            List<Point> PreviousIntersectionPointList)
+        {
+            var Intersection = Rhino.Geometry.Intersect.Intersection.BrepBrep(
+                Brep1,
+                Brep2,
+                RhinoDoc.ActiveDoc.ModelAbsoluteTolerance,
+                out var overlap_curves,
+                out var intersection_points);
+
+            for (var index = 0; index < overlap_curves.Length; index++)
+            {
+                var overlap_curve = overlap_curves[index];
+                var user_data_surface_1 = GetIntersectedSurface(overlap_curve, Brep1);
+                var user_data_surface_2 = GetIntersectedSurface(overlap_curve, Brep2);
+
+                if (user_data_surface_1 == null || user_data_surface_2 == null)
+                    continue;
+
+                foreach (var previous_curve in PreviousIntersectionCurveList)
+                {
+                    if (overlap_curve.Equals(previous_curve))
+                        overlap_curve = previous_curve;
+                }
+
+                var user_data_edge = UserDataUtilities.GetOrCreateUserDataEdge(overlap_curve);
+                if (user_data_edge == null)
+                    RhinoApp.WriteLine("user_data_edge is null - creation not possible");
+
+                user_data_edge.AddCoupling(
+                    user_data_surface_1.BrepId,
+                    user_data_surface_2.BrepId);
+
+                if (user_data_surface_1.IsBrepGroupCoupledWith(
+                        user_data_surface_2.GetThisBrepGroupCouplingId())
+                 && user_data_surface_2.IsBrepGroupCoupledWith(
+                        user_data_surface_1.GetThisBrepGroupCouplingId()))
+                {
+                    bool rotational_continuity = user_data_surface_1.CheckRotationalContinuity()
+                                                 && user_data_surface_2.CheckRotationalContinuity();
+
+                    var this_support = new Support(
+                        true, true, true,
+                        "0.0", "0.0", "0.0",
+                        rotational_continuity, false);
+
+                    var property_edge_coupling = new PropertyCoupling(
+                        GeometryType.SurfaceEdgeSurfaceEdge,
+                        this_support,
+                        new TimeInterval());
+
+                    user_data_edge.AddBrepElementEdge(property_edge_coupling);
+                }
+                else
+                {
+                    user_data_edge.DeleteBrepElementEdgePropertyType(typeof(PropertyCoupling));
+                }
+
+                IntersectionCurveList.Add(overlap_curve);
+
+                //if(Panels.UserControlCocodriloPanel.Instance.getIsEdgeCoupling())
+                //{
+                //    GetEdgeEdgeIntersection(overlap_curve, Brep1, Brep2, ref IntersectionPointList, PreviousIntersectionPointList);
+                //}
+            }
+
+            for (var i = 0; i < intersection_points.Length; i++)
+            {
+                var user_data_surface_1 = GetIntersectedSurface(intersection_points[i], Brep1);
+                var user_data_surface_2 = GetIntersectedSurface(intersection_points[i], Brep2);
+
+                Point intersection_point = new Point(intersection_points[i]);
+                foreach (var previous_point in PreviousIntersectionPointList)
+                {
+                    if (previous_point.Location.Equals(intersection_points[i]))
+                        intersection_point = previous_point;
+                }
+                
+                var user_data_point = UserDataUtilities.GetOrCreateUserDataPoint(
+                    intersection_point);
+
+                user_data_point.AddCoupling(
+                    user_data_surface_1.BrepId,
+                    user_data_surface_2.BrepId);
+
+                if (user_data_surface_1.IsBrepGroupCoupledWith(
+                        user_data_surface_2.GetThisBrepGroupCouplingId())
+                 && user_data_surface_2.IsBrepGroupCoupledWith(
+                        user_data_surface_1.GetThisBrepGroupCouplingId()))
+                {
+                    bool rotational_continuity = user_data_surface_1.CheckRotationalContinuity()
+                                                 && user_data_surface_2.CheckRotationalContinuity();
+
+                    var this_support = new Support(
+                        true, true, true,
+                        "0.0", "0.0", "0.0",
+                        rotational_continuity, false);
+
+                    var property_coupling = new PropertyCoupling(
+                        GeometryType.SurfaceEdgeSurfaceEdge,
+                        this_support,
+                        new TimeInterval());
+
+                    user_data_point.AddGeometryElementVertex(property_coupling);
+                }
+                else
+                {
+                    user_data_point.DeleteGeometryElementVertexPropertyType(typeof(PropertyCoupling));
+                }
+
+                IntersectionPointList.Add(intersection_point);
+            }
+        }
+
+
+        public static void GetBrepCurveIntersections(
+            Brep Brep1,
+            Curve Curve1,
+            ref List<Curve> rIntersectionCurveList,
+            ref List<Point> rIntersectionPointList,
+            List<Curve> PreviousIntersectionCurveList,
+            List<Point> PreviousIntersectionPointList)
+        {
+            var nurbs_curve_1 = Curve1.ToNurbsCurve();
+
+            bool has_intersection = Rhino.Geometry.Intersect.Intersection.CurveBrep(
+                nurbs_curve_1,
+                Brep1,
+                RhinoDoc.ActiveDoc.ModelAbsoluteTolerance,
+                out Curve[] overlap_curves,
+                out Point3d[] intersection_points);
+
+            if (has_intersection && overlap_curves.Length == 0 && intersection_points.Length == 0)
+                return;
+
+            var user_data_edge = Curve1.UserData.Find(typeof(Cocodrilo.UserData.UserDataEdge)) as Cocodrilo.UserData.UserDataEdge;
+            if (user_data_edge != null)
+            {
+                foreach (var overlap_curve in overlap_curves)
+                {
+                    var brep_elements = user_data_edge.GetBrepElementEdges();
+                    if (brep_elements.Count > 0)
+                    {
+                        var user_data_surface = GetIntersectedSurface(overlap_curve, Brep1);
+                        var user_data_edge_overlap_curve = UserDataUtilities.GetOrCreateUserDataEdge(overlap_curve);
+
+                        foreach (var brep_element in brep_elements)
+                        {
+                            var property = brep_element.GetProperty(out bool success);
+                            if (!success)
+                                continue;
+                            if (property is PropertySupport)
+                            {
+                                var support_property = (property as PropertySupport);
+                                if (support_property.mSupport.mIsSupportStrong)
+                                {
+                                    var nurbs_surface = GetIntersectedNurbsSurface(overlap_curve, Brep1);
+                                    nurbs_surface.Pullback(overlap_curve, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance);
+                                    if (GeometryUtilities.TryGetParamaterLocationSurface(
+                                        overlap_curve,
+                                        nurbs_surface,
+                                        out ParameterLocationSurface parameter_location))
+                                    {
+                                        var new_support_property = new PropertySupport(
+                                            GeometryType.SurfaceEdge,
+                                            new Support(support_property.mSupport),
+                                            support_property.mTimeInterval,
+                                            (int) parameter_location.mU_Normalized,
+                                            (int) parameter_location.mV_Normalized);
+                                        user_data_surface.AddGeometryElementSurface(property, parameter_location);
+                                    }
+                                }
+                                else
+                                {
+                                    user_data_edge_overlap_curve.AddBrepElementEdge(property);
+                                    user_data_edge_overlap_curve.AddCoupling(user_data_surface.BrepId);
+                                    rIntersectionCurveList.Add(overlap_curve);
+                                }
+                            }
+                            else
+                            {
+                                user_data_edge_overlap_curve.AddBrepElementEdge(property);
+                                user_data_edge_overlap_curve.AddCoupling(user_data_surface.BrepId);
+                                rIntersectionCurveList.Add(overlap_curve);
+                            }
+                        }
+                    }
+                }
+            }
+
+            var user_data_curve = Curve1.UserData.Find(typeof(Cocodrilo.UserData.UserDataCurve)) as Cocodrilo.UserData.UserDataCurve;
+            if (user_data_curve != null)
+            {
+                var beams = user_data_curve.GetGeometryElementCurvesOfPropertyType(typeof(PropertyBeam));
+                var cable = user_data_curve.GetGeometryElementCurvesOfPropertyType(typeof(PropertyCable));
+                if (beams.Count > 0 || cable.Count > 0)
+                {
+                    foreach (var overlap_curve in overlap_curves)
+                    {
+                        //Add Informatin of this Coupling Element ID zu related 2dPatches
+                        //Findout which Surface it is connected to
+                        //if Curves overlap different Surfaces of same Brep, several Overlap Curvs will be created
+                        //Check closest Surface to MidPoint of OverlapCurv --> get Surface Index
+                        //var StartPtOverlCrv = overlap_curve.PointAtNormalizedLength(0.5);
+
+                        var user_data_surface = GetIntersectedSurface(overlap_curve, Brep1);
+
+                        if (user_data_curve.IsBrepGroupCoupledWith(user_data_surface.GetBrepGroupCouplingId()))
+                        {
+                            var user_data_edge_overlap_curve = UserDataUtilities.GetOrCreateUserDataEdge(overlap_curve);
+
+                            var this_support = new Support(
+                                true, true, true,
+                                "0.0", "0.0", "0.0",
+                                false, false);
+
+                            var property_edge_coupling = new PropertyCoupling(
+                                GeometryType.SurfaceEdgeCurveEdge,
+                                this_support,
+                                new TimeInterval());
+
+                            user_data_edge.AddBrepElementEdge(property_edge_coupling);
+
+                            rIntersectionCurveList.Add(overlap_curve);
+                            user_data_edge_overlap_curve.AddCoupling(user_data_surface.BrepId, user_data_curve.BrepId);
+
+                            rIntersectionCurveList.Add(overlap_curve);
+                        }
+                    }
+
+                    for (var i = 0; i < intersection_points.Length; i++)
+                    {
+                        Brep1.ClosestPoint(
+                            intersection_points[i],
+                            out Point3d closest_point,
+                            out var component_index,
+                            out double s,
+                            out double t,
+                            RhinoDoc.ActiveDoc.ModelAbsoluteTolerance,
+                            out Vector3d normal);
+
+
+                        var user_data_surface = GetIntersectedSurface(intersection_points[i], Brep1);
+
+                        Point intersection_point = new Point(intersection_points[i]);
+                        foreach (var previous_point in PreviousIntersectionPointList)
+                        {
+                            if (previous_point.Location.Equals(intersection_points[i]))
+                                intersection_point = previous_point;
+                        }
+
+                        var user_data_point = UserDataUtilities.GetOrCreateUserDataPoint(intersection_point);
+
+                        user_data_point.AddCoupling(
+                            user_data_surface.BrepId,
+                            user_data_curve.BrepId);
+
+                        if (user_data_surface.IsBrepGroupCoupledWith(
+                                user_data_curve.GetThisBrepGroupCouplingId())
+                            && user_data_curve.IsBrepGroupCoupledWith(
+                                user_data_surface.GetThisBrepGroupCouplingId()))
+                        {
+                            var this_support = new Support(
+                                true, true, true,
+                                "0.0", "0.0", "0.0",
+                                false, false,
+                                false);
+
+                            var property_coupling = new PropertyCoupling(
+                                GeometryType.SurfacePointCurvePoint,
+                                this_support,
+                                new TimeInterval());
+
+                            user_data_point.AddGeometryElementVertex(property_coupling);
+                        }
+                        else
+                        {
+                            user_data_point.DeleteGeometryElementVertexPropertyType(typeof(PropertyCoupling));
+                        }
+
+
+                        rIntersectionPointList.Add(intersection_point);
+                    }
+                }
+            }
+        }
+
+        public static void GetBrepPointIntersections(
+            Brep Brep,
+            List<Point> PointList)
+        {
+            const double tolerance = 0.001;
+
+            foreach (var point in PointList)
+            {
+                Brep.FindCoincidentBrepComponents(point.Location, tolerance, out int[] face_ids, out int[] edge_ids, out int[] vertice_ids);
+                if (face_ids.Length > 0)
+                {
+                    var brep_face = Brep.Faces[face_ids[0]];
+                    var surface = Brep.Surfaces[brep_face.SurfaceIndex];
+                    surface.ClosestPoint(point.Location, out double u, out double v);
+                    double u_normalized = surface.Domain(0).NormalizedParameterAt(u);
+                    if (u_normalized != 0 || u_normalized != 1) // needed if triangular surface
+                    {
+                        var test_point = surface.PointAt(surface.Domain(0).ParameterAt(1), u);
+                        if (test_point.DistanceTo(point.Location) < tolerance)
+                            u_normalized = 1;
+                    }
+                    double v_normalized = surface.Domain(1).NormalizedParameterAt(v);
+                    if (v_normalized != 0 || v_normalized != 1) // needed if triangular surface
+                    {
+                        var test_point = surface.PointAt(u, surface.Domain(1).ParameterAt(1));
+                        if (test_point.DistanceTo(point.Location) < tolerance)
+                            v_normalized = 1;
+                    }
+                    double v_normalized2 = surface.Domain(1).NormalizedParameterAt(v+1);
+
+                    var parameter_location = new ParameterLocationSurface(u, v, u_normalized, v_normalized);
+
+                    var user_data_surface = UserDataUtilities.GetOrCreateUserDataSurface(surface);
+                    var user_data_point = UserDataUtilities.GetOrCreateUserDataPoint(point);
+
+                    var geometry_element_vertices = user_data_point.GetGeometryElementVertices();
+                    foreach (var geometry_element_vertex in geometry_element_vertices)
+                    {
+                        var property = geometry_element_vertex.GetProperty(out _);
+                        if (property.GetType() == typeof(PropertySupport) && parameter_location.IsCornerPoint())
+                        {
+                            var support_property = property as PropertySupport;
+                            var support_properties = new Support(support_property.mSupport);
+                            support_properties.mIsSupportStrong = true;
+                            var new_property_property = new PropertySupport(
+                                GeometryType.SurfacePoint, support_properties, support_property.mTimeInterval, (int)u_normalized, (int)v_normalized);
+                            CocodriloPlugIn.Instance.AddProperty(new_property_property);
+                            user_data_surface.AddGeometryElementSurface(new_property_property, parameter_location);
+                        }
+                        else
+                        {
+                            user_data_surface.AddBrepElementSurfaceVertex(property, parameter_location);
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void GetCurveCurveIntersections(
+            Curve Curve1,
+            Curve Curve2,
+            ref List<Curve> IntersectionCurveList,
+            ref List<Point> IntersectionPointList,
+            List<Point> PreviousIntersectionPointList)
+        {
+            var Intersection = Rhino.Geometry.Intersect.Intersection.CurveCurve(
+                Curve1,
+                Curve2, 
+                RhinoDoc.ActiveDoc.ModelAbsoluteTolerance, 
+                0.01);
+
+            var intersection_points = new List<Point3d>();
+
+            var user_data_curve_1 = UserDataUtilities.GetOrCreateUserDataCurve(Curve1);
+            var user_data_curve_2 = UserDataUtilities.GetOrCreateUserDataCurve(Curve2);
+
+            if (Intersection == null)
+                return;
+            
+            for (int i = 0; i < Intersection.Count; i++)
+            {
+                if(Intersection[i].PointA.DistanceTo(Intersection[i].PointB) < double.Epsilon)
+                {
+                    intersection_points.Add(Intersection[i].PointB);
+                }
+            }
+
+            for (var i = 0; i < intersection_points.Count; i++)
+            {
+                Point intersection_point = new Point(intersection_points[i]);
+                foreach (var previous_point in PreviousIntersectionPointList)
+                {
+                    if (previous_point.Location.Equals(intersection_points[i]))
+                        intersection_point = previous_point;
+                }
+                var user_data_point = UserDataUtilities.GetOrCreateUserDataPoint(
+                    intersection_point);
+
+                user_data_point.AddCoupling(
+                    user_data_curve_1.BrepId,
+                    user_data_curve_2.BrepId);
+                    
+                if (user_data_curve_1.IsBrepGroupCoupledWith(
+                        user_data_curve_2.GetThisBrepGroupCouplingId())
+                    && user_data_curve_2.IsBrepGroupCoupledWith(
+                        user_data_curve_1.GetThisBrepGroupCouplingId()))
+                {
+                    var this_support = new Support(
+                        true, true, true,
+                        "0.0", "0.0", "0.0",
+                        false, false,
+                        false);
+
+                    var property_coupling = new PropertyCoupling(
+                        GeometryType.CurvePointCurvePoint,
+                        this_support,
+                        new TimeInterval());
+
+                    user_data_point.AddGeometryElementVertex(property_coupling);
+                }
+                else
+                {
+                    user_data_point.DeleteGeometryElementVertexPropertyType(typeof(PropertyCoupling));
+                }
+                
+                IntersectionPointList.Add(intersection_point);
+            }
+        }
+
+        public static void GetEdgeEdgeIntersection(
+            Curve IntersectionCurve,
+            Brep Brep1,
+            Brep Brep2,
+            ref List<Point> IntersectionPointList,
+            List<Point> PreviousIntersectionPointList)
+        {
+            var tolerance = 1e-9;
+            //1. Loop over the first surface
+            foreach (var edge_1 in Brep1.Edges)
+            {
+                var edge_intersection_points = new List<Point3d>();
+
+                //2. Find the intersection between the overlap_curve and embedded edge of Brep1
+                var trim_index_1 = edge_1.TrimIndices()[0];
+                var trim_1 = edge_1.Brep.Trims[trim_index_1];
+                var curve_1 = edge_1.Brep.Curves2D[trim_1.TrimCurveIndex];
+
+                bool is_intersection_curve_equal_edge_1 = (IntersectionCurve.PointAtStart.DistanceTo(edge_1.PointAtStart) < tolerance && IntersectionCurve.PointAtEnd.DistanceTo(edge_1.PointAtEnd) < tolerance) ||
+                                                          (IntersectionCurve.PointAtStart.DistanceTo(edge_1.PointAtEnd) < tolerance && IntersectionCurve.PointAtEnd.DistanceTo(edge_1.PointAtStart) < tolerance);
+
+                if (is_intersection_curve_equal_edge_1 ||  edge_1.TrimIndices().Count() > 1)
+                    continue;
+
+                var Intersection_point = Rhino.Geometry.Intersect.Intersection.CurveCurve(
+                    IntersectionCurve,
+                    edge_1,
+                    RhinoDoc.ActiveDoc.ModelAbsoluteTolerance,
+                    0.01);
+
+                if (Intersection_point.Count == 0)
+                    continue;
+
+                for (int i = 0; i < Intersection_point.Count; i++)
+                {
+                    if (Intersection_point[i].PointA.DistanceTo(Intersection_point[i].PointB) < tolerance)
+                    {
+                        edge_intersection_points.Add(Intersection_point[i].PointB);
+                    }
+                }
+
+                //3. Store the brep1 id
+                var user_data_edge_1 = (UserDataEdge)curve_1.UserData.Find(typeof(UserDataEdge));
+                int brep_id_edge_1 = user_data_edge_1.BrepId;
+
+                //4. Find the intersection betweem the edge_1 and all embedded edges of Brep2, then store its id
+                foreach (var edge_2 in Brep2.Edges)
+                {
+                    var trim_index_2 = edge_2.TrimIndices()[0];
+                    var trim_2 = edge_2.Brep.Trims[trim_index_2];
+                    var curve_2 = edge_2.Brep.Curves2D[trim_2.TrimCurveIndex];
+
+                    if (Brep1 == Brep2 && trim_index_1 > trim_index_2)
+                        continue;
+
+                    bool is_intersection_curve_equal_edge_2 = (IntersectionCurve.PointAtStart.DistanceTo(edge_2.PointAtStart) < tolerance && IntersectionCurve.PointAtEnd.DistanceTo(edge_2.PointAtEnd) < tolerance) ||
+                                                              (IntersectionCurve.PointAtStart.DistanceTo(edge_2.PointAtEnd) < tolerance && IntersectionCurve.PointAtEnd.DistanceTo(edge_2.PointAtStart) < tolerance);
+                    bool is_edge_1_equal_edge_2 = (edge_1.PointAtStart.DistanceTo(edge_2.PointAtStart) < tolerance && edge_1.PointAtEnd.DistanceTo(edge_2.PointAtEnd) < tolerance) ||
+                                                  (edge_1.PointAtStart.DistanceTo(edge_2.PointAtEnd) < tolerance && edge_1.PointAtEnd.DistanceTo(edge_2.PointAtStart) < tolerance);
+
+                    if (is_intersection_curve_equal_edge_2 ||  edge_2.TrimIndices().Count() > 1 || is_edge_1_equal_edge_2)
+                        continue;
+
+                    var Intersection_point_2 = Rhino.Geometry.Intersect.Intersection.CurveCurve(
+                        IntersectionCurve,
+                        edge_2,
+                        RhinoDoc.ActiveDoc.ModelAbsoluteTolerance,
+                        0.01);
+
+                    var Intersection_point_3 = Rhino.Geometry.Intersect.Intersection.CurveCurve(
+                        edge_1,
+                        edge_2,
+                        RhinoDoc.ActiveDoc.ModelAbsoluteTolerance,
+                        0.1);
+
+                    if (Intersection_point_2.Count == 0 || Intersection_point_3.Count == 0)
+                        continue;
+
+                    var user_data_edge_2 = (UserDataEdge)curve_2.UserData.Find(typeof(UserDataEdge));
+                    int brep_id_edge_2 = user_data_edge_2.BrepId;
+
+                    //5. Create the user_data_point
+                    for (var i = 0; i < edge_intersection_points.Count; i++)
+                    {
+                        Point intersection_point = new Point(edge_intersection_points[i]);
+                        foreach (var previous_point in PreviousIntersectionPointList)
+                        {
+                            if (previous_point.Location.Equals(edge_intersection_points[i]))
+                                intersection_point = previous_point;
+                        }
+
+                        var user_data_point = UserDataUtilities.GetOrCreateUserDataPoint(
+                            intersection_point);
+
+                        user_data_point.AddCoupling(
+                            brep_id_edge_1,
+                            brep_id_edge_2);
+
+                        if (user_data_edge_1.IsBrepGroupCoupledWith(
+                               user_data_edge_2.GetThisBrepGroupCouplingId())
+                           && user_data_edge_2.IsBrepGroupCoupledWith(
+                               user_data_edge_1.GetThisBrepGroupCouplingId()))
+                        {
+                            var this_support = new Support(
+                                true, true, true,
+                                "0.0", "0.0", "0.0",
+                                false, false,
+                                false);
+
+                            var property_coupling = new PropertyCoupling(
+                                GeometryType.CurvePointCurvePoint,
+                                this_support,
+                                new TimeInterval());
+
+                            user_data_point.AddGeometryElementVertex(property_coupling);
+                        }
+                        else
+                        {
+                           user_data_point.DeleteGeometryElementVertexPropertyType(typeof(PropertyCoupling));
+                        }
+
+                        IntersectionPointList.Add(intersection_point);
+                    }
+
+                    var user_data_point_2 = UserDataUtilities.GetOrCreateUserDataPoint(IntersectionPointList.Last());
+                    if (user_data_point_2.IsCoupledWith(brep_id_edge_2))
+                    {
+                        edge_2.ClosestPoint(
+                            IntersectionPointList.Last().Location,
+                            out double u);
+
+                        //mapping from edge domain to the curve domain
+                        double v = (curve_2.Domain.Length) / (edge_2.Domain.Length) * (u - edge_2.Domain.T0) + (curve_2.Domain.T0);
+
+                        user_data_point_2.TryAddLocalCoordinates(
+                            brep_id_edge_2,
+                            v, 0.0, 0.0);
+                    }
+                }
+                var user_data_point_1 = UserDataUtilities.GetOrCreateUserDataPoint(IntersectionPointList.Last());
+                if (user_data_point_1.IsCoupledWith(brep_id_edge_1))
+                {
+                    edge_1.ClosestPoint(
+                        IntersectionPointList.Last().Location,
+                        out double u);
+
+                    //mapping from edge domain to the curve domain
+                    double v = (curve_1.Domain.Length)/(edge_1.Domain.Length)*(u - edge_1.Domain.T0) + (curve_1.Domain.T0);
+
+                    user_data_point_1.TryAddLocalCoordinates(
+                        brep_id_edge_1,
+                        v, 0.0, 0.0);
+                }
+            }
+            
+            for (int i = 0; i < IntersectionPointList.Count(); i++)
+            {
+                var user_data_point = UserDataUtilities.GetOrCreateUserDataPoint(IntersectionPointList[i]);
+                if (user_data_point.GetCoupling().mTopologies.Count() > 2)
+                {
+                    IntersectionPointList.Remove(IntersectionPointList[i]);
+                    i--;
+                }
+            }
+        }
+
+        public static NurbsSurface GetIntersectedNurbsSurface(Curve ThisCurve, Brep ThisBrep)
+        {
+            var StartPtOverlCrv = ThisCurve.PointAtNormalizedLength(0.5);
+
+            return GetIntersectedNurbsSurface(StartPtOverlCrv, ThisBrep);
+        }
+        public static NurbsSurface GetIntersectedNurbsSurface(Point3d ThisPoint, Brep ThisBrep)
+        {
+            Surface surface = null;
+
+            ThisBrep.ClosestPoint(
+                ThisPoint,
+                out Point3d closest_point,
+                out var component_index,
+                out double s,
+                out double t,
+                0.1,
+                out Vector3d normal);
+
+            if (component_index.ComponentIndexType.GetHashCode() == 3) //3 = BrepFace
+            {
+                surface = ThisBrep.Faces[component_index.Index].UnderlyingSurface();
+                var distance = closest_point.DistanceTo(ThisPoint);
+
+                if (closest_point.DistanceTo(ThisPoint) > RhinoDoc.ActiveDoc.ModelAbsoluteTolerance * 100)
+                    return null;
+            }
+            else if (component_index.ComponentIndexType.GetHashCode() == 2)
+            {
+                surface = ThisBrep.Faces[ThisBrep.Edges[component_index.Index]
+                        .AdjacentFaces()[0]]
+                    .UnderlyingSurface();
+            }
+
+            if (surface == null)
+                return null;
+
+            return surface.ToNurbsSurface();
+        }
+
+        public static UserDataSurface GetIntersectedSurface(Curve ThisCurve, Brep ThisBrep)
+        {
+            var StartPtOverlCrv = ThisCurve.PointAtNormalizedLength(0.5);
+
+            return GetIntersectedSurface(StartPtOverlCrv, ThisBrep);
+        }
+
+        public static UserDataSurface GetIntersectedSurface(Point3d ThisPoint, Brep ThisBrep)
+        {
+            Surface surface = null;
+
+            ThisBrep.ClosestPoint(
+                ThisPoint,
+                out Point3d closest_point,
+                out var component_index,
+                out double s,
+                out double t,
+                0.1,
+                out Vector3d normal);
+
+            if (component_index.ComponentIndexType.GetHashCode() == 3) //3 = BrepFace
+            {
+                surface = ThisBrep.Faces[component_index.Index].UnderlyingSurface();
+                var distance = closest_point.DistanceTo(ThisPoint);
+
+                if (closest_point.DistanceTo(ThisPoint) > RhinoDoc.ActiveDoc.ModelAbsoluteTolerance * 100)
+                    return null;
+            }
+            else if (component_index.ComponentIndexType.GetHashCode() == 2)
+            {
+                surface = ThisBrep.Faces[ThisBrep.Edges[component_index.Index]
+                        .AdjacentFaces()[0]]
+                    .UnderlyingSurface();
+            }
+
+            if (surface == null)
+                return null;
+
+            return UserDataUtilities.GetOrCreateUserDataSurface(surface);
+        }
+
+        public static bool TryGetParamaterLocationSurface(Curve ThisCurve2d, NurbsSurface ThisNurbsSurface, out ParameterLocationSurface ParameterLocation)
+        {
+            ParameterLocation = new ParameterLocationSurface(-1, -1, -1, -1);
+
+            double u_start = ThisNurbsSurface.KnotsU[0];
+            double u_end = ThisNurbsSurface.KnotsU[ThisNurbsSurface.KnotsU.Count - 1];
+            double v_start = ThisNurbsSurface.KnotsV[0];
+            double v_end = ThisNurbsSurface.KnotsV[ThisNurbsSurface.KnotsV.Count - 1];
+
+            var point_start = ThisCurve2d.PointAtStart;
+            var point_end = ThisCurve2d.PointAtEnd;
+
+            var tolerance = 0.0001;
+            if (Math.Abs(point_end.X - point_start.X) < tolerance)
+            {
+                if ((point_start.X - u_start) < tolerance)
+                {
+                    ParameterLocation.mU_Normalized = 0;
+                    ParameterLocation.mU = u_start;
+                }
+                else if ((point_start.X - u_end) < tolerance)
+                {
+                    ParameterLocation.mU_Normalized = 1;
+                    ParameterLocation.mU = u_end;
+                }
+            }
+            if (Math.Abs(point_end.Y - point_start.Y) < tolerance)
+            {
+                if ((point_start.Y - v_start) < tolerance)
+                {
+                    ParameterLocation.mV_Normalized = 0;
+                    ParameterLocation.mV = v_start;
+                }
+                else if ((point_start.Y - v_end) < tolerance)
+                {
+                    ParameterLocation.mV_Normalized = 1;
+                    ParameterLocation.mV = v_end;
+                }
+            }
+
+            return (ParameterLocation.mU_Normalized != -1 || ParameterLocation.mV_Normalized != -1);
+        }
+    }
+}
