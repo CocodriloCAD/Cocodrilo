@@ -14,8 +14,8 @@ Please cite as following:
 
 ```
 @misc{Cocodrilo,
-  author = "Tobias Teschemacher, Anna Maria Bauer, Ricky Aristio, Manuel Messmer, Kai-Uwe Bletzinger",
-  title = "Cocodrilo",
-  howpublished = "\url{https://github.com/CocodriloCAD/Cocodrilo}",
+  author = {Tobias Teschemacher and Anna Maria Bauer and Ricky Aristio and Manuel Messmer and Kai-Uwe Bletzinger},
+  title = {Cocodrilo},
+  howpublished = {\url{https://github.com/CocodriloCAD/Cocodrilo}},
 }
 ```
