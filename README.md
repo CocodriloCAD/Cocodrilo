@@ -4,7 +4,7 @@
 
 Please run benchmarks before commiting:
 
-Rhino Command Line: `RunPythonScript -> ../TeDaSharp/Benchmarks/run_benchmarks.py`
+Rhino Command Line: `RunPythonScript -> ../Cocodrilo/Benchmarks/run_benchmarks.py`
 
 If relevant critical code is added, according tests should be added to ensure future changes will not conflict.
 
