@@ -70,7 +70,7 @@ namespace Cocodrilo.Commands
                     else
                     {
                         if (CommandUtilities.TryGetUserDataAndParameterEdgeOnSurface(
-                            out List<Tuple<UserDataSurface, ParameterLocationSurface>>
+                            out List<Tuple<UserDataSurface, Elements.ParameterLocationSurface>>
                                 UserDataSurfaceParameterLocationList))
                         {
                             foreach (var user_data in UserDataSurfaceParameterLocationList)
@@ -92,7 +92,7 @@ namespace Cocodrilo.Commands
                     break;
                 case GeometryType.SurfacePoint:
                     if (CommandUtilities.TryGetUserDataAndParmeterVertexOnSurface(
-                        out List<Tuple<UserDataSurface, ParameterLocationSurface>>
+                        out List<Tuple<UserDataSurface, Elements.ParameterLocationSurface>>
                             UserDataSurfaceParameterLocationDictionary))
                     {
                         foreach (var user_data in UserDataSurfaceParameterLocationDictionary)
@@ -141,7 +141,7 @@ namespace Cocodrilo.Commands
                     break;
                 case GeometryType.CurvePoint:
                     if (CommandUtilities.TryGetUserDataAndParameterVertexOnCurve(
-                        out List<Tuple<UserDataCurve, ParameterLocationCurve>>
+                        out List<Tuple<UserDataCurve, Elements.ParameterLocationCurve>>
                             UserDataCurveParameterLocationList))
                     {
                         foreach (var user_data in UserDataCurveParameterLocationList)

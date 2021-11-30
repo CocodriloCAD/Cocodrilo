@@ -41,7 +41,7 @@ namespace Cocodrilo.Commands
                     if (CommandUtilities.TryGetUserDataSurface(out List<UserDataSurface> UserDataSurfaceList))
                     {
                         var load = Panels.UserControlCocodriloPanel.Instance.getLoad();
-                        var parameter_location = new ParameterLocationSurface(-1, -1, -1, -1);
+                        var parameter_location = new Elements.ParameterLocationSurface(-1, -1, -1, -1);
                         var property_load = new PropertyLoad(GeometryType.GeometrySurface, load, time_interval);
                         foreach (var user_data_surface in UserDataSurfaceList)
                         {
@@ -64,7 +64,7 @@ namespace Cocodrilo.Commands
                     break;
                 case GeometryType.SurfacePoint:
                     if (CommandUtilities.TryGetUserDataAndParmeterVertexOnSurface(
-                        out List<Tuple<UserDataSurface, ParameterLocationSurface>>
+                        out List<Tuple<UserDataSurface, Elements.ParameterLocationSurface>>
                             UserDataSurfaceParameterLocationDictionary))
                     {
                         foreach (var user_data_tuple in UserDataSurfaceParameterLocationDictionary)
@@ -87,7 +87,7 @@ namespace Cocodrilo.Commands
                     if (CommandUtilities.TryGetUserDataCurve(out List<UserDataCurve> UserDataCurveList))
                     {
                         var load = Panels.UserControlCocodriloPanel.Instance.getLoad();
-                        var parameter_location = new ParameterLocationCurve(-1, -1);
+                        var parameter_location = new Elements.ParameterLocationCurve(-1, -1);
                         var property_load = new PropertyLoad(GeometryType.GeometrySurface, load, time_interval);
                         foreach (var user_data_curve in UserDataCurveList)
                         {
@@ -99,7 +99,7 @@ namespace Cocodrilo.Commands
                     break;
                 case GeometryType.CurvePoint:
                     if (CommandUtilities.TryGetUserDataAndParameterVertexOnCurve(
-                        out List<Tuple<UserDataCurve, ParameterLocationCurve>>
+                        out List<Tuple<UserDataCurve, Elements.ParameterLocationCurve>>
                             UserDataCurveParameterLocationList))
                     {
                         var load = Panels.UserControlCocodriloPanel.Instance.getLoad();

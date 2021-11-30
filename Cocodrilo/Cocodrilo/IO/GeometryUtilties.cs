@@ -461,7 +461,7 @@ namespace Cocodrilo.IO
                                     if (GeometryUtilities.TryGetParamaterLocationSurface(
                                         overlap_curve,
                                         nurbs_surface,
-                                        out ParameterLocationSurface parameter_location))
+                                        out Elements.ParameterLocationSurface parameter_location))
                                     {
                                         var new_support_property = new PropertySupport(
                                             GeometryType.SurfaceEdge,
@@ -617,7 +617,7 @@ namespace Cocodrilo.IO
                     }
                     double v_normalized2 = surface.Domain(1).NormalizedParameterAt(v+1);
 
-                    var parameter_location = new ParameterLocationSurface(u, v, u_normalized, v_normalized);
+                    var parameter_location = new Elements.ParameterLocationSurface(u, v, u_normalized, v_normalized);
 
                     var user_data_surface = UserDataUtilities.GetOrCreateUserDataSurface(surface);
                     var user_data_point = UserDataUtilities.GetOrCreateUserDataPoint(point);
@@ -626,7 +626,7 @@ namespace Cocodrilo.IO
                     foreach (var geometry_element_vertex in geometry_element_vertices)
                     {
                         var property = geometry_element_vertex.GetProperty(out _);
-                        if (property.GetType() == typeof(PropertySupport) && parameter_location.IsCornerPoint())
+                        if (property.GetType() == typeof(PropertySupport) && parameter_location.IsOnNodes())
                         {
                             var support_property = property as PropertySupport;
                             var support_properties = new Support(support_property.mSupport);
@@ -963,9 +963,9 @@ namespace Cocodrilo.IO
             return UserDataUtilities.GetOrCreateUserDataSurface(surface);
         }
 
-        public static bool TryGetParamaterLocationSurface(Curve ThisCurve2d, NurbsSurface ThisNurbsSurface, out ParameterLocationSurface ParameterLocation)
+        public static bool TryGetParamaterLocationSurface(Curve ThisCurve2d, NurbsSurface ThisNurbsSurface, out Elements.ParameterLocationSurface ParameterLocation)
         {
-            ParameterLocation = new ParameterLocationSurface(-1, -1, -1, -1);
+            ParameterLocation = new Elements.ParameterLocationSurface(-1, -1, -1, -1);
 
             double u_start = ThisNurbsSurface.KnotsU[0];
             double u_end = ThisNurbsSurface.KnotsU[ThisNurbsSurface.KnotsU.Count - 1];

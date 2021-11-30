@@ -74,9 +74,9 @@ namespace Cocodrilo.Commands
         }
 
         public static bool TryGetUserDataAndParameterEdgeOnSurface(
-            out List<Tuple<UserDataSurface, ParameterLocationSurface>> UserDataSurfaceParameterLocationList)
+            out List<Tuple<UserDataSurface, Elements.ParameterLocationSurface>> UserDataSurfaceParameterLocationList)
         {
-            UserDataSurfaceParameterLocationList = new List<Tuple<UserDataSurface, ParameterLocationSurface>>();
+            UserDataSurfaceParameterLocationList = new List<Tuple<UserDataSurface, Elements.ParameterLocationSurface>>();
 
             var filter = ObjectType.Curve;
             ObjRef[] objref = null;
@@ -93,12 +93,12 @@ namespace Cocodrilo.Commands
                 var trim_curve = brep.Trims[trim_index];
                 var nurbs_surface = brep.Surfaces[trim_curve.Face.FaceIndex].ToNurbsSurface();
 
-                if (IO.GeometryUtilities.TryGetParamaterLocationSurface(trim_curve, nurbs_surface, out ParameterLocationSurface parameter_location))
+                if (IO.GeometryUtilities.TryGetParamaterLocationSurface(trim_curve, nurbs_surface, out Elements.ParameterLocationSurface parameter_location))
                 {
                     var user_data_surface = UserDataUtilities.GetOrCreateUserDataSurface(brep.Surfaces[trim_curve.Face.FaceIndex]);
 
                     UserDataSurfaceParameterLocationList.Add(
-                        new Tuple<UserDataSurface, ParameterLocationSurface>(user_data_surface, parameter_location));
+                        new Tuple<UserDataSurface, Elements.ParameterLocationSurface>(user_data_surface, parameter_location));
                 }
                 else
                 {
@@ -135,9 +135,9 @@ namespace Cocodrilo.Commands
         }
 
         public static bool TryGetUserDataAndParmeterVertexOnSurface(
-            out List<Tuple<UserDataSurface, ParameterLocationSurface>> UserDataSurfaceParameterLocationDictionary)
+            out List<Tuple<UserDataSurface, Elements.ParameterLocationSurface>> UserDataSurfaceParameterLocationDictionary)
         {
-            UserDataSurfaceParameterLocationDictionary = new List<Tuple<UserDataSurface, ParameterLocationSurface>>();
+            UserDataSurfaceParameterLocationDictionary = new List<Tuple<UserDataSurface, Elements.ParameterLocationSurface>>();
 
             var rc_surface = RhinoGet.GetOneObject("Select Surface...", 
                 false, 
@@ -179,7 +179,7 @@ namespace Cocodrilo.Commands
                 double u, v = 0;
                 face.ClosestPoint(gp.Point(), out u, out v);
 
-                ParameterLocationSurface parameter_location = new ParameterLocationSurface(u, v, -1, -1);
+                var parameter_location = new Elements.ParameterLocationSurface(u, v, -1, -1);
 
                 var nurbs_surface = face.ToNurbsSurface();
 
@@ -219,15 +219,15 @@ namespace Cocodrilo.Commands
 
 
                 UserDataSurfaceParameterLocationDictionary.Add(
-                    new Tuple<UserDataSurface, ParameterLocationSurface>(user_data_surface, parameter_location));
+                    new Tuple<UserDataSurface, Elements.ParameterLocationSurface>(user_data_surface, parameter_location));
             }
             return true;
         }
 
         public static bool TryGetUserDataAndParameterVertexOnCurve(
-            out List<Tuple<UserDataCurve, ParameterLocationCurve>> UserDataSurfaceParameterLocationList)
+            out List<Tuple<UserDataCurve, Elements.ParameterLocationCurve>> UserDataSurfaceParameterLocationList)
         {
-            UserDataSurfaceParameterLocationList = new List<Tuple<UserDataCurve, ParameterLocationCurve>>();
+            UserDataSurfaceParameterLocationList = new List<Tuple<UserDataCurve, Elements.ParameterLocationCurve>>();
             
             // select a curve
             var gs = new Rhino.Input.Custom.GetObject();
@@ -270,7 +270,7 @@ namespace Cocodrilo.Commands
                 crv.ClosestPoint(gp.Point(), out u);
                 crv.NormalizedLengthParameter(u, out double u_normalized);
 
-                var parameter_location = new ParameterLocationCurve(u, u_normalized);
+                var parameter_location = new Elements.ParameterLocationCurve(u, u_normalized);
 
                 var nurbs_crv = crv.ToNurbsCurve();
 
@@ -280,7 +280,7 @@ namespace Cocodrilo.Commands
                     parameter_location.mU_Normalized = 1;
 
                 UserDataSurfaceParameterLocationList.Add(
-                    new Tuple<UserDataCurve, ParameterLocationCurve>(user_data_curve, parameter_location));
+                    new Tuple<UserDataCurve, Elements.ParameterLocationCurve>(user_data_curve, parameter_location));
             }
             return true;
         }

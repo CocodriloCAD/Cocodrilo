@@ -92,7 +92,7 @@ namespace Cocodrilo.Commands
                     //break;
                 case GeometryType.SurfacePoint:
                     if (CommandUtilities.TryGetUserDataAndParmeterVertexOnSurface(
-                        out List<Tuple<UserDataSurface, ParameterLocationSurface>>
+                        out List<Tuple<UserDataSurface, Elements.ParameterLocationSurface>>
                             UserDataSurfaceParameterLocationDictionary))
                     {
                         foreach (var user_data in UserDataSurfaceParameterLocationDictionary)
