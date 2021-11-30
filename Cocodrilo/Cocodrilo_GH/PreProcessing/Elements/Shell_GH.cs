@@ -32,7 +32,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Surface", "Sur", "Geometry of Element", GH_ParamAccess.list);
+            pManager.AddBrepParameter("Surface", "Sur", "Geometry of Element", GH_ParamAccess.list);
             pManager.AddGenericParameter("Material", "Mat", "Material of Element", GH_ParamAccess.item);
         }
 
@@ -43,8 +43,8 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<Surface> surfaces = new List<Surface>();
-            DA.GetDataList(0, surfaces);
+            List<Brep> breps = new List<Brep>();
+            DA.GetDataList(0, breps);
 
             Material material = null;
             if (!DA.GetData(1, ref material)) return;
@@ -77,9 +77,9 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             }
 
             var geometries = new Cocodrilo_GH.PreProcessing.Geometries.Geometries();
-            foreach (var brep in surfaces)
+            foreach (var brep in breps)
             {
-                geometries.breps.Add(new KeyValuePair<Brep, Property>(brep.ToBrep(), this_property));
+                geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, this_property));
             }
 
             DA.SetData(0, geometries);

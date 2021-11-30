@@ -220,6 +220,13 @@ namespace Cocodrilo.UserData
                 ThisPropertyType,
                 ThisParameterLocationCurve);
         }
+        public bool HasGeometryElementCurvesOfPropertyType(
+            Type ThisPropertyType,
+            int StageId = -1)
+        {
+            return GetCurrentElementData(StageId).HasGeometryElementCurvesOfPropertyType(
+                ThisPropertyType);
+        }
         public List<GeometryElementCurve> GetGeometryElementCurvesOfPropertyType(
             Type ThisPropertyType,
             int StageId = -1)

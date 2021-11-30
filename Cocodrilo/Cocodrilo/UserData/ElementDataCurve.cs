@@ -1,5 +1,6 @@
 using Rhino;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Forms.VisualStyles;
 using Cocodrilo.Elements;
@@ -176,6 +177,12 @@ namespace Cocodrilo.UserData
             }
             return curve_element_list;
         }
+        public bool HasGeometryElementCurvesOfPropertyType(
+            Type ThisPropertyType)
+        {
+            return mGeometryElementCurves.Any(item => item.GetPropertyType() == ThisPropertyType);
+        }
+
         public List<GeometryElementCurve> GetGeometryElementCurvesOfPropertyType(
             Type ThisPropertyType)
         {

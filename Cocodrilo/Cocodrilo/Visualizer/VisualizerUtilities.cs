@@ -22,7 +22,7 @@ namespace Cocodrilo.Visualizer
         {
             var count = Convert.ToInt32(ThisCurve.GetLength() * 1.5);
             if (count == 0)
-                count = 5;
+                return new Point3d[] { };
 
             ThisCurve.DivideByCount(count, true, out var ptsDiff);
 

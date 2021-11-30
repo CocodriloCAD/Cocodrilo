@@ -306,7 +306,7 @@ namespace Cocodrilo.IO
             var Intersection = Rhino.Geometry.Intersect.Intersection.BrepBrep(
                 Brep1,
                 Brep2,
-                RhinoDoc.ActiveDoc.ModelAbsoluteTolerance,
+                RhinoDoc.ActiveDoc.ModelAbsoluteTolerance*15,
                 out var overlap_curves,
                 out var intersection_points);
 
@@ -654,18 +654,26 @@ namespace Cocodrilo.IO
         {
             var Intersection = Rhino.Geometry.Intersect.Intersection.CurveCurve(
                 Curve1,
-                Curve2, 
+                Curve2,
                 RhinoDoc.ActiveDoc.ModelAbsoluteTolerance, 
                 0.01);
 
-            var intersection_points = new List<Point3d>();
-
-            var user_data_curve_1 = UserDataUtilities.GetOrCreateUserDataCurve(Curve1);
-            var user_data_curve_2 = UserDataUtilities.GetOrCreateUserDataCurve(Curve2);
-
             if (Intersection == null)
                 return;
-            
+
+            var intersection_points = new List<Point3d>();
+
+            var user_data_curve_1 = Curve1.UserData.Find(typeof(UserDataCurve)) as UserDataCurve;
+            var user_data_curve_2 = Curve2.UserData.Find(typeof(UserDataCurve)) as UserDataCurve;
+
+            // stop of no curve user data provided.
+            if (user_data_curve_1 == null || user_data_curve_2 == null)
+                return;
+            // stop of neither of the curves do have any proprietary property as beam or cable.
+            if (!((user_data_curve_1.HasGeometryElementCurvesOfPropertyType(typeof(PropertyBeam)) || user_data_curve_1.HasGeometryElementCurvesOfPropertyType(typeof(PropertyCable)))
+                && (user_data_curve_2.HasGeometryElementCurvesOfPropertyType(typeof(PropertyBeam)) || user_data_curve_2.HasGeometryElementCurvesOfPropertyType(typeof(PropertyCable)))))
+                return;
+
             for (int i = 0; i < Intersection.Count; i++)
             {
                 if(Intersection[i].PointA.DistanceTo(Intersection[i].PointB) < double.Epsilon)
@@ -688,7 +696,7 @@ namespace Cocodrilo.IO
                 user_data_point.AddCoupling(
                     user_data_curve_1.BrepId,
                     user_data_curve_2.BrepId);
-                    
+
                 if (user_data_curve_1.IsBrepGroupCoupledWith(
                         user_data_curve_2.GetThisBrepGroupCouplingId())
                     && user_data_curve_2.IsBrepGroupCoupledWith(

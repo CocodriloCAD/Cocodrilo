@@ -111,7 +111,7 @@ namespace Cocodrilo.Visualizer
                                 }
                                 else if (support.mParameterLocationSurface.mV_Normalized == 1)
                                 {
-                                    curve = surface.IsoCurve(0, nurb_surface.KnotsV[nurb_surface.KnotsV.Count - 1]);
+                                    curve = surface.IsoCurve(0, nurb_surface.KnotsV.Last());
                                 }
 
                                 if (curve == null)

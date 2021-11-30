@@ -65,6 +65,9 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
             foreach (var brep in surfaces)
             {
+                if (brep == null)
+                    continue;
+
                 var support_property = new PropertySupport(
                     GeometryType.GeometrySurface, support, new TimeInterval());
 
