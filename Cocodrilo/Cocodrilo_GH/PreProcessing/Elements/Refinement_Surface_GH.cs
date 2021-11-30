@@ -18,7 +18,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddSurfaceParameter("Surface", "Sur", "Geometry of Element", GH_ParamAccess.list);
+            pManager.AddBrepParameter("Surface", "Sur", "Geometry of Element", GH_ParamAccess.list);
             pManager.AddIntegerParameter("p", "p", "Final Polynomial Degree p", GH_ParamAccess.item, 1);
             pManager.AddIntegerParameter("q", "q", "Polynomial Degree q", GH_ParamAccess.item, 1);
             pManager.AddIntegerParameter("InsertKnotU", "u", "Number of Knots inserted per Span in u", GH_ParamAccess.item, 0);
@@ -32,8 +32,8 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var surface_list = new List<Surface>();
-            if (!DA.GetDataList(0, surface_list)) return;
+            var breps = new List<Brep>();
+            if (!DA.GetDataList(0, breps)) return;
             int p = 1;
             if (!DA.GetData(1, ref p)) return;
             int q = 1;
@@ -44,38 +44,41 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             if (!DA.GetData(4, ref insert_knot_v)) return;
 
             var surface_list_out = new List<Surface>();
-            foreach (var surface in surface_list)
+            foreach (var brep in breps)
             {
-                var nurbs_surface = surface.ToNurbsSurface();
-                nurbs_surface.IncreaseDegreeU(p);
-                nurbs_surface.IncreaseDegreeV(q);
-
-                surface_list_out.Add(nurbs_surface);
-
-                if (mRefineWithinRhino)
+                foreach (var surface in brep.Surfaces)
                 {
-                    int ref_u = insert_knot_u + 1;
-                    int ref_v = insert_knot_v + 1;
+                    var nurbs_surface = surface.ToNurbsSurface();
+                    nurbs_surface.IncreaseDegreeU(p);
+                    nurbs_surface.IncreaseDegreeV(q);
 
-                    var span_u = nurbs_surface.GetSpanVector(0);
-                    for (int k = 1; k < span_u.Length; k++)
+                    surface_list_out.Add(nurbs_surface);
+
+                    if (mRefineWithinRhino)
                     {
-                        if (span_u[k - 1] < span_u[k])//nonzero knot span
+                        int ref_u = insert_knot_u + 1;
+                        int ref_v = insert_knot_v + 1;
+
+                        var span_u = nurbs_surface.GetSpanVector(0);
+                        for (int k = 1; k < span_u.Length; k++)
                         {
-                            var knotspansize = span_u[k] - span_u[k - 1];
-                            for (int l = 1; l < ref_u; l++) // dividing in #ref_u elements
-                                nurbs_surface.KnotsU.InsertKnot(span_u[k - 1] + l * knotspansize / ref_u);
+                            if (span_u[k - 1] < span_u[k])//nonzero knot span
+                            {
+                                var knotspansize = span_u[k] - span_u[k - 1];
+                                for (int l = 1; l < ref_u; l++) // dividing in #ref_u elements
+                                    nurbs_surface.KnotsU.InsertKnot(span_u[k - 1] + l * knotspansize / ref_u);
+                            }
                         }
-                    }
 
-                    var span_v = nurbs_surface.GetSpanVector(1);
-                    for (int k = 1; k < span_v.Length; k++)
-                    {
-                        if (span_v[k - 1] < span_v[k])//nonzero knot span
+                        var span_v = nurbs_surface.GetSpanVector(1);
+                        for (int k = 1; k < span_v.Length; k++)
                         {
-                            var knotspansize = span_v[k] - span_v[k - 1];
-                            for (int l = 1; l < ref_v; l++) // dividing in #ref_u elements
-                                nurbs_surface.KnotsV.InsertKnot(span_v[k - 1] + l * knotspansize / ref_v);
+                            if (span_v[k - 1] < span_v[k])//nonzero knot span
+                            {
+                                var knotspansize = span_v[k] - span_v[k - 1];
+                                for (int l = 1; l < ref_v; l++) // dividing in #ref_u elements
+                                    nurbs_surface.KnotsV.InsertKnot(span_v[k - 1] + l * knotspansize / ref_v);
+                            }
                         }
                     }
                 }

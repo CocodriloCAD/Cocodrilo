@@ -44,8 +44,8 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<Surface> surfaces = new List<Surface>();
-            DA.GetDataList(0, surfaces);
+            List<Brep> breps = new List<Brep>();
+            DA.GetDataList(0, breps);
 
             List<Curve> curves = new List<Curve>();
             DA.GetDataList(1, curves);
@@ -63,7 +63,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
                 mFixRotation, mFixRotation,
                 mStrong, mSupportType.ToString());
 
-            foreach (var brep in surfaces)
+            foreach (var brep in breps)
             {
                 if (brep == null)
                     continue;
@@ -71,7 +71,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
                 var support_property = new PropertySupport(
                     GeometryType.GeometrySurface, support, new TimeInterval());
 
-                geometries.breps.Add(new KeyValuePair<Brep, Property>(brep.ToBrep(), support_property));
+                geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, support_property));
             }
 
             foreach (var curve in curves)

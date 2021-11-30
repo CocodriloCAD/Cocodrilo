@@ -32,7 +32,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddSurfaceParameter("Surfaces", "Sur", "Geometries", GH_ParamAccess.list);
+            pManager.AddBrepParameter("Surfaces", "Sur", "Geometries", GH_ParamAccess.list);
             pManager[0].Optional = true;
             pManager.AddCurveParameter("Curves", "Cur", "Geometries", GH_ParamAccess.list);
             pManager[1].Optional = true;
@@ -49,8 +49,8 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<Surface> surfaces = new List<Surface>();
-            DA.GetDataList(0, surfaces);
+            List<Brep> breps = new List<Brep>();
+            DA.GetDataList(0, breps);
 
             List<Curve> curves = new List<Curve>();
             DA.GetDataList(1, curves);
@@ -64,7 +64,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             var geometries = new Cocodrilo_GH.PreProcessing.Geometries.Geometries();
 
 
-            foreach (var surface in surfaces)
+            foreach (var brep in breps)
             {
                 var load_type = mSelectedLoadType.ToString();
                 if (load_type == "GEOMETRY_LOAD")
@@ -76,7 +76,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
                 var support_property = new PropertyLoad(
                     GeometryType.GeometrySurface, load, new TimeInterval());
 
-                geometries.breps.Add(new KeyValuePair<Brep, Property>(surface.ToBrep(), support_property));
+                geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, support_property));
             }
 
             foreach (var curve in curves)

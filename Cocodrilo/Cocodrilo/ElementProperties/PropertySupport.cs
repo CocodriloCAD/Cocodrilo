@@ -164,8 +164,6 @@ namespace Cocodrilo.ElementProperties
         {
             if (mSupport.mIsSupportStrong)
             {
-                var variables = new ArrayList();
-
                 Dictionary<string, object> Parameters = (mGeometryType == GeometryType.CurvePoint)
                     ? new Dictionary<string, object> { { "local_parameters", new int[] { mKnotLocationU } } }
                     : new Dictionary<string, object> { { "local_parameters", new int[] { mKnotLocationU, mKnotLocationV } } };

@@ -10,9 +10,6 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 {
     public class Output_GH : GH_Component
     {
-        /// <summary>
-        /// Initializes a new instance of the Output_GH class.
-        /// </summary>
         public Output_GH()
           : base("Output", "Output",
               "Output Condition",
@@ -22,7 +19,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddSurfaceParameter("Surfaces", "Sur", "Geometries", GH_ParamAccess.list);
+            pManager.AddBrepParameter("Surfaces", "Sur", "Geometries", GH_ParamAccess.list);
             pManager[0].Optional = true;
             pManager.AddCurveParameter("Curves", "Cur", "Geometries", GH_ParamAccess.list);
             pManager[1].Optional = true;
@@ -38,8 +35,8 @@ namespace Cocodrilo_GH.PreProcessing.Elements
         }
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<Surface> surfaces = new List<Surface>();
-            DA.GetDataList(0, surfaces);
+            List<Brep> breps = new List<Brep>();
+            DA.GetDataList(0, breps);
 
             List<Curve> curves = new List<Curve>();
             DA.GetDataList(1, curves);
@@ -50,21 +47,21 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             List<Point3d> points = new List<Point3d>();
             DA.GetDataList(3, points);
 
-            var geometries = new Cocodrilo_GH.PreProcessing.Geometries.Geometries();
+            var geometries = new Geometries.Geometries();
 
-            var check_properties = new Cocodrilo.ElementProperties.CheckProperties(true, true, true, true);
-            foreach (var surface in surfaces)
+            var check_properties = new CheckProperties(true, true, true, true);
+            foreach (var brep in breps)
             {
-                var check_property = new Cocodrilo.ElementProperties.PropertyCheck(
-                    GeometryType.GeometrySurface, check_properties, false, new Cocodrilo.ElementProperties.TimeInterval());
+                var check_property = new PropertyCheck(
+                    GeometryType.GeometrySurface, check_properties, false, new TimeInterval());
 
-                geometries.breps.Add(new KeyValuePair<Brep, Property>(surface.ToBrep(), check_property));
+                geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, check_property));
             }
 
             foreach (var curve in curves)
             {
                 var check_property = new Cocodrilo.ElementProperties.PropertyCheck(
-                    GeometryType.GeometryCurve, check_properties, false, new Cocodrilo.ElementProperties.TimeInterval());
+                    GeometryType.GeometryCurve, check_properties, false, new TimeInterval());
 
                 geometries.curves.Add(new KeyValuePair<Curve, Property>(curve, check_property));
             }
@@ -72,15 +69,15 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             foreach (var edge in edges)
             {
                 var check_property = new Cocodrilo.ElementProperties.PropertyCheck(
-                    GeometryType.SurfaceEdge, check_properties, false, new Cocodrilo.ElementProperties.TimeInterval());
+                    GeometryType.SurfaceEdge, check_properties, false, new TimeInterval());
 
                 geometries.edges.Add(new KeyValuePair<Curve, Property>(edge, check_property));
             }
 
             foreach (var point in points)
             {
-                var check_property = new Cocodrilo.ElementProperties.PropertyCheck(
-                    GeometryType.Point, check_properties, false, new Cocodrilo.ElementProperties.TimeInterval());
+                var check_property = new PropertyCheck(
+                    GeometryType.Point, check_properties, false, new TimeInterval());
 
                 Point new_point = new Point(point);
 
