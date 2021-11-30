@@ -199,18 +199,6 @@ namespace Cocodrilo.UserData
             return GetCurrentElementData(StageId).mGeometryElementSurfaces;
         }
 
-        public int GetOneElementId(int StageId = -1)
-        {
-            foreach (var geometry_element_surface in GetCurrentElementData(StageId).mGeometryElementSurfaces)
-            {
-                if (geometry_element_surface.GetPropertyType() == typeof(PropertyMembrane) ||
-                    geometry_element_surface.GetPropertyType() == typeof(PropertyShell))
-                    return geometry_element_surface.mElementId;
-            }
-
-            return -1;
-        }
-
         public List<GeometryElementSurface> GetGeometryElementSurfacesElementFormulation(int StageId = -1)
         {
             var list = new List<GeometryElementSurface>();
