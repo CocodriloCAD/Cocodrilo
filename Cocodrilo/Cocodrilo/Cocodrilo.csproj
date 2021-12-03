@@ -75,6 +75,7 @@
     <Compile Include="Analyses\AnalysisFormfinding.cs" />
     <Compile Include="ElementProperties\PropertyDem.cs" />
     <Compile Include="Elements\ParameterLocation.cs" />
+    <Compile Include="IO\OutputKratosFEM.cs" />
     <Compile Include="IO\GeometryUtilties.cs" />
     <Compile Include="IO\Output.cs" />
     <Compile Include="IO\OutputKratosIGA.cs" />
