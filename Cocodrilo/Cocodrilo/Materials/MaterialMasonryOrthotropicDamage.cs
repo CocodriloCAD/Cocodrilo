@@ -25,7 +25,7 @@ namespace Cocodrilo.Materials
             MaterialIdDirection1 = Id + 1;
             MaterialIdDirection2 = Id + 2;
         }
-        public override int GetLastId() => Math.Max(MaterialIdDirection1, MaterialIdDirection2);
+        public override int GetLastId() => Math.Max(Math.Max(MaterialIdDirection1, MaterialIdDirection2), Id);
         public override Dictionary<string, object> GetKratosVariables()
         {
             return new Dictionary<string, object>

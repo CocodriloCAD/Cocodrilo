@@ -12,9 +12,35 @@ using Cocodrilo.Analyses;
 
 namespace Cocodrilo.IO
 {
+
     using Dict = Dictionary<string, object>;
     using DictList = List<Dictionary<string, object>>;
     using IdDict = Dictionary<int, List<int>>;
+    using PropertyIdDict = Dictionary<int, List<BrepToParameterLocations>>;
+
+    public struct BrepToParameterLocations
+    {
+        public int BrepId;
+        public List<Elements.ParameterLocation> ParameterLocations;
+
+        public BrepToParameterLocations(int ThisBrepId)
+        {
+            BrepId = ThisBrepId;
+            ParameterLocations = new List<Elements.ParameterLocation>();
+        }
+        public BrepToParameterLocations(int ThisBrepId, Elements.ParameterLocation ThisParameterLocation)
+        {
+            BrepId = ThisBrepId;
+            ParameterLocations = new List<Elements.ParameterLocation> { ThisParameterLocation };
+        }
+        public void AddParameterLocation(Elements.ParameterLocation ThisParameterLocation)
+        {
+            if (!ParameterLocations.Contains(ThisParameterLocation))
+            {
+                ParameterLocations.Add(ThisParameterLocation);
+            }
+        }
+    }
 
     public class OutputKratosIGA : Output
     {
@@ -54,7 +80,7 @@ namespace Cocodrilo.IO
             {
                 string geometry_json = "";
                 string refinements_json = "";
-                var propert_ids_brep_ids = new IdDict();
+                var propert_ids_brep_ids = new PropertyIdDict();
 
                 GetGeometryJson(BrepList, CurveList, PointList,
                     ref geometry_json, ref refinements_json, ref propert_ids_brep_ids);
@@ -68,7 +94,7 @@ namespace Cocodrilo.IO
                 List<string> nodal_variables = new List<string> { };
                 List<string> integration_point_variables = new List<string> { };
                 System.IO.File.WriteAllLines(project_path + "/" + "materials.json",
-                    new List<string> { GetMaterials(propert_ids_brep_ids, ref nodal_variables, ref integration_point_variables) });
+                    new List<string> { GetMaterials(propert_ids_brep_ids, ref nodal_variables) });
 
                 System.IO.File.WriteAllLines(project_path + "/" + "physics.iga.json",
                     new List<string> { GetPhysics(propert_ids_brep_ids) });
@@ -77,7 +103,7 @@ namespace Cocodrilo.IO
                     new List<string> { refinements_json });
 
                 System.IO.File.WriteAllLines(project_path + "/" + "ProjectParameters.json",
-                    new List<string> { GetProjectParameter(propert_ids_brep_ids, nodal_variables, integration_point_variables) });
+                    new List<string> { GetProjectParameter(propert_ids_brep_ids, nodal_variables) });
 
                 CocodriloPlugIn.Instance.ClearUnusedProperties(propert_ids_brep_ids.Keys.ToList());
             }
@@ -119,7 +145,7 @@ namespace Cocodrilo.IO
             List<Point> PointList,
             ref string rGeometryJson,
             ref string rRefinementsJson,
-            ref IdDict rPropertyIdsBrepsIds)
+            ref PropertyIdDict rPropertyIdsBrepsIds)
         {
             int brep_ids = 1;
 
@@ -275,7 +301,7 @@ namespace Cocodrilo.IO
         /// </summary>
         /// <param name="ElementConditionDictionary"></param>
         /// <returns></returns>
-        public string GetMaterials(IdDict ElementConditionDictionary, ref List<string> NodalVariables, ref List<string> IntegrationPointVariables)
+        public string GetMaterials(PropertyIdDict ElementConditionDictionary, ref List<string> NodalVariables)
         {
             var property_dict_list = new DictList();
             foreach (var property_id in ElementConditionDictionary.Keys)
@@ -288,8 +314,6 @@ namespace Cocodrilo.IO
                 }
                 NodalVariables.AddRange(
                     this_property.GetKratosOutputValuesNodes(CocodriloPlugIn.Instance.OutputOptions));
-                IntegrationPointVariables.AddRange(
-                    this_property.GetKratosOutputValuesIntegrationPoints(CocodriloPlugIn.Instance.OutputOptions));
 
                 //some properties do not need materials and properties
                 if (!this_property.HasKratosMaterial())
@@ -324,8 +348,6 @@ namespace Cocodrilo.IO
 
                     NodalVariables.AddRange(
                         material.GetKratosOutputValuesNodes(CocodriloPlugIn.Instance.OutputOptions));
-                    IntegrationPointVariables.AddRange(
-                        material.GetKratosOutputValuesIntegrationPoints(CocodriloPlugIn.Instance.OutputOptions));
                 }
 
                 material_dict.Add("Variables", variables);
@@ -351,7 +373,7 @@ namespace Cocodrilo.IO
         /// </summary>
         /// <param name="ElementConditionDictionary"></param>
         /// <returns></returns>
-        public string GetPhysics(IdDict ElementConditionDictionary)
+        public string GetPhysics(PropertyIdDict ElementConditionDictionary)
         {
             var element_condition_list = new DictList();
 
@@ -359,7 +381,9 @@ namespace Cocodrilo.IO
             {
                 var this_property = CocodriloPlugIn.Instance.GetProperty(dict_entry.Key, out bool success);
                 if (success)
+                {
                     element_condition_list.AddRange(this_property.GetKratosPhysic(dict_entry.Value));
+                }
             }
 
             var dict = new Dict
@@ -377,8 +401,8 @@ namespace Cocodrilo.IO
         /// <param name="ElementConditionDictionary"></param>
         /// <returns></returns>
         public string GetProjectParameter(
-            IdDict ElementConditionDictionary,
-            List<string> NodalVariables, List<string> IntegrationPointVariables)
+            PropertyIdDict ElementConditionDictionary,
+            List<string> NodalVariables)
         {
             string model_part_name = "IgaModelPart";
             string analysis_type = "linear";
@@ -540,7 +564,7 @@ namespace Cocodrilo.IO
                 }
                 else if (property.GetType() == typeof(PropertyShell))
                 {
-                    additional_processes.AddRange(property.GetKratosProcesses(dict_entry.Value));
+                    additional_processes.AddRange(property.GetKratosProcesses(dict_entry.Value.Select(item => item.BrepId).ToList()));
                 }
 
                 var output_integration_domain_process_dict = property.GetKratosOutputIntegrationDomainProcess(
@@ -719,7 +743,7 @@ namespace Cocodrilo.IO
         public void GetNurbsGeometriesJSON(
             Brep brep,
             ref int rCpId,
-            ref IdDict rPropertyElements,
+            ref PropertyIdDict rPropertyElements,
             ref DictList rFacesDictionary,
             ref DictList rVerticesDictionary,
             ref DictList rRefinementsDictionary,
@@ -739,7 +763,7 @@ namespace Cocodrilo.IO
                 int this_trim_index_iterator = brep.Trims.Count + 1;
 
                 var refinements = user_data_surface.GetRefinement();
-                rRefinementsDictionary.Add(refinements.GetKratosRefinement(this_brep_surface_id));
+                rRefinementsDictionary.Add(refinements?.GetKratosRefinement(this_brep_surface_id));
 
                 user_data_surface.TryGetKratosPropertyIdsBrepIds(
                     ref rPropertyElements);
@@ -747,12 +771,12 @@ namespace Cocodrilo.IO
                 var embedded_points = new DictList();
                 var embedded_edges = new DictList();
 
-                var embedded_points_surface = user_data_surface.GetBrepElementSurfaceVertices();
+                var embedded_points_surface = user_data_surface.GetNumericalElements().Where(item => item.HasBrepId()).ToArray();
                 foreach (var embedded_point in embedded_points_surface)
                 {
                     this_trim_index_iterator++;
 
-                    var parameter_location = embedded_point.GetPoint2d();
+                    var parameter_location = embedded_point.mParameterLocation.GetPoint2d();
 
                     rVerticesDictionary.Add(OutputUtilitiesJSON.CreateVertexDictionary(
                         embedded_point.GetBrepId(),
@@ -789,7 +813,7 @@ namespace Cocodrilo.IO
                     {
                         this_trim_index_iterator++;
 
-                        user_data_edge.TryAddEmbeddedEdgeTrimIndex(
+                        user_data_edge.TryAddTrimIndex(
                             this_brep_surface_id,
                             this_trim_index_iterator);
 
@@ -886,7 +910,7 @@ namespace Cocodrilo.IO
         private void GetNurbsGeometriesEdgesJSON(
             Brep brep,
             ref int rCpId,
-            ref IdDict rPropertyElements,
+            ref PropertyIdDict rPropertyElements,
             ref DictList rEdgesDictionary)
         {
             Rhino.Geometry.Collections.BrepEdgeList edges = brep.Edges;
@@ -933,7 +957,7 @@ namespace Cocodrilo.IO
                         GeometryType.SurfaceEdgeSurfaceEdge,
                         this_support);
 
-                    user_data_edge.AddBrepElementEdge(property_coupling);
+                    user_data_edge.AddNumericalElement(property_coupling);
                 }
 
                 user_data_edge.TryGetKratosPropertyIdsBrepIds(
@@ -1010,12 +1034,12 @@ namespace Cocodrilo.IO
             ref DictList rVerticesDictionary,
             List<Curve> IntersectionCurveList,
             List<Point> IntersectionPointList, 
-            ref IdDict rPropertyElements)
+            ref PropertyIdDict rPropertyElements)
         {
             var user_data_curve = ThisCurve.UserData.Find(typeof(UserDataCurve)) as UserDataCurve;
             if (user_data_curve == null) return;
 
-            user_data_curve.TryGetKratosPropertiesBrepIds(ref rPropertyElements);
+            user_data_curve.TryGetKratosPropertyIdsBrepIds(ref rPropertyElements);
 
             var this_coupling = new Coupling(0);
 
@@ -1031,17 +1055,17 @@ namespace Cocodrilo.IO
             var embedded_points = new DictList();
             var embedded_edges = new DictList();
 
-            var embedded_points_curve = user_data_curve.GetBrepElementCurveVertices();
+            var embedded_points_curve = user_data_curve.GetNumericalElements();
             foreach (var embedded_point in embedded_points_curve)
             {
                 this_trim_index_iterator++;
 
-                var parameter_location = embedded_point.GetPoint();
+                var parameter_location = embedded_point.mParameterLocation.GetParameters();
 
                 rVerticesDictionary.Add(OutputUtilitiesJSON.CreateVertexDictionary(
                     embedded_point.GetBrepId(),
                     new Coupling(this_curve_id, this_trim_index_iterator, 1),
-                    parameter_location));
+                    parameter_location[0]));
             }
 
             foreach (var coupling_point in IntersectionPointList)
@@ -1070,7 +1094,7 @@ namespace Cocodrilo.IO
                 {
                     this_trim_index_iterator++;
 
-                    user_data_edge.TryAddEmbeddedEdgeTrimIndex(
+                    user_data_edge.TryAddTrimIndex(
                         this_curve_id,
                         this_trim_index_iterator);
 
@@ -1106,7 +1130,7 @@ namespace Cocodrilo.IO
             List<Point> IntersectionPoints,
             ref int rCpId,
             ref DictList rVerticesDictionary,
-            ref IdDict rPropertyElements)
+            ref PropertyIdDict rPropertyElements)
         {
             foreach (var intersection_point in IntersectionPoints)
             {
@@ -1137,7 +1161,7 @@ namespace Cocodrilo.IO
             List<Curve> IntersectionCurves,
             ref int rCpId,
             ref DictList rCurveDictionary,
-            ref IdDict rPropertyElements)
+            ref PropertyIdDict rPropertyElements)
         {
             foreach (var intersection_curve in IntersectionCurves)
             {

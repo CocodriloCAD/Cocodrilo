@@ -50,7 +50,7 @@ namespace Cocodrilo.Visualizer
 
             DrawElements(e.Display,
                 active_breps, active_curves, intersection_curve_list, intersection_point_list,
-                show_elements, show_supports, show_loads, show_couplings);
+                show_elements, show_supports, show_loads, show_couplings, false);
 
             e.Display.EnableDepthWriting(false);
             e.Display.EnableDepthTesting(false);
@@ -61,12 +61,14 @@ namespace Cocodrilo.Visualizer
             List<Curve> CurveList,
             List<Curve> IntersectionCurveList,
             List<Rhino.Geometry.Point> IntersectionPointList,
-            bool ShowElements, bool ShowSupports, bool ShowLoads, bool ShowCouplings)
+            bool ShowElements, bool ShowSupports, bool ShowLoads, bool ShowCouplings, bool ShowIds)
         {
             foreach (var active_brep in BrepList)
             {
-                foreach (var surface in active_brep.Surfaces)
+                for (int index = 0; index < active_brep.Surfaces.Count; index++)
                 {
+                    var surface = active_brep.Surfaces[index];
+
                     var user_data_surface = surface.UserData.Find(typeof(UserDataSurface)) as UserDataSurface;
                     if (user_data_surface == null)
                         continue;
@@ -74,46 +76,37 @@ namespace Cocodrilo.Visualizer
                     if (ShowSupports)
                     {
                         // Draw weak surface points.
-                        foreach (var brep_vertex in user_data_surface.GetBrepElementSurfaceVerticesOfPropertyType(
-                            typeof(PropertySupport)))
-                        {
-                            var property_vertex_support = brep_vertex.GetProperty<PropertySupport>();
-                            var point = brep_vertex.GetPoint2d();
-                            VD.drawPointSupport(d, surface.PointAt(point.X, point.Y),
-                                property_vertex_support.mSupport);
-                        }
+                        //foreach (var brep_vertex in user_data_surface.GetNumericalElementsOfPropertyType(typeof(PropertySupport)))
+                        //{
+                        //    var property_vertex_support = brep_vertex.GetProperty<PropertySupport>();
+                        //    var point = brep_vertex.GetPoint2d();
+                        //    VD.drawPointSupport(d, surface.PointAt(point.X, point.Y),
+                        //        property_vertex_support.mSupport);
+                        //}
 
                         // Draw strong surface points.
-                        foreach (var support in user_data_surface.GetGeometryElementSurfacesOfPropertyType(typeof(PropertySupport)))
+                        foreach (var support in user_data_surface.GetNumericalElementsOfPropertyType(typeof(PropertySupport)))
                         {
-                            if (support.mParameterLocationSurface.IsPoint())
+                            if (support.mParameterLocation.IsPoint())
                             {
-                                VD.drawPointSupport(d, surface.PointAt(
-                                        support.mParameterLocationSurface.mU,
-                                        support.mParameterLocationSurface.mV),
+                                var parameters = support.mParameterLocation.GetParameters();
+                                VD.drawPointSupport(d, surface.PointAt(parameters[0], parameters[1]),
                                     support.GetProperty<PropertySupport>().mSupport);
                             }
-                            else if (support.mParameterLocationSurface.IsEdge())
+                            else if (support.mParameterLocation.IsEdge())
                             {
                                 Curve curve = null;
                                 var nurb_surface = surface.ToNurbsSurface();
-                                if (support.mParameterLocationSurface.mU_Normalized == 0)
+                                var parameters = support.mParameterLocation.GetParameters();
+                                var normalized_parameters = support.mParameterLocation.GetNormalizedParameters();
+                                if (normalized_parameters[0] == 0 || normalized_parameters[0] == 1)
                                 {
-                                    curve = surface.IsoCurve(1, nurb_surface.KnotsU[0]);
+                                    curve = surface.IsoCurve(1, parameters[0]);
                                 }
-                                else if (support.mParameterLocationSurface.mU_Normalized == 1)
+                                else if (normalized_parameters[1] == 0 || normalized_parameters[1] == 1)
                                 {
-                                    curve = surface.IsoCurve(1, nurb_surface.KnotsU[nurb_surface.KnotsU.Count - 1]);
+                                    curve = surface.IsoCurve(0, parameters[1]);
                                 }
-                                else if (support.mParameterLocationSurface.mV_Normalized == 0)
-                                {
-                                    curve = surface.IsoCurve(0, nurb_surface.KnotsV[0]);
-                                }
-                                else if (support.mParameterLocationSurface.mV_Normalized == 1)
-                                {
-                                    curve = surface.IsoCurve(0, nurb_surface.KnotsV.Last());
-                                }
-
                                 if (curve == null)
                                 {
                                     RhinoApp.WriteLine("WARNING: Not able to detect curve of strong support.");
@@ -123,7 +116,7 @@ namespace Cocodrilo.Visualizer
                                 VD.drawCurveSupport(d, curve,
                                     support.GetProperty<PropertySupport>().mSupport);
                             }
-                            else if (support.mParameterLocationSurface.IsSurface())
+                            else if (support.mParameterLocation.IsSurface())
                             {
                                 VD.drawSurfaceSupport(d, surface,
                                     support.GetProperty<PropertySupport>().mSupport);
@@ -132,84 +125,105 @@ namespace Cocodrilo.Visualizer
                     }
 
                     var shell_elements = user_data_surface
-                        .GetGeometryElementSurfacesOfPropertyType(
+                        .GetNumericalElementsOfPropertyType(
                             typeof(PropertyShell));
                     var membrane_elements = user_data_surface
-                        .GetGeometryElementSurfacesOfPropertyType(
+                        .GetNumericalElementsOfPropertyType(
                             typeof(PropertyMembrane));
-
+                    
                     var tmp_srf = surface.ToNurbsSurface();
                     NurbsSurface newsurface = new NurbsSurface(tmp_srf);
 
+                    //var index = surface.ComponentIndex().Index;
+                    //var aha = active_brep.Faces[0].UnderlyingSurface;
+
                     if (ShowElements && (shell_elements.Count > 0 || membrane_elements.Count > 0))
                     {
-                        var refinement = user_data_surface.GetRefinement();
-                        newsurface.IncreaseDegreeU(refinement.PDeg);
-                        newsurface.IncreaseDegreeV(refinement.QDeg);
-                        if (refinement.KnotInsertType == 0)
+                        var refinement = user_data_surface.GetRefinement() as Refinement.RefinementSurface;
+                        if (refinement != null)
                         {
-                            int ref_u = refinement.KnotSubDivU + 1;
-                            int ref_v = refinement.KnotSubDivV + 1;
-                            for (int j = 1; j < ref_u; j++)
+                            newsurface.IncreaseDegreeU(refinement.PDeg);
+                            newsurface.IncreaseDegreeV(refinement.QDeg);
+                            if (refinement.KnotInsertType == 0)
                             {
-                                for (int k = 1; k < tmp_srf.KnotsU.Count; k++)
+                                int ref_u = refinement.KnotSubDivU + 1;
+                                int ref_v = refinement.KnotSubDivV + 1;
+                                for (int j = 1; j < ref_u; j++)
                                 {
-                                    if (tmp_srf.KnotsU[k - 1] < tmp_srf.KnotsU[k])//nonzero knot span
+                                    for (int k = 1; k < tmp_srf.KnotsU.Count; k++)
                                     {
-                                        var knotspansize = tmp_srf.KnotsU[k] - tmp_srf.KnotsU[k - 1];
-                                        for (int l = 1; l < ref_u; l++) // dividing in #ref_u elements
-                                            newsurface.KnotsU.InsertKnot(tmp_srf.KnotsU[k - 1] + l * knotspansize / ref_u);
+                                        if (tmp_srf.KnotsU[k - 1] < tmp_srf.KnotsU[k])//nonzero knot span
+                                        {
+                                            var knotspansize = tmp_srf.KnotsU[k] - tmp_srf.KnotsU[k - 1];
+                                            for (int l = 1; l < ref_u; l++) // dividing in #ref_u elements
+                                                newsurface.KnotsU.InsertKnot(tmp_srf.KnotsU[k - 1] + l * knotspansize / ref_u);
+                                        }
                                     }
                                 }
-                            }
-                            for (int j = 1; j < ref_v; j++)
-                            {
-                                for (int k = 1; k < tmp_srf.KnotsV.Count; k++)
+                                for (int j = 1; j < ref_v; j++)
                                 {
-                                    if (tmp_srf.KnotsV[k - 1] < tmp_srf.KnotsV[k])//nonzero knot span
+                                    for (int k = 1; k < tmp_srf.KnotsV.Count; k++)
                                     {
-                                        var knotspansize = tmp_srf.KnotsV[k] - tmp_srf.KnotsV[k - 1];
-                                        for (int l = 1; l < ref_v; l++) // dividing in #ref_u elements
-                                            newsurface.KnotsV.InsertKnot(tmp_srf.KnotsV[k - 1] + l * knotspansize / ref_v);
+                                        if (tmp_srf.KnotsV[k - 1] < tmp_srf.KnotsV[k])//nonzero knot span
+                                        {
+                                            var knotspansize = tmp_srf.KnotsV[k] - tmp_srf.KnotsV[k - 1];
+                                            for (int l = 1; l < ref_v; l++) // dividing in #ref_u elements
+                                                newsurface.KnotsV.InsertKnot(tmp_srf.KnotsV[k - 1] + l * knotspansize / ref_v);
+                                        }
                                     }
                                 }
                             }
                         }
+                        //var draw_brep = newsurface.ToBrep();
+                        var face = active_brep.Faces.First(item => item.SurfaceIndex == index);
 
+                        //if (face != null)
+                        //{
+                        //    draw_brep = Brep.CreateTrimmedSurface(active_brep.Faces[0], newsurface, 0.001);
+                        //    draw_brep = Brep.CreateTrimmedSurface(active_brep.Faces[1], newsurface, 0.001);
+                        //    draw_brep = Brep.CopyTrimCurves(active_brep.Faces[0], newsurface, 0.001);
+                        //    draw_brep = Brep.CopyTrimCurves(active_brep.Faces[1], newsurface, 0.001);
+                        //}
+                        var draw_brep = Brep.CopyTrimCurves(face, newsurface, 0.001);
                         foreach (var shell in shell_elements)
-                            d.DrawBrepWires(newsurface.ToBrep(), shellColor);
+                            d.DrawBrepWires(draw_brep, shellColor);
 
                         foreach (var membrane in membrane_elements)
-                            d.DrawBrepWires(newsurface.ToBrep(), membraneColor);
+                            d.DrawBrepWires(draw_brep, membraneColor);
 
+                        if (ShowIds)
+                        {
+                            double middle_u =
+                                (newsurface.KnotsU[0] + newsurface.KnotsU[newsurface.KnotsU.Count() - 1]) / 2;
+                            double middle_v =
+                                (newsurface.KnotsV[0] + newsurface.KnotsV[newsurface.KnotsV.Count() - 1]) / 2;
 
-                        double middle_u =
-                            (newsurface.KnotsU[0] + newsurface.KnotsU[newsurface.KnotsU.Count() - 1]) / 2;
-                        double middle_v =
-                            (newsurface.KnotsV[0] + newsurface.KnotsV[newsurface.KnotsV.Count() - 1]) / 2;
-
-                        var point = newsurface.PointAt(middle_u, middle_v);
-                        d.Draw3dText(new Text3d(user_data_surface.BrepId.ToString()), shellColor, point);
+                            var point = newsurface.PointAt(middle_u, middle_v);
+                            d.Draw3dText(new Text3d(user_data_surface.BrepId.ToString()), shellColor, point);
+                        }
                     }
 
                     if (ShowLoads)
                     {
+                        var face = active_brep.Faces.First(item => item.SurfaceIndex == index);
                         foreach (var geometry_element in
-                            user_data_surface.GetGeometryElementSurfacesOfPropertyType(typeof(PropertyLoad)))
+                            user_data_surface.GetNumericalElementsOfPropertyType(typeof(PropertyLoad)))
                         {
                             var property_load = geometry_element.GetProperty<PropertyLoad>();
-                            if (geometry_element.mParameterLocationSurface.IsPoint())
+                            if (geometry_element.mParameterLocation.IsPoint())
+                            {
+                                var parameters = geometry_element.mParameterLocation.GetParameters();
                                 VD.drawPointLoad(d,
-                                    newsurface.PointAt(geometry_element.mParameterLocationSurface.mU,
-                                        geometry_element.mParameterLocationSurface.mV),
+                                    newsurface.PointAt(parameters[0], parameters[1]),
                                     property_load.mLoad);
-                            else if (geometry_element.mParameterLocationSurface.IsSurface())
+                            }
+                            else if (geometry_element.mParameterLocation.IsSurface())
                             {
                                 if (property_load.mLoad.mLoadType == "SNOW")
                                 {
                                     var direction = property_load.mLoad.GetLoadVector();
                                     VD.drawSurfaceSnowLoad(d,
-                                        newsurface,
+                                        face,
                                         direction[0],
                                         direction[1],
                                         direction[2]);
@@ -217,10 +231,10 @@ namespace Cocodrilo.Visualizer
                                 else if (property_load.mLoad.mLoadType == "PRES"
                                          || property_load.mLoad.mLoadType == "PRES_FL")
                                     VD.drawSurfacePressureLoad(d,
-                                        newsurface,
+                                        face,
                                         Convert.ToDouble(property_load.mLoad.mLoadX));
                                 else
-                                    VD.drawSurfaceLoad(d, newsurface, property_load.mLoad);
+                                    VD.drawSurfaceLoad(d, face, property_load.mLoad);
                             }
                         }
                     }
@@ -244,7 +258,7 @@ namespace Cocodrilo.Visualizer
 
                     if (ShowSupports)
                     {
-                        foreach (var brep_element in user_data_edge.GetBrepElementEdgeOfPropertyType(typeof(PropertySupport)))
+                        foreach (var brep_element in user_data_edge.GetNumericalElementsOfPropertyType(typeof(PropertySupport)))
                         {
                             VD.drawCurveSupport(
                                 d,
@@ -255,7 +269,7 @@ namespace Cocodrilo.Visualizer
 
                     if (ShowLoads)
                     {
-                        foreach (var brep_element in user_data_edge.GetBrepElementEdgeOfPropertyType(typeof(PropertyLoad)))
+                        foreach (var brep_element in user_data_edge.GetNumericalElementsOfPropertyType(typeof(PropertyLoad)))
                         {
                             VD.drawCurveLoad(
                                 d,
@@ -266,7 +280,7 @@ namespace Cocodrilo.Visualizer
 
                     if (ShowElements)
                     {
-                        foreach (var _ in user_data_edge.GetBrepElementEdgeOfPropertyType(typeof(PropertyCable)))
+                        foreach (var _ in user_data_edge.GetNumericalElementsOfPropertyType(typeof(PropertyCable)))
                         {
                             VD.drawCable(d, curve_3d);
                         }
@@ -281,92 +295,121 @@ namespace Cocodrilo.Visualizer
                     var ud_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
                     if (ud_curve == null || ud_edge == null)
                         continue;
-
-                    if (ShowSupports)
+                    if (ud_curve != null)
                     {
-                        // Draw weak surface points.
-                        foreach (var brep_vertex in ud_curve.GetBrepElementCurveVerticesOfPropertyType(typeof(PropertySupport)))
+                        if (ShowSupports)
                         {
-                            var point = brep_vertex.GetPoint();
-                            VD.drawPointSupport(d, curve.PointAt(point), brep_vertex.GetProperty<PropertySupport>().mSupport);
-                        }
-
-                        // Draw strong surface points.
-                        foreach (var brep_vertex in ud_curve.GetGeometryElementCurvesOfPropertyType(typeof(PropertySupport)))
-                        {
-                            if (brep_vertex.mParameterLocationCurve.IsPoint())
+                            var numerical_elements = ud_curve.GetNumericalElementsOfPropertyType(typeof(PropertySupport));
+                            // Draw weak surface points.
+                            foreach (var numerical_element in numerical_elements)
                             {
-                                VD.drawPointSupport(d, curve.PointAtLength(brep_vertex.mParameterLocationCurve.mU), brep_vertex.GetProperty<PropertySupport>().mSupport);
-                            }
-                            else if (brep_vertex.mParameterLocationCurve.IsEdge())
-                            {
-                                VD.drawCurveSupport(d, curve, brep_vertex.GetProperty<PropertySupport>().mSupport);
-                            }
-                        }
-
-                        foreach (var edge_support in ud_edge.GetBrepElementEdgeOfPropertyType(typeof(PropertySupport)))
-                        {
-                            var support_parameters = edge_support.GetProperty<PropertySupport>().mSupport;
-                            if (!support_parameters.mIsSupportStrong)
-                            {
-                                VD.drawCurveSupport(d, curve, edge_support.GetProperty<PropertySupport>().mSupport);
-                            }
-                        }
-
-                    }
-                    if (ShowLoads)
-                    {
-                        foreach (var geometry_element in ud_curve.GetBrepElementCurveVerticesOfPropertyType(typeof(PropertyLoad)))
-                        {
-                            var property_load = geometry_element.GetProperty<PropertyLoad>();
-                            if (geometry_element.mParameterLocationCurve.IsPoint())
-                                VD.drawPointLoad(d, curve.PointAtLength(geometry_element.mParameterLocationCurve.mU), property_load.mLoad);
-                            else
-                                VD.drawCurveLoad(d, curve, property_load.mLoad);
-                        }
-                        foreach (var geometry_element in ud_edge.GetBrepElementEdgeOfPropertyType(typeof(PropertyLoad)))
-                        {
-                            var property_load = geometry_element.GetProperty<PropertyLoad>();
-                            VD.drawCurveLoad(d, curve, property_load.mLoad);
-                        }
-                    }
-                    if (ShowElements)
-                    {
-                        if (ud_curve.GetGeometryElementCurvesOfPropertyType(typeof(PropertyCable)).Count > 0)
-                        {
-                            var refinement = ud_curve.GetRefinement();
-                            var tmp_crv = curve.ToNurbsCurve();
-                            NurbsCurve newcurve = new NurbsCurve(tmp_crv);
-                            newcurve.IncreaseDegree(refinement.PolynomialDegree);
-                            if (refinement.KnotInsertType == 0)
-                            {
-                                int ref_u = (int)refinement.KnotSubDivU;
-                                for (int j = 1; j < ref_u; j++)
+                                if (numerical_element.mParameterLocation.IsPoint())
                                 {
-                                    for (int k = 1; k < tmp_crv.Knots.Count; k++)
+                                    var parameters = numerical_element.mParameterLocation.GetParameters();
+                                    VD.drawPointSupport(d, curve.PointAt(parameters[0]), numerical_element.GetProperty<PropertySupport>().mSupport);
+                                }
+                                else if (numerical_element.mParameterLocation.IsEdge())
+                                {
+                                    VD.drawCurveSupport(d, curve, numerical_element.GetProperty<PropertySupport>().mSupport);
+                                }
+                            }
+                        }
+                        if (ShowLoads)
+                        {
+                            var numerical_elements = ud_curve.GetNumericalElementsOfPropertyType(typeof(PropertyLoad));
+                            // Draw weak surface points.
+                            foreach (var numerical_element in numerical_elements)
+                            {
+                                var property_load = numerical_element.GetProperty<PropertyLoad>();
+                                if (numerical_element.mParameterLocation.IsPoint())
+                                {
+                                    var parameters = numerical_element.mParameterLocation.GetParameters();
+                                    VD.drawPointLoad(d, curve.PointAt(parameters[0]), property_load.mLoad);
+                                }
+                                else if (numerical_element.mParameterLocation.IsEdge())
+                                {
+                                    VD.drawCurveLoad(d, curve, property_load.mLoad);
+                                }
+                            }
+                        }
+                        if (ShowElements)
+                        {
+                            if (ud_curve.GetNumericalElementsOfPropertyType(typeof(PropertyCable)).Count > 0)
+                            {
+                                var refinement = ud_curve.GetRefinement() as Refinement.RefinementCurve;
+                                var tmp_crv = curve.ToNurbsCurve();
+                                NurbsCurve newcurve = new NurbsCurve(tmp_crv);
+                                newcurve.IncreaseDegree(refinement.PolynomialDegree);
+                                if (refinement.KnotInsertType == 0)
+                                {
+                                    int ref_u = (int)refinement.KnotSubDivU;
+                                    for (int j = 1; j < ref_u; j++)
                                     {
-                                        if (tmp_crv.Knots[k - 1] < tmp_crv.Knots[k])//nonzero knot span
+                                        for (int k = 1; k < tmp_crv.Knots.Count; k++)
                                         {
-                                            var knotspansize = tmp_crv.Knots[k] - tmp_crv.Knots[k - 1];
-                                            for (int l = 1; l < ref_u; l++) // dividing in #ref_u elements
-                                                newcurve.Knots.InsertKnot(tmp_crv.Knots[k - 1] + l * knotspansize / ref_u);
+                                            if (tmp_crv.Knots[k - 1] < tmp_crv.Knots[k])//nonzero knot span
+                                            {
+                                                var knotspansize = tmp_crv.Knots[k] - tmp_crv.Knots[k - 1];
+                                                for (int l = 1; l < ref_u; l++) // dividing in #ref_u elements
+                                                    newcurve.Knots.InsertKnot(tmp_crv.Knots[k - 1] + l * knotspansize / ref_u);
+                                            }
                                         }
                                     }
                                 }
+
+                                List<double> unique_knots = newcurve.Knots.Distinct().ToList();
+                                List<Point3d> knot_points = new List<Point3d>();
+                                foreach (var knot in unique_knots)
+                                    knot_points.Add(newcurve.PointAt(knot));
+                                PointCloud pt_cloud = new PointCloud(knot_points);
+
+                                d.DrawCurve(newcurve, cableColor);
+                                d.DrawPointCloud(pt_cloud, 3, cableColor);
                             }
-
-                            List<double> unique_knots = newcurve.Knots.Distinct().ToList();
-                            List<Point3d> knot_points = new List<Point3d>();
-                            foreach (var knot in unique_knots)
-                                knot_points.Add(newcurve.PointAt(knot));
-                            PointCloud pt_cloud = new PointCloud(knot_points);
-
-                            d.DrawCurve(newcurve, cableColor);
-                            d.DrawPointCloud(pt_cloud, 3, cableColor);
                         }
                         if (ShowCouplings)
                         {
-                            if (ud_curve.GetGeometryElementCurvesOfPropertyType(typeof(PropertyCoupling)).Count > 0)
+                            if (ud_curve.GetNumericalElementsOfPropertyType(typeof(PropertyCoupling)).Count > 0)
+                            {
+                                d.DrawCurve(curve, Color.Orange);
+                            }
+                        }
+                    }
+                    if (ud_edge != null)
+                    {
+                        if (ShowSupports)
+                        {
+                            var numerical_elements = ud_edge.GetNumericalElementsOfPropertyType(typeof(PropertySupport));
+                            // Draw weak surface points.
+                            foreach (var numerical_element in numerical_elements)
+                            {
+                                var support_parameters = numerical_element.GetProperty<PropertySupport>().mSupport;
+                                if (!support_parameters.mIsSupportStrong)
+                                {
+                                    VD.drawCurveSupport(d, curve, support_parameters);
+                                }
+                            }
+                        }
+                        if (ShowLoads)
+                        {
+                            var numerical_elements = ud_edge.GetNumericalElementsOfPropertyType(typeof(PropertyLoad));
+                            // Draw weak surface points.
+                            foreach (var numerical_element in numerical_elements)
+                            {
+                                var property_load = numerical_element.GetProperty<PropertyLoad>();
+                                VD.drawCurveLoad(d, curve, property_load.mLoad);
+                            }
+                        }
+                        if (ShowElements)
+                        {
+                            if (ud_edge.GetNumericalElementsOfPropertyType(typeof(PropertyCable)).Count > 0)
+                            {
+                                d.DrawCurve(curve, cableColor);
+                            }
+                        }
+                        if (ShowCouplings)
+                        {
+                            if (ud_edge.GetNumericalElementsOfPropertyType(typeof(PropertyCoupling)).Count > 0)
                             {
                                 d.DrawCurve(curve, Color.Orange);
                             }
@@ -383,7 +426,7 @@ namespace Cocodrilo.Visualizer
                         var ud = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
                         if (ud != null)
                         {
-                            foreach (var brep_edge in ud.GetBrepElementEdgeOfPropertyType(typeof(PropertySupport)))
+                            foreach (var brep_edge in ud.GetNumericalElementsOfPropertyType(typeof(PropertySupport)))
                             {
                                 PropertySupport property = brep_edge.GetProperty<PropertySupport>();
                                 VD.drawCurveSupport(d, curve, property.mSupport);
@@ -401,6 +444,7 @@ namespace Cocodrilo.Visualizer
                 }
             }
         }
+
 
         public static void DrawDemElements(DisplayPipeline d,
             List<Rhino.Geometry.Point> PointList)

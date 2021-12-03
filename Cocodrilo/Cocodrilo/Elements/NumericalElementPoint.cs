@@ -4,7 +4,7 @@ using Cocodrilo.UserData;
 
 namespace Cocodrilo.Elements
 {
-    public class BrepElementSurfaceVertex : Element
+    public class NumericalElementPoint : NumericalElement
     {
         public ParameterLocationSurface mParameterLocationSurface { get; set; }
         /// <summary>
@@ -14,21 +14,29 @@ namespace Cocodrilo.Elements
         /// </summary>
         public readonly UserDataPoint mUserDataPoint;
 
-        public BrepElementSurfaceVertex() : base()
+        public NumericalElementPoint() : base()
         {
         }
 
-        public BrepElementSurfaceVertex(
+        public NumericalElementPoint(
             Property ThisProperty,
             ParameterLocationSurface ThisParameterLocationSurface
-            ):base(ThisProperty)
+            ):base(ThisProperty, ThisParameterLocationSurface)
         {
             mParameterLocationSurface = ThisParameterLocationSurface;
 
             mUserDataPoint = new UserDataPoint();
         }
 
-        public int GetBrepId() => mUserDataPoint.BrepId;
+        public override bool HasBrepId()
+        {
+            return true;
+        }
+        public override void SetBrepId(int BrepId)
+        {
+            mUserDataPoint.BrepId = BrepId;
+        }
+        public override int GetBrepId() => mUserDataPoint.BrepId;
 
         public Point2d GetPoint2d()
         {

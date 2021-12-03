@@ -41,11 +41,11 @@ namespace Cocodrilo.Commands
                     if (CommandUtilities.TryGetUserDataSurface(out List<UserDataSurface> UserDataSurfaceList))
                     {
                         var load = Panels.UserControlCocodriloPanel.Instance.getLoad();
-                        var parameter_location = new Elements.ParameterLocationSurface(-1, -1, -1, -1);
+                        var parameter_location = new Elements.ParameterLocationSurface(GeometryType.GeometrySurface, - 1, -1, -1, -1);
                         var property_load = new PropertyLoad(GeometryType.GeometrySurface, load, time_interval);
                         foreach (var user_data_surface in UserDataSurfaceList)
                         {
-                            user_data_surface.DeleteGeometryElementSurface(
+                            user_data_surface.DeleteNumericalElement(
                                 property_load,
                                 parameter_location);
                         }
@@ -58,7 +58,7 @@ namespace Cocodrilo.Commands
                         var property_load = new PropertyLoad(GeometryType.SurfaceEdge, load, time_interval);
 
                         foreach (var user_data_edge in UserDataEdgeList)
-                            user_data_edge.DeleteBrepElementEdge(
+                            user_data_edge.DeleteNumericalElement(
                                 property_load);
                     }
                     break;
@@ -76,7 +76,7 @@ namespace Cocodrilo.Commands
                                     GeometryType.SurfacePoint,
                                     load,
                                     time_interval);
-                                user_data_tuple.Item1.DeleteBrepElementSurfaceVertex(
+                                user_data_tuple.Item1.DeleteNumericalElement(
                                     property_load,
                                     user_data_tuple.Item2);
                             }
@@ -87,11 +87,11 @@ namespace Cocodrilo.Commands
                     if (CommandUtilities.TryGetUserDataCurve(out List<UserDataCurve> UserDataCurveList))
                     {
                         var load = Panels.UserControlCocodriloPanel.Instance.getLoad();
-                        var parameter_location = new Elements.ParameterLocationCurve(-1, -1);
+                        var parameter_location = new Elements.ParameterLocationCurve(GeometryType.GeometrySurface, - 1, -1);
                         var property_load = new PropertyLoad(GeometryType.GeometrySurface, load, time_interval);
                         foreach (var user_data_curve in UserDataCurveList)
                         {
-                            user_data_curve.DeleteGeometryElementCurve(
+                            user_data_curve.DeleteNumericalElement(
                                 property_load,
                                 parameter_location);
                         }
@@ -108,7 +108,7 @@ namespace Cocodrilo.Commands
                         {
                             if (user_data.Item2.IsPoint())
                             {
-                                user_data.Item1.DeleteBrepElementCurveVertex(
+                                user_data.Item1.DeleteNumericalElement(
                                     property_load,
                                     user_data.Item2);
                             }

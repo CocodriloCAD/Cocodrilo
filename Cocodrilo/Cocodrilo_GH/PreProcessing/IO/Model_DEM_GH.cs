@@ -27,9 +27,8 @@ namespace Cocodrilo_GH.PreProcessing.IO
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddPointParameter("Points", "Points", "DEM particles", GH_ParamAccess.list);
-            pManager[0].Optional = true;
             pManager.AddGenericParameter("Geometries", "Geoms", "DEM particles wrapped within geometries", GH_ParamAccess.list);
+            pManager.AddMeshParameter("Wall", "Mesh", "DEM Wall", GH_ParamAccess.list);
             pManager[1].Optional = true;
         }
 
@@ -46,20 +45,13 @@ namespace Cocodrilo_GH.PreProcessing.IO
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<Point3d> point_3d_list = new List<Point3d>();
-            DA.GetDataList(0, point_3d_list);
+            List<Geometries.Geometries> geometries_list = new List<Geometries.Geometries>();
+            DA.GetDataList(0, geometries_list);
+
+            List<Mesh> mesh_list = new List<Mesh>();
+            DA.GetDataList(1, mesh_list);
 
             List<Point> point_list = new List<Point>();
-            foreach (var point_3d_f in point_3d_list)
-            {
-                var geometry_point = new Point(point_3d_f);
-                geometry_point.UserDictionary.Set("RADIUS", 1.0);
-                point_list.Add(geometry_point);
-            }
-
-            List<Geometries.Geometries> geometries_list = new List<Geometries.Geometries>();
-            DA.GetDataList(1, geometries_list);
-
             foreach(var geom in geometries_list)
             {
                 foreach (var point in geom.points)
@@ -70,7 +62,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
             }
 
             var output_dem = new OutputKratosDEM();
-            output_dem.StartAnalysis(point_list);
+            output_dem.StartAnalysis(point_list, mesh_list);
 
             mPointList = point_list;
         }

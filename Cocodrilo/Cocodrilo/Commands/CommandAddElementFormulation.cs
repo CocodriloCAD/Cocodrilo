@@ -43,7 +43,7 @@ namespace Cocodrilo.Commands
                     {
                         var shell_properties = panel.GetShellProperties();
                         var shell_property = new PropertyShell(material_id, shell_properties);
-                        user_data_surface.AddGeometryElementSurface(
+                        user_data_surface.AddNumericalElement(
                             shell_property);
                     }
                 }
@@ -79,7 +79,7 @@ namespace Cocodrilo.Commands
                         material_id,
                         is_formfinding,
                         membrane_properties);
-                    user_data_surface.AddGeometryElementSurface(
+                    user_data_surface.AddNumericalElement(
                         membrane_property);
                 }
             }
@@ -100,7 +100,7 @@ namespace Cocodrilo.Commands
                             is_formfinding);
                         foreach (var user_data_edge in UserDataEdgeList)
                         {
-                            user_data_edge.AddBrepElementEdge(
+                            user_data_edge.AddNumericalElement(
                                 property_cable);
                         }
                     }
@@ -116,7 +116,7 @@ namespace Cocodrilo.Commands
                             is_formfinding);
                         foreach (var user_data_curve in UserDataCurveList)
                         {
-                            user_data_curve.AddGeometryElementCurve(property_cable);
+                            user_data_curve.AddNumericalElement(property_cable);
                         }
                     }
                 }

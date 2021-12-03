@@ -114,16 +114,7 @@ namespace Cocodrilo.ElementProperties
 
         public override List<Dictionary<string, object>> GetKratosPhysic(List<int> BrepIds)
         {
-            string name = "";
-            if (mGeometryType == GeometryType.SurfaceEdge)
-            {
-                name = "LoadCondition";
-            }
-            else if (mGeometryType == GeometryType.GeometrySurface)
-                name = "LoadCondition";
-            else if (mGeometryType == GeometryType.SurfacePoint
-                     || mGeometryType == GeometryType.CurvePoint)
-                name = "LoadCondition";
+            string name = "LoadCondition";
 
             if (mLoad.mLoadType == "MOMENT_5P_DIRECTOR")
                 name = "MomentLoadDirector5pCondition";

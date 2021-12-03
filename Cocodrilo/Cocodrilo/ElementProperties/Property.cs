@@ -16,7 +16,10 @@ namespace Cocodrilo.ElementProperties
         public int mMaterialId { get; set; }
         public bool mIsFormFinding { get; set; }
 
-        protected Property()
+        /// <summary>
+        /// public constructor for serializer
+        /// </summary>
+        public Property()
         {
         }
 
@@ -42,8 +45,9 @@ namespace Cocodrilo.ElementProperties
 
         public virtual List<Dictionary<string, object>> GetKratosProcesses(List<int> BrepIds)
         {
-            return new List<Dictionary<string, object>> { };
+            return GetKratosProcesses();
         }
+
 
         /// <summary>
         /// Returns the physical properties which are necessary for each respective problem
@@ -54,6 +58,10 @@ namespace Cocodrilo.ElementProperties
         public virtual List<Dictionary<string, object>> GetKratosPhysic(List<int> BrepIds)
         {
             return new List<Dictionary<string, object>> { };
+        }
+        public virtual List<Dictionary<string, object>> GetKratosPhysic(List<IO.BrepToParameterLocations> BrepToParameterLocations)
+        {
+            return GetKratosPhysic(BrepToParameterLocations.Select(item => item.BrepId).ToList());
         }
 
         /// <summary>

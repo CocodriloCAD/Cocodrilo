@@ -19,6 +19,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
         private bool mShowSupports = true;
         private bool mShowLoads = true;
         private bool mShowCouplings = true;
+        private bool mShowIds = false;
 
         public Model_GH()
           : base("Model", "Model",
@@ -88,7 +89,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
                                     }
                                 }
 
-                                ud.AddGeometryElementSurface(brep.Value);
+                                ud.AddNumericalElement(brep.Value);
                             }
                             if (add_brep)
                             {
@@ -115,7 +116,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
                                 }
                             }
 
-                            ud.AddGeometryElementCurve(curve.Value);
+                            ud.AddNumericalElement(curve.Value);
 
                             if (add_curve)
                             {
@@ -124,7 +125,6 @@ namespace Cocodrilo_GH.PreProcessing.IO
                         }
                         foreach (var edge in geoms.edges)
                         {
-                            
                             bool add_edge = true;
                             var ud = edge.Key.UserData.Find(typeof(Cocodrilo.UserData.UserDataEdge)) as Cocodrilo.UserData.UserDataEdge;
                             if (ud == null)
@@ -145,7 +145,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
                                 }
                             }
 
-                            ud.AddBrepElementEdge(edge.Value);
+                            ud.AddNumericalElement(edge.Value);
 
                             if (add_edge)
                             {
@@ -174,7 +174,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
                                 }
                             }
 
-                            ud.AddGeometryElementVertex(point.Value);
+                            ud.AddNumericalElement(point.Value);
 
                             if (add_point)
                             {
@@ -229,11 +229,10 @@ namespace Cocodrilo_GH.PreProcessing.IO
                 {
                     foreach (var brep in geoms.breps)
                     {
-                        foreach (var surface in brep.Key.Surfaces)
+                        foreach (var surface in brep.Key?.Surfaces)
                         {
                             var ud = surface.UserData.Find(typeof(Cocodrilo.UserData.UserDataSurface)) as Cocodrilo.UserData.UserDataSurface;
-                            ud?.DeleteBrepElementSurfaceVertices();
-                            ud?.DeleteGeometryElementSurfaces();
+                            ud?.DeleteNumericalElements();
                             if (ud != null)
                             {
                                 ud.BrepId = -1;
@@ -243,8 +242,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
                     foreach (var curve in geoms.curves)
                     {
                         var ud = curve.Key.UserData.Find(typeof(Cocodrilo.UserData.UserDataCurve)) as Cocodrilo.UserData.UserDataCurve;
-                        ud?.DeleteGeometryElementCurves();
-                        ud?.DeleteBrepElementCurveVertices();
+                        ud?.DeleteNumericalElements();
                         if (ud != null)
                         {
                             ud.BrepId = -1;
@@ -253,7 +251,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
                     foreach (var edge in geoms.edges)
                     {
                         var ud = edge.Key.UserData.Find(typeof(Cocodrilo.UserData.UserDataEdge)) as Cocodrilo.UserData.UserDataEdge;
-                        ud?.DeleteBrepElementEdges();
+                        ud?.DeleteNumericalElements();
                         if (ud != null)
                         {
                             ud.BrepId = -1;
@@ -262,7 +260,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
                     foreach (var point in geoms.points)
                     {
                         var ud = point.Key.UserData.Find(typeof(Cocodrilo.UserData.UserDataPoint)) as Cocodrilo.UserData.UserDataPoint;
-                        ud?.DeleteGeometryElementVertices();
+                        ud?.DeleteNumericalElements();
                         if (ud != null)
                         {
                             ud.BrepId = -1;
@@ -292,6 +290,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
             Menu_AppendItem(toolStripMenuItemPreProcessing.DropDown, "ShowSupports", Menu_DoClick_ShowSupports, mShowPreProcessing, mShowSupports);
             Menu_AppendItem(toolStripMenuItemPreProcessing.DropDown, "ShowLoads", Menu_DoClick_ShowLoads, mShowPreProcessing, mShowLoads);
             Menu_AppendItem(toolStripMenuItemPreProcessing.DropDown, "ShowCouplings", Menu_DoClick_ShowCouplings, mShowPreProcessing, mShowCouplings);
+            Menu_AppendItem(toolStripMenuItemPreProcessing.DropDown, "ShowIds", Menu_DoClick_ShowIds, mShowPreProcessing, mShowIds);
         }
 
         private void Menu_CouplingMethodChanged(object sender, EventArgs e)
@@ -308,6 +307,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
         private void Menu_DoClick_ShowSupports(object sender, EventArgs e) => mShowSupports = !mShowSupports;
         private void Menu_DoClick_ShowLoads(object sender, EventArgs e) => mShowLoads = !mShowLoads;
         private void Menu_DoClick_ShowCouplings(object sender, EventArgs e) => mShowCouplings = !mShowCouplings;
+        private void Menu_DoClick_ShowIds(object sender, EventArgs e) => mShowIds = !mShowIds;
         private void Menu_SetPenaltyFactor(Grasshopper.GUI.GH_MenuTextBox sender, System.Windows.Forms.KeyEventArgs e)
         {
             System.Windows.Forms.Keys keyCode = e.KeyCode;
@@ -339,7 +339,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
             if (mShowPreProcessing)
             {
                 Cocodrilo.Visualizer.Visualizer.DrawElements(args.Display, mBrepList, mCurveList,
-                    new List<Curve>(), new List<Point>(), mShowElements, mShowSupports, mShowLoads, mShowCouplings);
+                    new List<Curve>(), new List<Point>(), mShowElements, mShowSupports, mShowLoads, mShowCouplings, mShowIds);
             }
             Rhino.RhinoDoc.ActiveDoc.Views.Redraw();
         }
@@ -351,6 +351,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
             writer.SetBoolean("ShowSupports", mShowSupports);
             writer.SetBoolean("ShowLoads", mShowLoads);
             writer.SetBoolean("ShowCouplings", mShowCouplings);
+            writer.SetBoolean("ShowIds", mShowIds);
             return base.Write(writer);
         }
 
@@ -361,6 +362,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
             reader.TryGetBoolean("ShowSupports", ref mShowSupports);
             reader.TryGetBoolean("ShowLoads", ref mShowLoads);
             reader.TryGetBoolean("ShowCouplings", ref mShowCouplings);
+            reader.TryGetBoolean("ShowIds", ref mShowIds);
             return base.Read(reader);
         }
 

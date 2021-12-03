@@ -228,6 +228,10 @@ namespace Cocodrilo.ElementProperties
                 integration_point_results.Add("PK2_STRESS");
             if (ThisOutputOptions.moments)
                 integration_point_results.Add("INTERNAL_MOMENT");
+
+            integration_point_results.AddRange(
+                CocodriloPlugIn.Instance.GetMaterial(mMaterialId).GetKratosOutputValuesIntegrationPoints(ThisOutputOptions));
+
             string[] nodal_results = (ThisOutputOptions.displacements)
                 ? new string[] { "DISPLACEMENT" }
                 : new string[] { };

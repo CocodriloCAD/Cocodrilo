@@ -42,12 +42,11 @@ namespace Cocodrilo.Commands
                         var property_support = new PropertySupport(
                             GeometryTypeSelected,
                             support,
-                            time_interval,
-                            -1, -1);
+                            time_interval);
                         foreach (var user_data_surface in UserDataSurfaceList)
                         {
-                            var parameter_location = new Elements.ParameterLocationSurface(-1, -1, -1, -1);
-                            user_data_surface.DeleteGeometryElementSurface(
+                            var parameter_location = new Elements.ParameterLocationSurface(GeometryType.GeometrySurface, - 1, -1, -1, -1);
+                            user_data_surface.DeleteNumericalElement(
                                 property_support,
                                 parameter_location);
                         }
@@ -62,7 +61,7 @@ namespace Cocodrilo.Commands
                                 GeometryTypeSelected, support, time_interval);
 
                             foreach (var user_data_edge in UserDataEdgeList)
-                                user_data_edge.DeleteBrepElementEdge(
+                                user_data_edge.DeleteNumericalElement(
                                     property_support);
                         }
                     }
@@ -77,11 +76,9 @@ namespace Cocodrilo.Commands
                                 var property_support = new PropertySupport(
                                     GeometryTypeSelected,
                                     support,
-                                    time_interval,
-                                    (int) user_data.Item2.mU_Normalized,
-                                    (int) user_data.Item2.mV_Normalized);
+                                    time_interval);
 
-                                user_data.Item1.DeleteGeometryElementSurface(
+                                user_data.Item1.DeleteNumericalElement(
                                     property_support,
                                     user_data.Item2);
                             }
@@ -100,11 +97,9 @@ namespace Cocodrilo.Commands
                                 if (is_support_strong && user_data.Item2.IsOnNodes())
                                 {
                                     var property_support = new PropertySupport(
-                                        GeometryTypeSelected, support, time_interval,
-                                        (int) user_data.Item2.mU_Normalized,
-                                        (int) user_data.Item2.mV_Normalized);
+                                        GeometryTypeSelected, support, time_interval);
 
-                                    user_data.Item1.DeleteGeometryElementSurface(
+                                    user_data.Item1.DeleteNumericalElement(
                                         property_support,
                                         user_data.Item2);
                                 }
@@ -114,7 +109,7 @@ namespace Cocodrilo.Commands
                                         GeometryTypeSelected,
                                         support,
                                         time_interval);
-                                    user_data.Item1.DeleteBrepElementSurfaceVertex(
+                                    user_data.Item1.DeleteNumericalElement(
                                         property_support,
                                         user_data.Item2);
                                 }
@@ -130,9 +125,9 @@ namespace Cocodrilo.Commands
                             support,
                             time_interval);
 
-                        var parameter_location_curve = new Elements.ParameterLocationCurve(-1, -1);
+                        var parameter_location_curve = new Elements.ParameterLocationCurve(GeometryType.GeometryCurve, -1, -1);
                         foreach (var user_data_curve in UserDataCurveList)
-                            user_data_curve.DeleteGeometryElementCurve(
+                            user_data_curve.DeleteNumericalElement(
                                 property_support,
                                 parameter_location_curve);
                     }
@@ -151,10 +146,9 @@ namespace Cocodrilo.Commands
                                     var property_support = new PropertySupport(
                                         GeometryType.CurvePoint,
                                         support,
-                                        time_interval,
-                                        (int) user_data.Item2.mU_Normalized);
+                                        time_interval);
 
-                                    user_data.Item1.DeleteGeometryElementCurve(
+                                    user_data.Item1.DeleteNumericalElement(
                                         property_support,
                                         user_data.Item2);
                                 }
@@ -165,7 +159,7 @@ namespace Cocodrilo.Commands
                                         support,
                                         time_interval);
 
-                                    user_data.Item1.DeleteBrepElementCurveVertex(
+                                    user_data.Item1.DeleteNumericalElement(
                                         property_support,
                                         user_data.Item2);
                                 }

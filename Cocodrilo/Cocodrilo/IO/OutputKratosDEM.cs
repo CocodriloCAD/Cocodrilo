@@ -1,6 +1,7 @@
 ﻿using Rhino;
 using Rhino.Geometry;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using Cocodrilo.UserData;
@@ -14,24 +15,24 @@ namespace Cocodrilo.IO
         }
 
 
-        public void StartAnalysis(List<Point> PointList)
+        public void StartAnalysis(List<Point> PointList, List<Mesh> MeshList)
         {
             string project_path = UserDataUtilities.GetProjectPath("DEM");
 
-            StartAnalysis(project_path, PointList);
+            StartAnalysis(project_path, PointList, MeshList);
         }
 
-        public void StartAnalysis(string project_path, List<Point> PointList)
+        public void StartAnalysis(string project_path, List<Point> PointList, List<Mesh> MeshList)
         {
             //GET GEOMETRY JSON INPUT TEXT
             try
             {
                 System.IO.File.WriteAllLines(project_path + "/" + "KlausDEM.mdpa",
-                    new List<string> { GetMdpaFile(PointList) });
+                    new List<string> { GetDemMdpaFile(PointList) });
                 System.IO.File.WriteAllLines(project_path + "/" + "KlausDEM_Clusters.mdpa",
                     new List<string> { "" });
                 System.IO.File.WriteAllLines(project_path + "/" + "KlausDEM_FEM_boundary.mdpa",
-                    new List<string> { "" });
+                    new List<string> { GetDemFemMdpaFile(MeshList) });
                 System.IO.File.WriteAllLines(project_path + "/" + "KlausDEM_Inlet.mdpa",
                     new List<string> { "" });
                 System.IO.File.WriteAllLines(project_path + "/" + "MaterialsDEM.json",
@@ -45,8 +46,71 @@ namespace Cocodrilo.IO
                 RhinoApp.WriteLine(ex.ToString());
             }
         }
+        private string GetDemFemMdpaFile(List<Mesh> MeshList)
+        {
+            string mdpa_file;
 
-        private string GetMdpaFile(List<Point> PointList)
+            mdpa_file = "Begin ModelPartData\n"
+                        + "//  VARIABLE_NAME value\n"
+                        + "End ModelPartData\n\n";
+
+            for (int i = 2; i < MeshList.Count +2; i++)
+            {
+                mdpa_file += "Begin Properties " + i.ToString() +"\n End Properties \n";
+            }
+            mdpa_file += "\n\n";
+
+            string node_string = "Begin Nodes\n";
+            string element_string = "Begin Conditions RigidFace3D3N\n";
+            int id_node_counter = 1;
+            int id_element_counter = 1;
+
+            int sub_model_part_counter = 1;
+
+            string sub_model_part_string = "";
+
+            for (int m = 0; m < MeshList.Count; m++)
+            {
+
+                sub_model_part_string += "Begin SubModelPart " + sub_model_part_counter + " // GUI DEM-FEM-Wall - DEM-FEM-Wall - group identifier: Parts_membran_oben\n"
+                    + "  Begin SubModelPartData // DEM-FEM-Wall. Group name: Parts_membran_oben\n"
+                    + "    IS_GHOST false\n"
+                    + "    IDENTIFIER Parts_membran_oben\n"
+                    + "    FORCE_INTEGRATION_GROUP 0\n"
+                    + "  End SubModelPartData\n"
+                    + "  Begin SubModelPartNodes\n";
+
+                var mesh = MeshList[m];
+                for (int i = 0; i < mesh.Vertices.Count; i++)
+                {
+                    node_string += "    " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
+                    sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n";
+                }
+                sub_model_part_string += "End SubModelPartNodes\n";
+                sub_model_part_string += "Begin SubModelPartConditions\n";
+                foreach (var face in mesh.Faces)
+                {
+                    element_string += "    " + id_element_counter + "  " + (m + 2).ToString() + "  " + (face.A + id_node_counter) + "  " + (face.B + id_node_counter) + "  " + (face.C + id_node_counter) + "\n";
+                    sub_model_part_string += "     " + id_element_counter.ToString() + "\n";
+                    id_element_counter++;
+                }
+
+                sub_model_part_string += "End SubModelPartConditions\n";
+                sub_model_part_string += "End SubModelPart\n\n";
+
+                id_node_counter += mesh.Vertices.Count;
+                sub_model_part_counter++;
+            }
+            node_string += "End Nodes\n\n";
+            element_string += "End Elements\n\n";
+
+            mdpa_file += node_string;
+            mdpa_file += element_string;
+            mdpa_file += sub_model_part_string;
+
+            return mdpa_file;
+        }
+        private string GetDemMdpaFile(List<Point> PointList)
         {
             string mdpa_file;
 

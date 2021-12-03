@@ -71,22 +71,30 @@ namespace Cocodrilo.IO
                 foreach (var surface in brep.Surfaces)
                 {
                     var user_data_surface = UserDataUtilities.GetOrCreateUserDataSurface(surface);
-                    var vertices = user_data_surface.GetBrepElementSurfaceVertices();
-                    foreach (var vertex in vertices)
+                    var numerical_elements = user_data_surface.GetNumericalElements();
+                    foreach (var numerical_element in numerical_elements)
                     {
-                        vertex.mUserDataPoint.BrepId = rBrepId;
-                        rBrepId++;
+                        if (numerical_element.HasBrepId())
+                        {
+                            numerical_element.SetBrepId(rBrepId);
+                            rBrepId++;
+                        }
                     }
                 }
             }
             foreach (var curve in rCurves)
             {
-                var user_data_curve = UserDataUtilities.GetOrCreateUserDataCurve(curve);
-                var vertices = user_data_curve.GetBrepElementCurveVertices();
-                foreach (var vertex in vertices)
+                var user_data_curve = curve.UserData.Find(typeof(UserDataCurve)) as UserDataCurve;
+                if (user_data_curve == null)
+                    continue;
+                var numerical_elements = user_data_curve.GetNumericalElements();
+                foreach (var numerical_element in numerical_elements)
                 {
-                    vertex.mUserDataPoint.BrepId = rBrepId;
-                    rBrepId++;
+                    if (numerical_element.HasBrepId())
+                    {
+                        numerical_element.SetBrepId(rBrepId);
+                        rBrepId++;
+                    }
                 }
             }
             foreach (var point in rPoints)
@@ -326,8 +334,6 @@ namespace Cocodrilo.IO
                 }
 
                 var user_data_edge = UserDataUtilities.GetOrCreateUserDataEdge(overlap_curve);
-                if (user_data_edge == null)
-                    RhinoApp.WriteLine("user_data_edge is null - creation not possible");
 
                 user_data_edge.AddCoupling(
                     user_data_surface_1.BrepId,
@@ -351,11 +357,11 @@ namespace Cocodrilo.IO
                         this_support,
                         new TimeInterval());
 
-                    user_data_edge.AddBrepElementEdge(property_edge_coupling);
+                    user_data_edge.AddNumericalElement(property_edge_coupling);
                 }
                 else
                 {
-                    user_data_edge.DeleteBrepElementEdgePropertyType(typeof(PropertyCoupling));
+                    user_data_edge.DeleteNumericalElementOfPropertyType(typeof(PropertyCoupling));
                 }
 
                 IntersectionCurveList.Add(overlap_curve);
@@ -403,11 +409,11 @@ namespace Cocodrilo.IO
                         this_support,
                         new TimeInterval());
 
-                    user_data_point.AddGeometryElementVertex(property_coupling);
+                    user_data_point.AddNumericalElement(property_coupling);
                 }
                 else
                 {
-                    user_data_point.DeleteGeometryElementVertexPropertyType(typeof(PropertyCoupling));
+                    user_data_point.DeleteNumericalElementOfPropertyType(typeof(PropertyCoupling));
                 }
 
                 IntersectionPointList.Add(intersection_point);
@@ -438,15 +444,15 @@ namespace Cocodrilo.IO
             var user_data_edge = Curve1.UserData.Find(typeof(Cocodrilo.UserData.UserDataEdge)) as Cocodrilo.UserData.UserDataEdge;
             if (user_data_edge != null)
             {
-                foreach (var overlap_curve in overlap_curves)
+                var numerical_elements = user_data_edge.GetNumericalElements();
+                if (numerical_elements.Count > 0)
                 {
-                    var brep_elements = user_data_edge.GetBrepElementEdges();
-                    if (brep_elements.Count > 0)
+                    foreach (var overlap_curve in overlap_curves)
                     {
                         var user_data_surface = GetIntersectedSurface(overlap_curve, Brep1);
                         var user_data_edge_overlap_curve = UserDataUtilities.GetOrCreateUserDataEdge(overlap_curve);
 
-                        foreach (var brep_element in brep_elements)
+                        foreach (var brep_element in numerical_elements.ToList())
                         {
                             var property = brep_element.GetProperty(out bool success);
                             if (!success)
@@ -457,33 +463,34 @@ namespace Cocodrilo.IO
                                 if (support_property.mSupport.mIsSupportStrong)
                                 {
                                     var nurbs_surface = GetIntersectedNurbsSurface(overlap_curve, Brep1);
-                                    nurbs_surface.Pullback(overlap_curve, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance);
+                                    var parameter_curve = nurbs_surface.Pullback(overlap_curve, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance);
                                     if (GeometryUtilities.TryGetParamaterLocationSurface(
-                                        overlap_curve,
+                                        parameter_curve,
                                         nurbs_surface,
                                         out Elements.ParameterLocationSurface parameter_location))
                                     {
-                                        var new_support_property = new PropertySupport(
-                                            GeometryType.SurfaceEdge,
-                                            new Support(support_property.mSupport),
-                                            support_property.mTimeInterval,
-                                            (int) parameter_location.mU_Normalized,
-                                            (int) parameter_location.mV_Normalized);
-                                        user_data_surface.AddGeometryElementSurface(property, parameter_location);
+                                        user_data_surface.AddNumericalElement(property, parameter_location);
+                                        user_data_edge.DeleteNumericalElement(property);
+                                    }
+                                    else
+                                    {
+                                        RhinoApp.WriteLine("WARNING: Could not find iso curve for support.");
                                     }
                                 }
                                 else
                                 {
-                                    user_data_edge_overlap_curve.AddBrepElementEdge(property);
+                                    user_data_edge_overlap_curve.AddNumericalElement(property);
                                     user_data_edge_overlap_curve.AddCoupling(user_data_surface.BrepId);
                                     rIntersectionCurveList.Add(overlap_curve);
+                                    user_data_edge.DeleteNumericalElement(property);
                                 }
                             }
                             else
                             {
-                                user_data_edge_overlap_curve.AddBrepElementEdge(property);
+                                user_data_edge_overlap_curve.AddNumericalElement(property);
                                 user_data_edge_overlap_curve.AddCoupling(user_data_surface.BrepId);
                                 rIntersectionCurveList.Add(overlap_curve);
+                                user_data_edge.DeleteNumericalElement(property);
                             }
                         }
                     }
@@ -493,9 +500,8 @@ namespace Cocodrilo.IO
             var user_data_curve = Curve1.UserData.Find(typeof(Cocodrilo.UserData.UserDataCurve)) as Cocodrilo.UserData.UserDataCurve;
             if (user_data_curve != null)
             {
-                var beams = user_data_curve.GetGeometryElementCurvesOfPropertyType(typeof(PropertyBeam));
-                var cable = user_data_curve.GetGeometryElementCurvesOfPropertyType(typeof(PropertyCable));
-                if (beams.Count > 0 || cable.Count > 0)
+                if (user_data_curve.HasNumericalElementsOfPropertyType(typeof(PropertyCable))
+                    || user_data_curve.HasNumericalElementsOfPropertyType(typeof(PropertyBeam)))
                 {
                     foreach (var overlap_curve in overlap_curves)
                     {
@@ -507,7 +513,7 @@ namespace Cocodrilo.IO
 
                         var user_data_surface = GetIntersectedSurface(overlap_curve, Brep1);
 
-                        if (user_data_curve.IsBrepGroupCoupledWith(user_data_surface.GetBrepGroupCouplingId()))
+                        if (user_data_curve.IsBrepGroupCoupledWith(user_data_surface.GetThisBrepGroupCouplingId()))
                         {
                             var user_data_edge_overlap_curve = UserDataUtilities.GetOrCreateUserDataEdge(overlap_curve);
 
@@ -521,7 +527,7 @@ namespace Cocodrilo.IO
                                 this_support,
                                 new TimeInterval());
 
-                            user_data_edge.AddBrepElementEdge(property_edge_coupling);
+                            user_data_edge.AddNumericalElement(property_edge_coupling);
 
                             rIntersectionCurveList.Add(overlap_curve);
                             user_data_edge_overlap_curve.AddCoupling(user_data_surface.BrepId, user_data_curve.BrepId);
@@ -573,11 +579,11 @@ namespace Cocodrilo.IO
                                 this_support,
                                 new TimeInterval());
 
-                            user_data_point.AddGeometryElementVertex(property_coupling);
+                            user_data_point.AddNumericalElement(property_coupling);
                         }
                         else
                         {
-                            user_data_point.DeleteGeometryElementVertexPropertyType(typeof(PropertyCoupling));
+                            user_data_point.DeleteNumericalElementOfPropertyType(typeof(PropertyCoupling));
                         }
 
 
@@ -591,10 +597,16 @@ namespace Cocodrilo.IO
             Brep Brep,
             List<Point> PointList)
         {
-            const double tolerance = 0.001;
+            double tolerance = RhinoDoc.ActiveDoc.ModelAbsoluteTolerance;
 
             foreach (var point in PointList)
             {
+                var user_data_point = point.UserData.Find(typeof(UserDataPoint)) as UserDataPoint;
+                if (user_data_point == null)
+                    continue;
+                if (user_data_point.GetNumericalElements().Count == 0)
+                    continue;
+
                 Brep.FindCoincidentBrepComponents(point.Location, tolerance, out int[] face_ids, out int[] edge_ids, out int[] vertice_ids);
                 if (face_ids.Length > 0)
                 {
@@ -602,14 +614,14 @@ namespace Cocodrilo.IO
                     var surface = Brep.Surfaces[brep_face.SurfaceIndex];
                     surface.ClosestPoint(point.Location, out double u, out double v);
                     double u_normalized = surface.Domain(0).NormalizedParameterAt(u);
-                    if (u_normalized != 0 || u_normalized != 1) // needed if triangular surface
+                    if (u_normalized != 0 && u_normalized != 1) // needed if triangular surface
                     {
                         var test_point = surface.PointAt(surface.Domain(0).ParameterAt(1), u);
                         if (test_point.DistanceTo(point.Location) < tolerance)
                             u_normalized = 1;
                     }
                     double v_normalized = surface.Domain(1).NormalizedParameterAt(v);
-                    if (v_normalized != 0 || v_normalized != 1) // needed if triangular surface
+                    if (v_normalized != 0 && v_normalized != 1) // needed if triangular surface
                     {
                         var test_point = surface.PointAt(u, surface.Domain(1).ParameterAt(1));
                         if (test_point.DistanceTo(point.Location) < tolerance)
@@ -617,29 +629,32 @@ namespace Cocodrilo.IO
                     }
                     double v_normalized2 = surface.Domain(1).NormalizedParameterAt(v+1);
 
-                    var parameter_location = new Elements.ParameterLocationSurface(u, v, u_normalized, v_normalized);
+                    var parameter_location = new Elements.ParameterLocationSurface(GeometryType.SurfacePoint, u, v, u_normalized, v_normalized);
 
                     var user_data_surface = UserDataUtilities.GetOrCreateUserDataSurface(surface);
-                    var user_data_point = UserDataUtilities.GetOrCreateUserDataPoint(point);
 
-                    var geometry_element_vertices = user_data_point.GetGeometryElementVertices();
-                    foreach (var geometry_element_vertex in geometry_element_vertices)
+                    var numerical_elements = user_data_point.GetNumericalElements();
+                    foreach (var numerical_element in numerical_elements.ToList())
                     {
-                        var property = geometry_element_vertex.GetProperty(out _);
-                        if (property.GetType() == typeof(PropertySupport) && parameter_location.IsOnNodes())
-                        {
-                            var support_property = property as PropertySupport;
-                            var support_properties = new Support(support_property.mSupport);
-                            support_properties.mIsSupportStrong = true;
-                            var new_property_property = new PropertySupport(
-                                GeometryType.SurfacePoint, support_properties, support_property.mTimeInterval, (int)u_normalized, (int)v_normalized);
-                            CocodriloPlugIn.Instance.AddProperty(new_property_property);
-                            user_data_surface.AddGeometryElementSurface(new_property_property, parameter_location);
-                        }
-                        else
-                        {
-                            user_data_surface.AddBrepElementSurfaceVertex(property, parameter_location);
-                        }
+                        var property = numerical_element.GetProperty(out _);
+                        CocodriloPlugIn.Instance.AddProperty(property);
+                        user_data_surface.AddNumericalElement(property, parameter_location);
+
+                        user_data_point.DeleteNumericalElement(property);
+                        //if (property.GetType() == typeof(PropertySupport) && parameter_location.IsOnNodes())
+                        //{
+                        //    var support_property = property as PropertySupport;
+                        //    var support_properties = new Support(support_property.mSupport);
+                        //    support_properties.mIsSupportStrong = true;
+                        //    var new_property_property = new PropertySupport(
+                        //        GeometryType.SurfacePoint, support_properties, support_property.mTimeInterval);
+                        //    CocodriloPlugIn.Instance.AddProperty(new_property_property);
+                        //    user_data_surface.AddNumericalElement(new_property_property, parameter_location);
+                        //}
+                        //else
+                        //{
+                        //    user_data_surface.AddNumericalElement(property, parameter_location);
+                        //}
                     }
                 }
             }
@@ -670,8 +685,8 @@ namespace Cocodrilo.IO
             if (user_data_curve_1 == null || user_data_curve_2 == null)
                 return;
             // stop of neither of the curves do have any proprietary property as beam or cable.
-            if (!((user_data_curve_1.HasGeometryElementCurvesOfPropertyType(typeof(PropertyBeam)) || user_data_curve_1.HasGeometryElementCurvesOfPropertyType(typeof(PropertyCable)))
-                && (user_data_curve_2.HasGeometryElementCurvesOfPropertyType(typeof(PropertyBeam)) || user_data_curve_2.HasGeometryElementCurvesOfPropertyType(typeof(PropertyCable)))))
+            if (!((user_data_curve_1.HasNumericalElementsOfPropertyType(typeof(PropertyBeam)) || user_data_curve_1.HasNumericalElementsOfPropertyType(typeof(PropertyCable)))
+                && (user_data_curve_2.HasNumericalElementsOfPropertyType(typeof(PropertyBeam)) || user_data_curve_2.HasNumericalElementsOfPropertyType(typeof(PropertyCable)))))
                 return;
 
             for (int i = 0; i < Intersection.Count; i++)
@@ -713,11 +728,11 @@ namespace Cocodrilo.IO
                         this_support,
                         new TimeInterval());
 
-                    user_data_point.AddGeometryElementVertex(property_coupling);
+                    user_data_point.AddNumericalElement(property_coupling);
                 }
                 else
                 {
-                    user_data_point.DeleteGeometryElementVertexPropertyType(typeof(PropertyCoupling));
+                    user_data_point.DeleteNumericalElementOfPropertyType(typeof(PropertyCoupling));
                 }
                 
                 IntersectionPointList.Add(intersection_point);
@@ -838,11 +853,11 @@ namespace Cocodrilo.IO
                                 this_support,
                                 new TimeInterval());
 
-                            user_data_point.AddGeometryElementVertex(property_coupling);
+                            user_data_point.AddNumericalElement(property_coupling);
                         }
                         else
                         {
-                           user_data_point.DeleteGeometryElementVertexPropertyType(typeof(PropertyCoupling));
+                           user_data_point.DeleteNumericalElementOfPropertyType(typeof(PropertyCoupling));
                         }
 
                         IntersectionPointList.Add(intersection_point);
@@ -973,7 +988,7 @@ namespace Cocodrilo.IO
 
         public static bool TryGetParamaterLocationSurface(Curve ThisCurve2d, NurbsSurface ThisNurbsSurface, out Elements.ParameterLocationSurface ParameterLocation)
         {
-            ParameterLocation = new Elements.ParameterLocationSurface(-1, -1, -1, -1);
+            ParameterLocation = new Elements.ParameterLocationSurface(GeometryType.SurfaceEdge, - 1, -1, -1, -1);
 
             double u_start = ThisNurbsSurface.KnotsU[0];
             double u_end = ThisNurbsSurface.KnotsU[ThisNurbsSurface.KnotsU.Count - 1];

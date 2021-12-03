@@ -179,7 +179,7 @@ namespace Cocodrilo.Commands
                 double u, v = 0;
                 face.ClosestPoint(gp.Point(), out u, out v);
 
-                var parameter_location = new Elements.ParameterLocationSurface(u, v, -1, -1);
+                var parameter_location = new Elements.ParameterLocationSurface(GeometryType.SurfacePoint, u, v, -1, -1);
 
                 var nurbs_surface = face.ToNurbsSurface();
 
@@ -270,7 +270,7 @@ namespace Cocodrilo.Commands
                 crv.ClosestPoint(gp.Point(), out u);
                 crv.NormalizedLengthParameter(u, out double u_normalized);
 
-                var parameter_location = new Elements.ParameterLocationCurve(u, u_normalized);
+                var parameter_location = new Elements.ParameterLocationCurve(GeometryType.CurvePoint, u, u_normalized);
 
                 var nurbs_crv = crv.ToNurbsCurve();
 

@@ -36,7 +36,7 @@ namespace Cocodrilo.Commands
                 {
                     foreach (var user_data_surface in UserDataSurfaceList)
                     {
-                        user_data_surface.DeleteGeometryElementSurfaceOfPropertyType(
+                        user_data_surface.DeleteNumericalElementOfPropertyType(
                             typeof(PropertyMembrane));
                     }
                 }
@@ -48,7 +48,7 @@ namespace Cocodrilo.Commands
                 {
                     foreach (var user_data_surface in UserDataSurfaceList)
                     {
-                        user_data_surface.DeleteGeometryElementSurfaceOfPropertyType(
+                        user_data_surface.DeleteNumericalElementOfPropertyType(
                             typeof(PropertyShell));
                     }
                 }
@@ -63,7 +63,7 @@ namespace Cocodrilo.Commands
                     {
                         foreach (var user_data_edge in UserDataEdgeList)
                         {
-                            user_data_edge.DeleteBrepElementEdgePropertyType(
+                            user_data_edge.DeleteNumericalElementOfPropertyType(
                                 typeof(PropertyCable));
                         }
                     }
@@ -75,7 +75,7 @@ namespace Cocodrilo.Commands
                     {
                         foreach (var user_data_curve in UserDataCurveList)
                         {
-                            user_data_curve.DeleteGeometryElementCurveOfPropertyType(
+                            user_data_curve.DeleteNumericalElementOfPropertyType(
                                 typeof(PropertyCable));
                         }
                     }
@@ -91,7 +91,7 @@ namespace Cocodrilo.Commands
                     {
                         foreach (var user_data_edge in UserDataEdgeList)
                         {
-                            user_data_edge.DeleteBrepElementEdgePropertyType(
+                            user_data_edge.DeleteNumericalElementOfPropertyType(
                                 typeof(PropertyBeam));
                         }
                     }
@@ -103,7 +103,7 @@ namespace Cocodrilo.Commands
                     {
                         foreach (var user_data_curve in UserDataCurveList)
                         {
-                            user_data_curve.DeleteGeometryElementCurveOfPropertyType(
+                            user_data_curve.DeleteNumericalElementOfPropertyType(
                                 typeof(PropertyBeam));
                         }
                     }

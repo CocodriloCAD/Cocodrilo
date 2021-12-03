@@ -46,7 +46,7 @@ namespace Cocodrilo.Commands
                             time_interval);
                         foreach (var user_data_surface in UserDataSurfaceList)
                         {
-                            user_data_surface.AddGeometryElementSurface(
+                            user_data_surface.AddNumericalElement(
                                 property_check,
                                 overwrite_check);
                         }
@@ -105,11 +105,9 @@ namespace Cocodrilo.Commands
                                         GeometryTypeSelected,
                                         check_properties,
                                         true,
-                                        time_interval,
-                                        (int) user_data.Item2.mU_Normalized,
-                                        (int)user_data.Item2.mV_Normalized);
+                                        time_interval);
 
-                                    user_data.Item1.AddGeometryElementSurface(
+                                    user_data.Item1.AddNumericalElement(
                                         property_check,
                                         user_data.Item2,
                                         overwrite_check);
@@ -122,7 +120,7 @@ namespace Cocodrilo.Commands
                                         false,
                                         time_interval);
 
-                                    user_data.Item1.AddBrepElementSurfaceVertex(
+                                    user_data.Item1.AddNumericalElement(
                                         property_check,
                                         user_data.Item2,
                                         overwrite_check);

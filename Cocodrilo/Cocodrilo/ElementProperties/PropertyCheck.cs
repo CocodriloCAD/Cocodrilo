@@ -40,26 +40,22 @@ namespace Cocodrilo.ElementProperties
         //private CheckProperties mCheckProperties { get; set; }
         CheckProperties mCheckProperties { get; set; }
         public TimeInterval mTimeInterval { get; set; }
-        public int mKnotLocationU { get; set; }
-        public int mKnotLocationV { get; set; }
         bool mOnNode { get; set;}
 
+        public PropertyCheck() : base()
+        {
+        }
         public PropertyCheck(
                 GeometryType ThisGeometryType,
                 CheckProperties ThisCheckProperties,
                 bool OnNode,
-                TimeInterval ThisTimeInterval,
-                int KnotLocationU = -1,
-                int KnotLocationV = -1)
+                TimeInterval ThisTimeInterval)
             : base(ThisGeometryType)
         {
             mCheckProperties = ThisCheckProperties;
             mTimeInterval = ThisTimeInterval;
 
             mOnNode = OnNode;
-
-            mKnotLocationU = KnotLocationU;
-            mKnotLocationV = KnotLocationV;
         }
 
         public override bool Equals(Property OtherProperty)
@@ -69,63 +65,58 @@ namespace Cocodrilo.ElementProperties
             return other_property.mMaterialId == mMaterialId &&
                    other_property.mGeometryType == mGeometryType &&
                    other_property.mCheckProperties.Equals(mCheckProperties) &&
-                   other_property.mKnotLocationU == mKnotLocationU &&
-                   other_property.mKnotLocationV == mKnotLocationV &&
                    other_property.mOnNode == mOnNode;
         }
 
-        public override List<Dictionary<string, object>> GetKratosPhysic(List<int> BrepIds)
+        public override List<Dictionary<string, object>> GetKratosPhysic(List<IO.BrepToParameterLocations> ThisBrepToParameterLocations)
         {
-            if (!mOnNode)
+            var KratosPhysicList = new List<Dictionary<string, object>>();
+            foreach (var brep_parameter_location_combination in ThisBrepToParameterLocations)
             {
-                string name = "";
-                if (mGeometryType == GeometryType.SurfaceEdge)
+                foreach (var parameter_location in brep_parameter_location_combination.ParameterLocations)
                 {
-                    name = "OutputCondition";
+                    if (parameter_location.IsOnNodes())
+                    {
+                        Dictionary<string, object> Parameters = new Dictionary<string, object>
+                        {
+                            { "local_parameters", parameter_location.GetNormalizedParameters() }
+                        };
+
+                            string geometry_type = "GeometrySurfaceNodes";
+                            if (mGeometryType == GeometryType.GeometryCurve)
+                                geometry_type = "GeometryCurveNodes";
+
+                            KratosPhysicList.Add(new Dictionary<string, object>
+                        {
+                            {"brep_id", brep_parameter_location_combination.BrepId },
+                            {"geometry_type", geometry_type },
+                            {"iga_model_part", GetKratosModelPart() },
+                            {"parameters", Parameters}
+                        });
+                    }
+                    else
+                    {
+                        string name = "OutputCondition";
+
+                        Dictionary<string, object> Parameters = new Dictionary<string, object>
+                        {
+                            { "type", "condition"},
+                            { "name", name},
+                            { "shape_function_derivatives_order", 2}
+                        };
+
+                        Dictionary<string, object> property_element = new Dictionary<string, object>
+                        {
+                            {"brep_ids", brep_parameter_location_combination.BrepId},
+                            {"geometry_type", GeometryTypeString },
+                            {"iga_model_part", GetKratosModelPart() },
+                            {"parameters", Parameters}
+                        };
+                        KratosPhysicList.Add(property_element);
+                    }
                 }
-                else if (mGeometryType == GeometryType.GeometrySurface)
-                    name = "OutputCondition";
-                else if (mGeometryType == GeometryType.SurfacePoint
-                         || mGeometryType == GeometryType.CurvePoint)
-                    name = "OutputCondition";
-
-                Dictionary<string, object> Parameters = new Dictionary<string, object>
-                {
-                    { "type", "condition"},
-                    { "name", name},
-                    { "shape_function_derivatives_order", 2}
-                };
-
-                    Dictionary<string, object> property_element = new Dictionary<string, object>
-                {
-                    {"brep_ids", BrepIds},
-                    {"geometry_type", GeometryTypeString },
-                    {"iga_model_part", GetKratosModelPart() },
-                    {"parameters", Parameters}
-                };
-                return new List<Dictionary<string, object>> { property_element };
             }
-            else
-            {
-                var variables = new ArrayList();
-
-                Dictionary<string, object> Parameters = new Dictionary<string, object>
-                {
-                    { "local_parameters", new int[] {mKnotLocationU, mKnotLocationV } }
-                };
-
-                string geometry_type = "GeometrySurfaceNodes";
-                if (mGeometryType == GeometryType.GeometryCurve)
-                    geometry_type = "GeometryCurveNodes";
-
-                return new List<Dictionary<string, object>> { new Dictionary<string, object>
-                {
-                    {"brep_ids", BrepIds},
-                    {"geometry_type", geometry_type },
-                    {"iga_model_part", GetKratosModelPart() },
-                    {"parameters", Parameters}
-                } };
-            }
+            return KratosPhysicList;
         }
 
         public override List<Dictionary<string, object>> GetKratosProcesses()

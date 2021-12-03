@@ -43,11 +43,10 @@ namespace Cocodrilo.Commands
                         var property_support = new PropertySupport(
                             GeometryTypeSelected,
                             support,
-                            time_interval,
-                            -1, -1);
+                            time_interval);
                         foreach (var user_data_surface in UserDataSurfaceList)
                         {
-                            user_data_surface.AddGeometryElementSurface(
+                            user_data_surface.AddNumericalElement(
                                 property_support,
                                 overwrite_support);
                         }
@@ -62,7 +61,7 @@ namespace Cocodrilo.Commands
                                 GeometryTypeSelected, support, time_interval);
 
                             foreach (var user_data_edge in UserDataEdgeList)
-                                user_data_edge.AddBrepElementEdge(
+                                user_data_edge.AddNumericalElement(
                                     property_support,
                                     overwrite_support);
                         }
@@ -78,11 +77,9 @@ namespace Cocodrilo.Commands
                                 var property_support = new PropertySupport(
                                     GeometryTypeSelected,
                                     support,
-                                    time_interval,
-                                    (int) user_data.Item2.mU_Normalized,
-                                    (int) user_data.Item2.mV_Normalized);
+                                    time_interval);
 
-                                user_data.Item1.AddGeometryElementSurface(
+                                user_data.Item1.AddNumericalElement(
                                     property_support,
                                     user_data.Item2,
                                     overwrite_support);
@@ -102,11 +99,9 @@ namespace Cocodrilo.Commands
                                 if (is_support_strong && user_data.Item2.IsOnNodes())
                                 {
                                     var property_support = new PropertySupport(
-                                        GeometryTypeSelected, support, time_interval,
-                                        (int) user_data.Item2.mU_Normalized,
-                                        (int) user_data.Item2.mV_Normalized);
+                                        GeometryTypeSelected, support, time_interval);
 
-                                    user_data.Item1.AddGeometryElementSurface(
+                                    user_data.Item1.AddNumericalElement(
                                         property_support,
                                         user_data.Item2,
                                         overwrite_support);
@@ -117,7 +112,7 @@ namespace Cocodrilo.Commands
                                         GeometryTypeSelected,
                                         support,
                                         time_interval);
-                                    user_data.Item1.AddBrepElementSurfaceVertex(
+                                    user_data.Item1.AddNumericalElement(
                                         property_support,
                                         user_data.Item2,
                                         overwrite_support);
@@ -134,7 +129,7 @@ namespace Cocodrilo.Commands
                             support,
                             time_interval);
                         foreach (var user_data_curve in UserDataCurveList)
-                            user_data_curve.AddGeometryElementCurve(
+                            user_data_curve.AddNumericalElement(
                                 property_support,
                                 overwrite_support);
                     }
@@ -153,10 +148,9 @@ namespace Cocodrilo.Commands
                                     var property_support = new PropertySupport(
                                         GeometryType.CurvePoint,
                                         support,
-                                        time_interval,
-                                        (int) user_data.Item2.mU_Normalized);
+                                        time_interval);
 
-                                    user_data.Item1.AddGeometryElementCurve(
+                                    user_data.Item1.AddNumericalElement(
                                         property_support,
                                         user_data.Item2,
                                         overwrite_support);
@@ -168,7 +162,7 @@ namespace Cocodrilo.Commands
                                         support,
                                         time_interval);
 
-                                    user_data.Item1.AddBrepElementCurveVertex(
+                                    user_data.Item1.AddNumericalElement(
                                         property_support,
                                         user_data.Item2,
                                         overwrite_support);

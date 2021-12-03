@@ -77,7 +77,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             foreach (var point in points)
             {
                 var check_property = new PropertyCheck(
-                    GeometryType.Point, check_properties, false, new TimeInterval());
+                    GeometryType.Point, check_properties, true, new TimeInterval());
 
                 Point new_point = new Point(point);
 

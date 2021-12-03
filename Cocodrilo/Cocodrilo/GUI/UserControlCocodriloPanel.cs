@@ -217,7 +217,7 @@ namespace Cocodrilo.Panels
                     var user_data_surface = UserDataUtilities.GetOrCreateUserDataSurface(objref.Brep()
                         .Surfaces[objref.Face().FaceIndex]);
 
-                    var refinement = user_data_surface.GetRefinement();
+                    var refinement = user_data_surface.GetRefinement() as RefinementSurface;
                     textBoxPDeg.Text = refinement.PDeg.ToString();
                     textBoxQDeg.Text = refinement.QDeg.ToString();
                     textBoxKnotSubDivU.Text = refinement.KnotSubDivU.ToString();
@@ -237,7 +237,7 @@ namespace Cocodrilo.Panels
                     var user_data_edge = UserDataUtilities.GetOrCreateUserDataEdge(
                         objref.Curve());
 
-                    var refinement = user_data_edge.GetRefinement();
+                    var refinement = user_data_edge.GetRefinement() as RefinementEdge;
                     textBoxPDeg.Text = refinement.PDeg.ToString();
                     textBoxKnotSubDivU.Text = refinement.KnotSubDivU.ToString();
                     if (refinement.KnotInsertType == 1)
@@ -256,7 +256,7 @@ namespace Cocodrilo.Panels
 
                     var user_data_curve = UserDataUtilities.GetOrCreateUserDataCurve(objref.Curve());
 
-                    var refinement = user_data_curve.GetRefinement();
+                    var refinement = user_data_curve.GetRefinement() as Refinement.RefinementCurve;
                     textBoxPDeg.Text = refinement.PolynomialDegree.ToString();
                     textBoxKnotSubDivU.Text = refinement.KnotSubDivU.ToString();
                     if (refinement.KnotInsertType == 1)

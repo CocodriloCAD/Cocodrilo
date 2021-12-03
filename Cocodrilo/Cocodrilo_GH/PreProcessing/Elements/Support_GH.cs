@@ -152,6 +152,8 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             writer.SetString("InitialDisplacementX", mInitialDisplacementX);
             writer.SetString("InitialDisplacementY", mInitialDisplacementY);
             writer.SetString("InitialDisplacementZ", mInitialDisplacementZ);
+            writer.SetBoolean("Strong", mStrong);
+            writer.SetInt32("SupportType", (int)mSupportType);
             return base.Write(writer);
         }
 
@@ -163,7 +165,10 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             reader.TryGetBoolean("FixRotation", ref mFixRotation);
             reader.TryGetString("InitialDisplacementX", ref mInitialDisplacementX);
             reader.TryGetString("InitialDisplacementY", ref mInitialDisplacementY);
-            reader.TryGetString("InitialDisplacementZ", ref mInitialDisplacementZ);
+            reader.TryGetBoolean("Strong", ref mStrong);
+            int support_type_index = -1;
+            if (reader.TryGetInt32("SupportType", ref support_type_index))
+                mSupportType = (SupportType)support_type_index;
             return base.Read(reader);
         }
 

@@ -11,24 +11,17 @@ namespace Cocodrilo.ElementProperties
     {
         public Support mSupport { get; set; }
         public TimeInterval mTimeInterval { get; set; }
-        public int mKnotLocationU { get; set; }
-        public int mKnotLocationV { get; set; }
 
         public PropertySupport() : base() { }
 
         public PropertySupport(
             GeometryType ThisGeometryType,
             Support ThisSupport,
-            TimeInterval ThisTimeInterval,
-            int KnotLocationU = -1,
-            int KnotLocationV = -1
+            TimeInterval ThisTimeInterval
             ) : base(ThisGeometryType)
         {
             mSupport = ThisSupport;
             mTimeInterval = ThisTimeInterval;
-
-            mKnotLocationU = KnotLocationU;
-            mKnotLocationV = KnotLocationV;
         }
 
         public override string ToString()
@@ -160,44 +153,49 @@ namespace Cocodrilo.ElementProperties
             }
         }
 
-        public override List<Dictionary<string, object>> GetKratosPhysic(List<int> BrepIds)
+        public override List<Dictionary<string, object>> GetKratosPhysic(List<IO.BrepToParameterLocations> BrepToParameterLocations)
         {
             if (mSupport.mIsSupportStrong)
             {
-                Dictionary<string, object> Parameters = (mGeometryType == GeometryType.CurvePoint)
-                    ? new Dictionary<string, object> { { "local_parameters", new int[] { mKnotLocationU } } }
-                    : new Dictionary<string, object> { { "local_parameters", new int[] { mKnotLocationU, mKnotLocationV } } };
-
-                string geometry_type = (mGeometryType == GeometryType.CurvePoint)
-                    ? "GeometryCurveNodes"
-                    : "GeometrySurfaceNodes";
-
-                var KratosPhysicList = new List<Dictionary<string, object>> { new Dictionary<string, object>
+                var KratosPhysicList = new List<Dictionary<string, object>>();
+                foreach (var brep_property in BrepToParameterLocations)
                 {
-                    {"brep_ids", BrepIds},
-                    {"geometry_type", geometry_type },
-                    {"iga_model_part", GetKratosModelPart() },
-                    {"parameters", Parameters}
-                } };
-
-                if (mSupport.mSupportRotation)
-                {
-                    string variation_type = "GeometrySurfaceVariationNodes";
-                    if (mGeometryType == GeometryType.GeometryCurve)
-                        variation_type = "GeometryCurveVariationNodes";
-                    KratosPhysicList.Add(new Dictionary<string, object>()
+                    foreach (var parameter_loaction in brep_property.ParameterLocations)
                     {
-                        {"brep_ids", BrepIds},
+                        Dictionary<string, object> Parameters = new Dictionary<string, object> { { "local_parameters", parameter_loaction.GetNormalizedParameters() } };
+
+                        string geometry_type = (parameter_loaction.mGeometryType == GeometryType.CurvePoint)
+                            ? "GeometryCurveNodes"
+                            : "GeometrySurfaceNodes";
+
+                        KratosPhysicList.Add(new Dictionary<string, object>
+                        {
+                            {"brep_id", brep_property.BrepId },
+                            {"geometry_type", geometry_type },
+                            {"iga_model_part", GetKratosModelPart() },
+                            {"parameters", Parameters}
+                        });
+
+                        if (mSupport.mSupportRotation)
+                        {
+                            string variation_type = "GeometrySurfaceVariationNodes";
+                            if (mGeometryType == GeometryType.GeometryCurve)
+                                variation_type = "GeometryCurveVariationNodes";
+                            KratosPhysicList.Add(new Dictionary<string, object>()
+                    {
+                        {"brep_ids", brep_property},
                         {"geometry_type", variation_type},
                         {"iga_model_part", GetKratosModelPart() + "_Rotational" },
                         {"parameters", Parameters}
                     });
+                        }
+                    }
                 }
-
                 return KratosPhysicList;
             }
             else
             {
+                List<int> BrepIds = BrepToParameterLocations.Select(item => item.BrepId).ToList();
                 Dictionary<string, object> Parameters = new Dictionary<string, object>
                 {
                     { "type", "condition"},
@@ -320,19 +318,17 @@ namespace Cocodrilo.ElementProperties
         {
             if (!(ThisProperty is PropertySupport))
                 return false;
-        
+
             if (mSupport.mSupportType == "SupportNitscheCondition")
             {
                 return false;
             }
             else
-            {    
+            {
                 var support = ThisProperty as PropertySupport;
                 return support.mSupport.Equals(mSupport) &&
                     support.mTimeInterval.Equals(mTimeInterval) &&
                     support.mGeometryType == mGeometryType &&
-                    support.mKnotLocationU == mKnotLocationU &&
-                    support.mKnotLocationV == mKnotLocationV &&
                     support.mMaterialId == mMaterialId &&
                     support.mIsFormFinding == mIsFormFinding;
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Rhino;
 using Rhino.Geometry;
 
@@ -53,15 +54,34 @@ namespace Cocodrilo.UserData
         /// <param name="Entry">Entry which is added to the integer-list
         /// belonging to the index. For brep id, which is added.</param>
         public static void AddEntryToDictionary(
-            ref Dictionary<int, List<int>> rPropertyElements,
+            ref Dictionary<int, List<Cocodrilo.IO.BrepToParameterLocations>> rPropertyElements,
             int Index,
             int Entry)
         {
             if (rPropertyElements.TryGetValue(Index, out _))
-                rPropertyElements[Index].Add(Entry);
+                rPropertyElements[Index].Add(new Cocodrilo.IO.BrepToParameterLocations(Entry));
             else
             {
-                rPropertyElements.Add(Index, new List<int> { Entry });
+                rPropertyElements.Add(Index, new List<Cocodrilo.IO.BrepToParameterLocations> { new Cocodrilo.IO.BrepToParameterLocations(Entry) });
+            }
+        }
+
+        public static void AddEntryToDictionary(
+            ref Dictionary<int, List<Cocodrilo.IO.BrepToParameterLocations>> rPropertyElements,
+            int Index, int Entry, Cocodrilo.Elements.ParameterLocation ThisParameterLocation)
+        {
+            if (rPropertyElements.TryGetValue(Index, out _))
+                if (rPropertyElements[Index].Any(item => item.BrepId == Entry))
+                {
+                    rPropertyElements[Index].Find(item => item.BrepId == Entry).AddParameterLocation(ThisParameterLocation);
+                }
+                else
+                {
+                    rPropertyElements[Index].Add(new Cocodrilo.IO.BrepToParameterLocations(Entry, ThisParameterLocation));
+                }
+            else
+            {
+                rPropertyElements.Add(Index, new List<Cocodrilo.IO.BrepToParameterLocations> { new Cocodrilo.IO.BrepToParameterLocations(Entry, ThisParameterLocation) });
             }
         }
 

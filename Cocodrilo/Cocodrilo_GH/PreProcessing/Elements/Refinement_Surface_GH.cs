@@ -27,7 +27,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddSurfaceParameter("Surface", "Sur", "Refined Surface", GH_ParamAccess.list);
+            pManager.AddBrepParameter("Surface", "Sur", "Refined Surface", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -43,16 +43,19 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             int insert_knot_v = 0;
             if (!DA.GetData(4, ref insert_knot_v)) return;
 
-            var surface_list_out = new List<Surface>();
+            var refinement_surface = (mRefineWithinRhino)
+                ? new Cocodrilo.Refinement.RefinementSurface(p, q, 0, 0)
+                : new Cocodrilo.Refinement.RefinementSurface(p, q, insert_knot_u, insert_knot_v);
+
+            var surface_list_out = new List<Brep>();
             foreach (var brep in breps)
             {
-                foreach (var surface in brep.Surfaces)
+                List<Brep> new_breps = new List<Brep>();
+                foreach (var face in brep.Faces)
                 {
-                    var nurbs_surface = surface.ToNurbsSurface();
+                    var nurbs_surface = brep.Surfaces[face.SurfaceIndex].ToNurbsSurface();
                     nurbs_surface.IncreaseDegreeU(p);
                     nurbs_surface.IncreaseDegreeV(q);
-
-                    surface_list_out.Add(nurbs_surface);
 
                     if (mRefineWithinRhino)
                     {
@@ -81,21 +84,19 @@ namespace Cocodrilo_GH.PreProcessing.Elements
                             }
                         }
                     }
-                }
-            }
 
-            var refinement_surface = (mRefineWithinRhino)
-                ? new Cocodrilo.Refinement.RefinementSurface(p, q, 0, 0)
-                : new Cocodrilo.Refinement.RefinementSurface(p,q, insert_knot_u, insert_knot_v);
-            foreach (var surface in surface_list_out)
-            {
-                var ud = surface.UserData.Find(typeof(Cocodrilo.UserData.UserDataSurface)) as Cocodrilo.UserData.UserDataSurface;
-                if (ud == null)
-                {
-                    ud = new Cocodrilo.UserData.UserDataSurface();
-                    surface.UserData.Add(ud);
+                    var ud = nurbs_surface.UserData.Find(typeof(Cocodrilo.UserData.UserDataSurface)) as Cocodrilo.UserData.UserDataSurface;
+                    if (ud == null)
+                    {
+                        ud = new Cocodrilo.UserData.UserDataSurface();
+                        nurbs_surface.UserData.Add(ud);
+                    }
+                    ud.ChangeRefinement(refinement_surface);
+
+                    var new_face_brep = Brep.CopyTrimCurves(face, nurbs_surface, Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance);
+                    new_breps.Add(new_face_brep);
                 }
-                ud.ChangeRefinement(refinement_surface);
+                surface_list_out.AddRange(Brep.JoinBreps(new_breps, Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance));
             }
 
             DA.SetDataList(0, surface_list_out);

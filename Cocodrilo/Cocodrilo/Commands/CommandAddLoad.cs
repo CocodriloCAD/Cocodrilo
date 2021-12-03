@@ -40,11 +40,11 @@ namespace Cocodrilo.Commands
                     if (CommandUtilities.TryGetUserDataSurface(out List<UserDataSurface> UserDataSurfaceList))
                     {
                         var load = Panels.UserControlCocodriloPanel.Instance.getLoad();
-                        var parameter_location = new Elements.ParameterLocationSurface(-1, -1, -1, -1);
+                        var parameter_location = new Elements.ParameterLocationSurface(GeometryType.GeometrySurface, - 1, -1, -1, -1);
                         var property_load = new PropertyLoad(GeometryType.GeometrySurface, load, time_interval);
                         foreach (var user_data_surface in UserDataSurfaceList)
                         {
-                            user_data_surface.AddGeometryElementSurface(
+                            user_data_surface.AddNumericalElement(
                                 property_load,
                                 parameter_location,
                                 overwrite);
@@ -58,7 +58,7 @@ namespace Cocodrilo.Commands
                         var property_load = new PropertyLoad(GeometryType.SurfaceEdge, load, time_interval);
 
                         foreach (var user_data_edge in UserDataEdgeList)
-                            user_data_edge.AddBrepElementEdge(
+                            user_data_edge.AddNumericalElement(
                                 property_load,
                                 overwrite);
                     }
@@ -77,7 +77,7 @@ namespace Cocodrilo.Commands
                                     GeometryType.SurfacePoint,
                                     load,
                                     time_interval);
-                                user_data_tuple.Item1.AddBrepElementSurfaceVertex(
+                                user_data_tuple.Item1.AddNumericalElement(
                                     property_load,
                                     user_data_tuple.Item2,
                                     overwrite);
@@ -89,11 +89,11 @@ namespace Cocodrilo.Commands
                     if (CommandUtilities.TryGetUserDataCurve(out List<UserDataCurve> UserDataCurveList))
                     {
                         var load = Panels.UserControlCocodriloPanel.Instance.getLoad();
-                        var parameter_location = new Elements.ParameterLocationCurve(-1, -1);
-                        var property_load = new PropertyLoad(GeometryType.GeometrySurface, load, time_interval);
+                        var parameter_location = new Elements.ParameterLocationCurve(GeometryType.GeometryCurve, - 1, -1);
+                        var property_load = new PropertyLoad(GeometryType.GeometryCurve, load, time_interval);
                         foreach (var user_data_curve in UserDataCurveList)
                         {
-                            user_data_curve.AddGeometryElementCurve(
+                            user_data_curve.AddNumericalElement(
                                 property_load,
                                 parameter_location,
                                 overwrite);
@@ -111,7 +111,7 @@ namespace Cocodrilo.Commands
                         {
                             if (user_data.Item2.IsPoint())
                             {
-                                user_data.Item1.AddBrepElementCurveVertex(
+                                user_data.Item1.AddNumericalElement(
                                     property_load,
                                     user_data.Item2,
                                     overwrite);

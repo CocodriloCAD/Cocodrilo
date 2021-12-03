@@ -154,6 +154,8 @@ namespace Cocodrilo
             Success = (property != null);
             return property;
         }
+        public bool HasProperty(int PropertyId) => Properties.Any(i => i.mPropertyId == PropertyId);
+
         /// <summary>
         /// Deletes all properties.
         /// </summary>
