@@ -118,7 +118,8 @@ namespace Cocodrilo.Visualizer
                             }
                             else if (support.mParameterLocation.IsSurface())
                             {
-                                VD.drawSurfaceSupport(d, surface,
+                                var face = active_brep.Faces.First(item => item.SurfaceIndex == index);
+                                VD.drawSurfaceSupport(d, face,
                                     support.GetProperty<PropertySupport>().mSupport);
                             }
                         }
@@ -230,9 +231,7 @@ namespace Cocodrilo.Visualizer
                                 }
                                 else if (property_load.mLoad.mLoadType == "PRES"
                                          || property_load.mLoad.mLoadType == "PRES_FL")
-                                    VD.drawSurfacePressureLoad(d,
-                                        face,
-                                        Convert.ToDouble(property_load.mLoad.mLoadX));
+                                    VD.drawSurfacePressureLoad(d, face, Convert.ToDouble(property_load.mLoad.mLoadX));
                                 else
                                     VD.drawSurfaceLoad(d, face, property_load.mLoad);
                             }

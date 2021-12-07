@@ -99,11 +99,9 @@ namespace Cocodrilo.Visualizer
 
 
 
-        public static void drawSurfaceSupport(DisplayPipeline d, Surface surface, Support ThisSupport)
+        public static void drawSurfaceSupport(DisplayPipeline d, BrepFace Face, Support ThisSupport)
         {
-            var bb = surface.GetBoundingBox(false);
-
-            var ptList = VU.SurfaceDivide(surface);
+            var ptList = VU.SurfaceDivide(Face);
             foreach (var pt in ptList)
                 drawPointSupport(d, pt, ThisSupport);
         }
@@ -168,11 +166,9 @@ namespace Cocodrilo.Visualizer
                 drawPointLoad(d, pt, ThisLoad);
         }
 
-        public static void drawSurfaceLoad(DisplayPipeline d, Surface surface, Load ThisLoad)
+        public static void drawSurfaceLoad(DisplayPipeline d, BrepFace Face, Load ThisLoad)
         {
-            var bb = surface.GetBoundingBox(false);
-
-            var ptList = VU.SurfaceDivide(surface);
+            var ptList = VU.SurfaceDivide(Face);
             foreach (var pt in ptList)
                 drawPointLoad(d, pt, ThisLoad);
         }
