@@ -125,6 +125,7 @@ namespace Cocodrilo.PostProcessing
             ref Dictionary<int[], List<KeyValuePair<int, List<double>>>> rCouplingEvaluationPointList)
         {
             var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
+            serializer.MaxJsonLength = 100000000;
             Dictionary<string, object> dict;
             using (System.IO.StreamReader reader = System.IO.File.OpenText(path))
             {
