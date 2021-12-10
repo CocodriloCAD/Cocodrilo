@@ -344,10 +344,9 @@ namespace Cocodrilo.Panels
             this.TeDA_Plugin.Controls.Add(this.tabPage1);
             this.TeDA_Plugin.Controls.Add(this.tabPage2);
             this.TeDA_Plugin.Location = new System.Drawing.Point(0, 0);
-            this.TeDA_Plugin.Margin = new System.Windows.Forms.Padding(6);
             this.TeDA_Plugin.Name = "TeDA_Plugin";
             this.TeDA_Plugin.SelectedIndex = 0;
-            this.TeDA_Plugin.Size = new System.Drawing.Size(600, 1517);
+            this.TeDA_Plugin.Size = new System.Drawing.Size(266, 789);
             this.TeDA_Plugin.TabIndex = 0;
             // 
             // tabPage1
@@ -356,11 +355,10 @@ namespace Cocodrilo.Panels
             this.tabPage1.Controls.Add(this.groupBoxOptions);
             this.tabPage1.Controls.Add(this.groupBoxMaterials);
             this.tabPage1.Controls.Add(this.groupBoxProperties);
-            this.tabPage1.Location = new System.Drawing.Point(8, 39);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(6);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPage1.Size = new System.Drawing.Size(584, 1470);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Size = new System.Drawing.Size(258, 763);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Pre Processing";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -376,11 +374,11 @@ namespace Cocodrilo.Panels
             this.groupBoxAnalyses.Controls.Add(this.buttonDeleteAnalysis);
             this.groupBoxAnalyses.Controls.Add(this.buttonCreateAnalysis);
             this.groupBoxAnalyses.Controls.Add(this.buttonModifyAnalysis);
-            this.groupBoxAnalyses.Location = new System.Drawing.Point(10, 663);
-            this.groupBoxAnalyses.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBoxAnalyses.Location = new System.Drawing.Point(5, 345);
+            this.groupBoxAnalyses.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBoxAnalyses.Name = "groupBoxAnalyses";
-            this.groupBoxAnalyses.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBoxAnalyses.Size = new System.Drawing.Size(686, 537);
+            this.groupBoxAnalyses.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBoxAnalyses.Size = new System.Drawing.Size(343, 279);
             this.groupBoxAnalyses.TabIndex = 99;
             this.groupBoxAnalyses.TabStop = false;
             this.groupBoxAnalyses.Text = "Analyses";
@@ -389,10 +387,9 @@ namespace Cocodrilo.Panels
             // 
             this.radioButtonRunKratos.AutoSize = true;
             this.radioButtonRunKratos.Checked = true;
-            this.radioButtonRunKratos.Location = new System.Drawing.Point(146, 435);
-            this.radioButtonRunKratos.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonRunKratos.Location = new System.Drawing.Point(73, 226);
             this.radioButtonRunKratos.Name = "radioButtonRunKratos";
-            this.radioButtonRunKratos.Size = new System.Drawing.Size(105, 29);
+            this.radioButtonRunKratos.Size = new System.Drawing.Size(55, 17);
             this.radioButtonRunKratos.TabIndex = 91;
             this.radioButtonRunKratos.TabStop = true;
             this.radioButtonRunKratos.Text = "Kratos";
@@ -403,10 +400,9 @@ namespace Cocodrilo.Panels
             // 
             this.radioButtonRunCarat.AutoSize = true;
             this.radioButtonRunCarat.Enabled = false;
-            this.radioButtonRunCarat.Location = new System.Drawing.Point(10, 435);
-            this.radioButtonRunCarat.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonRunCarat.Location = new System.Drawing.Point(5, 226);
             this.radioButtonRunCarat.Name = "radioButtonRunCarat";
-            this.radioButtonRunCarat.Size = new System.Drawing.Size(119, 29);
+            this.radioButtonRunCarat.Size = new System.Drawing.Size(62, 17);
             this.radioButtonRunCarat.TabIndex = 90;
             this.radioButtonRunCarat.Text = "Carat++";
             this.radioButtonRunCarat.UseVisualStyleBackColor = true;
@@ -414,10 +410,9 @@ namespace Cocodrilo.Panels
             // 
             // buttonEditOutput
             // 
-            this.buttonEditOutput.Location = new System.Drawing.Point(318, 477);
-            this.buttonEditOutput.Margin = new System.Windows.Forms.Padding(6);
+            this.buttonEditOutput.Location = new System.Drawing.Point(159, 248);
             this.buttonEditOutput.Name = "buttonEditOutput";
-            this.buttonEditOutput.Size = new System.Drawing.Size(228, 46);
+            this.buttonEditOutput.Size = new System.Drawing.Size(114, 24);
             this.buttonEditOutput.TabIndex = 89;
             this.buttonEditOutput.Text = "Edit Output Options";
             this.buttonEditOutput.UseVisualStyleBackColor = true;
@@ -432,11 +427,11 @@ namespace Cocodrilo.Panels
             this.tabControlAnalyses.Controls.Add(this.tabPageNonLinStrucAnalysis);
             this.tabControlAnalyses.Controls.Add(this.tabPageTransientAnalysis);
             this.tabControlAnalyses.Controls.Add(this.tabPageCutPatternAnalysis);
-            this.tabControlAnalyses.Location = new System.Drawing.Point(8, 33);
-            this.tabControlAnalyses.Margin = new System.Windows.Forms.Padding(4);
+            this.tabControlAnalyses.Location = new System.Drawing.Point(4, 17);
+            this.tabControlAnalyses.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabControlAnalyses.Name = "tabControlAnalyses";
             this.tabControlAnalyses.SelectedIndex = 0;
-            this.tabControlAnalyses.Size = new System.Drawing.Size(670, 288);
+            this.tabControlAnalyses.Size = new System.Drawing.Size(335, 150);
             this.tabControlAnalyses.TabIndex = 3;
             this.tabControlAnalyses.SelectedIndexChanged += new System.EventHandler(this.tabControlAnalyses_SelectedIndexChanged);
             // 
@@ -450,11 +445,11 @@ namespace Cocodrilo.Panels
             this.tabPageFormfinding.Controls.Add(this.labelAnalysisFofiName);
             this.tabPageFormfinding.Controls.Add(this.labelAccuracy);
             this.tabPageFormfinding.Controls.Add(this.labelMaxSteps);
-            this.tabPageFormfinding.Location = new System.Drawing.Point(8, 39);
-            this.tabPageFormfinding.Margin = new System.Windows.Forms.Padding(4);
+            this.tabPageFormfinding.Location = new System.Drawing.Point(4, 22);
+            this.tabPageFormfinding.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabPageFormfinding.Name = "tabPageFormfinding";
-            this.tabPageFormfinding.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPageFormfinding.Size = new System.Drawing.Size(654, 241);
+            this.tabPageFormfinding.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPageFormfinding.Size = new System.Drawing.Size(327, 124);
             this.tabPageFormfinding.TabIndex = 0;
             this.tabPageFormfinding.Text = "Formfinding";
             this.tabPageFormfinding.UseVisualStyleBackColor = true;
@@ -463,10 +458,10 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxFormfindingName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxFormfindingName.Location = new System.Drawing.Point(166, 8);
-            this.textBoxFormfindingName.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxFormfindingName.Location = new System.Drawing.Point(83, 4);
+            this.textBoxFormfindingName.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxFormfindingName.Name = "textBoxFormfindingName";
-            this.textBoxFormfindingName.Size = new System.Drawing.Size(456, 31);
+            this.textBoxFormfindingName.Size = new System.Drawing.Size(234, 20);
             this.textBoxFormfindingName.TabIndex = 80;
             this.textBoxFormfindingName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxFormfindingName_KeyPress);
             // 
@@ -474,10 +469,10 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxTolerance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxTolerance.Location = new System.Drawing.Point(166, 146);
-            this.textBoxTolerance.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxTolerance.Location = new System.Drawing.Point(83, 76);
+            this.textBoxTolerance.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxTolerance.Name = "textBoxTolerance";
-            this.textBoxTolerance.Size = new System.Drawing.Size(456, 31);
+            this.textBoxTolerance.Size = new System.Drawing.Size(234, 20);
             this.textBoxTolerance.TabIndex = 83;
             this.textBoxTolerance.Text = "0.001";
             this.textBoxTolerance.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxTolerance_KeyPress);
@@ -486,10 +481,10 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxMaxIterations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxMaxIterations.Location = new System.Drawing.Point(166, 100);
-            this.textBoxMaxIterations.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxMaxIterations.Location = new System.Drawing.Point(83, 52);
+            this.textBoxMaxIterations.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxMaxIterations.Name = "textBoxMaxIterations";
-            this.textBoxMaxIterations.Size = new System.Drawing.Size(456, 31);
+            this.textBoxMaxIterations.Size = new System.Drawing.Size(234, 20);
             this.textBoxMaxIterations.TabIndex = 82;
             this.textBoxMaxIterations.Text = "1";
             this.textBoxMaxIterations.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxMaxIterations_KeyPress);
@@ -498,10 +493,10 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxMaxSteps.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxMaxSteps.Location = new System.Drawing.Point(166, 54);
-            this.textBoxMaxSteps.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxMaxSteps.Location = new System.Drawing.Point(83, 28);
+            this.textBoxMaxSteps.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxMaxSteps.Name = "textBoxMaxSteps";
-            this.textBoxMaxSteps.Size = new System.Drawing.Size(456, 31);
+            this.textBoxMaxSteps.Size = new System.Drawing.Size(234, 20);
             this.textBoxMaxSteps.TabIndex = 81;
             this.textBoxMaxSteps.Text = "10";
             this.textBoxMaxSteps.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxMaxSteps_KeyPress);
@@ -509,40 +504,40 @@ namespace Cocodrilo.Panels
             // labelMaxIterattions
             // 
             this.labelMaxIterattions.AutoSize = true;
-            this.labelMaxIterattions.Location = new System.Drawing.Point(8, 106);
-            this.labelMaxIterattions.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelMaxIterattions.Location = new System.Drawing.Point(4, 55);
+            this.labelMaxIterattions.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelMaxIterattions.Name = "labelMaxIterattions";
-            this.labelMaxIterattions.Size = new System.Drawing.Size(159, 25);
+            this.labelMaxIterattions.Size = new System.Drawing.Size(79, 13);
             this.labelMaxIterattions.TabIndex = 3;
             this.labelMaxIterattions.Text = "Max. Iterations:";
             // 
             // labelAnalysisFofiName
             // 
             this.labelAnalysisFofiName.AutoSize = true;
-            this.labelAnalysisFofiName.Location = new System.Drawing.Point(8, 15);
-            this.labelAnalysisFofiName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelAnalysisFofiName.Location = new System.Drawing.Point(4, 8);
+            this.labelAnalysisFofiName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelAnalysisFofiName.Name = "labelAnalysisFofiName";
-            this.labelAnalysisFofiName.Size = new System.Drawing.Size(74, 25);
+            this.labelAnalysisFofiName.Size = new System.Drawing.Size(38, 13);
             this.labelAnalysisFofiName.TabIndex = 3;
             this.labelAnalysisFofiName.Text = "Name:";
             // 
             // labelAccuracy
             // 
             this.labelAccuracy.AutoSize = true;
-            this.labelAccuracy.Location = new System.Drawing.Point(8, 152);
-            this.labelAccuracy.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelAccuracy.Location = new System.Drawing.Point(4, 79);
+            this.labelAccuracy.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelAccuracy.Name = "labelAccuracy";
-            this.labelAccuracy.Size = new System.Drawing.Size(114, 25);
+            this.labelAccuracy.Size = new System.Drawing.Size(58, 13);
             this.labelAccuracy.TabIndex = 3;
             this.labelAccuracy.Text = "Tolerance:";
             // 
             // labelMaxSteps
             // 
             this.labelMaxSteps.AutoSize = true;
-            this.labelMaxSteps.Location = new System.Drawing.Point(8, 60);
-            this.labelMaxSteps.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelMaxSteps.Location = new System.Drawing.Point(4, 31);
+            this.labelMaxSteps.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelMaxSteps.Name = "labelMaxSteps";
-            this.labelMaxSteps.Size = new System.Drawing.Size(126, 25);
+            this.labelMaxSteps.Size = new System.Drawing.Size(63, 13);
             this.labelMaxSteps.TabIndex = 3;
             this.labelMaxSteps.Text = "Max. Steps:";
             // 
@@ -550,11 +545,11 @@ namespace Cocodrilo.Panels
             // 
             this.tabPageLinStructuralAnalysis.Controls.Add(this.textBoxLinStrucAnalysisName);
             this.tabPageLinStructuralAnalysis.Controls.Add(this.labelAnalysisStaGeoName);
-            this.tabPageLinStructuralAnalysis.Location = new System.Drawing.Point(8, 39);
-            this.tabPageLinStructuralAnalysis.Margin = new System.Windows.Forms.Padding(4);
+            this.tabPageLinStructuralAnalysis.Location = new System.Drawing.Point(4, 22);
+            this.tabPageLinStructuralAnalysis.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabPageLinStructuralAnalysis.Name = "tabPageLinStructuralAnalysis";
-            this.tabPageLinStructuralAnalysis.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPageLinStructuralAnalysis.Size = new System.Drawing.Size(654, 241);
+            this.tabPageLinStructuralAnalysis.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPageLinStructuralAnalysis.Size = new System.Drawing.Size(327, 124);
             this.tabPageLinStructuralAnalysis.TabIndex = 1;
             this.tabPageLinStructuralAnalysis.Text = "LinStrucAnalysis";
             this.tabPageLinStructuralAnalysis.UseVisualStyleBackColor = true;
@@ -563,19 +558,19 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxLinStrucAnalysisName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxLinStrucAnalysisName.Location = new System.Drawing.Point(166, 8);
-            this.textBoxLinStrucAnalysisName.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxLinStrucAnalysisName.Location = new System.Drawing.Point(83, 4);
+            this.textBoxLinStrucAnalysisName.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxLinStrucAnalysisName.Name = "textBoxLinStrucAnalysisName";
-            this.textBoxLinStrucAnalysisName.Size = new System.Drawing.Size(458, 31);
+            this.textBoxLinStrucAnalysisName.Size = new System.Drawing.Size(235, 20);
             this.textBoxLinStrucAnalysisName.TabIndex = 88;
             // 
             // labelAnalysisStaGeoName
             // 
             this.labelAnalysisStaGeoName.AutoSize = true;
-            this.labelAnalysisStaGeoName.Location = new System.Drawing.Point(6, 15);
-            this.labelAnalysisStaGeoName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelAnalysisStaGeoName.Location = new System.Drawing.Point(3, 8);
+            this.labelAnalysisStaGeoName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelAnalysisStaGeoName.Name = "labelAnalysisStaGeoName";
-            this.labelAnalysisStaGeoName.Size = new System.Drawing.Size(74, 25);
+            this.labelAnalysisStaGeoName.Size = new System.Drawing.Size(38, 13);
             this.labelAnalysisStaGeoName.TabIndex = 87;
             this.labelAnalysisStaGeoName.Text = "Name:";
             // 
@@ -593,11 +588,11 @@ namespace Cocodrilo.Panels
             this.tabPageNonLinStrucAnalysis.Controls.Add(this.labelNonLinStrucAnalysisAcc);
             this.tabPageNonLinStrucAnalysis.Controls.Add(this.textBoxNonLinStrucAnalysisName);
             this.tabPageNonLinStrucAnalysis.Controls.Add(this.labelNonLinStrucAnalysisName);
-            this.tabPageNonLinStrucAnalysis.Location = new System.Drawing.Point(8, 39);
-            this.tabPageNonLinStrucAnalysis.Margin = new System.Windows.Forms.Padding(4);
+            this.tabPageNonLinStrucAnalysis.Location = new System.Drawing.Point(4, 22);
+            this.tabPageNonLinStrucAnalysis.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabPageNonLinStrucAnalysis.Name = "tabPageNonLinStrucAnalysis";
-            this.tabPageNonLinStrucAnalysis.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPageNonLinStrucAnalysis.Size = new System.Drawing.Size(654, 241);
+            this.tabPageNonLinStrucAnalysis.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPageNonLinStrucAnalysis.Size = new System.Drawing.Size(327, 124);
             this.tabPageNonLinStrucAnalysis.TabIndex = 2;
             this.tabPageNonLinStrucAnalysis.Text = "NonLinStrucAnalysis";
             this.tabPageNonLinStrucAnalysis.UseVisualStyleBackColor = true;
@@ -606,20 +601,20 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxNonLinStruAnalysisStepSize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxNonLinStruAnalysisStepSize.Location = new System.Drawing.Point(428, 54);
-            this.textBoxNonLinStruAnalysisStepSize.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxNonLinStruAnalysisStepSize.Location = new System.Drawing.Point(214, 28);
+            this.textBoxNonLinStruAnalysisStepSize.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxNonLinStruAnalysisStepSize.Name = "textBoxNonLinStruAnalysisStepSize";
-            this.textBoxNonLinStruAnalysisStepSize.Size = new System.Drawing.Size(198, 31);
+            this.textBoxNonLinStruAnalysisStepSize.Size = new System.Drawing.Size(105, 20);
             this.textBoxNonLinStruAnalysisStepSize.TabIndex = 102;
             this.textBoxNonLinStruAnalysisStepSize.Text = "0.1";
             // 
             // labelNonLinAnalysisStepSize
             // 
             this.labelNonLinAnalysisStepSize.AutoSize = true;
-            this.labelNonLinAnalysisStepSize.Location = new System.Drawing.Point(310, 60);
-            this.labelNonLinAnalysisStepSize.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelNonLinAnalysisStepSize.Location = new System.Drawing.Point(155, 31);
+            this.labelNonLinAnalysisStepSize.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelNonLinAnalysisStepSize.Name = "labelNonLinAnalysisStepSize";
-            this.labelNonLinAnalysisStepSize.Size = new System.Drawing.Size(110, 25);
+            this.labelNonLinAnalysisStepSize.Size = new System.Drawing.Size(55, 13);
             this.labelNonLinAnalysisStepSize.TabIndex = 101;
             this.labelNonLinAnalysisStepSize.Text = "Step Size:";
             // 
@@ -627,30 +622,28 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxNonLinStrucAnalysisAdapStepCntrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxNonLinStrucAnalysisAdapStepCntrl.Location = new System.Drawing.Point(166, 198);
-            this.textBoxNonLinStrucAnalysisAdapStepCntrl.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxNonLinStrucAnalysisAdapStepCntrl.Location = new System.Drawing.Point(83, 103);
             this.textBoxNonLinStrucAnalysisAdapStepCntrl.Name = "textBoxNonLinStrucAnalysisAdapStepCntrl";
-            this.textBoxNonLinStrucAnalysisAdapStepCntrl.Size = new System.Drawing.Size(458, 31);
+            this.textBoxNonLinStrucAnalysisAdapStepCntrl.Size = new System.Drawing.Size(235, 20);
             this.textBoxNonLinStrucAnalysisAdapStepCntrl.TabIndex = 100;
             this.textBoxNonLinStrucAnalysisAdapStepCntrl.Text = "0";
             // 
             // labelNonLinStrucAnalysisAdapStepCntrl
             // 
             this.labelNonLinStrucAnalysisAdapStepCntrl.AutoSize = true;
-            this.labelNonLinStrucAnalysisAdapStepCntrl.Location = new System.Drawing.Point(8, 204);
-            this.labelNonLinStrucAnalysisAdapStepCntrl.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelNonLinStrucAnalysisAdapStepCntrl.Location = new System.Drawing.Point(4, 106);
             this.labelNonLinStrucAnalysisAdapStepCntrl.Name = "labelNonLinStrucAnalysisAdapStepCntrl";
-            this.labelNonLinStrucAnalysisAdapStepCntrl.Size = new System.Drawing.Size(163, 25);
+            this.labelNonLinStrucAnalysisAdapStepCntrl.Size = new System.Drawing.Size(82, 13);
             this.labelNonLinStrucAnalysisAdapStepCntrl.TabIndex = 99;
             this.labelNonLinStrucAnalysisAdapStepCntrl.Text = "Adaptive Steps:";
             // 
             // labelNonLinStrucAnalysisNumIter
             // 
             this.labelNonLinStrucAnalysisNumIter.AutoSize = true;
-            this.labelNonLinStrucAnalysisNumIter.Location = new System.Drawing.Point(8, 106);
-            this.labelNonLinStrucAnalysisNumIter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelNonLinStrucAnalysisNumIter.Location = new System.Drawing.Point(4, 55);
+            this.labelNonLinStrucAnalysisNumIter.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelNonLinStrucAnalysisNumIter.Name = "labelNonLinStrucAnalysisNumIter";
-            this.labelNonLinStrucAnalysisNumIter.Size = new System.Drawing.Size(159, 25);
+            this.labelNonLinStrucAnalysisNumIter.Size = new System.Drawing.Size(79, 13);
             this.labelNonLinStrucAnalysisNumIter.TabIndex = 98;
             this.labelNonLinStrucAnalysisNumIter.Text = "Max. Iterations:";
             // 
@@ -658,29 +651,29 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxNonLinStrucAnalysisNumIter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxNonLinStrucAnalysisNumIter.Location = new System.Drawing.Point(166, 100);
-            this.textBoxNonLinStrucAnalysisNumIter.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxNonLinStrucAnalysisNumIter.Location = new System.Drawing.Point(83, 52);
+            this.textBoxNonLinStrucAnalysisNumIter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxNonLinStrucAnalysisNumIter.Name = "textBoxNonLinStrucAnalysisNumIter";
-            this.textBoxNonLinStrucAnalysisNumIter.Size = new System.Drawing.Size(460, 31);
+            this.textBoxNonLinStrucAnalysisNumIter.Size = new System.Drawing.Size(236, 20);
             this.textBoxNonLinStrucAnalysisNumIter.TabIndex = 97;
             this.textBoxNonLinStrucAnalysisNumIter.Text = "100";
             // 
             // labelNonLinStrucAnalysisNumSteps
             // 
             this.labelNonLinStrucAnalysisNumSteps.AutoSize = true;
-            this.labelNonLinStrucAnalysisNumSteps.Location = new System.Drawing.Point(8, 60);
-            this.labelNonLinStrucAnalysisNumSteps.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelNonLinStrucAnalysisNumSteps.Location = new System.Drawing.Point(4, 31);
+            this.labelNonLinStrucAnalysisNumSteps.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelNonLinStrucAnalysisNumSteps.Name = "labelNonLinStrucAnalysisNumSteps";
-            this.labelNonLinStrucAnalysisNumSteps.Size = new System.Drawing.Size(129, 25);
+            this.labelNonLinStrucAnalysisNumSteps.Size = new System.Drawing.Size(65, 13);
             this.labelNonLinStrucAnalysisNumSteps.TabIndex = 96;
             this.labelNonLinStrucAnalysisNumSteps.Text = "Num. Steps:";
             // 
             // textBoxNonLinStrucAnalysisNumSteps
             // 
-            this.textBoxNonLinStrucAnalysisNumSteps.Location = new System.Drawing.Point(166, 54);
-            this.textBoxNonLinStrucAnalysisNumSteps.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxNonLinStrucAnalysisNumSteps.Location = new System.Drawing.Point(83, 28);
+            this.textBoxNonLinStrucAnalysisNumSteps.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxNonLinStrucAnalysisNumSteps.Name = "textBoxNonLinStrucAnalysisNumSteps";
-            this.textBoxNonLinStrucAnalysisNumSteps.Size = new System.Drawing.Size(132, 31);
+            this.textBoxNonLinStrucAnalysisNumSteps.Size = new System.Drawing.Size(68, 20);
             this.textBoxNonLinStrucAnalysisNumSteps.TabIndex = 95;
             this.textBoxNonLinStrucAnalysisNumSteps.Text = "1";
             // 
@@ -688,20 +681,18 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxNonLinStrucAnalysisAcc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxNonLinStrucAnalysisAcc.Location = new System.Drawing.Point(166, 148);
-            this.textBoxNonLinStrucAnalysisAcc.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxNonLinStrucAnalysisAcc.Location = new System.Drawing.Point(83, 77);
             this.textBoxNonLinStrucAnalysisAcc.Name = "textBoxNonLinStrucAnalysisAcc";
-            this.textBoxNonLinStrucAnalysisAcc.Size = new System.Drawing.Size(458, 31);
+            this.textBoxNonLinStrucAnalysisAcc.Size = new System.Drawing.Size(235, 20);
             this.textBoxNonLinStrucAnalysisAcc.TabIndex = 94;
             this.textBoxNonLinStrucAnalysisAcc.Text = "0.001";
             // 
             // labelNonLinStrucAnalysisAcc
             // 
             this.labelNonLinStrucAnalysisAcc.AutoSize = true;
-            this.labelNonLinStrucAnalysisAcc.Location = new System.Drawing.Point(8, 154);
-            this.labelNonLinStrucAnalysisAcc.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelNonLinStrucAnalysisAcc.Location = new System.Drawing.Point(4, 80);
             this.labelNonLinStrucAnalysisAcc.Name = "labelNonLinStrucAnalysisAcc";
-            this.labelNonLinStrucAnalysisAcc.Size = new System.Drawing.Size(114, 25);
+            this.labelNonLinStrucAnalysisAcc.Size = new System.Drawing.Size(58, 13);
             this.labelNonLinStrucAnalysisAcc.TabIndex = 93;
             this.labelNonLinStrucAnalysisAcc.Text = "Tolerance:";
             // 
@@ -709,19 +700,19 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxNonLinStrucAnalysisName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxNonLinStrucAnalysisName.Location = new System.Drawing.Point(166, 8);
-            this.textBoxNonLinStrucAnalysisName.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxNonLinStrucAnalysisName.Location = new System.Drawing.Point(83, 4);
+            this.textBoxNonLinStrucAnalysisName.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxNonLinStrucAnalysisName.Name = "textBoxNonLinStrucAnalysisName";
-            this.textBoxNonLinStrucAnalysisName.Size = new System.Drawing.Size(460, 31);
+            this.textBoxNonLinStrucAnalysisName.Size = new System.Drawing.Size(236, 20);
             this.textBoxNonLinStrucAnalysisName.TabIndex = 88;
             // 
             // labelNonLinStrucAnalysisName
             // 
             this.labelNonLinStrucAnalysisName.AutoSize = true;
-            this.labelNonLinStrucAnalysisName.Location = new System.Drawing.Point(8, 15);
-            this.labelNonLinStrucAnalysisName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelNonLinStrucAnalysisName.Location = new System.Drawing.Point(4, 8);
+            this.labelNonLinStrucAnalysisName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelNonLinStrucAnalysisName.Name = "labelNonLinStrucAnalysisName";
-            this.labelNonLinStrucAnalysisName.Size = new System.Drawing.Size(74, 25);
+            this.labelNonLinStrucAnalysisName.Size = new System.Drawing.Size(38, 13);
             this.labelNonLinStrucAnalysisName.TabIndex = 87;
             this.labelNonLinStrucAnalysisName.Text = "Name:";
             // 
@@ -755,11 +746,11 @@ namespace Cocodrilo.Panels
             this.tabPageTransientAnalysis.Controls.Add(this.labelTransientAnalysisDampingRatio1);
             this.tabPageTransientAnalysis.Controls.Add(this.textBoxTransientAnalysisNumEigen);
             this.tabPageTransientAnalysis.Controls.Add(this.labelTransientAnalysisNumEigen);
-            this.tabPageTransientAnalysis.Location = new System.Drawing.Point(8, 39);
-            this.tabPageTransientAnalysis.Margin = new System.Windows.Forms.Padding(4);
+            this.tabPageTransientAnalysis.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTransientAnalysis.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabPageTransientAnalysis.Name = "tabPageTransientAnalysis";
-            this.tabPageTransientAnalysis.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPageTransientAnalysis.Size = new System.Drawing.Size(654, 241);
+            this.tabPageTransientAnalysis.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPageTransientAnalysis.Size = new System.Drawing.Size(327, 124);
             this.tabPageTransientAnalysis.TabIndex = 2;
             this.tabPageTransientAnalysis.Text = "TransientAnalysis";
             this.tabPageTransientAnalysis.UseVisualStyleBackColor = true;
@@ -768,20 +759,20 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxTransientAnalysisStepSize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxTransientAnalysisStepSize.Location = new System.Drawing.Point(428, 54);
-            this.textBoxTransientAnalysisStepSize.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxTransientAnalysisStepSize.Location = new System.Drawing.Point(214, 28);
+            this.textBoxTransientAnalysisStepSize.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxTransientAnalysisStepSize.Name = "textBoxTransientAnalysisStepSize";
-            this.textBoxTransientAnalysisStepSize.Size = new System.Drawing.Size(279, 31);
+            this.textBoxTransientAnalysisStepSize.Size = new System.Drawing.Size(137, 20);
             this.textBoxTransientAnalysisStepSize.TabIndex = 102;
             this.textBoxTransientAnalysisStepSize.Text = "0.1";
             // 
             // labelTransientAnalysisStepSize
             // 
             this.labelTransientAnalysisStepSize.AutoSize = true;
-            this.labelTransientAnalysisStepSize.Location = new System.Drawing.Point(310, 60);
-            this.labelTransientAnalysisStepSize.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelTransientAnalysisStepSize.Location = new System.Drawing.Point(155, 31);
+            this.labelTransientAnalysisStepSize.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelTransientAnalysisStepSize.Name = "labelTransientAnalysisStepSize";
-            this.labelTransientAnalysisStepSize.Size = new System.Drawing.Size(110, 25);
+            this.labelTransientAnalysisStepSize.Size = new System.Drawing.Size(55, 13);
             this.labelTransientAnalysisStepSize.TabIndex = 101;
             this.labelTransientAnalysisStepSize.Text = "Step Size:";
             // 
@@ -789,30 +780,28 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxTransientAnalysisAdapStepCntrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxTransientAnalysisAdapStepCntrl.Location = new System.Drawing.Point(166, 198);
-            this.textBoxTransientAnalysisAdapStepCntrl.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxTransientAnalysisAdapStepCntrl.Location = new System.Drawing.Point(83, 103);
             this.textBoxTransientAnalysisAdapStepCntrl.Name = "textBoxTransientAnalysisAdapStepCntrl";
-            this.textBoxTransientAnalysisAdapStepCntrl.Size = new System.Drawing.Size(279, 31);
+            this.textBoxTransientAnalysisAdapStepCntrl.Size = new System.Drawing.Size(137, 20);
             this.textBoxTransientAnalysisAdapStepCntrl.TabIndex = 100;
             this.textBoxTransientAnalysisAdapStepCntrl.Text = "0";
             // 
             // labelTransientAnalysisAdapStepCntrl
             // 
             this.labelTransientAnalysisAdapStepCntrl.AutoSize = true;
-            this.labelTransientAnalysisAdapStepCntrl.Location = new System.Drawing.Point(8, 204);
-            this.labelTransientAnalysisAdapStepCntrl.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelTransientAnalysisAdapStepCntrl.Location = new System.Drawing.Point(4, 106);
             this.labelTransientAnalysisAdapStepCntrl.Name = "labelTransientAnalysisAdapStepCntrl";
-            this.labelTransientAnalysisAdapStepCntrl.Size = new System.Drawing.Size(163, 25);
+            this.labelTransientAnalysisAdapStepCntrl.Size = new System.Drawing.Size(82, 13);
             this.labelTransientAnalysisAdapStepCntrl.TabIndex = 99;
             this.labelTransientAnalysisAdapStepCntrl.Text = "Adaptive Steps:";
             // 
             // labelTransientAnalysisNumIter
             // 
             this.labelTransientAnalysisNumIter.AutoSize = true;
-            this.labelTransientAnalysisNumIter.Location = new System.Drawing.Point(8, 106);
-            this.labelTransientAnalysisNumIter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelTransientAnalysisNumIter.Location = new System.Drawing.Point(4, 55);
+            this.labelTransientAnalysisNumIter.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelTransientAnalysisNumIter.Name = "labelTransientAnalysisNumIter";
-            this.labelTransientAnalysisNumIter.Size = new System.Drawing.Size(159, 25);
+            this.labelTransientAnalysisNumIter.Size = new System.Drawing.Size(79, 13);
             this.labelTransientAnalysisNumIter.TabIndex = 98;
             this.labelTransientAnalysisNumIter.Text = "Max. Iterations:";
             // 
@@ -820,29 +809,29 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxTransientAnalysisNumIter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxTransientAnalysisNumIter.Location = new System.Drawing.Point(166, 100);
-            this.textBoxTransientAnalysisNumIter.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxTransientAnalysisNumIter.Location = new System.Drawing.Point(83, 52);
+            this.textBoxTransientAnalysisNumIter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxTransientAnalysisNumIter.Name = "textBoxTransientAnalysisNumIter";
-            this.textBoxTransientAnalysisNumIter.Size = new System.Drawing.Size(279, 31);
+            this.textBoxTransientAnalysisNumIter.Size = new System.Drawing.Size(137, 20);
             this.textBoxTransientAnalysisNumIter.TabIndex = 97;
             this.textBoxTransientAnalysisNumIter.Text = "100";
             // 
             // labelTransientAnalysisNumSteps
             // 
             this.labelTransientAnalysisNumSteps.AutoSize = true;
-            this.labelTransientAnalysisNumSteps.Location = new System.Drawing.Point(8, 60);
-            this.labelTransientAnalysisNumSteps.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelTransientAnalysisNumSteps.Location = new System.Drawing.Point(4, 31);
+            this.labelTransientAnalysisNumSteps.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelTransientAnalysisNumSteps.Name = "labelTransientAnalysisNumSteps";
-            this.labelTransientAnalysisNumSteps.Size = new System.Drawing.Size(129, 25);
+            this.labelTransientAnalysisNumSteps.Size = new System.Drawing.Size(65, 13);
             this.labelTransientAnalysisNumSteps.TabIndex = 96;
             this.labelTransientAnalysisNumSteps.Text = "Num. Steps:";
             // 
             // textBoxTransientAnalysisNumSteps
             // 
-            this.textBoxTransientAnalysisNumSteps.Location = new System.Drawing.Point(166, 54);
-            this.textBoxTransientAnalysisNumSteps.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxTransientAnalysisNumSteps.Location = new System.Drawing.Point(83, 28);
+            this.textBoxTransientAnalysisNumSteps.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxTransientAnalysisNumSteps.Name = "textBoxTransientAnalysisNumSteps";
-            this.textBoxTransientAnalysisNumSteps.Size = new System.Drawing.Size(132, 31);
+            this.textBoxTransientAnalysisNumSteps.Size = new System.Drawing.Size(68, 20);
             this.textBoxTransientAnalysisNumSteps.TabIndex = 95;
             this.textBoxTransientAnalysisNumSteps.Text = "1";
             // 
@@ -850,20 +839,18 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxTransientAnalysisAcc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxTransientAnalysisAcc.Location = new System.Drawing.Point(166, 148);
-            this.textBoxTransientAnalysisAcc.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxTransientAnalysisAcc.Location = new System.Drawing.Point(83, 77);
             this.textBoxTransientAnalysisAcc.Name = "textBoxTransientAnalysisAcc";
-            this.textBoxTransientAnalysisAcc.Size = new System.Drawing.Size(279, 31);
+            this.textBoxTransientAnalysisAcc.Size = new System.Drawing.Size(137, 20);
             this.textBoxTransientAnalysisAcc.TabIndex = 94;
             this.textBoxTransientAnalysisAcc.Text = "0.001";
             // 
             // labelTransientAnalysisAcc
             // 
             this.labelTransientAnalysisAcc.AutoSize = true;
-            this.labelTransientAnalysisAcc.Location = new System.Drawing.Point(8, 154);
-            this.labelTransientAnalysisAcc.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelTransientAnalysisAcc.Location = new System.Drawing.Point(4, 80);
             this.labelTransientAnalysisAcc.Name = "labelTransientAnalysisAcc";
-            this.labelTransientAnalysisAcc.Size = new System.Drawing.Size(114, 25);
+            this.labelTransientAnalysisAcc.Size = new System.Drawing.Size(58, 13);
             this.labelTransientAnalysisAcc.TabIndex = 93;
             this.labelTransientAnalysisAcc.Text = "Tolerance:";
             // 
@@ -871,20 +858,20 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxTransientAnalysisRayleighAlpha.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxTransientAnalysisRayleighAlpha.Location = new System.Drawing.Point(166, 348);
-            this.textBoxTransientAnalysisRayleighAlpha.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
+            this.textBoxTransientAnalysisRayleighAlpha.Location = new System.Drawing.Point(83, 181);
+            this.textBoxTransientAnalysisRayleighAlpha.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxTransientAnalysisRayleighAlpha.Name = "textBoxTransientAnalysisRayleighAlpha";
-            this.textBoxTransientAnalysisRayleighAlpha.Size = new System.Drawing.Size(279, 31);
+            this.textBoxTransientAnalysisRayleighAlpha.Size = new System.Drawing.Size(137, 20);
             this.textBoxTransientAnalysisRayleighAlpha.TabIndex = 94;
             this.textBoxTransientAnalysisRayleighAlpha.Text = "1.0";
             // 
             // labelTransientAnalysisRayleighAlpha
             // 
             this.labelTransientAnalysisRayleighAlpha.AutoSize = true;
-            this.labelTransientAnalysisRayleighAlpha.Location = new System.Drawing.Point(8, 354);
-            this.labelTransientAnalysisRayleighAlpha.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelTransientAnalysisRayleighAlpha.Location = new System.Drawing.Point(4, 184);
+            this.labelTransientAnalysisRayleighAlpha.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTransientAnalysisRayleighAlpha.Name = "labelTransientAnalysisRayleighAlpha";
-            this.labelTransientAnalysisRayleighAlpha.Size = new System.Drawing.Size(161, 25);
+            this.labelTransientAnalysisRayleighAlpha.Size = new System.Drawing.Size(80, 13);
             this.labelTransientAnalysisRayleighAlpha.TabIndex = 93;
             this.labelTransientAnalysisRayleighAlpha.Text = "Rayleigh alpha:";
             // 
@@ -892,20 +879,20 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxTransientAnalysisRayleighBeta.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxTransientAnalysisRayleighBeta.Location = new System.Drawing.Point(166, 398);
-            this.textBoxTransientAnalysisRayleighBeta.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
+            this.textBoxTransientAnalysisRayleighBeta.Location = new System.Drawing.Point(83, 207);
+            this.textBoxTransientAnalysisRayleighBeta.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxTransientAnalysisRayleighBeta.Name = "textBoxTransientAnalysisRayleighBeta";
-            this.textBoxTransientAnalysisRayleighBeta.Size = new System.Drawing.Size(279, 31);
+            this.textBoxTransientAnalysisRayleighBeta.Size = new System.Drawing.Size(137, 20);
             this.textBoxTransientAnalysisRayleighBeta.TabIndex = 94;
             this.textBoxTransientAnalysisRayleighBeta.Text = "1.0";
             // 
             // labelTransientAnalysisRayleighBeta
             // 
             this.labelTransientAnalysisRayleighBeta.AutoSize = true;
-            this.labelTransientAnalysisRayleighBeta.Location = new System.Drawing.Point(8, 404);
-            this.labelTransientAnalysisRayleighBeta.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelTransientAnalysisRayleighBeta.Location = new System.Drawing.Point(4, 210);
+            this.labelTransientAnalysisRayleighBeta.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTransientAnalysisRayleighBeta.Name = "labelTransientAnalysisRayleighBeta";
-            this.labelTransientAnalysisRayleighBeta.Size = new System.Drawing.Size(150, 25);
+            this.labelTransientAnalysisRayleighBeta.Size = new System.Drawing.Size(75, 13);
             this.labelTransientAnalysisRayleighBeta.TabIndex = 93;
             this.labelTransientAnalysisRayleighBeta.Text = "Rayleigh beta:";
             // 
@@ -913,19 +900,19 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxTransientAnalysisName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxTransientAnalysisName.Location = new System.Drawing.Point(166, 8);
-            this.textBoxTransientAnalysisName.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxTransientAnalysisName.Location = new System.Drawing.Point(83, 4);
+            this.textBoxTransientAnalysisName.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxTransientAnalysisName.Name = "textBoxTransientAnalysisName";
-            this.textBoxTransientAnalysisName.Size = new System.Drawing.Size(279, 31);
+            this.textBoxTransientAnalysisName.Size = new System.Drawing.Size(137, 20);
             this.textBoxTransientAnalysisName.TabIndex = 88;
             // 
             // labelTransientAnalysisName
             // 
             this.labelTransientAnalysisName.AutoSize = true;
-            this.labelTransientAnalysisName.Location = new System.Drawing.Point(8, 15);
-            this.labelTransientAnalysisName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelTransientAnalysisName.Location = new System.Drawing.Point(4, 8);
+            this.labelTransientAnalysisName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelTransientAnalysisName.Name = "labelTransientAnalysisName";
-            this.labelTransientAnalysisName.Size = new System.Drawing.Size(74, 25);
+            this.labelTransientAnalysisName.Size = new System.Drawing.Size(38, 13);
             this.labelTransientAnalysisName.TabIndex = 87;
             this.labelTransientAnalysisName.Text = "Name:";
             // 
@@ -940,20 +927,20 @@ namespace Cocodrilo.Panels
             this.comboBoxTransientAnalysisTimeIntegration.Items.AddRange(new object[] {
             "implicit",
             "explicit"});
-            this.comboBoxTransientAnalysisTimeIntegration.Location = new System.Drawing.Point(166, 248);
-            this.comboBoxTransientAnalysisTimeIntegration.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
+            this.comboBoxTransientAnalysisTimeIntegration.Location = new System.Drawing.Point(83, 129);
+            this.comboBoxTransientAnalysisTimeIntegration.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxTransientAnalysisTimeIntegration.Name = "comboBoxTransientAnalysisTimeIntegration";
-            this.comboBoxTransientAnalysisTimeIntegration.Size = new System.Drawing.Size(279, 33);
+            this.comboBoxTransientAnalysisTimeIntegration.Size = new System.Drawing.Size(137, 21);
             this.comboBoxTransientAnalysisTimeIntegration.TabIndex = 22;
             this.comboBoxTransientAnalysisTimeIntegration.Text = "implicit";
             // 
             // labelTransientAnalysisTimeIntegration
             // 
             this.labelTransientAnalysisTimeIntegration.AutoSize = true;
-            this.labelTransientAnalysisTimeIntegration.Location = new System.Drawing.Point(8, 254);
-            this.labelTransientAnalysisTimeIntegration.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelTransientAnalysisTimeIntegration.Location = new System.Drawing.Point(4, 132);
+            this.labelTransientAnalysisTimeIntegration.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTransientAnalysisTimeIntegration.Name = "labelTransientAnalysisTimeIntegration";
-            this.labelTransientAnalysisTimeIntegration.Size = new System.Drawing.Size(124, 25);
+            this.labelTransientAnalysisTimeIntegration.Size = new System.Drawing.Size(62, 13);
             this.labelTransientAnalysisTimeIntegration.TabIndex = 7;
             this.labelTransientAnalysisTimeIntegration.Text = "Time integ.:";
             // 
@@ -970,30 +957,29 @@ namespace Cocodrilo.Panels
             "newmark",
             "bossak",
             "bdf2"});
-            this.comboBoxTransientAnalysisScheme.Location = new System.Drawing.Point(166, 298);
-            this.comboBoxTransientAnalysisScheme.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
+            this.comboBoxTransientAnalysisScheme.Location = new System.Drawing.Point(83, 155);
+            this.comboBoxTransientAnalysisScheme.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxTransientAnalysisScheme.Name = "comboBoxTransientAnalysisScheme";
-            this.comboBoxTransientAnalysisScheme.Size = new System.Drawing.Size(279, 33);
+            this.comboBoxTransientAnalysisScheme.Size = new System.Drawing.Size(137, 21);
             this.comboBoxTransientAnalysisScheme.TabIndex = 22;
             this.comboBoxTransientAnalysisScheme.Text = "newmark";
             // 
             // labelTransientAnalysisScheme
             // 
             this.labelTransientAnalysisScheme.AutoSize = true;
-            this.labelTransientAnalysisScheme.Location = new System.Drawing.Point(8, 304);
-            this.labelTransientAnalysisScheme.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelTransientAnalysisScheme.Location = new System.Drawing.Point(4, 158);
+            this.labelTransientAnalysisScheme.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTransientAnalysisScheme.Name = "labelTransientAnalysisScheme";
-            this.labelTransientAnalysisScheme.Size = new System.Drawing.Size(96, 25);
+            this.labelTransientAnalysisScheme.Size = new System.Drawing.Size(49, 13);
             this.labelTransientAnalysisScheme.TabIndex = 7;
             this.labelTransientAnalysisScheme.Text = "Scheme:";
             // 
             // checkBoxTransientAnalysisAutomaticRayleigh
             // 
             this.checkBoxTransientAnalysisAutomaticRayleigh.AutoSize = true;
-            this.checkBoxTransientAnalysisAutomaticRayleigh.Location = new System.Drawing.Point(12, 448);
-            this.checkBoxTransientAnalysisAutomaticRayleigh.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxTransientAnalysisAutomaticRayleigh.Location = new System.Drawing.Point(6, 233);
             this.checkBoxTransientAnalysisAutomaticRayleigh.Name = "checkBoxTransientAnalysisAutomaticRayleigh";
-            this.checkBoxTransientAnalysisAutomaticRayleigh.Size = new System.Drawing.Size(345, 29);
+            this.checkBoxTransientAnalysisAutomaticRayleigh.Size = new System.Drawing.Size(173, 17);
             this.checkBoxTransientAnalysisAutomaticRayleigh.TabIndex = 92;
             this.checkBoxTransientAnalysisAutomaticRayleigh.Text = "Automatic Rayleigh Parameters";
             this.checkBoxTransientAnalysisAutomaticRayleigh.UseVisualStyleBackColor = true;
@@ -1002,20 +988,20 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxTransientAnalysisDampingRatio0.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxTransientAnalysisDampingRatio0.Location = new System.Drawing.Point(166, 498);
-            this.textBoxTransientAnalysisDampingRatio0.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
+            this.textBoxTransientAnalysisDampingRatio0.Location = new System.Drawing.Point(83, 259);
+            this.textBoxTransientAnalysisDampingRatio0.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxTransientAnalysisDampingRatio0.Name = "textBoxTransientAnalysisDampingRatio0";
-            this.textBoxTransientAnalysisDampingRatio0.Size = new System.Drawing.Size(279, 31);
+            this.textBoxTransientAnalysisDampingRatio0.Size = new System.Drawing.Size(137, 20);
             this.textBoxTransientAnalysisDampingRatio0.TabIndex = 94;
             this.textBoxTransientAnalysisDampingRatio0.Text = "0.001";
             // 
             // labelTransientAnalysisDampingRatio0
             // 
             this.labelTransientAnalysisDampingRatio0.AutoSize = true;
-            this.labelTransientAnalysisDampingRatio0.Location = new System.Drawing.Point(8, 504);
-            this.labelTransientAnalysisDampingRatio0.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelTransientAnalysisDampingRatio0.Location = new System.Drawing.Point(4, 262);
+            this.labelTransientAnalysisDampingRatio0.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTransientAnalysisDampingRatio0.Name = "labelTransientAnalysisDampingRatio0";
-            this.labelTransientAnalysisDampingRatio0.Size = new System.Drawing.Size(155, 25);
+            this.labelTransientAnalysisDampingRatio0.Size = new System.Drawing.Size(78, 13);
             this.labelTransientAnalysisDampingRatio0.TabIndex = 93;
             this.labelTransientAnalysisDampingRatio0.Text = "Damping val 0:";
             // 
@@ -1023,20 +1009,20 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxTransientAnalysisDampingRatio1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxTransientAnalysisDampingRatio1.Location = new System.Drawing.Point(166, 548);
-            this.textBoxTransientAnalysisDampingRatio1.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
+            this.textBoxTransientAnalysisDampingRatio1.Location = new System.Drawing.Point(83, 285);
+            this.textBoxTransientAnalysisDampingRatio1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxTransientAnalysisDampingRatio1.Name = "textBoxTransientAnalysisDampingRatio1";
-            this.textBoxTransientAnalysisDampingRatio1.Size = new System.Drawing.Size(279, 31);
+            this.textBoxTransientAnalysisDampingRatio1.Size = new System.Drawing.Size(137, 20);
             this.textBoxTransientAnalysisDampingRatio1.TabIndex = 94;
             this.textBoxTransientAnalysisDampingRatio1.Text = "-1.0";
             // 
             // labelTransientAnalysisDampingRatio1
             // 
             this.labelTransientAnalysisDampingRatio1.AutoSize = true;
-            this.labelTransientAnalysisDampingRatio1.Location = new System.Drawing.Point(8, 554);
-            this.labelTransientAnalysisDampingRatio1.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelTransientAnalysisDampingRatio1.Location = new System.Drawing.Point(4, 288);
+            this.labelTransientAnalysisDampingRatio1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTransientAnalysisDampingRatio1.Name = "labelTransientAnalysisDampingRatio1";
-            this.labelTransientAnalysisDampingRatio1.Size = new System.Drawing.Size(155, 25);
+            this.labelTransientAnalysisDampingRatio1.Size = new System.Drawing.Size(78, 13);
             this.labelTransientAnalysisDampingRatio1.TabIndex = 93;
             this.labelTransientAnalysisDampingRatio1.Text = "Damping val 1:";
             // 
@@ -1044,20 +1030,20 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxTransientAnalysisNumEigen.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxTransientAnalysisNumEigen.Location = new System.Drawing.Point(166, 598);
-            this.textBoxTransientAnalysisNumEigen.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
+            this.textBoxTransientAnalysisNumEigen.Location = new System.Drawing.Point(83, 311);
+            this.textBoxTransientAnalysisNumEigen.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxTransientAnalysisNumEigen.Name = "textBoxTransientAnalysisNumEigen";
-            this.textBoxTransientAnalysisNumEigen.Size = new System.Drawing.Size(279, 31);
+            this.textBoxTransientAnalysisNumEigen.Size = new System.Drawing.Size(137, 20);
             this.textBoxTransientAnalysisNumEigen.TabIndex = 94;
             this.textBoxTransientAnalysisNumEigen.Text = "15";
             // 
             // labelTransientAnalysisNumEigen
             // 
             this.labelTransientAnalysisNumEigen.AutoSize = true;
-            this.labelTransientAnalysisNumEigen.Location = new System.Drawing.Point(8, 604);
-            this.labelTransientAnalysisNumEigen.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelTransientAnalysisNumEigen.Location = new System.Drawing.Point(4, 314);
+            this.labelTransientAnalysisNumEigen.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTransientAnalysisNumEigen.Name = "labelTransientAnalysisNumEigen";
-            this.labelTransientAnalysisNumEigen.Size = new System.Drawing.Size(129, 25);
+            this.labelTransientAnalysisNumEigen.Size = new System.Drawing.Size(65, 13);
             this.labelTransientAnalysisNumEigen.TabIndex = 93;
             this.labelTransientAnalysisNumEigen.Text = "Num. Eigen:";
             // 
@@ -1073,11 +1059,10 @@ namespace Cocodrilo.Panels
             this.tabPageCutPatternAnalysis.Controls.Add(this.labelCutPatternAnalysisName);
             this.tabPageCutPatternAnalysis.Controls.Add(this.labelCutPatternAnalysisTol);
             this.tabPageCutPatternAnalysis.Controls.Add(this.labelCutPatternAnalysisMaxStep);
-            this.tabPageCutPatternAnalysis.Location = new System.Drawing.Point(8, 39);
-            this.tabPageCutPatternAnalysis.Margin = new System.Windows.Forms.Padding(6);
+            this.tabPageCutPatternAnalysis.Location = new System.Drawing.Point(4, 22);
             this.tabPageCutPatternAnalysis.Name = "tabPageCutPatternAnalysis";
-            this.tabPageCutPatternAnalysis.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPageCutPatternAnalysis.Size = new System.Drawing.Size(654, 241);
+            this.tabPageCutPatternAnalysis.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPageCutPatternAnalysis.Size = new System.Drawing.Size(327, 124);
             this.tabPageCutPatternAnalysis.TabIndex = 3;
             this.tabPageCutPatternAnalysis.Text = "CutPattern";
             this.tabPageCutPatternAnalysis.UseVisualStyleBackColor = true;
@@ -1085,10 +1070,9 @@ namespace Cocodrilo.Panels
             // checkBoxCutPatternAnalysisPrestress
             // 
             this.checkBoxCutPatternAnalysisPrestress.AutoSize = true;
-            this.checkBoxCutPatternAnalysisPrestress.Location = new System.Drawing.Point(12, 194);
-            this.checkBoxCutPatternAnalysisPrestress.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxCutPatternAnalysisPrestress.Location = new System.Drawing.Point(6, 101);
             this.checkBoxCutPatternAnalysisPrestress.Name = "checkBoxCutPatternAnalysisPrestress";
-            this.checkBoxCutPatternAnalysisPrestress.Size = new System.Drawing.Size(227, 29);
+            this.checkBoxCutPatternAnalysisPrestress.Size = new System.Drawing.Size(113, 17);
             this.checkBoxCutPatternAnalysisPrestress.TabIndex = 92;
             this.checkBoxCutPatternAnalysisPrestress.Text = "Consider Prestress";
             this.checkBoxCutPatternAnalysisPrestress.UseVisualStyleBackColor = true;
@@ -1097,20 +1081,20 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxCutPatternAnalysisName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCutPatternAnalysisName.Location = new System.Drawing.Point(166, 8);
-            this.textBoxCutPatternAnalysisName.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxCutPatternAnalysisName.Location = new System.Drawing.Point(83, 4);
+            this.textBoxCutPatternAnalysisName.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxCutPatternAnalysisName.Name = "textBoxCutPatternAnalysisName";
-            this.textBoxCutPatternAnalysisName.Size = new System.Drawing.Size(458, 31);
+            this.textBoxCutPatternAnalysisName.Size = new System.Drawing.Size(235, 20);
             this.textBoxCutPatternAnalysisName.TabIndex = 88;
             // 
             // textBoxCutPatternAnalysisTol
             // 
             this.textBoxCutPatternAnalysisTol.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCutPatternAnalysisTol.Location = new System.Drawing.Point(166, 146);
-            this.textBoxCutPatternAnalysisTol.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxCutPatternAnalysisTol.Location = new System.Drawing.Point(83, 76);
+            this.textBoxCutPatternAnalysisTol.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxCutPatternAnalysisTol.Name = "textBoxCutPatternAnalysisTol";
-            this.textBoxCutPatternAnalysisTol.Size = new System.Drawing.Size(458, 31);
+            this.textBoxCutPatternAnalysisTol.Size = new System.Drawing.Size(235, 20);
             this.textBoxCutPatternAnalysisTol.TabIndex = 91;
             this.textBoxCutPatternAnalysisTol.Text = "0.001";
             // 
@@ -1118,10 +1102,10 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxCutPatternAnalysisMaxIter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCutPatternAnalysisMaxIter.Location = new System.Drawing.Point(166, 100);
-            this.textBoxCutPatternAnalysisMaxIter.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxCutPatternAnalysisMaxIter.Location = new System.Drawing.Point(83, 52);
+            this.textBoxCutPatternAnalysisMaxIter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxCutPatternAnalysisMaxIter.Name = "textBoxCutPatternAnalysisMaxIter";
-            this.textBoxCutPatternAnalysisMaxIter.Size = new System.Drawing.Size(458, 31);
+            this.textBoxCutPatternAnalysisMaxIter.Size = new System.Drawing.Size(235, 20);
             this.textBoxCutPatternAnalysisMaxIter.TabIndex = 90;
             this.textBoxCutPatternAnalysisMaxIter.Text = "10";
             // 
@@ -1129,50 +1113,50 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxCutPatternAnalysisMaxStep.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCutPatternAnalysisMaxStep.Location = new System.Drawing.Point(166, 54);
-            this.textBoxCutPatternAnalysisMaxStep.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxCutPatternAnalysisMaxStep.Location = new System.Drawing.Point(83, 28);
+            this.textBoxCutPatternAnalysisMaxStep.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxCutPatternAnalysisMaxStep.Name = "textBoxCutPatternAnalysisMaxStep";
-            this.textBoxCutPatternAnalysisMaxStep.Size = new System.Drawing.Size(458, 31);
+            this.textBoxCutPatternAnalysisMaxStep.Size = new System.Drawing.Size(235, 20);
             this.textBoxCutPatternAnalysisMaxStep.TabIndex = 89;
             this.textBoxCutPatternAnalysisMaxStep.Text = "10";
             // 
             // labelCutPatternAnalysisMaxIter
             // 
             this.labelCutPatternAnalysisMaxIter.AutoSize = true;
-            this.labelCutPatternAnalysisMaxIter.Location = new System.Drawing.Point(8, 106);
-            this.labelCutPatternAnalysisMaxIter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelCutPatternAnalysisMaxIter.Location = new System.Drawing.Point(4, 55);
+            this.labelCutPatternAnalysisMaxIter.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelCutPatternAnalysisMaxIter.Name = "labelCutPatternAnalysisMaxIter";
-            this.labelCutPatternAnalysisMaxIter.Size = new System.Drawing.Size(159, 25);
+            this.labelCutPatternAnalysisMaxIter.Size = new System.Drawing.Size(79, 13);
             this.labelCutPatternAnalysisMaxIter.TabIndex = 84;
             this.labelCutPatternAnalysisMaxIter.Text = "Max. Iterations:";
             // 
             // labelCutPatternAnalysisName
             // 
             this.labelCutPatternAnalysisName.AutoSize = true;
-            this.labelCutPatternAnalysisName.Location = new System.Drawing.Point(8, 15);
-            this.labelCutPatternAnalysisName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelCutPatternAnalysisName.Location = new System.Drawing.Point(4, 8);
+            this.labelCutPatternAnalysisName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelCutPatternAnalysisName.Name = "labelCutPatternAnalysisName";
-            this.labelCutPatternAnalysisName.Size = new System.Drawing.Size(74, 25);
+            this.labelCutPatternAnalysisName.Size = new System.Drawing.Size(38, 13);
             this.labelCutPatternAnalysisName.TabIndex = 85;
             this.labelCutPatternAnalysisName.Text = "Name:";
             // 
             // labelCutPatternAnalysisTol
             // 
             this.labelCutPatternAnalysisTol.AutoSize = true;
-            this.labelCutPatternAnalysisTol.Location = new System.Drawing.Point(8, 152);
-            this.labelCutPatternAnalysisTol.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelCutPatternAnalysisTol.Location = new System.Drawing.Point(4, 79);
+            this.labelCutPatternAnalysisTol.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelCutPatternAnalysisTol.Name = "labelCutPatternAnalysisTol";
-            this.labelCutPatternAnalysisTol.Size = new System.Drawing.Size(114, 25);
+            this.labelCutPatternAnalysisTol.Size = new System.Drawing.Size(58, 13);
             this.labelCutPatternAnalysisTol.TabIndex = 86;
             this.labelCutPatternAnalysisTol.Text = "Tolerance:";
             // 
             // labelCutPatternAnalysisMaxStep
             // 
             this.labelCutPatternAnalysisMaxStep.AutoSize = true;
-            this.labelCutPatternAnalysisMaxStep.Location = new System.Drawing.Point(8, 60);
-            this.labelCutPatternAnalysisMaxStep.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelCutPatternAnalysisMaxStep.Location = new System.Drawing.Point(4, 31);
+            this.labelCutPatternAnalysisMaxStep.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelCutPatternAnalysisMaxStep.Name = "labelCutPatternAnalysisMaxStep";
-            this.labelCutPatternAnalysisMaxStep.Size = new System.Drawing.Size(126, 25);
+            this.labelCutPatternAnalysisMaxStep.Size = new System.Drawing.Size(63, 13);
             this.labelCutPatternAnalysisMaxStep.TabIndex = 87;
             this.labelCutPatternAnalysisMaxStep.Text = "Max. Steps:";
             // 
@@ -1181,19 +1165,19 @@ namespace Cocodrilo.Panels
             this.comboBoxAnalyses.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxAnalyses.FormattingEnabled = true;
-            this.comboBoxAnalyses.Location = new System.Drawing.Point(8, 385);
-            this.comboBoxAnalyses.Margin = new System.Windows.Forms.Padding(4);
+            this.comboBoxAnalyses.Location = new System.Drawing.Point(4, 200);
+            this.comboBoxAnalyses.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.comboBoxAnalyses.Name = "comboBoxAnalyses";
-            this.comboBoxAnalyses.Size = new System.Drawing.Size(660, 33);
+            this.comboBoxAnalyses.Size = new System.Drawing.Size(332, 21);
             this.comboBoxAnalyses.TabIndex = 87;
             this.comboBoxAnalyses.SelectedIndexChanged += new System.EventHandler(this.comboBoxAnalyses_SelectedIndexChanged);
             // 
             // buttonRunAnalysis
             // 
-            this.buttonRunAnalysis.Location = new System.Drawing.Point(8, 477);
-            this.buttonRunAnalysis.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonRunAnalysis.Location = new System.Drawing.Point(4, 248);
+            this.buttonRunAnalysis.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonRunAnalysis.Name = "buttonRunAnalysis";
-            this.buttonRunAnalysis.Size = new System.Drawing.Size(174, 48);
+            this.buttonRunAnalysis.Size = new System.Drawing.Size(87, 25);
             this.buttonRunAnalysis.TabIndex = 88;
             this.buttonRunAnalysis.Text = "Run Analysis";
             this.buttonRunAnalysis.UseVisualStyleBackColor = true;
@@ -1201,10 +1185,10 @@ namespace Cocodrilo.Panels
             // 
             // buttonDeleteAnalysis
             // 
-            this.buttonDeleteAnalysis.Location = new System.Drawing.Point(372, 329);
-            this.buttonDeleteAnalysis.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonDeleteAnalysis.Location = new System.Drawing.Point(186, 171);
+            this.buttonDeleteAnalysis.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonDeleteAnalysis.Name = "buttonDeleteAnalysis";
-            this.buttonDeleteAnalysis.Size = new System.Drawing.Size(174, 48);
+            this.buttonDeleteAnalysis.Size = new System.Drawing.Size(87, 25);
             this.buttonDeleteAnalysis.TabIndex = 86;
             this.buttonDeleteAnalysis.Text = "Delete Analysis";
             this.buttonDeleteAnalysis.UseVisualStyleBackColor = true;
@@ -1212,10 +1196,10 @@ namespace Cocodrilo.Panels
             // 
             // buttonCreateAnalysis
             // 
-            this.buttonCreateAnalysis.Location = new System.Drawing.Point(8, 329);
-            this.buttonCreateAnalysis.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonCreateAnalysis.Location = new System.Drawing.Point(4, 171);
+            this.buttonCreateAnalysis.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonCreateAnalysis.Name = "buttonCreateAnalysis";
-            this.buttonCreateAnalysis.Size = new System.Drawing.Size(174, 48);
+            this.buttonCreateAnalysis.Size = new System.Drawing.Size(87, 25);
             this.buttonCreateAnalysis.TabIndex = 84;
             this.buttonCreateAnalysis.Text = "Create Analysis";
             this.buttonCreateAnalysis.UseVisualStyleBackColor = true;
@@ -1223,10 +1207,10 @@ namespace Cocodrilo.Panels
             // 
             // buttonModifyAnalysis
             // 
-            this.buttonModifyAnalysis.Location = new System.Drawing.Point(190, 329);
-            this.buttonModifyAnalysis.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonModifyAnalysis.Location = new System.Drawing.Point(95, 171);
+            this.buttonModifyAnalysis.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonModifyAnalysis.Name = "buttonModifyAnalysis";
-            this.buttonModifyAnalysis.Size = new System.Drawing.Size(174, 48);
+            this.buttonModifyAnalysis.Size = new System.Drawing.Size(87, 25);
             this.buttonModifyAnalysis.TabIndex = 85;
             this.buttonModifyAnalysis.Text = "Modify Analysis";
             this.buttonModifyAnalysis.UseVisualStyleBackColor = true;
@@ -1240,11 +1224,11 @@ namespace Cocodrilo.Panels
             this.groupBoxOptions.Controls.Add(this.buttonResetInstance);
             this.groupBoxOptions.Controls.Add(this.buttonDeleteAll);
             this.groupBoxOptions.Controls.Add(this.checkBoxShowPreprocessing);
-            this.groupBoxOptions.Location = new System.Drawing.Point(10, 1208);
-            this.groupBoxOptions.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBoxOptions.Location = new System.Drawing.Point(5, 628);
+            this.groupBoxOptions.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBoxOptions.Name = "groupBoxOptions";
-            this.groupBoxOptions.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBoxOptions.Size = new System.Drawing.Size(686, 188);
+            this.groupBoxOptions.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBoxOptions.Size = new System.Drawing.Size(343, 98);
             this.groupBoxOptions.TabIndex = 100;
             this.groupBoxOptions.TabStop = false;
             this.groupBoxOptions.Text = "Options";
@@ -1252,10 +1236,9 @@ namespace Cocodrilo.Panels
             // checkBoxShowPreLoads
             // 
             this.checkBoxShowPreLoads.AutoSize = true;
-            this.checkBoxShowPreLoads.Location = new System.Drawing.Point(422, 33);
-            this.checkBoxShowPreLoads.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxShowPreLoads.Location = new System.Drawing.Point(211, 17);
             this.checkBoxShowPreLoads.Name = "checkBoxShowPreLoads";
-            this.checkBoxShowPreLoads.Size = new System.Drawing.Size(162, 29);
+            this.checkBoxShowPreLoads.Size = new System.Drawing.Size(85, 17);
             this.checkBoxShowPreLoads.TabIndex = 4;
             this.checkBoxShowPreLoads.Text = "Show Loads";
             this.checkBoxShowPreLoads.UseVisualStyleBackColor = true;
@@ -1264,10 +1247,9 @@ namespace Cocodrilo.Panels
             // checkBoxShowPreSupports
             // 
             this.checkBoxShowPreSupports.AutoSize = true;
-            this.checkBoxShowPreSupports.Location = new System.Drawing.Point(216, 33);
-            this.checkBoxShowPreSupports.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxShowPreSupports.Location = new System.Drawing.Point(108, 17);
             this.checkBoxShowPreSupports.Name = "checkBoxShowPreSupports";
-            this.checkBoxShowPreSupports.Size = new System.Drawing.Size(189, 29);
+            this.checkBoxShowPreSupports.Size = new System.Drawing.Size(98, 17);
             this.checkBoxShowPreSupports.TabIndex = 3;
             this.checkBoxShowPreSupports.Text = "Show Supports";
             this.checkBoxShowPreSupports.UseVisualStyleBackColor = true;
@@ -1276,10 +1258,10 @@ namespace Cocodrilo.Panels
             // checkBoxShowPreCouplings
             // 
             this.checkBoxShowPreCouplings.AutoSize = true;
-            this.checkBoxShowPreCouplings.Location = new System.Drawing.Point(8, 73);
-            this.checkBoxShowPreCouplings.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBoxShowPreCouplings.Location = new System.Drawing.Point(4, 38);
+            this.checkBoxShowPreCouplings.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.checkBoxShowPreCouplings.Name = "checkBoxShowPreCouplings";
-            this.checkBoxShowPreCouplings.Size = new System.Drawing.Size(199, 29);
+            this.checkBoxShowPreCouplings.Size = new System.Drawing.Size(102, 17);
             this.checkBoxShowPreCouplings.TabIndex = 0;
             this.checkBoxShowPreCouplings.Text = "Show Couplings";
             this.checkBoxShowPreCouplings.UseVisualStyleBackColor = true;
@@ -1287,10 +1269,9 @@ namespace Cocodrilo.Panels
             // 
             // buttonResetInstance
             // 
-            this.buttonResetInstance.Location = new System.Drawing.Point(308, 113);
-            this.buttonResetInstance.Margin = new System.Windows.Forms.Padding(6);
+            this.buttonResetInstance.Location = new System.Drawing.Point(154, 59);
             this.buttonResetInstance.Name = "buttonResetInstance";
-            this.buttonResetInstance.Size = new System.Drawing.Size(292, 46);
+            this.buttonResetInstance.Size = new System.Drawing.Size(146, 24);
             this.buttonResetInstance.TabIndex = 2;
             this.buttonResetInstance.Text = "Reset Instance";
             this.buttonResetInstance.UseVisualStyleBackColor = true;
@@ -1298,10 +1279,10 @@ namespace Cocodrilo.Panels
             // 
             // buttonDeleteAll
             // 
-            this.buttonDeleteAll.Location = new System.Drawing.Point(8, 113);
-            this.buttonDeleteAll.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonDeleteAll.Location = new System.Drawing.Point(4, 59);
+            this.buttonDeleteAll.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonDeleteAll.Name = "buttonDeleteAll";
-            this.buttonDeleteAll.Size = new System.Drawing.Size(290, 48);
+            this.buttonDeleteAll.Size = new System.Drawing.Size(145, 25);
             this.buttonDeleteAll.TabIndex = 1;
             this.buttonDeleteAll.Text = "Delete Entire User Data";
             this.buttonDeleteAll.UseVisualStyleBackColor = true;
@@ -1310,10 +1291,10 @@ namespace Cocodrilo.Panels
             // checkBoxShowPreprocessing
             // 
             this.checkBoxShowPreprocessing.AutoSize = true;
-            this.checkBoxShowPreprocessing.Location = new System.Drawing.Point(8, 33);
-            this.checkBoxShowPreprocessing.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBoxShowPreprocessing.Location = new System.Drawing.Point(4, 17);
+            this.checkBoxShowPreprocessing.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.checkBoxShowPreprocessing.Name = "checkBoxShowPreprocessing";
-            this.checkBoxShowPreprocessing.Size = new System.Drawing.Size(192, 29);
+            this.checkBoxShowPreprocessing.Size = new System.Drawing.Size(99, 17);
             this.checkBoxShowPreprocessing.TabIndex = 0;
             this.checkBoxShowPreprocessing.Text = "Show Elements";
             this.checkBoxShowPreprocessing.UseVisualStyleBackColor = true;
@@ -1322,21 +1303,21 @@ namespace Cocodrilo.Panels
             // groupBoxMaterials
             // 
             this.groupBoxMaterials.Controls.Add(this.buttonAddModifyMaterial);
-            this.groupBoxMaterials.Location = new System.Drawing.Point(10, 10);
-            this.groupBoxMaterials.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBoxMaterials.Location = new System.Drawing.Point(5, 5);
+            this.groupBoxMaterials.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBoxMaterials.Name = "groupBoxMaterials";
-            this.groupBoxMaterials.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBoxMaterials.Size = new System.Drawing.Size(686, 98);
+            this.groupBoxMaterials.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBoxMaterials.Size = new System.Drawing.Size(343, 51);
             this.groupBoxMaterials.TabIndex = 101;
             this.groupBoxMaterials.TabStop = false;
             this.groupBoxMaterials.Text = "Materials";
             // 
             // buttonAddModifyMaterial
             // 
-            this.buttonAddModifyMaterial.Location = new System.Drawing.Point(24, 40);
-            this.buttonAddModifyMaterial.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonAddModifyMaterial.Location = new System.Drawing.Point(12, 21);
+            this.buttonAddModifyMaterial.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonAddModifyMaterial.Name = "buttonAddModifyMaterial";
-            this.buttonAddModifyMaterial.Size = new System.Drawing.Size(294, 48);
+            this.buttonAddModifyMaterial.Size = new System.Drawing.Size(147, 25);
             this.buttonAddModifyMaterial.TabIndex = 0;
             this.buttonAddModifyMaterial.Text = "Add/ Modify Materials";
             this.buttonAddModifyMaterial.UseVisualStyleBackColor = true;
@@ -1345,11 +1326,11 @@ namespace Cocodrilo.Panels
             // groupBoxProperties
             // 
             this.groupBoxProperties.Controls.Add(this.tabControlProperties);
-            this.groupBoxProperties.Location = new System.Drawing.Point(10, 115);
-            this.groupBoxProperties.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBoxProperties.Location = new System.Drawing.Point(5, 60);
+            this.groupBoxProperties.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBoxProperties.Name = "groupBoxProperties";
-            this.groupBoxProperties.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBoxProperties.Size = new System.Drawing.Size(686, 540);
+            this.groupBoxProperties.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBoxProperties.Size = new System.Drawing.Size(343, 281);
             this.groupBoxProperties.TabIndex = 102;
             this.groupBoxProperties.TabStop = false;
             this.groupBoxProperties.Text = "Properties";
@@ -1364,11 +1345,11 @@ namespace Cocodrilo.Panels
             this.tabControlProperties.Controls.Add(this.tabPageLoad);
             this.tabControlProperties.Controls.Add(this.tabPageCheck);
             this.tabControlProperties.ImageList = this.imageListTabControlElement;
-            this.tabControlProperties.Location = new System.Drawing.Point(8, 37);
-            this.tabControlProperties.Margin = new System.Windows.Forms.Padding(4);
+            this.tabControlProperties.Location = new System.Drawing.Point(4, 19);
+            this.tabControlProperties.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabControlProperties.Name = "tabControlProperties";
             this.tabControlProperties.SelectedIndex = 0;
-            this.tabControlProperties.Size = new System.Drawing.Size(670, 496);
+            this.tabControlProperties.Size = new System.Drawing.Size(335, 258);
             this.tabControlProperties.TabIndex = 3;
             // 
             // tabPageElement
@@ -1383,21 +1364,19 @@ namespace Cocodrilo.Panels
             this.tabPageElement.Controls.Add(this.buttonDeleteElement);
             this.tabPageElement.Controls.Add(this.buttonAddElement);
             this.tabPageElement.ImageKey = "Teda_icon_element.png";
-            this.tabPageElement.Location = new System.Drawing.Point(8, 39);
-            this.tabPageElement.Margin = new System.Windows.Forms.Padding(6);
+            this.tabPageElement.Location = new System.Drawing.Point(4, 23);
             this.tabPageElement.Name = "tabPageElement";
-            this.tabPageElement.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPageElement.Size = new System.Drawing.Size(654, 449);
+            this.tabPageElement.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPageElement.Size = new System.Drawing.Size(327, 231);
             this.tabPageElement.TabIndex = 8;
             this.tabPageElement.Text = "Element";
             this.tabPageElement.UseVisualStyleBackColor = true;
             // 
             // buttonLoadElement
             // 
-            this.buttonLoadElement.Location = new System.Drawing.Point(384, 381);
-            this.buttonLoadElement.Margin = new System.Windows.Forms.Padding(6);
+            this.buttonLoadElement.Location = new System.Drawing.Point(192, 198);
             this.buttonLoadElement.Name = "buttonLoadElement";
-            this.buttonLoadElement.Size = new System.Drawing.Size(172, 40);
+            this.buttonLoadElement.Size = new System.Drawing.Size(86, 21);
             this.buttonLoadElement.TabIndex = 39;
             this.buttonLoadElement.Text = "Load Element";
             this.buttonLoadElement.UseVisualStyleBackColor = true;
@@ -1412,11 +1391,10 @@ namespace Cocodrilo.Panels
             this.tabControlElement.Controls.Add(this.tabPageElementBeam);
             this.tabControlElement.Controls.Add(this.tabPageElementCable);
             this.tabControlElement.ImageList = this.imageListTabControlElement;
-            this.tabControlElement.Location = new System.Drawing.Point(0, 12);
-            this.tabControlElement.Margin = new System.Windows.Forms.Padding(6);
+            this.tabControlElement.Location = new System.Drawing.Point(0, 6);
             this.tabControlElement.Name = "tabControlElement";
             this.tabControlElement.SelectedIndex = 0;
-            this.tabControlElement.Size = new System.Drawing.Size(592, 256);
+            this.tabControlElement.Size = new System.Drawing.Size(300, 133);
             this.tabControlElement.TabIndex = 38;
             // 
             // tabPageElementMembrane
@@ -1429,11 +1407,10 @@ namespace Cocodrilo.Panels
             this.tabPageElementMembrane.Controls.Add(this.labelMembraneThick);
             this.tabPageElementMembrane.Controls.Add(this.labelMembranePrestress1);
             this.tabPageElementMembrane.Controls.Add(this.textBoxMembraneThick);
-            this.tabPageElementMembrane.Location = new System.Drawing.Point(8, 39);
-            this.tabPageElementMembrane.Margin = new System.Windows.Forms.Padding(6);
+            this.tabPageElementMembrane.Location = new System.Drawing.Point(4, 23);
             this.tabPageElementMembrane.Name = "tabPageElementMembrane";
-            this.tabPageElementMembrane.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPageElementMembrane.Size = new System.Drawing.Size(576, 209);
+            this.tabPageElementMembrane.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPageElementMembrane.Size = new System.Drawing.Size(292, 106);
             this.tabPageElementMembrane.TabIndex = 0;
             this.tabPageElementMembrane.Text = "Membrane";
             this.tabPageElementMembrane.UseVisualStyleBackColor = true;
@@ -1443,10 +1420,9 @@ namespace Cocodrilo.Panels
             this.checkBoxElementMembraneFofi.AutoSize = true;
             this.checkBoxElementMembraneFofi.Checked = true;
             this.checkBoxElementMembraneFofi.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxElementMembraneFofi.Location = new System.Drawing.Point(144, 162);
-            this.checkBoxElementMembraneFofi.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxElementMembraneFofi.Location = new System.Drawing.Point(72, 84);
             this.checkBoxElementMembraneFofi.Name = "checkBoxElementMembraneFofi";
-            this.checkBoxElementMembraneFofi.Size = new System.Drawing.Size(157, 29);
+            this.checkBoxElementMembraneFofi.Size = new System.Drawing.Size(80, 17);
             this.checkBoxElementMembraneFofi.TabIndex = 10;
             this.checkBoxElementMembraneFofi.Text = "Formfinding";
             this.checkBoxElementMembraneFofi.UseVisualStyleBackColor = true;
@@ -1454,10 +1430,9 @@ namespace Cocodrilo.Panels
             // checkBoxElementMembraneEdgeCoupling
             // 
             this.checkBoxElementMembraneEdgeCoupling.AutoSize = true;
-            this.checkBoxElementMembraneEdgeCoupling.Location = new System.Drawing.Point(404, 162);
-            this.checkBoxElementMembraneEdgeCoupling.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxElementMembraneEdgeCoupling.Location = new System.Drawing.Point(202, 84);
             this.checkBoxElementMembraneEdgeCoupling.Name = "checkBoxElementMembraneEdgeCoupling";
-            this.checkBoxElementMembraneEdgeCoupling.Size = new System.Drawing.Size(185, 29);
+            this.checkBoxElementMembraneEdgeCoupling.Size = new System.Drawing.Size(95, 17);
             this.checkBoxElementMembraneEdgeCoupling.TabIndex = 10;
             this.checkBoxElementMembraneEdgeCoupling.Text = "Edge Coupling";
             this.checkBoxElementMembraneEdgeCoupling.UseVisualStyleBackColor = true;
@@ -1466,20 +1441,18 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxMembranePrestress2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxMembranePrestress2.Location = new System.Drawing.Point(144, 112);
-            this.textBoxMembranePrestress2.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxMembranePrestress2.Location = new System.Drawing.Point(72, 58);
             this.textBoxMembranePrestress2.Name = "textBoxMembranePrestress2";
-            this.textBoxMembranePrestress2.Size = new System.Drawing.Size(374, 31);
+            this.textBoxMembranePrestress2.Size = new System.Drawing.Size(197, 20);
             this.textBoxMembranePrestress2.TabIndex = 9;
             this.textBoxMembranePrestress2.Text = "1.0";
             // 
             // labelMembranePrestress2
             // 
             this.labelMembranePrestress2.AutoSize = true;
-            this.labelMembranePrestress2.Location = new System.Drawing.Point(0, 117);
-            this.labelMembranePrestress2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelMembranePrestress2.Location = new System.Drawing.Point(0, 61);
             this.labelMembranePrestress2.Name = "labelMembranePrestress2";
-            this.labelMembranePrestress2.Size = new System.Drawing.Size(121, 25);
+            this.labelMembranePrestress2.Size = new System.Drawing.Size(59, 13);
             this.labelMembranePrestress2.TabIndex = 8;
             this.labelMembranePrestress2.Text = "Prestress 2";
             // 
@@ -1487,30 +1460,27 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxMembranePrestress1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxMembranePrestress1.Location = new System.Drawing.Point(142, 62);
-            this.textBoxMembranePrestress1.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxMembranePrestress1.Location = new System.Drawing.Point(71, 32);
             this.textBoxMembranePrestress1.Name = "textBoxMembranePrestress1";
-            this.textBoxMembranePrestress1.Size = new System.Drawing.Size(376, 31);
+            this.textBoxMembranePrestress1.Size = new System.Drawing.Size(198, 20);
             this.textBoxMembranePrestress1.TabIndex = 7;
             this.textBoxMembranePrestress1.Text = "1.0";
             // 
             // labelMembraneThick
             // 
             this.labelMembraneThick.AutoSize = true;
-            this.labelMembraneThick.Location = new System.Drawing.Point(0, 17);
-            this.labelMembraneThick.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelMembraneThick.Location = new System.Drawing.Point(0, 9);
             this.labelMembraneThick.Name = "labelMembraneThick";
-            this.labelMembraneThick.Size = new System.Drawing.Size(110, 25);
+            this.labelMembraneThick.Size = new System.Drawing.Size(56, 13);
             this.labelMembraneThick.TabIndex = 2;
             this.labelMembraneThick.Text = "Thickness";
             // 
             // labelMembranePrestress1
             // 
             this.labelMembranePrestress1.AutoSize = true;
-            this.labelMembranePrestress1.Location = new System.Drawing.Point(0, 67);
-            this.labelMembranePrestress1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelMembranePrestress1.Location = new System.Drawing.Point(0, 35);
             this.labelMembranePrestress1.Name = "labelMembranePrestress1";
-            this.labelMembranePrestress1.Size = new System.Drawing.Size(121, 25);
+            this.labelMembranePrestress1.Size = new System.Drawing.Size(59, 13);
             this.labelMembranePrestress1.TabIndex = 6;
             this.labelMembranePrestress1.Text = "Prestress 1";
             // 
@@ -1518,10 +1488,9 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxMembraneThick.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxMembraneThick.Location = new System.Drawing.Point(144, 12);
-            this.textBoxMembraneThick.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxMembraneThick.Location = new System.Drawing.Point(72, 6);
             this.textBoxMembraneThick.Name = "textBoxMembraneThick";
-            this.textBoxMembraneThick.Size = new System.Drawing.Size(374, 31);
+            this.textBoxMembraneThick.Size = new System.Drawing.Size(197, 20);
             this.textBoxMembraneThick.TabIndex = 3;
             this.textBoxMembraneThick.Text = "1.0";
             // 
@@ -1531,11 +1500,10 @@ namespace Cocodrilo.Panels
             this.tabPageElementShell.Controls.Add(this.label1);
             this.tabPageElementShell.Controls.Add(this.labelShellThick);
             this.tabPageElementShell.Controls.Add(this.textBoxShellThick);
-            this.tabPageElementShell.Location = new System.Drawing.Point(8, 39);
-            this.tabPageElementShell.Margin = new System.Windows.Forms.Padding(6);
+            this.tabPageElementShell.Location = new System.Drawing.Point(4, 23);
             this.tabPageElementShell.Name = "tabPageElementShell";
-            this.tabPageElementShell.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPageElementShell.Size = new System.Drawing.Size(576, 209);
+            this.tabPageElementShell.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPageElementShell.Size = new System.Drawing.Size(292, 106);
             this.tabPageElementShell.TabIndex = 1;
             this.tabPageElementShell.Text = "Shell";
             this.tabPageElementShell.UseVisualStyleBackColor = true;
@@ -1553,30 +1521,27 @@ namespace Cocodrilo.Panels
             "Shell3pElement",
             "Shell5pElement",
             "Shell5pHierarchicElement"});
-            this.comboBoxShellType.Location = new System.Drawing.Point(144, 62);
-            this.comboBoxShellType.Margin = new System.Windows.Forms.Padding(6);
+            this.comboBoxShellType.Location = new System.Drawing.Point(72, 32);
             this.comboBoxShellType.Name = "comboBoxShellType";
-            this.comboBoxShellType.Size = new System.Drawing.Size(458, 33);
+            this.comboBoxShellType.Size = new System.Drawing.Size(235, 21);
             this.comboBoxShellType.TabIndex = 22;
             this.comboBoxShellType.Text = "Shell3pElement";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(-2, 67);
-            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label1.Location = new System.Drawing.Point(-1, 35);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(114, 25);
+            this.label1.Size = new System.Drawing.Size(57, 13);
             this.label1.TabIndex = 7;
             this.label1.Text = "Shell Type";
             // 
             // labelShellThick
             // 
             this.labelShellThick.AutoSize = true;
-            this.labelShellThick.Location = new System.Drawing.Point(0, 17);
-            this.labelShellThick.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelShellThick.Location = new System.Drawing.Point(0, 9);
             this.labelShellThick.Name = "labelShellThick";
-            this.labelShellThick.Size = new System.Drawing.Size(110, 25);
+            this.labelShellThick.Size = new System.Drawing.Size(56, 13);
             this.labelShellThick.TabIndex = 5;
             this.labelShellThick.Text = "Thickness";
             // 
@@ -1584,10 +1549,9 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxShellThick.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxShellThick.Location = new System.Drawing.Point(144, 12);
-            this.textBoxShellThick.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxShellThick.Location = new System.Drawing.Point(72, 6);
             this.textBoxShellThick.Name = "textBoxShellThick";
-            this.textBoxShellThick.Size = new System.Drawing.Size(458, 31);
+            this.textBoxShellThick.Size = new System.Drawing.Size(235, 20);
             this.textBoxShellThick.TabIndex = 4;
             this.textBoxShellThick.Text = "1.0";
             // 
@@ -1607,11 +1571,10 @@ namespace Cocodrilo.Panels
             this.tabPageElementBeam.Controls.Add(this.labelBeamArea);
             this.tabPageElementBeam.Controls.Add(this.labelBeamType);
             this.tabPageElementBeam.Controls.Add(this.comboBoxBeamType);
-            this.tabPageElementBeam.Location = new System.Drawing.Point(8, 39);
-            this.tabPageElementBeam.Margin = new System.Windows.Forms.Padding(6);
+            this.tabPageElementBeam.Location = new System.Drawing.Point(4, 23);
             this.tabPageElementBeam.Name = "tabPageElementBeam";
-            this.tabPageElementBeam.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPageElementBeam.Size = new System.Drawing.Size(576, 209);
+            this.tabPageElementBeam.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPageElementBeam.Size = new System.Drawing.Size(292, 106);
             this.tabPageElementBeam.TabIndex = 2;
             this.tabPageElementBeam.Text = "Beam";
             this.tabPageElementBeam.UseVisualStyleBackColor = true;
@@ -1620,10 +1583,9 @@ namespace Cocodrilo.Panels
             // 
             this.buttonAddAxis.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAddAxis.Location = new System.Drawing.Point(142, 163);
-            this.buttonAddAxis.Margin = new System.Windows.Forms.Padding(6);
+            this.buttonAddAxis.Location = new System.Drawing.Point(71, 85);
             this.buttonAddAxis.Name = "buttonAddAxis";
-            this.buttonAddAxis.Size = new System.Drawing.Size(464, 42);
+            this.buttonAddAxis.Size = new System.Drawing.Size(236, 22);
             this.buttonAddAxis.TabIndex = 37;
             this.buttonAddAxis.Text = "Add Axis";
             this.buttonAddAxis.UseVisualStyleBackColor = true;
@@ -1632,10 +1594,9 @@ namespace Cocodrilo.Panels
             // labelBeamIy
             // 
             this.labelBeamIy.AutoSize = true;
-            this.labelBeamIy.Location = new System.Drawing.Point(0, 119);
-            this.labelBeamIy.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelBeamIy.Location = new System.Drawing.Point(0, 62);
             this.labelBeamIy.Name = "labelBeamIy";
-            this.labelBeamIy.Size = new System.Drawing.Size(28, 25);
+            this.labelBeamIy.Size = new System.Drawing.Size(15, 13);
             this.labelBeamIy.TabIndex = 30;
             this.labelBeamIy.Text = "Iy";
             this.labelBeamIy.Visible = false;
@@ -1643,10 +1604,9 @@ namespace Cocodrilo.Panels
             // labelBeamWidth
             // 
             this.labelBeamWidth.AutoSize = true;
-            this.labelBeamWidth.Location = new System.Drawing.Point(0, 119);
-            this.labelBeamWidth.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelBeamWidth.Location = new System.Drawing.Point(0, 62);
             this.labelBeamWidth.Name = "labelBeamWidth";
-            this.labelBeamWidth.Size = new System.Drawing.Size(67, 25);
+            this.labelBeamWidth.Size = new System.Drawing.Size(35, 13);
             this.labelBeamWidth.TabIndex = 27;
             this.labelBeamWidth.Text = "Width";
             this.labelBeamWidth.Visible = false;
@@ -1656,30 +1616,27 @@ namespace Cocodrilo.Panels
             this.labelBeamIt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelBeamIt.AutoSize = true;
-            this.labelBeamIt.Location = new System.Drawing.Point(376, 119);
-            this.labelBeamIt.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelBeamIt.Location = new System.Drawing.Point(188, 62);
             this.labelBeamIt.Name = "labelBeamIt";
-            this.labelBeamIt.Size = new System.Drawing.Size(23, 25);
+            this.labelBeamIt.Size = new System.Drawing.Size(13, 13);
             this.labelBeamIt.TabIndex = 35;
             this.labelBeamIt.Text = "It";
             this.labelBeamIt.Visible = false;
             // 
             // textBoxBeamIy
             // 
-            this.textBoxBeamIy.Location = new System.Drawing.Point(142, 113);
-            this.textBoxBeamIy.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxBeamIy.Location = new System.Drawing.Point(71, 59);
             this.textBoxBeamIy.Name = "textBoxBeamIy";
-            this.textBoxBeamIy.Size = new System.Drawing.Size(218, 31);
+            this.textBoxBeamIy.Size = new System.Drawing.Size(111, 20);
             this.textBoxBeamIy.TabIndex = 32;
             this.textBoxBeamIy.Text = "8.3333e-6";
             this.textBoxBeamIy.Visible = false;
             // 
             // textBoxBeamArea
             // 
-            this.textBoxBeamArea.Location = new System.Drawing.Point(142, 63);
-            this.textBoxBeamArea.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxBeamArea.Location = new System.Drawing.Point(71, 33);
             this.textBoxBeamArea.Name = "textBoxBeamArea";
-            this.textBoxBeamArea.Size = new System.Drawing.Size(218, 31);
+            this.textBoxBeamArea.Size = new System.Drawing.Size(111, 20);
             this.textBoxBeamArea.TabIndex = 31;
             this.textBoxBeamArea.Text = "0.01";
             this.textBoxBeamArea.Visible = false;
@@ -1689,10 +1646,9 @@ namespace Cocodrilo.Panels
             this.labelBeamIz.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelBeamIz.AutoSize = true;
-            this.labelBeamIz.Location = new System.Drawing.Point(376, 69);
-            this.labelBeamIz.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelBeamIz.Location = new System.Drawing.Point(188, 36);
             this.labelBeamIz.Name = "labelBeamIz";
-            this.labelBeamIz.Size = new System.Drawing.Size(28, 25);
+            this.labelBeamIz.Size = new System.Drawing.Size(15, 13);
             this.labelBeamIz.TabIndex = 33;
             this.labelBeamIz.Text = "Iz";
             this.labelBeamIz.Visible = false;
@@ -1701,10 +1657,9 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxBeamIz.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxBeamIz.Location = new System.Drawing.Point(418, 63);
-            this.textBoxBeamIz.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxBeamIz.Location = new System.Drawing.Point(209, 33);
             this.textBoxBeamIz.Name = "textBoxBeamIz";
-            this.textBoxBeamIz.Size = new System.Drawing.Size(162, 31);
+            this.textBoxBeamIz.Size = new System.Drawing.Size(87, 20);
             this.textBoxBeamIz.TabIndex = 34;
             this.textBoxBeamIz.Text = "8.3333e-6";
             this.textBoxBeamIz.Visible = false;
@@ -1712,10 +1667,9 @@ namespace Cocodrilo.Panels
             // labelBeamDiameter
             // 
             this.labelBeamDiameter.AutoSize = true;
-            this.labelBeamDiameter.Location = new System.Drawing.Point(-2, 69);
-            this.labelBeamDiameter.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelBeamDiameter.Location = new System.Drawing.Point(-1, 36);
             this.labelBeamDiameter.Name = "labelBeamDiameter";
-            this.labelBeamDiameter.Size = new System.Drawing.Size(98, 25);
+            this.labelBeamDiameter.Size = new System.Drawing.Size(49, 13);
             this.labelBeamDiameter.TabIndex = 23;
             this.labelBeamDiameter.Text = "Diameter";
             this.labelBeamDiameter.Visible = false;
@@ -1723,10 +1677,9 @@ namespace Cocodrilo.Panels
             // labelBeamHeight
             // 
             this.labelBeamHeight.AutoSize = true;
-            this.labelBeamHeight.Location = new System.Drawing.Point(0, 69);
-            this.labelBeamHeight.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelBeamHeight.Location = new System.Drawing.Point(0, 36);
             this.labelBeamHeight.Name = "labelBeamHeight";
-            this.labelBeamHeight.Size = new System.Drawing.Size(74, 25);
+            this.labelBeamHeight.Size = new System.Drawing.Size(38, 13);
             this.labelBeamHeight.TabIndex = 25;
             this.labelBeamHeight.Text = "Height";
             this.labelBeamHeight.Visible = false;
@@ -1735,10 +1688,9 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxBeamIt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxBeamIt.Location = new System.Drawing.Point(418, 113);
-            this.textBoxBeamIt.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxBeamIt.Location = new System.Drawing.Point(209, 59);
             this.textBoxBeamIt.Name = "textBoxBeamIt";
-            this.textBoxBeamIt.Size = new System.Drawing.Size(164, 31);
+            this.textBoxBeamIt.Size = new System.Drawing.Size(88, 20);
             this.textBoxBeamIt.TabIndex = 36;
             this.textBoxBeamIt.Text = "3.3333e-5";
             this.textBoxBeamIt.Visible = false;
@@ -1746,10 +1698,9 @@ namespace Cocodrilo.Panels
             // labelBeamArea
             // 
             this.labelBeamArea.AutoSize = true;
-            this.labelBeamArea.Location = new System.Drawing.Point(0, 69);
-            this.labelBeamArea.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelBeamArea.Location = new System.Drawing.Point(0, 36);
             this.labelBeamArea.Name = "labelBeamArea";
-            this.labelBeamArea.Size = new System.Drawing.Size(57, 25);
+            this.labelBeamArea.Size = new System.Drawing.Size(29, 13);
             this.labelBeamArea.TabIndex = 29;
             this.labelBeamArea.Text = "Area";
             this.labelBeamArea.Visible = false;
@@ -1757,10 +1708,9 @@ namespace Cocodrilo.Panels
             // labelBeamType
             // 
             this.labelBeamType.AutoSize = true;
-            this.labelBeamType.Location = new System.Drawing.Point(0, 17);
-            this.labelBeamType.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelBeamType.Location = new System.Drawing.Point(0, 9);
             this.labelBeamType.Name = "labelBeamType";
-            this.labelBeamType.Size = new System.Drawing.Size(143, 25);
+            this.labelBeamType.Size = new System.Drawing.Size(70, 13);
             this.labelBeamType.TabIndex = 22;
             this.labelBeamType.Text = "Cross section";
             // 
@@ -1773,10 +1723,9 @@ namespace Cocodrilo.Panels
             "Circular",
             "Rectangular",
             "Undefined"});
-            this.comboBoxBeamType.Location = new System.Drawing.Point(144, 12);
-            this.comboBoxBeamType.Margin = new System.Windows.Forms.Padding(6);
+            this.comboBoxBeamType.Location = new System.Drawing.Point(72, 6);
             this.comboBoxBeamType.Name = "comboBoxBeamType";
-            this.comboBoxBeamType.Size = new System.Drawing.Size(458, 33);
+            this.comboBoxBeamType.Size = new System.Drawing.Size(235, 21);
             this.comboBoxBeamType.TabIndex = 21;
             this.comboBoxBeamType.SelectedIndexChanged += new System.EventHandler(this.comboBoxBeamType_SelectedIndexChanged);
             // 
@@ -1790,11 +1739,10 @@ namespace Cocodrilo.Panels
             this.tabPageElementCable.Controls.Add(this.comboBoxCableType);
             this.tabPageElementCable.Controls.Add(this.labelCableArea);
             this.tabPageElementCable.Controls.Add(this.labelCableType);
-            this.tabPageElementCable.Location = new System.Drawing.Point(8, 39);
-            this.tabPageElementCable.Margin = new System.Windows.Forms.Padding(6);
+            this.tabPageElementCable.Location = new System.Drawing.Point(4, 23);
             this.tabPageElementCable.Name = "tabPageElementCable";
-            this.tabPageElementCable.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPageElementCable.Size = new System.Drawing.Size(576, 209);
+            this.tabPageElementCable.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPageElementCable.Size = new System.Drawing.Size(292, 106);
             this.tabPageElementCable.TabIndex = 3;
             this.tabPageElementCable.Text = "Cable";
             this.tabPageElementCable.UseVisualStyleBackColor = true;
@@ -1804,10 +1752,9 @@ namespace Cocodrilo.Panels
             this.checkBoxElementCableFofi.AutoSize = true;
             this.checkBoxElementCableFofi.Checked = true;
             this.checkBoxElementCableFofi.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxElementCableFofi.Location = new System.Drawing.Point(440, 163);
-            this.checkBoxElementCableFofi.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxElementCableFofi.Location = new System.Drawing.Point(220, 85);
             this.checkBoxElementCableFofi.Name = "checkBoxElementCableFofi";
-            this.checkBoxElementCableFofi.Size = new System.Drawing.Size(157, 29);
+            this.checkBoxElementCableFofi.Size = new System.Drawing.Size(80, 17);
             this.checkBoxElementCableFofi.TabIndex = 21;
             this.checkBoxElementCableFofi.Text = "Formfinding";
             this.checkBoxElementCableFofi.UseVisualStyleBackColor = true;
@@ -1817,10 +1764,9 @@ namespace Cocodrilo.Panels
             this.checkBoxCablePrestressCurve.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxCablePrestressCurve.AutoSize = true;
-            this.checkBoxCablePrestressCurve.Location = new System.Drawing.Point(144, 163);
-            this.checkBoxCablePrestressCurve.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxCablePrestressCurve.Location = new System.Drawing.Point(72, 85);
             this.checkBoxCablePrestressCurve.Name = "checkBoxCablePrestressCurve";
-            this.checkBoxCablePrestressCurve.Size = new System.Drawing.Size(283, 29);
+            this.checkBoxCablePrestressCurve.Size = new System.Drawing.Size(142, 17);
             this.checkBoxCablePrestressCurve.TabIndex = 20;
             this.checkBoxCablePrestressCurve.Text = "Load Curve for Prestress";
             this.checkBoxCablePrestressCurve.UseVisualStyleBackColor = true;
@@ -1828,10 +1774,9 @@ namespace Cocodrilo.Panels
             // labelCablePrestress
             // 
             this.labelCablePrestress.AutoSize = true;
-            this.labelCablePrestress.Location = new System.Drawing.Point(-2, 119);
-            this.labelCablePrestress.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelCablePrestress.Location = new System.Drawing.Point(-1, 62);
             this.labelCablePrestress.Name = "labelCablePrestress";
-            this.labelCablePrestress.Size = new System.Drawing.Size(103, 25);
+            this.labelCablePrestress.Size = new System.Drawing.Size(50, 13);
             this.labelCablePrestress.TabIndex = 16;
             this.labelCablePrestress.Text = "Prestress";
             // 
@@ -1839,10 +1784,9 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxCablePrestress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCablePrestress.Location = new System.Drawing.Point(144, 113);
-            this.textBoxCablePrestress.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxCablePrestress.Location = new System.Drawing.Point(72, 59);
             this.textBoxCablePrestress.Name = "textBoxCablePrestress";
-            this.textBoxCablePrestress.Size = new System.Drawing.Size(458, 31);
+            this.textBoxCablePrestress.Size = new System.Drawing.Size(235, 20);
             this.textBoxCablePrestress.TabIndex = 17;
             this.textBoxCablePrestress.Text = "1.0";
             // 
@@ -1850,10 +1794,9 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxCableArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCableArea.Location = new System.Drawing.Point(144, 63);
-            this.textBoxCableArea.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxCableArea.Location = new System.Drawing.Point(72, 33);
             this.textBoxCableArea.Name = "textBoxCableArea";
-            this.textBoxCableArea.Size = new System.Drawing.Size(458, 31);
+            this.textBoxCableArea.Size = new System.Drawing.Size(235, 20);
             this.textBoxCableArea.TabIndex = 15;
             this.textBoxCableArea.Text = "1.0";
             // 
@@ -1865,30 +1808,27 @@ namespace Cocodrilo.Panels
             this.comboBoxCableType.Items.AddRange(new object[] {
             "Curve",
             "Edge"});
-            this.comboBoxCableType.Location = new System.Drawing.Point(144, 12);
-            this.comboBoxCableType.Margin = new System.Windows.Forms.Padding(6);
+            this.comboBoxCableType.Location = new System.Drawing.Point(72, 6);
             this.comboBoxCableType.Name = "comboBoxCableType";
-            this.comboBoxCableType.Size = new System.Drawing.Size(458, 33);
+            this.comboBoxCableType.Size = new System.Drawing.Size(235, 21);
             this.comboBoxCableType.TabIndex = 19;
             this.comboBoxCableType.SelectedIndexChanged += new System.EventHandler(this.comboBoxCableType_SelectedIndex_Changed);
             // 
             // labelCableArea
             // 
             this.labelCableArea.AutoSize = true;
-            this.labelCableArea.Location = new System.Drawing.Point(0, 69);
-            this.labelCableArea.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelCableArea.Location = new System.Drawing.Point(0, 36);
             this.labelCableArea.Name = "labelCableArea";
-            this.labelCableArea.Size = new System.Drawing.Size(57, 25);
+            this.labelCableArea.Size = new System.Drawing.Size(29, 13);
             this.labelCableArea.TabIndex = 14;
             this.labelCableArea.Text = "Area";
             // 
             // labelCableType
             // 
             this.labelCableType.AutoSize = true;
-            this.labelCableType.Location = new System.Drawing.Point(0, 17);
-            this.labelCableType.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelCableType.Location = new System.Drawing.Point(0, 9);
             this.labelCableType.Name = "labelCableType";
-            this.labelCableType.Size = new System.Drawing.Size(60, 25);
+            this.labelCableType.Size = new System.Drawing.Size(31, 13);
             this.labelCableType.TabIndex = 18;
             this.labelCableType.Text = "Type";
             // 
@@ -1906,10 +1846,9 @@ namespace Cocodrilo.Panels
             // labelElementMat
             // 
             this.labelElementMat.AutoSize = true;
-            this.labelElementMat.Location = new System.Drawing.Point(6, 285);
-            this.labelElementMat.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelElementMat.Location = new System.Drawing.Point(3, 148);
             this.labelElementMat.Name = "labelElementMat";
-            this.labelElementMat.Size = new System.Drawing.Size(89, 25);
+            this.labelElementMat.Size = new System.Drawing.Size(44, 13);
             this.labelElementMat.TabIndex = 10;
             this.labelElementMat.Text = "Material";
             // 
@@ -1918,19 +1857,17 @@ namespace Cocodrilo.Panels
             this.comboBoxElementMat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxElementMat.FormattingEnabled = true;
-            this.comboBoxElementMat.Location = new System.Drawing.Point(150, 279);
-            this.comboBoxElementMat.Margin = new System.Windows.Forms.Padding(6);
+            this.comboBoxElementMat.Location = new System.Drawing.Point(75, 145);
             this.comboBoxElementMat.Name = "comboBoxElementMat";
-            this.comboBoxElementMat.Size = new System.Drawing.Size(438, 33);
+            this.comboBoxElementMat.Size = new System.Drawing.Size(225, 21);
             this.comboBoxElementMat.TabIndex = 11;
             // 
             // labelCouplingType
             // 
             this.labelCouplingType.AutoSize = true;
-            this.labelCouplingType.Location = new System.Drawing.Point(6, 335);
-            this.labelCouplingType.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelCouplingType.Location = new System.Drawing.Point(3, 174);
             this.labelCouplingType.Name = "labelCouplingType";
-            this.labelCouplingType.Size = new System.Drawing.Size(97, 25);
+            this.labelCouplingType.Size = new System.Drawing.Size(48, 13);
             this.labelCouplingType.TabIndex = 10;
             this.labelCouplingType.Text = "Coupling";
             // 
@@ -1939,20 +1876,18 @@ namespace Cocodrilo.Panels
             this.comboBoxCouplingType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxCouplingType.FormattingEnabled = true;
-            this.comboBoxCouplingType.Location = new System.Drawing.Point(150, 329);
-            this.comboBoxCouplingType.Margin = new System.Windows.Forms.Padding(6);
+            this.comboBoxCouplingType.Location = new System.Drawing.Point(75, 171);
             this.comboBoxCouplingType.Name = "comboBoxCouplingType";
-            this.comboBoxCouplingType.Size = new System.Drawing.Size(438, 33);
+            this.comboBoxCouplingType.Size = new System.Drawing.Size(225, 21);
             this.comboBoxCouplingType.TabIndex = 11;
             this.comboBoxCouplingType.Text = "CouplingPenaltyCondition";
             this.comboBoxCouplingType.SelectedIndexChanged += new System.EventHandler(this.comboBoxCouplingType_SelectedIndexChanged);
             // 
             // buttonDeleteElement
             // 
-            this.buttonDeleteElement.Location = new System.Drawing.Point(198, 381);
-            this.buttonDeleteElement.Margin = new System.Windows.Forms.Padding(6);
+            this.buttonDeleteElement.Location = new System.Drawing.Point(99, 198);
             this.buttonDeleteElement.Name = "buttonDeleteElement";
-            this.buttonDeleteElement.Size = new System.Drawing.Size(174, 40);
+            this.buttonDeleteElement.Size = new System.Drawing.Size(87, 21);
             this.buttonDeleteElement.TabIndex = 13;
             this.buttonDeleteElement.Text = "Delete Element";
             this.buttonDeleteElement.UseVisualStyleBackColor = true;
@@ -1960,10 +1895,9 @@ namespace Cocodrilo.Panels
             // 
             // buttonAddElement
             // 
-            this.buttonAddElement.Location = new System.Drawing.Point(14, 381);
-            this.buttonAddElement.Margin = new System.Windows.Forms.Padding(6);
+            this.buttonAddElement.Location = new System.Drawing.Point(7, 198);
             this.buttonAddElement.Name = "buttonAddElement";
-            this.buttonAddElement.Size = new System.Drawing.Size(172, 40);
+            this.buttonAddElement.Size = new System.Drawing.Size(86, 21);
             this.buttonAddElement.TabIndex = 12;
             this.buttonAddElement.Text = "Add Element";
             this.buttonAddElement.UseVisualStyleBackColor = true;
@@ -1985,11 +1919,10 @@ namespace Cocodrilo.Panels
             this.tabPageRefinement.Controls.Add(this.labelRefinementQDeg);
             this.tabPageRefinement.Controls.Add(this.labelRefinementPDeg);
             this.tabPageRefinement.ImageKey = "Teda_icon_ref.png";
-            this.tabPageRefinement.Location = new System.Drawing.Point(8, 39);
-            this.tabPageRefinement.Margin = new System.Windows.Forms.Padding(6);
+            this.tabPageRefinement.Location = new System.Drawing.Point(4, 23);
             this.tabPageRefinement.Name = "tabPageRefinement";
-            this.tabPageRefinement.Padding = new System.Windows.Forms.Padding(8);
-            this.tabPageRefinement.Size = new System.Drawing.Size(654, 449);
+            this.tabPageRefinement.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPageRefinement.Size = new System.Drawing.Size(327, 231);
             this.tabPageRefinement.TabIndex = 4;
             this.tabPageRefinement.Text = "Refinement";
             this.tabPageRefinement.UseVisualStyleBackColor = true;
@@ -1997,10 +1930,9 @@ namespace Cocodrilo.Panels
             // radioButtonRefinementApproxElementSize
             // 
             this.radioButtonRefinementApproxElementSize.AutoSize = true;
-            this.radioButtonRefinementApproxElementSize.Location = new System.Drawing.Point(238, 183);
-            this.radioButtonRefinementApproxElementSize.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonRefinementApproxElementSize.Location = new System.Drawing.Point(119, 95);
             this.radioButtonRefinementApproxElementSize.Name = "radioButtonRefinementApproxElementSize";
-            this.radioButtonRefinementApproxElementSize.Size = new System.Drawing.Size(249, 29);
+            this.radioButtonRefinementApproxElementSize.Size = new System.Drawing.Size(125, 17);
             this.radioButtonRefinementApproxElementSize.TabIndex = 85;
             this.radioButtonRefinementApproxElementSize.TabStop = true;
             this.radioButtonRefinementApproxElementSize.Text = "Approx. Element Size";
@@ -2011,10 +1943,9 @@ namespace Cocodrilo.Panels
             // 
             this.radioButtonRefinementKnotSubdivision.AutoSize = true;
             this.radioButtonRefinementKnotSubdivision.Checked = true;
-            this.radioButtonRefinementKnotSubdivision.Location = new System.Drawing.Point(18, 183);
-            this.radioButtonRefinementKnotSubdivision.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonRefinementKnotSubdivision.Location = new System.Drawing.Point(9, 95);
             this.radioButtonRefinementKnotSubdivision.Name = "radioButtonRefinementKnotSubdivision";
-            this.radioButtonRefinementKnotSubdivision.Size = new System.Drawing.Size(204, 29);
+            this.radioButtonRefinementKnotSubdivision.Size = new System.Drawing.Size(104, 17);
             this.radioButtonRefinementKnotSubdivision.TabIndex = 84;
             this.radioButtonRefinementKnotSubdivision.TabStop = true;
             this.radioButtonRefinementKnotSubdivision.Text = "Knot Subdivision";
@@ -2028,11 +1959,9 @@ namespace Cocodrilo.Panels
             this.groupBoxRefinementElement.Controls.Add(this.radioButtonRefinementElementEdge);
             this.groupBoxRefinementElement.Controls.Add(this.radioButtonRefinementElementCurve);
             this.groupBoxRefinementElement.Controls.Add(this.radioButtonRefinementElementSurf);
-            this.groupBoxRefinementElement.Location = new System.Drawing.Point(0, 6);
-            this.groupBoxRefinementElement.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBoxRefinementElement.Location = new System.Drawing.Point(0, 3);
             this.groupBoxRefinementElement.Name = "groupBoxRefinementElement";
-            this.groupBoxRefinementElement.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBoxRefinementElement.Size = new System.Drawing.Size(632, 79);
+            this.groupBoxRefinementElement.Size = new System.Drawing.Size(320, 41);
             this.groupBoxRefinementElement.TabIndex = 83;
             this.groupBoxRefinementElement.TabStop = false;
             this.groupBoxRefinementElement.Text = "Structural Element";
@@ -2040,10 +1969,9 @@ namespace Cocodrilo.Panels
             // radioButtonRefinementElementEdge
             // 
             this.radioButtonRefinementElementEdge.AutoSize = true;
-            this.radioButtonRefinementElementEdge.Location = new System.Drawing.Point(274, 35);
-            this.radioButtonRefinementElementEdge.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonRefinementElementEdge.Location = new System.Drawing.Point(137, 18);
             this.radioButtonRefinementElementEdge.Name = "radioButtonRefinementElementEdge";
-            this.radioButtonRefinementElementEdge.Size = new System.Drawing.Size(93, 29);
+            this.radioButtonRefinementElementEdge.Size = new System.Drawing.Size(50, 17);
             this.radioButtonRefinementElementEdge.TabIndex = 2;
             this.radioButtonRefinementElementEdge.Text = "Edge";
             this.radioButtonRefinementElementEdge.UseVisualStyleBackColor = true;
@@ -2052,10 +1980,9 @@ namespace Cocodrilo.Panels
             // radioButtonRefinementElementCurve
             // 
             this.radioButtonRefinementElementCurve.AutoSize = true;
-            this.radioButtonRefinementElementCurve.Location = new System.Drawing.Point(156, 35);
-            this.radioButtonRefinementElementCurve.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonRefinementElementCurve.Location = new System.Drawing.Point(78, 18);
             this.radioButtonRefinementElementCurve.Name = "radioButtonRefinementElementCurve";
-            this.radioButtonRefinementElementCurve.Size = new System.Drawing.Size(100, 29);
+            this.radioButtonRefinementElementCurve.Size = new System.Drawing.Size(53, 17);
             this.radioButtonRefinementElementCurve.TabIndex = 1;
             this.radioButtonRefinementElementCurve.Text = "Curve";
             this.radioButtonRefinementElementCurve.UseVisualStyleBackColor = true;
@@ -2065,10 +1992,9 @@ namespace Cocodrilo.Panels
             // 
             this.radioButtonRefinementElementSurf.AutoSize = true;
             this.radioButtonRefinementElementSurf.Checked = true;
-            this.radioButtonRefinementElementSurf.Location = new System.Drawing.Point(20, 35);
-            this.radioButtonRefinementElementSurf.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonRefinementElementSurf.Location = new System.Drawing.Point(10, 18);
             this.radioButtonRefinementElementSurf.Name = "radioButtonRefinementElementSurf";
-            this.radioButtonRefinementElementSurf.Size = new System.Drawing.Size(117, 29);
+            this.radioButtonRefinementElementSurf.Size = new System.Drawing.Size(62, 17);
             this.radioButtonRefinementElementSurf.TabIndex = 0;
             this.radioButtonRefinementElementSurf.TabStop = true;
             this.radioButtonRefinementElementSurf.Text = "Surface";
@@ -2079,10 +2005,10 @@ namespace Cocodrilo.Panels
             // 
             this.buttonCheckRefinement.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCheckRefinement.Location = new System.Drawing.Point(296, 321);
-            this.buttonCheckRefinement.Margin = new System.Windows.Forms.Padding(8);
+            this.buttonCheckRefinement.Location = new System.Drawing.Point(148, 167);
+            this.buttonCheckRefinement.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonCheckRefinement.Name = "buttonCheckRefinement";
-            this.buttonCheckRefinement.Size = new System.Drawing.Size(326, 50);
+            this.buttonCheckRefinement.Size = new System.Drawing.Size(167, 26);
             this.buttonCheckRefinement.TabIndex = 55;
             this.buttonCheckRefinement.Text = "Check Refinement";
             this.buttonCheckRefinement.UseVisualStyleBackColor = true;
@@ -2090,10 +2016,10 @@ namespace Cocodrilo.Panels
             // 
             // buttonChangeRefinement
             // 
-            this.buttonChangeRefinement.Location = new System.Drawing.Point(6, 321);
-            this.buttonChangeRefinement.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
+            this.buttonChangeRefinement.Location = new System.Drawing.Point(3, 167);
+            this.buttonChangeRefinement.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonChangeRefinement.Name = "buttonChangeRefinement";
-            this.buttonChangeRefinement.Size = new System.Drawing.Size(276, 48);
+            this.buttonChangeRefinement.Size = new System.Drawing.Size(138, 25);
             this.buttonChangeRefinement.TabIndex = 54;
             this.buttonChangeRefinement.Text = "Change Refinement";
             this.buttonChangeRefinement.UseVisualStyleBackColor = true;
@@ -2103,10 +2029,10 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxKnotSubDivV.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxKnotSubDivV.Location = new System.Drawing.Point(126, 265);
-            this.textBoxKnotSubDivV.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxKnotSubDivV.Location = new System.Drawing.Point(63, 138);
+            this.textBoxKnotSubDivV.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxKnotSubDivV.Name = "textBoxKnotSubDivV";
-            this.textBoxKnotSubDivV.Size = new System.Drawing.Size(492, 31);
+            this.textBoxKnotSubDivV.Size = new System.Drawing.Size(252, 20);
             this.textBoxKnotSubDivV.TabIndex = 53;
             this.textBoxKnotSubDivV.Text = "4";
             // 
@@ -2114,10 +2040,10 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxKnotSubDivU.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxKnotSubDivU.Location = new System.Drawing.Point(126, 225);
-            this.textBoxKnotSubDivU.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxKnotSubDivU.Location = new System.Drawing.Point(63, 117);
+            this.textBoxKnotSubDivU.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxKnotSubDivU.Name = "textBoxKnotSubDivU";
-            this.textBoxKnotSubDivU.Size = new System.Drawing.Size(492, 31);
+            this.textBoxKnotSubDivU.Size = new System.Drawing.Size(252, 20);
             this.textBoxKnotSubDivU.TabIndex = 52;
             this.textBoxKnotSubDivU.Text = "4";
             // 
@@ -2125,10 +2051,10 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxQDeg.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxQDeg.Location = new System.Drawing.Point(126, 135);
-            this.textBoxQDeg.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxQDeg.Location = new System.Drawing.Point(63, 70);
+            this.textBoxQDeg.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxQDeg.Name = "textBoxQDeg";
-            this.textBoxQDeg.Size = new System.Drawing.Size(492, 31);
+            this.textBoxQDeg.Size = new System.Drawing.Size(252, 20);
             this.textBoxQDeg.TabIndex = 51;
             this.textBoxQDeg.Text = "3";
             // 
@@ -2136,50 +2062,50 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxPDeg.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxPDeg.Location = new System.Drawing.Point(126, 94);
-            this.textBoxPDeg.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxPDeg.Location = new System.Drawing.Point(63, 49);
+            this.textBoxPDeg.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxPDeg.Name = "textBoxPDeg";
-            this.textBoxPDeg.Size = new System.Drawing.Size(492, 31);
+            this.textBoxPDeg.Size = new System.Drawing.Size(252, 20);
             this.textBoxPDeg.TabIndex = 50;
             this.textBoxPDeg.Text = "3";
             // 
             // labelRefinementMinV
             // 
             this.labelRefinementMinV.AutoSize = true;
-            this.labelRefinementMinV.Location = new System.Drawing.Point(12, 271);
-            this.labelRefinementMinV.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelRefinementMinV.Location = new System.Drawing.Point(6, 141);
+            this.labelRefinementMinV.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelRefinementMinV.Name = "labelRefinementMinV";
-            this.labelRefinementMinV.Size = new System.Drawing.Size(65, 25);
+            this.labelRefinementMinV.Size = new System.Drawing.Size(33, 13);
             this.labelRefinementMinV.TabIndex = 11;
             this.labelRefinementMinV.Text = "Dir V:";
             // 
             // labelRefinementMinU
             // 
             this.labelRefinementMinU.AutoSize = true;
-            this.labelRefinementMinU.Location = new System.Drawing.Point(14, 231);
-            this.labelRefinementMinU.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelRefinementMinU.Location = new System.Drawing.Point(7, 120);
+            this.labelRefinementMinU.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelRefinementMinU.Name = "labelRefinementMinU";
-            this.labelRefinementMinU.Size = new System.Drawing.Size(66, 25);
+            this.labelRefinementMinU.Size = new System.Drawing.Size(34, 13);
             this.labelRefinementMinU.TabIndex = 11;
             this.labelRefinementMinU.Text = "Dir U:";
             // 
             // labelRefinementQDeg
             // 
             this.labelRefinementQDeg.AutoSize = true;
-            this.labelRefinementQDeg.Location = new System.Drawing.Point(12, 138);
-            this.labelRefinementQDeg.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelRefinementQDeg.Location = new System.Drawing.Point(6, 72);
+            this.labelRefinementQDeg.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelRefinementQDeg.Name = "labelRefinementQDeg";
-            this.labelRefinementQDeg.Size = new System.Drawing.Size(79, 25);
+            this.labelRefinementQDeg.Size = new System.Drawing.Size(41, 13);
             this.labelRefinementQDeg.TabIndex = 11;
             this.labelRefinementQDeg.Text = "Q Deg:";
             // 
             // labelRefinementPDeg
             // 
             this.labelRefinementPDeg.AutoSize = true;
-            this.labelRefinementPDeg.Location = new System.Drawing.Point(12, 98);
-            this.labelRefinementPDeg.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelRefinementPDeg.Location = new System.Drawing.Point(6, 51);
+            this.labelRefinementPDeg.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelRefinementPDeg.Name = "labelRefinementPDeg";
-            this.labelRefinementPDeg.Size = new System.Drawing.Size(77, 25);
+            this.labelRefinementPDeg.Size = new System.Drawing.Size(40, 13);
             this.labelRefinementPDeg.TabIndex = 11;
             this.labelRefinementPDeg.Text = "P Deg:";
             // 
@@ -2194,11 +2120,11 @@ namespace Cocodrilo.Panels
             this.tabPagePropSupport.Controls.Add(this.buttonDeleteEdgeSupport);
             this.tabPagePropSupport.Controls.Add(this.buttonAddEdgeSupports);
             this.tabPagePropSupport.ImageIndex = 2;
-            this.tabPagePropSupport.Location = new System.Drawing.Point(8, 39);
-            this.tabPagePropSupport.Margin = new System.Windows.Forms.Padding(4);
+            this.tabPagePropSupport.Location = new System.Drawing.Point(4, 23);
+            this.tabPagePropSupport.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabPagePropSupport.Name = "tabPagePropSupport";
-            this.tabPagePropSupport.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPagePropSupport.Size = new System.Drawing.Size(654, 449);
+            this.tabPagePropSupport.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPagePropSupport.Size = new System.Drawing.Size(327, 231);
             this.tabPagePropSupport.TabIndex = 0;
             this.tabPagePropSupport.Text = "Support";
             this.tabPagePropSupport.UseVisualStyleBackColor = true;
@@ -2207,11 +2133,9 @@ namespace Cocodrilo.Panels
             // 
             this.groupBox4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox4.Controls.Add(this.comboBoxSupportType);
-            this.groupBox4.Location = new System.Drawing.Point(360, 100);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBox4.Location = new System.Drawing.Point(180, 52);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox4.Size = new System.Drawing.Size(278, 88);
+            this.groupBox4.Size = new System.Drawing.Size(139, 46);
             this.groupBox4.TabIndex = 96;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Support Type";
@@ -2224,10 +2148,9 @@ namespace Cocodrilo.Panels
             "SupportLagrangeCondition",
             "SupportNitscheCondition",
             "DirectorInc5pShellSupport"});
-            this.comboBoxSupportType.Location = new System.Drawing.Point(12, 35);
-            this.comboBoxSupportType.Margin = new System.Windows.Forms.Padding(6);
+            this.comboBoxSupportType.Location = new System.Drawing.Point(6, 18);
             this.comboBoxSupportType.Name = "comboBoxSupportType";
-            this.comboBoxSupportType.Size = new System.Drawing.Size(250, 33);
+            this.comboBoxSupportType.Size = new System.Drawing.Size(127, 21);
             this.comboBoxSupportType.TabIndex = 0;
             this.comboBoxSupportType.Text = "SupportPenaltyCondition";
             // 
@@ -2235,30 +2158,28 @@ namespace Cocodrilo.Panels
             // 
             this.groupBoxInterval.Controls.Add(this.textBoxSupportEndTime);
             this.groupBoxInterval.Controls.Add(this.textBoxSupportStartTime);
-            this.groupBoxInterval.Location = new System.Drawing.Point(302, 6);
-            this.groupBoxInterval.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBoxInterval.Location = new System.Drawing.Point(151, 3);
             this.groupBoxInterval.Name = "groupBoxInterval";
-            this.groupBoxInterval.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBoxInterval.Size = new System.Drawing.Size(336, 83);
+            this.groupBoxInterval.Size = new System.Drawing.Size(168, 43);
             this.groupBoxInterval.TabIndex = 83;
             this.groupBoxInterval.TabStop = false;
             this.groupBoxInterval.Text = "Interval: Start Time - End Time";
             // 
             // textBoxSupportEndTime
             // 
-            this.textBoxSupportEndTime.Location = new System.Drawing.Point(182, 35);
-            this.textBoxSupportEndTime.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxSupportEndTime.Location = new System.Drawing.Point(91, 18);
+            this.textBoxSupportEndTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxSupportEndTime.Name = "textBoxSupportEndTime";
-            this.textBoxSupportEndTime.Size = new System.Drawing.Size(138, 31);
+            this.textBoxSupportEndTime.Size = new System.Drawing.Size(71, 20);
             this.textBoxSupportEndTime.TabIndex = 93;
             this.textBoxSupportEndTime.Text = "End";
             // 
             // textBoxSupportStartTime
             // 
-            this.textBoxSupportStartTime.Location = new System.Drawing.Point(10, 35);
-            this.textBoxSupportStartTime.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxSupportStartTime.Location = new System.Drawing.Point(5, 18);
+            this.textBoxSupportStartTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxSupportStartTime.Name = "textBoxSupportStartTime";
-            this.textBoxSupportStartTime.Size = new System.Drawing.Size(160, 31);
+            this.textBoxSupportStartTime.Size = new System.Drawing.Size(82, 20);
             this.textBoxSupportStartTime.TabIndex = 92;
             this.textBoxSupportStartTime.Text = "0.0";
             // 
@@ -2269,10 +2190,9 @@ namespace Cocodrilo.Panels
             this.checkBoxOverwriteSupport.AutoSize = true;
             this.checkBoxOverwriteSupport.Checked = true;
             this.checkBoxOverwriteSupport.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxOverwriteSupport.Location = new System.Drawing.Point(8, 335);
-            this.checkBoxOverwriteSupport.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxOverwriteSupport.Location = new System.Drawing.Point(4, 174);
             this.checkBoxOverwriteSupport.Name = "checkBoxOverwriteSupport";
-            this.checkBoxOverwriteSupport.Size = new System.Drawing.Size(135, 29);
+            this.checkBoxOverwriteSupport.Size = new System.Drawing.Size(71, 17);
             this.checkBoxOverwriteSupport.TabIndex = 95;
             this.checkBoxOverwriteSupport.Text = "Overwrite";
             this.checkBoxOverwriteSupport.UseVisualStyleBackColor = true;
@@ -2289,39 +2209,37 @@ namespace Cocodrilo.Panels
             this.groupBoxSupportType.Controls.Add(this.checkBoxDispY);
             this.groupBoxSupportType.Controls.Add(this.checkBoxRotationSupport);
             this.groupBoxSupportType.Controls.Add(this.checkBoxDispX);
-            this.groupBoxSupportType.Location = new System.Drawing.Point(2, 200);
-            this.groupBoxSupportType.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBoxSupportType.Location = new System.Drawing.Point(1, 104);
             this.groupBoxSupportType.Name = "groupBoxSupportType";
-            this.groupBoxSupportType.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBoxSupportType.Size = new System.Drawing.Size(620, 115);
+            this.groupBoxSupportType.Size = new System.Drawing.Size(314, 60);
             this.groupBoxSupportType.TabIndex = 3;
             this.groupBoxSupportType.TabStop = false;
             this.groupBoxSupportType.Text = "Support Direction";
             // 
             // textBoxSupportTypeDispZ
             // 
-            this.textBoxSupportTypeDispZ.Location = new System.Drawing.Point(254, 67);
-            this.textBoxSupportTypeDispZ.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxSupportTypeDispZ.Location = new System.Drawing.Point(127, 35);
+            this.textBoxSupportTypeDispZ.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxSupportTypeDispZ.Name = "textBoxSupportTypeDispZ";
-            this.textBoxSupportTypeDispZ.Size = new System.Drawing.Size(110, 31);
+            this.textBoxSupportTypeDispZ.Size = new System.Drawing.Size(57, 20);
             this.textBoxSupportTypeDispZ.TabIndex = 91;
             this.textBoxSupportTypeDispZ.Text = "0.0";
             // 
             // textBoxSupportTypeDispY
             // 
-            this.textBoxSupportTypeDispY.Location = new System.Drawing.Point(132, 67);
-            this.textBoxSupportTypeDispY.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxSupportTypeDispY.Location = new System.Drawing.Point(66, 35);
+            this.textBoxSupportTypeDispY.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxSupportTypeDispY.Name = "textBoxSupportTypeDispY";
-            this.textBoxSupportTypeDispY.Size = new System.Drawing.Size(110, 31);
+            this.textBoxSupportTypeDispY.Size = new System.Drawing.Size(57, 20);
             this.textBoxSupportTypeDispY.TabIndex = 90;
             this.textBoxSupportTypeDispY.Text = "0.0";
             // 
             // textBoxSupportTypeDispX
             // 
-            this.textBoxSupportTypeDispX.Location = new System.Drawing.Point(10, 67);
-            this.textBoxSupportTypeDispX.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxSupportTypeDispX.Location = new System.Drawing.Point(5, 35);
+            this.textBoxSupportTypeDispX.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxSupportTypeDispX.Name = "textBoxSupportTypeDispX";
-            this.textBoxSupportTypeDispX.Size = new System.Drawing.Size(110, 31);
+            this.textBoxSupportTypeDispX.Size = new System.Drawing.Size(57, 20);
             this.textBoxSupportTypeDispX.TabIndex = 89;
             this.textBoxSupportTypeDispX.Text = "0.0";
             // 
@@ -2330,10 +2248,9 @@ namespace Cocodrilo.Panels
             this.checkBoxSupportStrong.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxSupportStrong.AutoSize = true;
-            this.checkBoxSupportStrong.Location = new System.Drawing.Point(526, 35);
-            this.checkBoxSupportStrong.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxSupportStrong.Location = new System.Drawing.Point(263, 18);
             this.checkBoxSupportStrong.Name = "checkBoxSupportStrong";
-            this.checkBoxSupportStrong.Size = new System.Drawing.Size(107, 29);
+            this.checkBoxSupportStrong.Size = new System.Drawing.Size(57, 17);
             this.checkBoxSupportStrong.TabIndex = 43;
             this.checkBoxSupportStrong.Text = "Strong";
             this.checkBoxSupportStrong.UseVisualStyleBackColor = true;
@@ -2343,10 +2260,10 @@ namespace Cocodrilo.Panels
             this.checkBoxDispZ.AutoSize = true;
             this.checkBoxDispZ.Checked = true;
             this.checkBoxDispZ.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxDispZ.Location = new System.Drawing.Point(254, 35);
-            this.checkBoxDispZ.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBoxDispZ.Location = new System.Drawing.Point(127, 18);
+            this.checkBoxDispZ.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.checkBoxDispZ.Name = "checkBoxDispZ";
-            this.checkBoxDispZ.Size = new System.Drawing.Size(106, 29);
+            this.checkBoxDispZ.Size = new System.Drawing.Size(57, 17);
             this.checkBoxDispZ.TabIndex = 42;
             this.checkBoxDispZ.Text = "Disp Z";
             this.checkBoxDispZ.UseVisualStyleBackColor = true;
@@ -2356,10 +2273,10 @@ namespace Cocodrilo.Panels
             this.checkBoxDispY.AutoSize = true;
             this.checkBoxDispY.Checked = true;
             this.checkBoxDispY.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxDispY.Location = new System.Drawing.Point(132, 35);
-            this.checkBoxDispY.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBoxDispY.Location = new System.Drawing.Point(66, 18);
+            this.checkBoxDispY.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.checkBoxDispY.Name = "checkBoxDispY";
-            this.checkBoxDispY.Size = new System.Drawing.Size(108, 29);
+            this.checkBoxDispY.Size = new System.Drawing.Size(57, 17);
             this.checkBoxDispY.TabIndex = 41;
             this.checkBoxDispY.Text = "Disp Y";
             this.checkBoxDispY.UseVisualStyleBackColor = true;
@@ -2369,10 +2286,10 @@ namespace Cocodrilo.Panels
             this.checkBoxRotationSupport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxRotationSupport.AutoSize = true;
-            this.checkBoxRotationSupport.Location = new System.Drawing.Point(376, 35);
-            this.checkBoxRotationSupport.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBoxRotationSupport.Location = new System.Drawing.Point(188, 18);
+            this.checkBoxRotationSupport.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.checkBoxRotationSupport.Name = "checkBoxRotationSupport";
-            this.checkBoxRotationSupport.Size = new System.Drawing.Size(124, 29);
+            this.checkBoxRotationSupport.Size = new System.Drawing.Size(66, 17);
             this.checkBoxRotationSupport.TabIndex = 42;
             this.checkBoxRotationSupport.Text = "Rotation";
             this.checkBoxRotationSupport.UseVisualStyleBackColor = true;
@@ -2382,10 +2299,10 @@ namespace Cocodrilo.Panels
             this.checkBoxDispX.AutoSize = true;
             this.checkBoxDispX.Checked = true;
             this.checkBoxDispX.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxDispX.Location = new System.Drawing.Point(10, 35);
-            this.checkBoxDispX.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBoxDispX.Location = new System.Drawing.Point(5, 18);
+            this.checkBoxDispX.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.checkBoxDispX.Name = "checkBoxDispX";
-            this.checkBoxDispX.Size = new System.Drawing.Size(107, 29);
+            this.checkBoxDispX.Size = new System.Drawing.Size(57, 17);
             this.checkBoxDispX.TabIndex = 40;
             this.checkBoxDispX.Text = "Disp X";
             this.checkBoxDispX.UseVisualStyleBackColor = true;
@@ -2396,11 +2313,9 @@ namespace Cocodrilo.Panels
             this.groupBoxSupportDimension.Controls.Add(this.radioButtonSupportDimVertex);
             this.groupBoxSupportDimension.Controls.Add(this.radioButtonSupportDimLine);
             this.groupBoxSupportDimension.Controls.Add(this.radioButtonSupportDimFace);
-            this.groupBoxSupportDimension.Location = new System.Drawing.Point(0, 100);
-            this.groupBoxSupportDimension.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBoxSupportDimension.Location = new System.Drawing.Point(0, 52);
             this.groupBoxSupportDimension.Name = "groupBoxSupportDimension";
-            this.groupBoxSupportDimension.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBoxSupportDimension.Size = new System.Drawing.Size(348, 88);
+            this.groupBoxSupportDimension.Size = new System.Drawing.Size(174, 46);
             this.groupBoxSupportDimension.TabIndex = 83;
             this.groupBoxSupportDimension.TabStop = false;
             this.groupBoxSupportDimension.Text = "Support Dimension";
@@ -2408,10 +2323,9 @@ namespace Cocodrilo.Panels
             // radioButtonSupportDimVertex
             // 
             this.radioButtonSupportDimVertex.AutoSize = true;
-            this.radioButtonSupportDimVertex.Location = new System.Drawing.Point(230, 37);
-            this.radioButtonSupportDimVertex.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonSupportDimVertex.Location = new System.Drawing.Point(115, 19);
             this.radioButtonSupportDimVertex.Name = "radioButtonSupportDimVertex";
-            this.radioButtonSupportDimVertex.Size = new System.Drawing.Size(105, 29);
+            this.radioButtonSupportDimVertex.Size = new System.Drawing.Size(55, 17);
             this.radioButtonSupportDimVertex.TabIndex = 2;
             this.radioButtonSupportDimVertex.TabStop = true;
             this.radioButtonSupportDimVertex.Text = "Vertex";
@@ -2420,10 +2334,9 @@ namespace Cocodrilo.Panels
             // radioButtonSupportDimLine
             // 
             this.radioButtonSupportDimLine.AutoSize = true;
-            this.radioButtonSupportDimLine.Location = new System.Drawing.Point(128, 37);
-            this.radioButtonSupportDimLine.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonSupportDimLine.Location = new System.Drawing.Point(64, 19);
             this.radioButtonSupportDimLine.Name = "radioButtonSupportDimLine";
-            this.radioButtonSupportDimLine.Size = new System.Drawing.Size(84, 29);
+            this.radioButtonSupportDimLine.Size = new System.Drawing.Size(45, 17);
             this.radioButtonSupportDimLine.TabIndex = 1;
             this.radioButtonSupportDimLine.TabStop = true;
             this.radioButtonSupportDimLine.Text = "Line";
@@ -2432,10 +2345,9 @@ namespace Cocodrilo.Panels
             // radioButtonSupportDimFace
             // 
             this.radioButtonSupportDimFace.AutoSize = true;
-            this.radioButtonSupportDimFace.Location = new System.Drawing.Point(18, 37);
-            this.radioButtonSupportDimFace.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonSupportDimFace.Location = new System.Drawing.Point(9, 19);
             this.radioButtonSupportDimFace.Name = "radioButtonSupportDimFace";
-            this.radioButtonSupportDimFace.Size = new System.Drawing.Size(91, 29);
+            this.radioButtonSupportDimFace.Size = new System.Drawing.Size(49, 17);
             this.radioButtonSupportDimFace.TabIndex = 0;
             this.radioButtonSupportDimFace.TabStop = true;
             this.radioButtonSupportDimFace.Text = "Face";
@@ -2445,11 +2357,9 @@ namespace Cocodrilo.Panels
             // 
             this.groupBoxSupportElementType.Controls.Add(this.radioButtonSupportCurve);
             this.groupBoxSupportElementType.Controls.Add(this.radioButtonSupportSurface);
-            this.groupBoxSupportElementType.Location = new System.Drawing.Point(0, 6);
-            this.groupBoxSupportElementType.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBoxSupportElementType.Location = new System.Drawing.Point(0, 3);
             this.groupBoxSupportElementType.Name = "groupBoxSupportElementType";
-            this.groupBoxSupportElementType.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBoxSupportElementType.Size = new System.Drawing.Size(290, 83);
+            this.groupBoxSupportElementType.Size = new System.Drawing.Size(145, 43);
             this.groupBoxSupportElementType.TabIndex = 82;
             this.groupBoxSupportElementType.TabStop = false;
             this.groupBoxSupportElementType.Text = "Structural Element";
@@ -2457,10 +2367,9 @@ namespace Cocodrilo.Panels
             // radioButtonSupportCurve
             // 
             this.radioButtonSupportCurve.AutoSize = true;
-            this.radioButtonSupportCurve.Location = new System.Drawing.Point(150, 37);
-            this.radioButtonSupportCurve.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonSupportCurve.Location = new System.Drawing.Point(75, 19);
             this.radioButtonSupportCurve.Name = "radioButtonSupportCurve";
-            this.radioButtonSupportCurve.Size = new System.Drawing.Size(100, 29);
+            this.radioButtonSupportCurve.Size = new System.Drawing.Size(53, 17);
             this.radioButtonSupportCurve.TabIndex = 1;
             this.radioButtonSupportCurve.TabStop = true;
             this.radioButtonSupportCurve.Text = "Curve";
@@ -2470,10 +2379,9 @@ namespace Cocodrilo.Panels
             // radioButtonSupportSurface
             // 
             this.radioButtonSupportSurface.AutoSize = true;
-            this.radioButtonSupportSurface.Location = new System.Drawing.Point(18, 37);
-            this.radioButtonSupportSurface.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonSupportSurface.Location = new System.Drawing.Point(9, 19);
             this.radioButtonSupportSurface.Name = "radioButtonSupportSurface";
-            this.radioButtonSupportSurface.Size = new System.Drawing.Size(117, 29);
+            this.radioButtonSupportSurface.Size = new System.Drawing.Size(62, 17);
             this.radioButtonSupportSurface.TabIndex = 0;
             this.radioButtonSupportSurface.TabStop = true;
             this.radioButtonSupportSurface.Text = "Surface";
@@ -2483,10 +2391,10 @@ namespace Cocodrilo.Panels
             // buttonDeleteEdgeSupport
             // 
             this.buttonDeleteEdgeSupport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDeleteEdgeSupport.Location = new System.Drawing.Point(434, 325);
-            this.buttonDeleteEdgeSupport.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonDeleteEdgeSupport.Location = new System.Drawing.Point(221, 169);
+            this.buttonDeleteEdgeSupport.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonDeleteEdgeSupport.Name = "buttonDeleteEdgeSupport";
-            this.buttonDeleteEdgeSupport.Size = new System.Drawing.Size(188, 48);
+            this.buttonDeleteEdgeSupport.Size = new System.Drawing.Size(94, 25);
             this.buttonDeleteEdgeSupport.TabIndex = 5;
             this.buttonDeleteEdgeSupport.Text = "Delete Support";
             this.buttonDeleteEdgeSupport.UseVisualStyleBackColor = true;
@@ -2495,10 +2403,10 @@ namespace Cocodrilo.Panels
             // buttonAddEdgeSupports
             // 
             this.buttonAddEdgeSupports.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAddEdgeSupports.Location = new System.Drawing.Point(226, 325);
-            this.buttonAddEdgeSupports.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonAddEdgeSupports.Location = new System.Drawing.Point(117, 169);
+            this.buttonAddEdgeSupports.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonAddEdgeSupports.Name = "buttonAddEdgeSupports";
-            this.buttonAddEdgeSupports.Size = new System.Drawing.Size(200, 48);
+            this.buttonAddEdgeSupports.Size = new System.Drawing.Size(100, 25);
             this.buttonAddEdgeSupports.TabIndex = 2;
             this.buttonAddEdgeSupports.Text = "Add Supports";
             this.buttonAddEdgeSupports.UseVisualStyleBackColor = true;
@@ -2526,11 +2434,11 @@ namespace Cocodrilo.Panels
             this.tabPageLoad.Controls.Add(this.buttonDeleteLoad);
             this.tabPageLoad.Controls.Add(this.buttonAddLoad);
             this.tabPageLoad.ImageIndex = 3;
-            this.tabPageLoad.Location = new System.Drawing.Point(8, 39);
-            this.tabPageLoad.Margin = new System.Windows.Forms.Padding(4);
+            this.tabPageLoad.Location = new System.Drawing.Point(4, 23);
+            this.tabPageLoad.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabPageLoad.Name = "tabPageLoad";
-            this.tabPageLoad.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPageLoad.Size = new System.Drawing.Size(654, 449);
+            this.tabPageLoad.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPageLoad.Size = new System.Drawing.Size(327, 231);
             this.tabPageLoad.TabIndex = 7;
             this.tabPageLoad.Text = "Load";
             this.tabPageLoad.UseVisualStyleBackColor = true;
@@ -2541,11 +2449,9 @@ namespace Cocodrilo.Panels
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLoadInterval.Controls.Add(this.textBoxLoadEndTime);
             this.groupBoxLoadInterval.Controls.Add(this.textBoxLoadStartTime);
-            this.groupBoxLoadInterval.Location = new System.Drawing.Point(304, 6);
-            this.groupBoxLoadInterval.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBoxLoadInterval.Location = new System.Drawing.Point(152, 3);
             this.groupBoxLoadInterval.Name = "groupBoxLoadInterval";
-            this.groupBoxLoadInterval.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBoxLoadInterval.Size = new System.Drawing.Size(324, 83);
+            this.groupBoxLoadInterval.Size = new System.Drawing.Size(166, 43);
             this.groupBoxLoadInterval.TabIndex = 95;
             this.groupBoxLoadInterval.TabStop = false;
             this.groupBoxLoadInterval.Text = "Interval: Start Time - End Time";
@@ -2554,10 +2460,10 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxLoadEndTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxLoadEndTime.Location = new System.Drawing.Point(158, 35);
-            this.textBoxLoadEndTime.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxLoadEndTime.Location = new System.Drawing.Point(79, 18);
+            this.textBoxLoadEndTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxLoadEndTime.Name = "textBoxLoadEndTime";
-            this.textBoxLoadEndTime.Size = new System.Drawing.Size(152, 31);
+            this.textBoxLoadEndTime.Size = new System.Drawing.Size(82, 20);
             this.textBoxLoadEndTime.TabIndex = 93;
             this.textBoxLoadEndTime.Text = "End";
             // 
@@ -2565,10 +2471,10 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxLoadStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxLoadStartTime.Location = new System.Drawing.Point(10, 35);
-            this.textBoxLoadStartTime.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxLoadStartTime.Location = new System.Drawing.Point(5, 18);
+            this.textBoxLoadStartTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxLoadStartTime.Name = "textBoxLoadStartTime";
-            this.textBoxLoadStartTime.Size = new System.Drawing.Size(120, 31);
+            this.textBoxLoadStartTime.Size = new System.Drawing.Size(66, 20);
             this.textBoxLoadStartTime.TabIndex = 92;
             this.textBoxLoadStartTime.Text = "0.0";
             // 
@@ -2577,124 +2483,114 @@ namespace Cocodrilo.Panels
             this.checkBoxLoadOverwrite.AutoSize = true;
             this.checkBoxLoadOverwrite.Checked = true;
             this.checkBoxLoadOverwrite.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxLoadOverwrite.Location = new System.Drawing.Point(16, 344);
-            this.checkBoxLoadOverwrite.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxLoadOverwrite.Location = new System.Drawing.Point(8, 179);
             this.checkBoxLoadOverwrite.Name = "checkBoxLoadOverwrite";
-            this.checkBoxLoadOverwrite.Size = new System.Drawing.Size(135, 29);
+            this.checkBoxLoadOverwrite.Size = new System.Drawing.Size(71, 17);
             this.checkBoxLoadOverwrite.TabIndex = 94;
             this.checkBoxLoadOverwrite.Text = "Overwrite";
             this.checkBoxLoadOverwrite.UseVisualStyleBackColor = true;
             // 
             // textBoxLoadPositionV
             // 
-            this.textBoxLoadPositionV.Location = new System.Drawing.Point(384, 196);
-            this.textBoxLoadPositionV.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxLoadPositionV.Location = new System.Drawing.Point(192, 102);
             this.textBoxLoadPositionV.Name = "textBoxLoadPositionV";
-            this.textBoxLoadPositionV.Size = new System.Drawing.Size(132, 31);
+            this.textBoxLoadPositionV.Size = new System.Drawing.Size(68, 20);
             this.textBoxLoadPositionV.TabIndex = 93;
             // 
             // textBoxLoadPositionU
             // 
-            this.textBoxLoadPositionU.Location = new System.Drawing.Point(172, 196);
-            this.textBoxLoadPositionU.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxLoadPositionU.Location = new System.Drawing.Point(86, 102);
             this.textBoxLoadPositionU.Name = "textBoxLoadPositionU";
-            this.textBoxLoadPositionU.Size = new System.Drawing.Size(132, 31);
+            this.textBoxLoadPositionU.Size = new System.Drawing.Size(68, 20);
             this.textBoxLoadPositionU.TabIndex = 92;
             // 
             // textBoxLoadZ
             // 
-            this.textBoxLoadZ.Location = new System.Drawing.Point(520, 288);
-            this.textBoxLoadZ.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxLoadZ.Location = new System.Drawing.Point(260, 150);
+            this.textBoxLoadZ.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxLoadZ.Name = "textBoxLoadZ";
-            this.textBoxLoadZ.Size = new System.Drawing.Size(120, 31);
+            this.textBoxLoadZ.Size = new System.Drawing.Size(62, 20);
             this.textBoxLoadZ.TabIndex = 77;
             this.textBoxLoadZ.Text = "1.0";
             // 
             // textBoxLoadY
             // 
-            this.textBoxLoadY.Location = new System.Drawing.Point(336, 288);
-            this.textBoxLoadY.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxLoadY.Location = new System.Drawing.Point(168, 150);
+            this.textBoxLoadY.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxLoadY.Name = "textBoxLoadY";
-            this.textBoxLoadY.Size = new System.Drawing.Size(132, 31);
+            this.textBoxLoadY.Size = new System.Drawing.Size(68, 20);
             this.textBoxLoadY.TabIndex = 77;
             this.textBoxLoadY.Text = "0.0";
             // 
             // textBoxLoadX
             // 
-            this.textBoxLoadX.Location = new System.Drawing.Point(152, 288);
-            this.textBoxLoadX.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxLoadX.Location = new System.Drawing.Point(76, 150);
+            this.textBoxLoadX.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxLoadX.Name = "textBoxLoadX";
-            this.textBoxLoadX.Size = new System.Drawing.Size(132, 31);
+            this.textBoxLoadX.Size = new System.Drawing.Size(68, 20);
             this.textBoxLoadX.TabIndex = 76;
             this.textBoxLoadX.Text = "0.0";
             // 
             // labelLoadDirectionZ
             // 
             this.labelLoadDirectionZ.AutoSize = true;
-            this.labelLoadDirectionZ.Location = new System.Drawing.Point(482, 294);
-            this.labelLoadDirectionZ.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelLoadDirectionZ.Location = new System.Drawing.Point(241, 153);
             this.labelLoadDirectionZ.Name = "labelLoadDirectionZ";
-            this.labelLoadDirectionZ.Size = new System.Drawing.Size(25, 25);
+            this.labelLoadDirectionZ.Size = new System.Drawing.Size(14, 13);
             this.labelLoadDirectionZ.TabIndex = 91;
             this.labelLoadDirectionZ.Text = "Z";
             // 
             // labelLoadDirectionY
             // 
             this.labelLoadDirectionY.AutoSize = true;
-            this.labelLoadDirectionY.Location = new System.Drawing.Point(298, 294);
-            this.labelLoadDirectionY.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelLoadDirectionY.Location = new System.Drawing.Point(149, 153);
             this.labelLoadDirectionY.Name = "labelLoadDirectionY";
-            this.labelLoadDirectionY.Size = new System.Drawing.Size(27, 25);
+            this.labelLoadDirectionY.Size = new System.Drawing.Size(14, 13);
             this.labelLoadDirectionY.TabIndex = 90;
             this.labelLoadDirectionY.Text = "Y";
             // 
             // labelLoadDirectionX
             // 
             this.labelLoadDirectionX.AutoSize = true;
-            this.labelLoadDirectionX.Location = new System.Drawing.Point(114, 294);
-            this.labelLoadDirectionX.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelLoadDirectionX.Location = new System.Drawing.Point(57, 153);
             this.labelLoadDirectionX.Name = "labelLoadDirectionX";
-            this.labelLoadDirectionX.Size = new System.Drawing.Size(26, 25);
+            this.labelLoadDirectionX.Size = new System.Drawing.Size(14, 13);
             this.labelLoadDirectionX.TabIndex = 89;
             this.labelLoadDirectionX.Text = "X";
             // 
             // labelLoadPositionV
             // 
             this.labelLoadPositionV.AutoSize = true;
-            this.labelLoadPositionV.Location = new System.Drawing.Point(320, 202);
-            this.labelLoadPositionV.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelLoadPositionV.Location = new System.Drawing.Point(160, 105);
             this.labelLoadPositionV.Name = "labelLoadPositionV";
-            this.labelLoadPositionV.Size = new System.Drawing.Size(50, 25);
+            this.labelLoadPositionV.Size = new System.Drawing.Size(26, 13);
             this.labelLoadPositionV.TabIndex = 88;
             this.labelLoadPositionV.Text = "V = ";
             // 
             // labelLoadPositionU
             // 
             this.labelLoadPositionU.AutoSize = true;
-            this.labelLoadPositionU.Location = new System.Drawing.Point(106, 202);
-            this.labelLoadPositionU.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelLoadPositionU.Location = new System.Drawing.Point(53, 105);
             this.labelLoadPositionU.Name = "labelLoadPositionU";
-            this.labelLoadPositionU.Size = new System.Drawing.Size(51, 25);
+            this.labelLoadPositionU.Size = new System.Drawing.Size(27, 13);
             this.labelLoadPositionU.TabIndex = 87;
             this.labelLoadPositionU.Text = "U = ";
             // 
             // labelLoadPosition
             // 
             this.labelLoadPosition.AutoSize = true;
-            this.labelLoadPosition.Location = new System.Drawing.Point(10, 202);
-            this.labelLoadPosition.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelLoadPosition.Location = new System.Drawing.Point(5, 105);
             this.labelLoadPosition.Name = "labelLoadPosition";
-            this.labelLoadPosition.Size = new System.Drawing.Size(95, 25);
+            this.labelLoadPosition.Size = new System.Drawing.Size(47, 13);
             this.labelLoadPosition.TabIndex = 86;
             this.labelLoadPosition.Text = "Position:";
             // 
             // labelLoadDirection
             // 
             this.labelLoadDirection.AutoSize = true;
-            this.labelLoadDirection.Location = new System.Drawing.Point(8, 294);
-            this.labelLoadDirection.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelLoadDirection.Location = new System.Drawing.Point(4, 153);
             this.labelLoadDirection.Name = "labelLoadDirection";
-            this.labelLoadDirection.Size = new System.Drawing.Size(66, 25);
+            this.labelLoadDirection.Size = new System.Drawing.Size(34, 13);
             this.labelLoadDirection.TabIndex = 85;
             this.labelLoadDirection.Text = "Load:";
             // 
@@ -2705,11 +2601,9 @@ namespace Cocodrilo.Panels
             this.groupBoxLoadDimension.Controls.Add(this.radioButtonLoadDimVertex);
             this.groupBoxLoadDimension.Controls.Add(this.radioButtonLoadDimLine);
             this.groupBoxLoadDimension.Controls.Add(this.radioButtonLoadDimFace);
-            this.groupBoxLoadDimension.Location = new System.Drawing.Point(6, 100);
-            this.groupBoxLoadDimension.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBoxLoadDimension.Location = new System.Drawing.Point(3, 52);
             this.groupBoxLoadDimension.Name = "groupBoxLoadDimension";
-            this.groupBoxLoadDimension.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBoxLoadDimension.Size = new System.Drawing.Size(622, 88);
+            this.groupBoxLoadDimension.Size = new System.Drawing.Size(315, 46);
             this.groupBoxLoadDimension.TabIndex = 84;
             this.groupBoxLoadDimension.TabStop = false;
             this.groupBoxLoadDimension.Text = "Load Dimension";
@@ -2717,10 +2611,9 @@ namespace Cocodrilo.Panels
             // radioButtonLoadDimVertex
             // 
             this.radioButtonLoadDimVertex.AutoSize = true;
-            this.radioButtonLoadDimVertex.Location = new System.Drawing.Point(270, 37);
-            this.radioButtonLoadDimVertex.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonLoadDimVertex.Location = new System.Drawing.Point(135, 19);
             this.radioButtonLoadDimVertex.Name = "radioButtonLoadDimVertex";
-            this.radioButtonLoadDimVertex.Size = new System.Drawing.Size(105, 29);
+            this.radioButtonLoadDimVertex.Size = new System.Drawing.Size(55, 17);
             this.radioButtonLoadDimVertex.TabIndex = 2;
             this.radioButtonLoadDimVertex.TabStop = true;
             this.radioButtonLoadDimVertex.Text = "Vertex";
@@ -2730,10 +2623,9 @@ namespace Cocodrilo.Panels
             // radioButtonLoadDimLine
             // 
             this.radioButtonLoadDimLine.AutoSize = true;
-            this.radioButtonLoadDimLine.Location = new System.Drawing.Point(150, 37);
-            this.radioButtonLoadDimLine.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonLoadDimLine.Location = new System.Drawing.Point(75, 19);
             this.radioButtonLoadDimLine.Name = "radioButtonLoadDimLine";
-            this.radioButtonLoadDimLine.Size = new System.Drawing.Size(84, 29);
+            this.radioButtonLoadDimLine.Size = new System.Drawing.Size(45, 17);
             this.radioButtonLoadDimLine.TabIndex = 1;
             this.radioButtonLoadDimLine.TabStop = true;
             this.radioButtonLoadDimLine.Text = "Line";
@@ -2743,10 +2635,9 @@ namespace Cocodrilo.Panels
             // radioButtonLoadDimFace
             // 
             this.radioButtonLoadDimFace.AutoSize = true;
-            this.radioButtonLoadDimFace.Location = new System.Drawing.Point(18, 37);
-            this.radioButtonLoadDimFace.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonLoadDimFace.Location = new System.Drawing.Point(9, 19);
             this.radioButtonLoadDimFace.Name = "radioButtonLoadDimFace";
-            this.radioButtonLoadDimFace.Size = new System.Drawing.Size(91, 29);
+            this.radioButtonLoadDimFace.Size = new System.Drawing.Size(49, 17);
             this.radioButtonLoadDimFace.TabIndex = 0;
             this.radioButtonLoadDimFace.TabStop = true;
             this.radioButtonLoadDimFace.Text = "Face";
@@ -2759,11 +2650,9 @@ namespace Cocodrilo.Panels
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLoadElement.Controls.Add(this.radioButtonLoadElementCurve);
             this.groupBoxLoadElement.Controls.Add(this.radioButtonLoadElementSurface);
-            this.groupBoxLoadElement.Location = new System.Drawing.Point(6, 6);
-            this.groupBoxLoadElement.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBoxLoadElement.Location = new System.Drawing.Point(3, 3);
             this.groupBoxLoadElement.Name = "groupBoxLoadElement";
-            this.groupBoxLoadElement.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBoxLoadElement.Size = new System.Drawing.Size(276, 83);
+            this.groupBoxLoadElement.Size = new System.Drawing.Size(142, 43);
             this.groupBoxLoadElement.TabIndex = 83;
             this.groupBoxLoadElement.TabStop = false;
             this.groupBoxLoadElement.Text = "Structural Element";
@@ -2771,10 +2660,9 @@ namespace Cocodrilo.Panels
             // radioButtonLoadElementCurve
             // 
             this.radioButtonLoadElementCurve.AutoSize = true;
-            this.radioButtonLoadElementCurve.Location = new System.Drawing.Point(150, 37);
-            this.radioButtonLoadElementCurve.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonLoadElementCurve.Location = new System.Drawing.Point(75, 19);
             this.radioButtonLoadElementCurve.Name = "radioButtonLoadElementCurve";
-            this.radioButtonLoadElementCurve.Size = new System.Drawing.Size(100, 29);
+            this.radioButtonLoadElementCurve.Size = new System.Drawing.Size(53, 17);
             this.radioButtonLoadElementCurve.TabIndex = 1;
             this.radioButtonLoadElementCurve.TabStop = true;
             this.radioButtonLoadElementCurve.Text = "Curve";
@@ -2784,10 +2672,9 @@ namespace Cocodrilo.Panels
             // radioButtonLoadElementSurface
             // 
             this.radioButtonLoadElementSurface.AutoSize = true;
-            this.radioButtonLoadElementSurface.Location = new System.Drawing.Point(18, 37);
-            this.radioButtonLoadElementSurface.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonLoadElementSurface.Location = new System.Drawing.Point(9, 19);
             this.radioButtonLoadElementSurface.Name = "radioButtonLoadElementSurface";
-            this.radioButtonLoadElementSurface.Size = new System.Drawing.Size(117, 29);
+            this.radioButtonLoadElementSurface.Size = new System.Drawing.Size(62, 17);
             this.radioButtonLoadElementSurface.TabIndex = 0;
             this.radioButtonLoadElementSurface.TabStop = true;
             this.radioButtonLoadElementSurface.Text = "Surface";
@@ -2808,10 +2695,10 @@ namespace Cocodrilo.Panels
             "SNOW",
             "MOMENT",
             "MOMENT_5P_DIRECTOR"});
-            this.comboBoxLoadType.Location = new System.Drawing.Point(14, 240);
-            this.comboBoxLoadType.Margin = new System.Windows.Forms.Padding(4);
+            this.comboBoxLoadType.Location = new System.Drawing.Point(7, 125);
+            this.comboBoxLoadType.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.comboBoxLoadType.Name = "comboBoxLoadType";
-            this.comboBoxLoadType.Size = new System.Drawing.Size(610, 33);
+            this.comboBoxLoadType.Size = new System.Drawing.Size(311, 21);
             this.comboBoxLoadType.TabIndex = 81;
             this.comboBoxLoadType.Text = "DEAD";
             this.comboBoxLoadType.UseWaitCursor = true;
@@ -2819,10 +2706,10 @@ namespace Cocodrilo.Panels
             // 
             // buttonDeleteLoad
             // 
-            this.buttonDeleteLoad.Location = new System.Drawing.Point(402, 335);
-            this.buttonDeleteLoad.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonDeleteLoad.Location = new System.Drawing.Point(201, 174);
+            this.buttonDeleteLoad.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonDeleteLoad.Name = "buttonDeleteLoad";
-            this.buttonDeleteLoad.Size = new System.Drawing.Size(242, 48);
+            this.buttonDeleteLoad.Size = new System.Drawing.Size(121, 25);
             this.buttonDeleteLoad.TabIndex = 78;
             this.buttonDeleteLoad.Text = "Delete Load";
             this.buttonDeleteLoad.UseVisualStyleBackColor = true;
@@ -2830,10 +2717,10 @@ namespace Cocodrilo.Panels
             // 
             // buttonAddLoad
             // 
-            this.buttonAddLoad.Location = new System.Drawing.Point(158, 335);
-            this.buttonAddLoad.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonAddLoad.Location = new System.Drawing.Point(79, 174);
+            this.buttonAddLoad.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonAddLoad.Name = "buttonAddLoad";
-            this.buttonAddLoad.Size = new System.Drawing.Size(236, 48);
+            this.buttonAddLoad.Size = new System.Drawing.Size(118, 25);
             this.buttonAddLoad.TabIndex = 79;
             this.buttonAddLoad.Text = "Add Load";
             this.buttonAddLoad.UseVisualStyleBackColor = true;
@@ -2848,11 +2735,10 @@ namespace Cocodrilo.Panels
             this.tabPageCheck.Controls.Add(this.groupBoxCheckStructuralElement);
             this.tabPageCheck.Controls.Add(this.button1);
             this.tabPageCheck.Controls.Add(this.buttonAddCheck);
-            this.tabPageCheck.Location = new System.Drawing.Point(8, 39);
-            this.tabPageCheck.Margin = new System.Windows.Forms.Padding(6);
+            this.tabPageCheck.Location = new System.Drawing.Point(4, 23);
             this.tabPageCheck.Name = "tabPageCheck";
-            this.tabPageCheck.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPageCheck.Size = new System.Drawing.Size(654, 449);
+            this.tabPageCheck.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPageCheck.Size = new System.Drawing.Size(327, 231);
             this.tabPageCheck.TabIndex = 10;
             this.tabPageCheck.Text = "Output";
             this.tabPageCheck.UseVisualStyleBackColor = true;
@@ -2863,11 +2749,9 @@ namespace Cocodrilo.Panels
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.textBoxCheckEndTime);
             this.groupBox1.Controls.Add(this.textBoxCheckStartTime);
-            this.groupBox1.Location = new System.Drawing.Point(306, 6);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBox1.Location = new System.Drawing.Point(153, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox1.Size = new System.Drawing.Size(354, 83);
+            this.groupBox1.Size = new System.Drawing.Size(181, 43);
             this.groupBox1.TabIndex = 100;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Interval: Start Time - End Time";
@@ -2876,10 +2760,10 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxCheckEndTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCheckEndTime.Location = new System.Drawing.Point(182, 35);
-            this.textBoxCheckEndTime.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxCheckEndTime.Location = new System.Drawing.Point(91, 18);
+            this.textBoxCheckEndTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxCheckEndTime.Name = "textBoxCheckEndTime";
-            this.textBoxCheckEndTime.Size = new System.Drawing.Size(136, 31);
+            this.textBoxCheckEndTime.Size = new System.Drawing.Size(74, 20);
             this.textBoxCheckEndTime.TabIndex = 93;
             this.textBoxCheckEndTime.Text = "End";
             // 
@@ -2887,10 +2771,10 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxCheckStartTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCheckStartTime.Location = new System.Drawing.Point(10, 35);
-            this.textBoxCheckStartTime.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxCheckStartTime.Location = new System.Drawing.Point(5, 18);
+            this.textBoxCheckStartTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textBoxCheckStartTime.Name = "textBoxCheckStartTime";
-            this.textBoxCheckStartTime.Size = new System.Drawing.Size(104, 31);
+            this.textBoxCheckStartTime.Size = new System.Drawing.Size(58, 20);
             this.textBoxCheckStartTime.TabIndex = 92;
             this.textBoxCheckStartTime.Text = "0.0";
             // 
@@ -2899,10 +2783,9 @@ namespace Cocodrilo.Panels
             this.checkBoxOverwriteChecks.AutoSize = true;
             this.checkBoxOverwriteChecks.Checked = true;
             this.checkBoxOverwriteChecks.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxOverwriteChecks.Location = new System.Drawing.Point(10, 342);
-            this.checkBoxOverwriteChecks.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxOverwriteChecks.Location = new System.Drawing.Point(5, 178);
             this.checkBoxOverwriteChecks.Name = "checkBoxOverwriteChecks";
-            this.checkBoxOverwriteChecks.Size = new System.Drawing.Size(135, 29);
+            this.checkBoxOverwriteChecks.Size = new System.Drawing.Size(71, 17);
             this.checkBoxOverwriteChecks.TabIndex = 102;
             this.checkBoxOverwriteChecks.Text = "Overwrite";
             this.checkBoxOverwriteChecks.UseVisualStyleBackColor = true;
@@ -2915,11 +2798,9 @@ namespace Cocodrilo.Panels
             this.groupBox2.Controls.Add(this.checkBoxOutputDispZ);
             this.groupBox2.Controls.Add(this.checkBoxOutputDispX);
             this.groupBox2.Controls.Add(this.checkBoxOutputDispY);
-            this.groupBox2.Location = new System.Drawing.Point(6, 200);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBox2.Location = new System.Drawing.Point(3, 104);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox2.Size = new System.Drawing.Size(654, 115);
+            this.groupBox2.Size = new System.Drawing.Size(331, 60);
             this.groupBox2.TabIndex = 97;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Check Type";
@@ -2927,10 +2808,9 @@ namespace Cocodrilo.Panels
             // checkBoxOutputLagrangeMP
             // 
             this.checkBoxOutputLagrangeMP.AutoSize = true;
-            this.checkBoxOutputLagrangeMP.Location = new System.Drawing.Point(12, 71);
-            this.checkBoxOutputLagrangeMP.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxOutputLagrangeMP.Location = new System.Drawing.Point(6, 37);
             this.checkBoxOutputLagrangeMP.Name = "checkBoxOutputLagrangeMP";
-            this.checkBoxOutputLagrangeMP.Size = new System.Drawing.Size(204, 29);
+            this.checkBoxOutputLagrangeMP.Size = new System.Drawing.Size(107, 17);
             this.checkBoxOutputLagrangeMP.TabIndex = 3;
             this.checkBoxOutputLagrangeMP.Text = "LAGRANGE_MP";
             this.checkBoxOutputLagrangeMP.UseVisualStyleBackColor = true;
@@ -2938,10 +2818,9 @@ namespace Cocodrilo.Panels
             // checkBoxOutputDispZ
             // 
             this.checkBoxOutputDispZ.AutoSize = true;
-            this.checkBoxOutputDispZ.Location = new System.Drawing.Point(292, 37);
-            this.checkBoxOutputDispZ.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxOutputDispZ.Location = new System.Drawing.Point(146, 19);
             this.checkBoxOutputDispZ.Name = "checkBoxOutputDispZ";
-            this.checkBoxOutputDispZ.Size = new System.Drawing.Size(117, 29);
+            this.checkBoxOutputDispZ.Size = new System.Drawing.Size(64, 17);
             this.checkBoxOutputDispZ.TabIndex = 2;
             this.checkBoxOutputDispZ.Text = "DISP_Z";
             this.checkBoxOutputDispZ.UseVisualStyleBackColor = true;
@@ -2949,10 +2828,9 @@ namespace Cocodrilo.Panels
             // checkBoxOutputDispX
             // 
             this.checkBoxOutputDispX.AutoSize = true;
-            this.checkBoxOutputDispX.Location = new System.Drawing.Point(12, 37);
-            this.checkBoxOutputDispX.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxOutputDispX.Location = new System.Drawing.Point(6, 19);
             this.checkBoxOutputDispX.Name = "checkBoxOutputDispX";
-            this.checkBoxOutputDispX.Size = new System.Drawing.Size(118, 29);
+            this.checkBoxOutputDispX.Size = new System.Drawing.Size(64, 17);
             this.checkBoxOutputDispX.TabIndex = 1;
             this.checkBoxOutputDispX.Text = "DISP_X";
             this.checkBoxOutputDispX.UseVisualStyleBackColor = true;
@@ -2960,10 +2838,9 @@ namespace Cocodrilo.Panels
             // checkBoxOutputDispY
             // 
             this.checkBoxOutputDispY.AutoSize = true;
-            this.checkBoxOutputDispY.Location = new System.Drawing.Point(152, 37);
-            this.checkBoxOutputDispY.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxOutputDispY.Location = new System.Drawing.Point(76, 19);
             this.checkBoxOutputDispY.Name = "checkBoxOutputDispY";
-            this.checkBoxOutputDispY.Size = new System.Drawing.Size(119, 29);
+            this.checkBoxOutputDispY.Size = new System.Drawing.Size(64, 17);
             this.checkBoxOutputDispY.TabIndex = 0;
             this.checkBoxOutputDispY.Text = "DISP_Y";
             this.checkBoxOutputDispY.UseVisualStyleBackColor = true;
@@ -2975,11 +2852,9 @@ namespace Cocodrilo.Panels
             this.groupBox3.Controls.Add(this.radioButtonCheckVertex);
             this.groupBox3.Controls.Add(this.radioButtonCheckLine);
             this.groupBox3.Controls.Add(this.radioButtonCheckFace);
-            this.groupBox3.Location = new System.Drawing.Point(4, 100);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBox3.Location = new System.Drawing.Point(2, 52);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox3.Size = new System.Drawing.Size(656, 88);
+            this.groupBox3.Size = new System.Drawing.Size(332, 46);
             this.groupBox3.TabIndex = 101;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Dimension";
@@ -2987,10 +2862,9 @@ namespace Cocodrilo.Panels
             // radioButtonCheckVertex
             // 
             this.radioButtonCheckVertex.AutoSize = true;
-            this.radioButtonCheckVertex.Location = new System.Drawing.Point(270, 37);
-            this.radioButtonCheckVertex.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonCheckVertex.Location = new System.Drawing.Point(135, 19);
             this.radioButtonCheckVertex.Name = "radioButtonCheckVertex";
-            this.radioButtonCheckVertex.Size = new System.Drawing.Size(105, 29);
+            this.radioButtonCheckVertex.Size = new System.Drawing.Size(55, 17);
             this.radioButtonCheckVertex.TabIndex = 2;
             this.radioButtonCheckVertex.TabStop = true;
             this.radioButtonCheckVertex.Text = "Vertex";
@@ -2999,10 +2873,9 @@ namespace Cocodrilo.Panels
             // radioButtonCheckLine
             // 
             this.radioButtonCheckLine.AutoSize = true;
-            this.radioButtonCheckLine.Location = new System.Drawing.Point(150, 37);
-            this.radioButtonCheckLine.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonCheckLine.Location = new System.Drawing.Point(75, 19);
             this.radioButtonCheckLine.Name = "radioButtonCheckLine";
-            this.radioButtonCheckLine.Size = new System.Drawing.Size(84, 29);
+            this.radioButtonCheckLine.Size = new System.Drawing.Size(45, 17);
             this.radioButtonCheckLine.TabIndex = 1;
             this.radioButtonCheckLine.TabStop = true;
             this.radioButtonCheckLine.Text = "Line";
@@ -3011,10 +2884,9 @@ namespace Cocodrilo.Panels
             // radioButtonCheckFace
             // 
             this.radioButtonCheckFace.AutoSize = true;
-            this.radioButtonCheckFace.Location = new System.Drawing.Point(18, 37);
-            this.radioButtonCheckFace.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonCheckFace.Location = new System.Drawing.Point(9, 19);
             this.radioButtonCheckFace.Name = "radioButtonCheckFace";
-            this.radioButtonCheckFace.Size = new System.Drawing.Size(91, 29);
+            this.radioButtonCheckFace.Size = new System.Drawing.Size(49, 17);
             this.radioButtonCheckFace.TabIndex = 0;
             this.radioButtonCheckFace.TabStop = true;
             this.radioButtonCheckFace.Text = "Face";
@@ -3026,11 +2898,9 @@ namespace Cocodrilo.Panels
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxCheckStructuralElement.Controls.Add(this.radioButtonCheckCurve);
             this.groupBoxCheckStructuralElement.Controls.Add(this.radioButtonCheckSurface);
-            this.groupBoxCheckStructuralElement.Location = new System.Drawing.Point(4, 6);
-            this.groupBoxCheckStructuralElement.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBoxCheckStructuralElement.Location = new System.Drawing.Point(2, 3);
             this.groupBoxCheckStructuralElement.Name = "groupBoxCheckStructuralElement";
-            this.groupBoxCheckStructuralElement.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBoxCheckStructuralElement.Size = new System.Drawing.Size(286, 83);
+            this.groupBoxCheckStructuralElement.Size = new System.Drawing.Size(147, 43);
             this.groupBoxCheckStructuralElement.TabIndex = 99;
             this.groupBoxCheckStructuralElement.TabStop = false;
             this.groupBoxCheckStructuralElement.Text = "Structural Element";
@@ -3038,10 +2908,9 @@ namespace Cocodrilo.Panels
             // radioButtonCheckCurve
             // 
             this.radioButtonCheckCurve.AutoSize = true;
-            this.radioButtonCheckCurve.Location = new System.Drawing.Point(150, 37);
-            this.radioButtonCheckCurve.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonCheckCurve.Location = new System.Drawing.Point(75, 19);
             this.radioButtonCheckCurve.Name = "radioButtonCheckCurve";
-            this.radioButtonCheckCurve.Size = new System.Drawing.Size(100, 29);
+            this.radioButtonCheckCurve.Size = new System.Drawing.Size(53, 17);
             this.radioButtonCheckCurve.TabIndex = 1;
             this.radioButtonCheckCurve.TabStop = true;
             this.radioButtonCheckCurve.Text = "Curve";
@@ -3050,10 +2919,9 @@ namespace Cocodrilo.Panels
             // radioButtonCheckSurface
             // 
             this.radioButtonCheckSurface.AutoSize = true;
-            this.radioButtonCheckSurface.Location = new System.Drawing.Point(18, 37);
-            this.radioButtonCheckSurface.Margin = new System.Windows.Forms.Padding(6);
+            this.radioButtonCheckSurface.Location = new System.Drawing.Point(9, 19);
             this.radioButtonCheckSurface.Name = "radioButtonCheckSurface";
-            this.radioButtonCheckSurface.Size = new System.Drawing.Size(117, 29);
+            this.radioButtonCheckSurface.Size = new System.Drawing.Size(62, 17);
             this.radioButtonCheckSurface.TabIndex = 0;
             this.radioButtonCheckSurface.TabStop = true;
             this.radioButtonCheckSurface.Text = "Surface";
@@ -3062,20 +2930,20 @@ namespace Cocodrilo.Panels
             // button1
             // 
             this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(412, 325);
-            this.button1.Margin = new System.Windows.Forms.Padding(4);
+            this.button1.Location = new System.Drawing.Point(206, 169);
+            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(244, 48);
+            this.button1.Size = new System.Drawing.Size(122, 25);
             this.button1.TabIndex = 98;
             this.button1.Text = "Check";
             this.button1.UseVisualStyleBackColor = true;
             // 
             // buttonAddCheck
             // 
-            this.buttonAddCheck.Location = new System.Drawing.Point(184, 325);
-            this.buttonAddCheck.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonAddCheck.Location = new System.Drawing.Point(92, 169);
+            this.buttonAddCheck.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.buttonAddCheck.Name = "buttonAddCheck";
-            this.buttonAddCheck.Size = new System.Drawing.Size(220, 48);
+            this.buttonAddCheck.Size = new System.Drawing.Size(110, 25);
             this.buttonAddCheck.TabIndex = 96;
             this.buttonAddCheck.Text = "Add Checks";
             this.buttonAddCheck.UseVisualStyleBackColor = true;
@@ -3088,21 +2956,19 @@ namespace Cocodrilo.Panels
             this.tabPage2.Controls.Add(this.buttonClearPost);
             this.tabPage2.Controls.Add(this.groupBoxVisualization);
             this.tabPage2.Controls.Add(this.groupBoxAnalysisStep);
-            this.tabPage2.Location = new System.Drawing.Point(8, 39);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(6);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPage2.Size = new System.Drawing.Size(584, 1470);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Size = new System.Drawing.Size(258, 763);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Post Processing";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // open_file
             // 
-            this.open_file.Location = new System.Drawing.Point(420, 1035);
-            this.open_file.Margin = new System.Windows.Forms.Padding(6);
+            this.open_file.Location = new System.Drawing.Point(210, 538);
             this.open_file.Name = "open_file";
-            this.open_file.Size = new System.Drawing.Size(202, 46);
+            this.open_file.Size = new System.Drawing.Size(101, 24);
             this.open_file.TabIndex = 13;
             this.open_file.Text = "Open File";
             this.open_file.UseVisualStyleBackColor = true;
@@ -3110,10 +2976,9 @@ namespace Cocodrilo.Panels
             // 
             // buttonShowPost
             // 
-            this.buttonShowPost.Location = new System.Drawing.Point(6, 1035);
-            this.buttonShowPost.Margin = new System.Windows.Forms.Padding(6);
+            this.buttonShowPost.Location = new System.Drawing.Point(3, 538);
             this.buttonShowPost.Name = "buttonShowPost";
-            this.buttonShowPost.Size = new System.Drawing.Size(202, 46);
+            this.buttonShowPost.Size = new System.Drawing.Size(101, 24);
             this.buttonShowPost.TabIndex = 11;
             this.buttonShowPost.Text = "Show";
             this.buttonShowPost.UseVisualStyleBackColor = true;
@@ -3121,10 +2986,9 @@ namespace Cocodrilo.Panels
             // 
             // buttonClearPost
             // 
-            this.buttonClearPost.Location = new System.Drawing.Point(214, 1035);
-            this.buttonClearPost.Margin = new System.Windows.Forms.Padding(6);
+            this.buttonClearPost.Location = new System.Drawing.Point(107, 538);
             this.buttonClearPost.Name = "buttonClearPost";
-            this.buttonClearPost.Size = new System.Drawing.Size(202, 46);
+            this.buttonClearPost.Size = new System.Drawing.Size(101, 24);
             this.buttonClearPost.TabIndex = 12;
             this.buttonClearPost.Text = "Clear";
             this.buttonClearPost.UseVisualStyleBackColor = true;
@@ -3132,8 +2996,6 @@ namespace Cocodrilo.Panels
             // 
             // groupBoxVisualization
             // 
-            this.groupBoxVisualization.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxVisualization.Controls.Add(this.button3);
             this.groupBoxVisualization.Controls.Add(this.groupBox5);
             this.groupBoxVisualization.Controls.Add(this.comboBoxPostProcessingDirection);
@@ -3144,21 +3006,18 @@ namespace Cocodrilo.Panels
             this.groupBoxVisualization.Controls.Add(this.pictureBoxColorBar);
             this.groupBoxVisualization.Controls.Add(this.groupBoxShow);
             this.groupBoxVisualization.Controls.Add(this.comboBoxResultType);
-            this.groupBoxVisualization.Location = new System.Drawing.Point(6, 198);
-            this.groupBoxVisualization.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBoxVisualization.Location = new System.Drawing.Point(3, 103);
             this.groupBoxVisualization.Name = "groupBoxVisualization";
-            this.groupBoxVisualization.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBoxVisualization.Size = new System.Drawing.Size(294, 825);
+            this.groupBoxVisualization.Size = new System.Drawing.Size(308, 429);
             this.groupBoxVisualization.TabIndex = 10;
             this.groupBoxVisualization.TabStop = false;
             this.groupBoxVisualization.Text = "Visualization";
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(196, 131);
-            this.button3.Margin = new System.Windows.Forms.Padding(6);
+            this.button3.Location = new System.Drawing.Point(98, 68);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(214, 38);
+            this.button3.Size = new System.Drawing.Size(107, 20);
             this.button3.TabIndex = 15;
             this.button3.Text = "Auto Min/Max";
             this.button3.UseVisualStyleBackColor = true;
@@ -3167,11 +3026,9 @@ namespace Cocodrilo.Panels
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.button2);
-            this.groupBox5.Location = new System.Drawing.Point(12, 612);
-            this.groupBox5.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBox5.Location = new System.Drawing.Point(6, 318);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox5.Size = new System.Drawing.Size(592, 98);
+            this.groupBox5.Size = new System.Drawing.Size(296, 51);
             this.groupBox5.TabIndex = 18;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Visualization Mesh";
@@ -3179,10 +3036,9 @@ namespace Cocodrilo.Panels
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(12, 37);
-            this.button2.Margin = new System.Windows.Forms.Padding(6);
+            this.button2.Location = new System.Drawing.Point(6, 19);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(214, 46);
+            this.button2.Size = new System.Drawing.Size(107, 24);
             this.button2.TabIndex = 14;
             this.button2.Text = "Refinement";
             this.button2.UseVisualStyleBackColor = true;
@@ -3193,29 +3049,26 @@ namespace Cocodrilo.Panels
             this.comboBoxPostProcessingDirection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxPostProcessingDirection.FormattingEnabled = true;
-            this.comboBoxPostProcessingDirection.Location = new System.Drawing.Point(436, 37);
-            this.comboBoxPostProcessingDirection.Margin = new System.Windows.Forms.Padding(6);
+            this.comboBoxPostProcessingDirection.Location = new System.Drawing.Point(218, 19);
             this.comboBoxPostProcessingDirection.Name = "comboBoxPostProcessingDirection";
-            this.comboBoxPostProcessingDirection.Size = new System.Drawing.Size(0, 33);
+            this.comboBoxPostProcessingDirection.Size = new System.Drawing.Size(84, 21);
             this.comboBoxPostProcessingDirection.TabIndex = 21;
             this.comboBoxPostProcessingDirection.SelectedIndexChanged += new System.EventHandler(this.comboBoxPostProcessingDirection_SelectedIndexChanged);
             // 
             // labelPostProcessingDirection
             // 
             this.labelPostProcessingDirection.AutoSize = true;
-            this.labelPostProcessingDirection.Location = new System.Drawing.Point(320, 42);
-            this.labelPostProcessingDirection.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelPostProcessingDirection.Location = new System.Drawing.Point(160, 22);
             this.labelPostProcessingDirection.Name = "labelPostProcessingDirection";
-            this.labelPostProcessingDirection.Size = new System.Drawing.Size(103, 25);
+            this.labelPostProcessingDirection.Size = new System.Drawing.Size(52, 13);
             this.labelPostProcessingDirection.TabIndex = 20;
             this.labelPostProcessingDirection.Text = "Direction:";
             // 
             // textBoxColorBarMin
             // 
-            this.textBoxColorBarMin.Location = new System.Drawing.Point(10, 131);
-            this.textBoxColorBarMin.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxColorBarMin.Location = new System.Drawing.Point(5, 68);
             this.textBoxColorBarMin.Name = "textBoxColorBarMin";
-            this.textBoxColorBarMin.Size = new System.Drawing.Size(130, 31);
+            this.textBoxColorBarMin.Size = new System.Drawing.Size(67, 20);
             this.textBoxColorBarMin.TabIndex = 19;
             this.textBoxColorBarMin.Text = "0";
             this.textBoxColorBarMin.TextChanged += new System.EventHandler(this.textBoxColorBarMin_TextChanged);
@@ -3223,10 +3076,9 @@ namespace Cocodrilo.Panels
             // textBoxColorBarMax
             // 
             this.textBoxColorBarMax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxColorBarMax.Location = new System.Drawing.Point(144, 131);
-            this.textBoxColorBarMax.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxColorBarMax.Location = new System.Drawing.Point(233, 68);
             this.textBoxColorBarMax.Name = "textBoxColorBarMax";
-            this.textBoxColorBarMax.Size = new System.Drawing.Size(134, 31);
+            this.textBoxColorBarMax.Size = new System.Drawing.Size(69, 20);
             this.textBoxColorBarMax.TabIndex = 18;
             this.textBoxColorBarMax.Text = "1";
             this.textBoxColorBarMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -3240,11 +3092,9 @@ namespace Cocodrilo.Panels
             this.groupBoxScalings.Controls.Add(this.labelFlyingNodeLimit);
             this.groupBoxScalings.Controls.Add(this.labelDispScale);
             this.groupBoxScalings.Controls.Add(this.labelResScale);
-            this.groupBoxScalings.Location = new System.Drawing.Point(10, 181);
-            this.groupBoxScalings.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBoxScalings.Location = new System.Drawing.Point(5, 94);
             this.groupBoxScalings.Name = "groupBoxScalings";
-            this.groupBoxScalings.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBoxScalings.Size = new System.Drawing.Size(482, 192);
+            this.groupBoxScalings.Size = new System.Drawing.Size(241, 100);
             this.groupBoxScalings.TabIndex = 17;
             this.groupBoxScalings.TabStop = false;
             this.groupBoxScalings.Text = "Scalings";
@@ -3253,10 +3103,9 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxFlyingNodeLimit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxFlyingNodeLimit.Location = new System.Drawing.Point(248, 137);
-            this.textBoxFlyingNodeLimit.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxFlyingNodeLimit.Location = new System.Drawing.Point(124, 71);
             this.textBoxFlyingNodeLimit.Name = "textBoxFlyingNodeLimit";
-            this.textBoxFlyingNodeLimit.Size = new System.Drawing.Size(214, 31);
+            this.textBoxFlyingNodeLimit.Size = new System.Drawing.Size(109, 20);
             this.textBoxFlyingNodeLimit.TabIndex = 13;
             this.textBoxFlyingNodeLimit.Text = "1.000e+05";
             this.textBoxFlyingNodeLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -3266,10 +3115,9 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxResScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxResScale.Location = new System.Drawing.Point(248, 87);
-            this.textBoxResScale.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxResScale.Location = new System.Drawing.Point(124, 45);
             this.textBoxResScale.Name = "textBoxResScale";
-            this.textBoxResScale.Size = new System.Drawing.Size(214, 31);
+            this.textBoxResScale.Size = new System.Drawing.Size(109, 20);
             this.textBoxResScale.TabIndex = 12;
             this.textBoxResScale.Text = "1.000e+00";
             this.textBoxResScale.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -3279,10 +3127,9 @@ namespace Cocodrilo.Panels
             // 
             this.textBoxDispScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDispScale.Location = new System.Drawing.Point(248, 37);
-            this.textBoxDispScale.Margin = new System.Windows.Forms.Padding(6);
+            this.textBoxDispScale.Location = new System.Drawing.Point(124, 19);
             this.textBoxDispScale.Name = "textBoxDispScale";
-            this.textBoxDispScale.Size = new System.Drawing.Size(214, 31);
+            this.textBoxDispScale.Size = new System.Drawing.Size(109, 20);
             this.textBoxDispScale.TabIndex = 11;
             this.textBoxDispScale.Text = "1.000e+00";
             this.textBoxDispScale.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -3291,30 +3138,27 @@ namespace Cocodrilo.Panels
             // labelFlyingNodeLimit
             // 
             this.labelFlyingNodeLimit.AutoSize = true;
-            this.labelFlyingNodeLimit.Location = new System.Drawing.Point(12, 142);
-            this.labelFlyingNodeLimit.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelFlyingNodeLimit.Location = new System.Drawing.Point(6, 74);
             this.labelFlyingNodeLimit.Name = "labelFlyingNodeLimit";
-            this.labelFlyingNodeLimit.Size = new System.Drawing.Size(184, 25);
+            this.labelFlyingNodeLimit.Size = new System.Drawing.Size(90, 13);
             this.labelFlyingNodeLimit.TabIndex = 10;
             this.labelFlyingNodeLimit.Text = "Flying Node Limit:";
             // 
             // labelDispScale
             // 
             this.labelDispScale.AutoSize = true;
-            this.labelDispScale.Location = new System.Drawing.Point(12, 42);
-            this.labelDispScale.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelDispScale.Location = new System.Drawing.Point(6, 22);
             this.labelDispScale.Name = "labelDispScale";
-            this.labelDispScale.Size = new System.Drawing.Size(225, 25);
+            this.labelDispScale.Size = new System.Drawing.Size(112, 13);
             this.labelDispScale.TabIndex = 8;
             this.labelDispScale.Text = "Displacement Scaling:";
             // 
             // labelResScale
             // 
             this.labelResScale.AutoSize = true;
-            this.labelResScale.Location = new System.Drawing.Point(12, 92);
-            this.labelResScale.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.labelResScale.Location = new System.Drawing.Point(6, 48);
             this.labelResScale.Name = "labelResScale";
-            this.labelResScale.Size = new System.Drawing.Size(162, 25);
+            this.labelResScale.Size = new System.Drawing.Size(81, 13);
             this.labelResScale.TabIndex = 9;
             this.labelResScale.Text = "Result Scaling: ";
             // 
@@ -3323,10 +3167,9 @@ namespace Cocodrilo.Panels
             this.pictureBoxColorBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxColorBar.Image = global::Cocodrilo.Properties.Resources.color_bar;
-            this.pictureBoxColorBar.Location = new System.Drawing.Point(12, 88);
-            this.pictureBoxColorBar.Margin = new System.Windows.Forms.Padding(6);
+            this.pictureBoxColorBar.Location = new System.Drawing.Point(6, 46);
             this.pictureBoxColorBar.Name = "pictureBoxColorBar";
-            this.pictureBoxColorBar.Size = new System.Drawing.Size(270, 31);
+            this.pictureBoxColorBar.Size = new System.Drawing.Size(296, 16);
             this.pictureBoxColorBar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxColorBar.TabIndex = 16;
             this.pictureBoxColorBar.TabStop = false;
@@ -3343,11 +3186,9 @@ namespace Cocodrilo.Panels
             this.groupBoxShow.Controls.Add(this.checkBoxShowUndeformed);
             this.groupBoxShow.Controls.Add(this.checkBoxShowGaussPoints);
             this.groupBoxShow.Controls.Add(this.checkBoxShowCouplingPoints);
-            this.groupBoxShow.Location = new System.Drawing.Point(12, 383);
-            this.groupBoxShow.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBoxShow.Location = new System.Drawing.Point(6, 199);
             this.groupBoxShow.Name = "groupBoxShow";
-            this.groupBoxShow.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBoxShow.Size = new System.Drawing.Size(270, 217);
+            this.groupBoxShow.Size = new System.Drawing.Size(296, 113);
             this.groupBoxShow.TabIndex = 15;
             this.groupBoxShow.TabStop = false;
             this.groupBoxShow.Text = "Show";
@@ -3355,10 +3196,9 @@ namespace Cocodrilo.Panels
             // checkBoxPrincipalStresses
             // 
             this.checkBoxPrincipalStresses.AutoSize = true;
-            this.checkBoxPrincipalStresses.Location = new System.Drawing.Point(388, 125);
-            this.checkBoxPrincipalStresses.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxPrincipalStresses.Location = new System.Drawing.Point(194, 65);
             this.checkBoxPrincipalStresses.Name = "checkBoxPrincipalStresses";
-            this.checkBoxPrincipalStresses.Size = new System.Drawing.Size(217, 29);
+            this.checkBoxPrincipalStresses.Size = new System.Drawing.Size(109, 17);
             this.checkBoxPrincipalStresses.TabIndex = 9;
             this.checkBoxPrincipalStresses.Text = "Principal Stresses";
             this.checkBoxPrincipalStresses.UseVisualStyleBackColor = true;
@@ -3367,10 +3207,9 @@ namespace Cocodrilo.Panels
             // checkBoxPK2Stresses
             // 
             this.checkBoxPK2Stresses.AutoSize = true;
-            this.checkBoxPK2Stresses.Location = new System.Drawing.Point(388, 81);
-            this.checkBoxPK2Stresses.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxPK2Stresses.Location = new System.Drawing.Point(194, 42);
             this.checkBoxPK2Stresses.Name = "checkBoxPK2Stresses";
-            this.checkBoxPK2Stresses.Size = new System.Drawing.Size(174, 29);
+            this.checkBoxPK2Stresses.Size = new System.Drawing.Size(89, 17);
             this.checkBoxPK2Stresses.TabIndex = 8;
             this.checkBoxPK2Stresses.Text = "PK2 Stresses";
             this.checkBoxPK2Stresses.UseVisualStyleBackColor = true;
@@ -3379,10 +3218,9 @@ namespace Cocodrilo.Panels
             // checkBoxShowCauchyStresses
             // 
             this.checkBoxShowCauchyStresses.AutoSize = true;
-            this.checkBoxShowCauchyStresses.Location = new System.Drawing.Point(388, 37);
-            this.checkBoxShowCauchyStresses.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxShowCauchyStresses.Location = new System.Drawing.Point(194, 19);
             this.checkBoxShowCauchyStresses.Name = "checkBoxShowCauchyStresses";
-            this.checkBoxShowCauchyStresses.Size = new System.Drawing.Size(207, 29);
+            this.checkBoxShowCauchyStresses.Size = new System.Drawing.Size(105, 17);
             this.checkBoxShowCauchyStresses.TabIndex = 7;
             this.checkBoxShowCauchyStresses.Text = "Cauchy Stresses";
             this.checkBoxShowCauchyStresses.UseVisualStyleBackColor = true;
@@ -3393,10 +3231,9 @@ namespace Cocodrilo.Panels
             this.checkBoxShowResults.AutoSize = true;
             this.checkBoxShowResults.Checked = true;
             this.checkBoxShowResults.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowResults.Location = new System.Drawing.Point(12, 37);
-            this.checkBoxShowResults.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxShowResults.Location = new System.Drawing.Point(6, 19);
             this.checkBoxShowResults.Name = "checkBoxShowResults";
-            this.checkBoxShowResults.Size = new System.Drawing.Size(116, 29);
+            this.checkBoxShowResults.Size = new System.Drawing.Size(61, 17);
             this.checkBoxShowResults.TabIndex = 0;
             this.checkBoxShowResults.Text = "Results";
             this.checkBoxShowResults.UseVisualStyleBackColor = true;
@@ -3405,10 +3242,9 @@ namespace Cocodrilo.Panels
             // checkBoxShowKnots
             // 
             this.checkBoxShowKnots.AutoSize = true;
-            this.checkBoxShowKnots.Location = new System.Drawing.Point(12, 81);
-            this.checkBoxShowKnots.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxShowKnots.Location = new System.Drawing.Point(6, 42);
             this.checkBoxShowKnots.Name = "checkBoxShowKnots";
-            this.checkBoxShowKnots.Size = new System.Drawing.Size(99, 29);
+            this.checkBoxShowKnots.Size = new System.Drawing.Size(53, 17);
             this.checkBoxShowKnots.TabIndex = 1;
             this.checkBoxShowKnots.Text = "Knots";
             this.checkBoxShowKnots.UseVisualStyleBackColor = true;
@@ -3417,10 +3253,9 @@ namespace Cocodrilo.Panels
             // checkBoxShowUndeformed
             // 
             this.checkBoxShowUndeformed.AutoSize = true;
-            this.checkBoxShowUndeformed.Location = new System.Drawing.Point(12, 173);
-            this.checkBoxShowUndeformed.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxShowUndeformed.Location = new System.Drawing.Point(6, 90);
             this.checkBoxShowUndeformed.Name = "checkBoxShowUndeformed";
-            this.checkBoxShowUndeformed.Size = new System.Drawing.Size(161, 29);
+            this.checkBoxShowUndeformed.Size = new System.Drawing.Size(84, 17);
             this.checkBoxShowUndeformed.TabIndex = 2;
             this.checkBoxShowUndeformed.Text = "Undeformed";
             this.checkBoxShowUndeformed.UseVisualStyleBackColor = true;
@@ -3428,10 +3263,9 @@ namespace Cocodrilo.Panels
             // checkBoxShowGaussPoints
             // 
             this.checkBoxShowGaussPoints.AutoSize = true;
-            this.checkBoxShowGaussPoints.Location = new System.Drawing.Point(184, 37);
-            this.checkBoxShowGaussPoints.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxShowGaussPoints.Location = new System.Drawing.Point(92, 19);
             this.checkBoxShowGaussPoints.Name = "checkBoxShowGaussPoints";
-            this.checkBoxShowGaussPoints.Size = new System.Drawing.Size(172, 29);
+            this.checkBoxShowGaussPoints.Size = new System.Drawing.Size(88, 17);
             this.checkBoxShowGaussPoints.TabIndex = 4;
             this.checkBoxShowGaussPoints.Text = "Gauss Points";
             this.checkBoxShowGaussPoints.UseVisualStyleBackColor = true;
@@ -3440,10 +3274,9 @@ namespace Cocodrilo.Panels
             // checkBoxShowCouplingPoints
             // 
             this.checkBoxShowCouplingPoints.AutoSize = true;
-            this.checkBoxShowCouplingPoints.Location = new System.Drawing.Point(184, 81);
-            this.checkBoxShowCouplingPoints.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxShowCouplingPoints.Location = new System.Drawing.Point(92, 42);
             this.checkBoxShowCouplingPoints.Name = "checkBoxShowCouplingPoints";
-            this.checkBoxShowCouplingPoints.Size = new System.Drawing.Size(195, 29);
+            this.checkBoxShowCouplingPoints.Size = new System.Drawing.Size(99, 17);
             this.checkBoxShowCouplingPoints.TabIndex = 5;
             this.checkBoxShowCouplingPoints.Text = "Coupling Points";
             this.checkBoxShowCouplingPoints.UseVisualStyleBackColor = true;
@@ -3453,25 +3286,20 @@ namespace Cocodrilo.Panels
             // comboBoxResultType
             // 
             this.comboBoxResultType.FormattingEnabled = true;
-            this.comboBoxResultType.Location = new System.Drawing.Point(10, 37);
-            this.comboBoxResultType.Margin = new System.Windows.Forms.Padding(6);
+            this.comboBoxResultType.Location = new System.Drawing.Point(5, 19);
             this.comboBoxResultType.Name = "comboBoxResultType";
-            this.comboBoxResultType.Size = new System.Drawing.Size(294, 33);
+            this.comboBoxResultType.Size = new System.Drawing.Size(149, 21);
             this.comboBoxResultType.TabIndex = 7;
             this.comboBoxResultType.SelectedIndexChanged += new System.EventHandler(this.comboBoxResultType_SelectedIndexChanged);
             // 
             // groupBoxAnalysisStep
             // 
-            this.groupBoxAnalysisStep.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxAnalysisStep.Controls.Add(this.domainUpDownAnalysisStep);
             this.groupBoxAnalysisStep.Controls.Add(this.trackBarAnalysisStep);
             this.groupBoxAnalysisStep.Controls.Add(this.comboBoxLoadCaseType);
-            this.groupBoxAnalysisStep.Location = new System.Drawing.Point(6, 12);
-            this.groupBoxAnalysisStep.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBoxAnalysisStep.Location = new System.Drawing.Point(3, 6);
             this.groupBoxAnalysisStep.Name = "groupBoxAnalysisStep";
-            this.groupBoxAnalysisStep.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBoxAnalysisStep.Size = new System.Drawing.Size(294, 187);
+            this.groupBoxAnalysisStep.Size = new System.Drawing.Size(308, 97);
             this.groupBoxAnalysisStep.TabIndex = 9;
             this.groupBoxAnalysisStep.TabStop = false;
             this.groupBoxAnalysisStep.Text = "Analysis/Step";
@@ -3480,10 +3308,9 @@ namespace Cocodrilo.Panels
             // 
             this.domainUpDownAnalysisStep.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.domainUpDownAnalysisStep.Location = new System.Drawing.Point(352, 38);
-            this.domainUpDownAnalysisStep.Margin = new System.Windows.Forms.Padding(6);
+            this.domainUpDownAnalysisStep.Location = new System.Drawing.Point(176, 20);
             this.domainUpDownAnalysisStep.Name = "domainUpDownAnalysisStep";
-            this.domainUpDownAnalysisStep.Size = new System.Drawing.Size(0, 31);
+            this.domainUpDownAnalysisStep.Size = new System.Drawing.Size(161, 20);
             this.domainUpDownAnalysisStep.TabIndex = 2;
             this.domainUpDownAnalysisStep.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.domainUpDownAnalysisStep.SelectedItemChanged += new System.EventHandler(this.domainUpDownAnalysisStep_SelectedItemChanged);
@@ -3492,20 +3319,18 @@ namespace Cocodrilo.Panels
             // 
             this.trackBarAnalysisStep.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarAnalysisStep.Location = new System.Drawing.Point(12, 88);
-            this.trackBarAnalysisStep.Margin = new System.Windows.Forms.Padding(6);
+            this.trackBarAnalysisStep.Location = new System.Drawing.Point(6, 46);
             this.trackBarAnalysisStep.Name = "trackBarAnalysisStep";
-            this.trackBarAnalysisStep.Size = new System.Drawing.Size(270, 90);
+            this.trackBarAnalysisStep.Size = new System.Drawing.Size(296, 45);
             this.trackBarAnalysisStep.TabIndex = 1;
             this.trackBarAnalysisStep.Scroll += new System.EventHandler(this.trackBarAnalysisStep_Scroll);
             // 
             // comboBoxLoadCaseType
             // 
             this.comboBoxLoadCaseType.FormattingEnabled = true;
-            this.comboBoxLoadCaseType.Location = new System.Drawing.Point(12, 37);
-            this.comboBoxLoadCaseType.Margin = new System.Windows.Forms.Padding(6);
+            this.comboBoxLoadCaseType.Location = new System.Drawing.Point(6, 19);
             this.comboBoxLoadCaseType.Name = "comboBoxLoadCaseType";
-            this.comboBoxLoadCaseType.Size = new System.Drawing.Size(264, 33);
+            this.comboBoxLoadCaseType.Size = new System.Drawing.Size(134, 21);
             this.comboBoxLoadCaseType.TabIndex = 0;
             this.comboBoxLoadCaseType.SelectedIndexChanged += new System.EventHandler(this.comboBoxLoadCaseType_SelectedIndexChanged);
             // 
@@ -3519,14 +3344,14 @@ namespace Cocodrilo.Panels
             // 
             // UserControlCocodriloPanel
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.TeDA_Plugin);
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "UserControlCocodriloPanel";
-            this.Size = new System.Drawing.Size(572, 1263);
+            this.Size = new System.Drawing.Size(252, 657);
             this.TeDA_Plugin.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.groupBoxAnalyses.ResumeLayout(false);
