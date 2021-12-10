@@ -8,9 +8,9 @@ using Cocodrilo.UserData;
 
 namespace Cocodrilo.IO
 {
-    public class OutputKratosDEM
+    public class OutputKratosDEM : Output
     {
-        public OutputKratosDEM()
+        public OutputKratosDEM(Analyses.Analysis ThisAnalysis) : base(ThisAnalysis)
         {
         }
 
@@ -24,7 +24,6 @@ namespace Cocodrilo.IO
 
         public void StartAnalysis(string project_path, List<Point> PointList, List<Mesh> MeshList)
         {
-            //GET GEOMETRY JSON INPUT TEXT
             try
             {
                 System.IO.File.WriteAllLines(project_path + "/" + "KlausDEM.mdpa",
@@ -42,7 +41,7 @@ namespace Cocodrilo.IO
             }
             catch (Exception ex)
             {
-                RhinoApp.WriteLine("Json output not possible.");
+                RhinoApp.WriteLine("Output not possible.");
                 RhinoApp.WriteLine(ex.ToString());
             }
         }
@@ -268,5 +267,45 @@ End Properties
 
             return json;
         }
+
+        #region CO SIMULATION
+        public override Dictionary<string, object> GetCouplingSolver()
+        {
+            var solver_wrapper_settings = new Dictionary<string, object> {
+                { "input_file", "ProjectParamatersDEM" },
+                { "move_mesh_model_part", new List<string>{ "RigidFacePart.0" } },
+                { "working_directory", analysis.Name }
+            };
+
+            var disp = new Dictionary<string, object> {
+                { "model_part_name", "RigidFacePart.0" },
+                { "variable_name", "DISPLACEMENT" },
+                { "dimension", 3 }
+            };
+            var contact_force = new Dictionary<string, object> {
+                { "model_part_name", "RigidFacePart.0" },
+                { "variable_name", "CONTACT_FORCES" },
+                { "dimension", 3 }
+            };
+            var velocity = new Dictionary<string, object> {
+                { "model_part_name", "RigidFacePart.0" },
+                { "variable_name", "VELOCITY" },
+                { "dimension", 3 }
+            };
+
+            var data = new Dictionary<string, object> {
+                { "disp", disp },
+                { "contact_force", contact_force },
+                { "velocity", velocity }
+            };
+
+            return new Dictionary<string, object> {
+                    { analysis.Name, new Dictionary<string, object> {
+                        { "type", "solver_wrappers.kratos.dem_wrapper"},
+                        { "solver_wrapper_settings", solver_wrapper_settings},
+                        { "data", data}
+                    } } };
+        }
+        #endregion
     }
 }

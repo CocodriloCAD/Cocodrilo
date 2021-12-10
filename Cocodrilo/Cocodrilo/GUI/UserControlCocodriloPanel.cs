@@ -1235,6 +1235,7 @@ namespace Cocodrilo.Panels
             {
                 RhinoApp.WriteLine("No data deleted!");
             }
+
         }
         private void buttonLoadElement_Click(object sender, EventArgs e)
         {

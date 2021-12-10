@@ -7,9 +7,9 @@
         public double tolerance { get; set; }
 
         public AnalysisFormfinding() { }
-        public AnalysisFormfinding(string name, int maxSteps = 10,
+        public AnalysisFormfinding(string AnalysisName, int maxSteps = 10,
             int maxIterations = 1, double tolerance = 0.001)
-            : base(name)
+            : base(AnalysisName)
         {
             this.maxSteps = maxSteps;
             this.maxIterations = maxIterations;

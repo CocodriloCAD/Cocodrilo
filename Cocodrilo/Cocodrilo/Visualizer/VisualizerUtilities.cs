@@ -31,8 +31,8 @@ namespace Cocodrilo.Visualizer
             var points = new List<Point3d>();
             Face.GetSurfaceSize(out double width, out double height);
 
-            var divide_u = Math.Max(5, Convert.ToInt32(width * 10));
-            var divide_v = Math.Max(5, Convert.ToInt32(height * 10));
+            var divide_u = Math.Max(5, Convert.ToInt32(width / 1.5));
+            var divide_v = Math.Max(5, Convert.ToInt32(height / 1.5));
 
             var u_t0 = Face.Domain(0).T0;
             var length_u = Face.Domain(0).Length;
