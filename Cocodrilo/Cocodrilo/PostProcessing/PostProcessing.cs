@@ -151,9 +151,9 @@ namespace Cocodrilo.PostProcessing
                             PostProcessingImportUtilities.LoadEvaluationPoints(
                                 file, ref s_EvaluationPointList, ref mCouplingEvaluationPointList);
                         }
-                        catch
+                        catch(Exception e)
                         {
-                            RhinoApp.WriteLine("ERROR: could not read evaluation points from file: " + file);
+                            RhinoApp.WriteLine("ERROR: could not read evaluation points from file: " + file + "\n" + e.ToString());
                         }
                     }
                 }
