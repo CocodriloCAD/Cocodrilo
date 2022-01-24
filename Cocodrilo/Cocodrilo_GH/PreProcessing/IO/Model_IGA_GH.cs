@@ -9,7 +9,7 @@ using Cocodrilo.ElementProperties;
 
 namespace Cocodrilo_GH.PreProcessing.IO
 {
-    public class Model_GH : GH_Component
+    public class Model_IGA_GH : GH_Component
     {
         private List<Brep> mBrepList = new List<Brep>();
         private List<Curve> mCurveList = new List<Curve>();
@@ -21,10 +21,10 @@ namespace Cocodrilo_GH.PreProcessing.IO
         private bool mShowCouplings = true;
         private bool mShowIds = false;
 
-        public Model_GH()
-          : base("Model", "Model",
-              "Entire numerical model",
-              "Cocodrilo", "Model")
+        public Model_IGA_GH()
+          : base("IGA Model", "IGA Model",
+              "Isogeometric analysis model.",
+              "Cocodrilo", "Models")
         {
         }
 
@@ -37,7 +37,10 @@ namespace Cocodrilo_GH.PreProcessing.IO
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddGenericParameter("IGA Model", "Model", "IGA Model", GH_ParamAccess.item);
+            pManager[0].Optional = true;
             pManager.AddGenericParameter("Path", "Path", "Path to input files.", GH_ParamAccess.item);
+            pManager[1].Optional = true;
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -208,10 +211,11 @@ namespace Cocodrilo_GH.PreProcessing.IO
                 var output_kratos_iga = new Cocodrilo.IO.OutputKratosIGA(this_analysis);
                 output_kratos_iga.StartAnalysis(mBrepList, mCurveList, point_list);
 
-            }
-            string project_path = Cocodrilo.UserData.UserDataUtilities.GetProjectPath(this_analysis.Name);
+                DA.SetData(1, output_kratos_iga);
 
-            DA.SetData(0, project_path);
+                string project_path = Cocodrilo.UserData.UserDataUtilities.GetProjectPath(this_analysis.Name);
+                DA.SetData(1, project_path);
+            }
         }
 
         /// <summary>

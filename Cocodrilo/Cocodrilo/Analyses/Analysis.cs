@@ -13,6 +13,10 @@ namespace Cocodrilo.Analyses
         {
             this.Name = _name;
         }
+        public virtual int GetEchoLevel()
+        {
+            return 0;
+        }
     }
 
 }

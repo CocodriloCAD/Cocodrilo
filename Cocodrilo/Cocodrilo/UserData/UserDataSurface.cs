@@ -61,7 +61,14 @@ namespace Cocodrilo.UserData
                 Rhino.RhinoApp.WriteLine("WARNING: Trying to assign a refinement to a surface, which is not of type RefinementSurface.");
             }
         }
-
+        protected override void OnDuplicate(Rhino.DocObjects.Custom.UserData source)
+        {
+            if (source is UserDataSurface src)
+            {
+                base.OnDuplicate(src);
+                mRefinement = src.mRefinement;
+            }
+        }
         //    #region Staging
         //    public ElementDataSurface GetCurrentElementData(int StageId = -1)
         //    {

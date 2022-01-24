@@ -19,6 +19,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
         private string mInitialDisplacementZ = "0.0";
         private bool mStrong = true;
         private SupportType mSupportType = SupportType.SupportPenaltyCondition;
+        private bool mComputeReactions = false;
 
         public Support_GH()
           : base("Support", "Support", "Dirichlet Boundary Conditions", "Cocodrilo", "Elements")
@@ -69,7 +70,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
                     continue;
 
                 var support_property = new PropertySupport(
-                    GeometryType.GeometrySurface, support, new TimeInterval());
+                    GeometryType.GeometrySurface, support, new TimeInterval(), mComputeReactions);
 
                 geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, support_property));
             }
@@ -77,7 +78,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             foreach (var curve in curves)
             {
                 var support_property = new PropertySupport(
-                    GeometryType.GeometryCurve, support, new TimeInterval());
+                    GeometryType.GeometryCurve, support, new TimeInterval(), mComputeReactions);
 
                 geometries.curves.Add(new KeyValuePair<Curve, Property>(curve, support_property));
             }
@@ -85,7 +86,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             foreach (var edge in edges)
             {
                 var support_property = new PropertySupport(
-                    GeometryType.SurfaceEdge, support, new TimeInterval());
+                    GeometryType.SurfaceEdge, support, new TimeInterval(), mComputeReactions);
 
                 geometries.edges.Add(new KeyValuePair<Curve, Property>(edge, support_property));
             }
@@ -93,7 +94,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             foreach (var point in points)
             {
                 var support_property = new PropertySupport(
-                    GeometryType.Point, support, new TimeInterval());
+                    GeometryType.Point, support, new TimeInterval(), mComputeReactions);
 
                 Point new_point = new Point(point);
 
@@ -119,6 +120,8 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             foreach (SupportType pt in Enum.GetValues(typeof(SupportType)))
                 GH_Component.Menu_AppendItem(toolStripMenuItemSupportType.DropDown, pt.ToString(), Menu_SupportTypeChanged, true, pt == mSupportType).Tag = pt;
             Menu_AppendItem(menu, "Strong/ Directly Fix DoFs", Menu_DoClick_Strong, true, mStrong);
+            Menu_AppendSeparator(menu);
+            Menu_AppendItem(menu, "Compute Reactions", Menu_ComputeReactions, true, mComputeReactions);
         }
 
         private void Menu_SupportTypeChanged(object sender, EventArgs e)
@@ -142,6 +145,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
         private void Menu_SetDisplacementZ(Grasshopper.GUI.GH_MenuTextBox sender, System.Windows.Forms.KeyEventArgs e){}
         private void Menu_SetDisplacementZText(GH_MenuTextBox sender, string newText) { mInitialDisplacementZ = newText; ExpireSolution(true); }
         private void Menu_DoClick_Strong(object sender, EventArgs e) { mStrong = !mStrong; ExpireSolution(true); }
+        private void Menu_ComputeReactions(object sender, EventArgs e) { mComputeReactions = !mComputeReactions; ExpireSolution(true); }
 
         public override bool Write(GH_IO.Serialization.GH_IWriter writer)
         {
@@ -154,6 +158,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             writer.SetString("InitialDisplacementZ", mInitialDisplacementZ);
             writer.SetBoolean("Strong", mStrong);
             writer.SetInt32("SupportType", (int)mSupportType);
+            writer.SetBoolean("ComputeReactions", mComputeReactions);
             return base.Write(writer);
         }
 
@@ -169,6 +174,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             int support_type_index = -1;
             if (reader.TryGetInt32("SupportType", ref support_type_index))
                 mSupportType = (SupportType)support_type_index;
+            reader.TryGetBoolean("ComputeReactions", ref mComputeReactions);
             return base.Read(reader);
         }
 

@@ -20,63 +20,41 @@ namespace Cocodrilo.Visualizer
 
         public static Point3d[] GetCurvePoints(Curve ThisCurve)
         {
-            var count = Convert.ToInt32(ThisCurve.GetLength() * 1.5);
-            if (count == 0)
-                return new Point3d[] { };
-
-            ThisCurve.DivideByCount(count, true, out var ptsDiff);
+            var divide = Math.Max(3, Convert.ToInt32(ThisCurve.GetLength() * 1.5));
+            ThisCurve.DivideByCount(divide, true, out var ptsDiff);
 
             return ptsDiff;
         }
 
-        public static List<Point3d> SurfaceDivide(Surface surface)
+        public static List<Point3d> SurfaceDivide(BrepFace Face)
         {
-            var PointsOnSrf = new List<Point3d>();
+            var points = new List<Point3d>();
+            Face.GetSurfaceSize(out double width, out double height);
 
-            var U = 5;
-            //if (area > 100)
-            //    U = 20;
-            //else if (area > 500)
-            //    U = 50;
+            var divide_u = Math.Max(5, Convert.ToInt32(width / 1.5));
+            var divide_v = Math.Max(5, Convert.ToInt32(height / 1.5));
 
-            var V = U;
+            var u_t0 = Face.Domain(0).T0;
+            var length_u = Face.Domain(0).Length;
 
-            var Srf = surface;
-            //foreach (var Srf in Brep.Surfaces)
+            var v_t0 = Face.Domain(1).T0;
+            var length_v = Face.Domain(1).Length;
+
+            for (var i = 0; i <= divide_u; i++)
             {
-
-                var _uT0 = Srf.Domain(0).T0;
-                var _length_u = Srf.Domain(0).Length;
-
-                var _vT0 = Srf.Domain(1).T0;
-                var _length_v = Srf.Domain(1).Length;
-
-                var PointsAll = new List<Point3d>();
-
-                for (var i = 0; i <= U; i++)
+                for (var j = 0; j <= divide_v; j++)
                 {
-                    for (var j = 0; j <= V; j++)
+                    var u = u_t0 + i * (length_u / divide_u);
+                    var v = v_t0 + j * (length_v / divide_v);
+                    var point_face_direction = Face.IsPointOnFace(u, v);
+                    if (PointFaceRelation.Exterior != point_face_direction)
                     {
-                        var _u = _uT0 + i * (_length_u / U);
-                        var _v = _vT0 + j * (_length_v / V);
-                        PointsAll.Add(new Point3d(_u, _v, 0));
+                        points.Add(Face.PointAt(u, v));
                     }
-                }
-
-                foreach (var pt in PointsAll)
-                {
-                    var ptTest = Srf.PointAt(pt.X, pt.Y);
-
-                    double u, v;
-                    Srf.ClosestPoint(ptTest, out u, out v);
-                    var ptSrf = Srf.PointAt(u, v);
-                    //var ptBrep = Brep.ClosestPoint(ptTest);
-                    //if (ptBrep.DistanceTo(ptSrf) < 0.0001)
-                    PointsOnSrf.Add(ptTest);
                 }
             }
 
-            return PointsOnSrf;
+            return points;
         }
 
 

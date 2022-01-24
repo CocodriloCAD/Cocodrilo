@@ -29,7 +29,6 @@ namespace Cocodrilo.UserData
             mCoupling = new Coupling(0);
         }
 
-
         #region Coupling Functions
         public bool TryAddTrimIndex(int BrepId, int TrimIndex)
         {
@@ -191,7 +190,7 @@ namespace Cocodrilo.UserData
         #region Rhino methods
         protected override void OnDuplicate(Rhino.DocObjects.Custom.UserData source)
         {
-            if (source is UserDataEdge src)
+            if (source is UserDataCocodrilo src)
             {
                 mStageElementData = src.mStageElementData;
                 BrepId = src.BrepId;

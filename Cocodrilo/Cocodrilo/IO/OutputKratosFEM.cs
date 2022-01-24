@@ -14,9 +14,9 @@ namespace Cocodrilo.IO
     using DictList = List<Dictionary<string, object>>;
     using IdDict = Dictionary<int, List<int>>;
     using PropertyIdDict = Dictionary<int, List<BrepToParameterLocations>>;
-    public class OutputKratosFEM
+    public class OutputKratosFEM : Output
     {
-        public OutputKratosFEM()
+        public OutputKratosFEM() : base(new Analyses.Analysis("FEM"))
         {
         }
         public void StartAnalysis(List<Mesh> MeshList)
@@ -178,6 +178,69 @@ namespace Cocodrilo.IO
 
             return json;
         }
+
+        #region CO SIMULATION
+        public override Dictionary<string, object> GetCouplingSequence(
+            List<Analyses.Analysis> InputAnalyses,
+            List<Analyses.Analysis> OutputAnalyses)
+        {
+            var input_data_list = new List<Dictionary<string, object>> { };
+            foreach (var input_analysis in InputAnalyses)
+                input_data_list.Add( new Dictionary<string, object> {
+                        { "data"                  , "load" },
+                        {"from_solver"            , input_analysis.Name},
+                        {"from_solver_data"       , "contact_force"},
+                        {"data_transfer_operator" , "mapper_1"}});
+            var output_data_list = new List<Dictionary<string, object>> { };
+            foreach (var input_analysis in InputAnalyses)
+                input_data_list.Add(new Dictionary<string, object> {
+                        { "data"                  , "disp" },
+                        {"from_solver"            , input_analysis.Name},
+                        {"from_solver_data"       , "disp"},
+                        {"data_transfer_operator" , "mapper_1"}});
+
+            return new Dictionary<string, object> {
+                    { "name", analysis.Name },
+                    { "input_data_list", input_data_list },
+                    { "output_data_list", input_data_list } };
+        }
+
+        public override Dictionary<string, object> GetCouplingSolver()
+        {
+            var solver_wrapper_settings = new Dictionary<string, object> {
+                { "input_file", "ProjectParametersFEM" }
+            };
+
+            var disp = new Dictionary<string, object> {
+                { "model_part_name", "Structure.struct_sub" },
+                { "variable_name", "DISPLACEMENT" },
+                { "dimension", 3 }
+            };
+            var load = new Dictionary<string, object> {
+                { "model_part_name", "Structure.struct_sub" },
+                { "variable_name", "POINT_LOAD" },
+                { "dimension", 3 }
+            };
+            var velocity = new Dictionary<string, object> {
+                { "model_part_name", "Structure.struct_sub" },
+                { "variable_name", "VELOCITY" },
+                { "dimension", 3 }
+            };
+
+            var data = new Dictionary<string, object> {
+                { "disp", disp },
+                { "load", load },
+                { "velocity", velocity }
+            };
+
+            return new Dictionary<string, object> {
+                    { analysis.Name, new Dictionary<string, object> {
+                        { "type", "solver_wrappers.kratos.dem_wrapper"},
+                        { "solver_wrapper_settings", solver_wrapper_settings},
+                        { "data", data}
+                    } } };
+        }
+        #endregion
     }
 
 }
