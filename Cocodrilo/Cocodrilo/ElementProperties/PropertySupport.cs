@@ -233,7 +233,7 @@ namespace Cocodrilo.ElementProperties
         public override List<Dictionary<string, object>> GetKratosPhysic(List<IO.BrepToParameterLocations> BrepToParameterLocations)
         {
             var list = new List<Dictionary<string, object>>();
-            if (mSupport.mIsSupportStrong)
+            if (mSupport.mIsSupportStrong  && mSupport.mSupportType != "DirectorInc5pShellSupport")
             {
                 foreach (var brep_property in BrepToParameterLocations)
                 {
@@ -260,7 +260,7 @@ namespace Cocodrilo.ElementProperties
                                 variation_type = "GeometryCurveVariationNodes";
                             list.Add(new Dictionary<string, object>()
                                 {
-                                    {"brep_ids", brep_property},
+                                    {"brep_id", brep_property.BrepId },
                                     {"geometry_type", variation_type},
                                     {"iga_model_part", GetKratosModelPart() + "_Rotational" },
                                     {"parameters", Parameters}
