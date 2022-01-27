@@ -134,8 +134,6 @@ namespace Cocodrilo_GH.PreProcessing.IO
                             {
                                 ud = new Cocodrilo.UserData.UserDataEdge();
                                 edge.Key.UserData.Add(ud);
-
-                                mCurveList.Add(edge.Key);
                             }
                             else
                             {
