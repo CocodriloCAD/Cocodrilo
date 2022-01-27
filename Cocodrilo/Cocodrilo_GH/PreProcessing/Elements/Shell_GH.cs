@@ -24,6 +24,8 @@ namespace Cocodrilo_GH.PreProcessing.Elements
     {
         private FormulationType mFormulationType = FormulationType.Shell3p;
         private bool mCoupleRotations = true;
+        private double mPrestress1 = 1.0;
+        private double mPrestress2 = 1.0;
 
         public Shell_GH()
           : base("Shell", "Shell", "Shell Element", "Cocodrilo", "Elements")
@@ -57,7 +59,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             if (mFormulationType == FormulationType.Membrane)
             {
                 MembraneProperties membrane_properties = new MembraneProperties(
-                    1, new double[] { 1, 0, 0 }, new double[] { 0, 1, 0 }, 0.0, 0.0);
+                    1, new double[] { 1, 0, 0 }, new double[] { 0, 1, 0 }, mPrestress1, mPrestress2);
                 this_property = new PropertyMembrane(material.Id, false, membrane_properties);
             }
             else if (mFormulationType == FormulationType.Shell3p)
@@ -89,7 +91,40 @@ namespace Cocodrilo_GH.PreProcessing.Elements
         {
             foreach (FormulationType pt in Enum.GetValues(typeof(FormulationType)))
                 GH_Component.Menu_AppendItem(menu, pt.ToString(), Menu_FormulationTypeChanged, true, pt == mFormulationType).Tag = pt;
+            Menu_AppendSeparator(menu);
+            if (mFormulationType == FormulationType.Membrane)
+            {
+                Menu_AppendItem(menu, "Prestress 1:");
+                Menu_AppendTextItem(menu, Convert.ToString(mPrestress1), Menu_Prestress1_KeyDown, Menu_Prestress1_EventHandler, false);
+                Menu_AppendItem(menu, "Prestress 2:");
+                Menu_AppendTextItem(menu, Convert.ToString(mPrestress2), Menu_Prestress2_KeyDown, Menu_Prestress2_EventHandler, false);
+            }
         }
+        
+        private void Menu_Prestress1_EventHandler(GH_MenuTextBox sender, string newText)
+        {
+            if (newText != "")
+            {
+                mPrestress1 = Convert.ToDouble(newText);
+            }
+            else
+                mPrestress1 = 1;
+            ExpireSolution(true);
+        }
+        private void Menu_Prestress1_KeyDown(GH_MenuTextBox sender, KeyEventArgs e) {}
+
+        private void Menu_Prestress2_EventHandler(GH_MenuTextBox sender, string newText)
+        {
+            if (newText != "")
+            {
+                mPrestress2 = Convert.ToDouble(newText);
+            }
+            else
+                mPrestress2 = 1;
+            ExpireSolution(true);
+        }
+        private void Menu_Prestress2_KeyDown(GH_MenuTextBox sender, KeyEventArgs e) {}
+
         private void Menu_FormulationTypeChanged(object sender, EventArgs e)
         {
             if (sender is ToolStripMenuItem item && item.Tag is FormulationType)
