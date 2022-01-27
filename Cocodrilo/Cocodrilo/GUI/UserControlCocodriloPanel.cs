@@ -1756,7 +1756,7 @@ namespace Cocodrilo.Panels
         }
         public void UpdatePostProcessingVariables()
         {
-            if (CocodriloPlugIn.Instance.PostProcessingCocodrilo.ResultList.Count > 0)
+            if (CocodriloPlugIn.Instance.PostProcessingCocodrilo?.ResultList.Count > 0)
             {
                 this.comboBoxLoadCaseType.Items.Clear();
                 foreach (var result_type in CocodriloPlugIn.Instance.PostProcessingCocodrilo.DistinctLoadCaseTypes)
@@ -1815,7 +1815,7 @@ namespace Cocodrilo.Panels
 
         private void buttonClearPost_Click(object sender, EventArgs e)
         {
-            CocodriloPlugIn.Instance.PostProcessingCocodrilo.ClearPostProcessing();
+            CocodriloPlugIn.Instance.PostProcessingCocodrilo?.ClearPostProcessing();
 
             UpdatePostProcessingVariables();
         }
@@ -1881,7 +1881,7 @@ namespace Cocodrilo.Panels
             {
                 this.comboBoxPostProcessingDirection.Enabled = true;
 
-                if (ThisResultInfo.ResultType == "\"DISPLACEMENT\"")
+                if (ThisResultInfo.NodeOrGauss == "OnNodes" || ThisResultInfo.NodeOrGauss == "\"OnNodes\"")
                 {
                     this.comboBoxPostProcessingDirection.Items.Add("X");
                     this.comboBoxPostProcessingDirection.Items.Add("Y");

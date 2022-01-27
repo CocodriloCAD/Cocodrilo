@@ -321,15 +321,14 @@ namespace Cocodrilo.IO
 
                 var variables = this_property.GetKratosVariables();
 
+                int material_id = this_property.GetMaterialId();
                 var property_dict = new Dict
                     {
                         {"model_part_name", "IgaModelPart." + this_property.GetKratosModelPart()},
-                        {"properties_id", this_property.mPropertyId},
+                        {"properties_id", material_id},
                     };
 
                 var material_dict = new Dict{};
-
-                int material_id = this_property.GetMaterialId();
                 if(material_id >= 0)
                 {
                     var material = CocodriloPlugIn.Instance.GetMaterial(material_id);
@@ -338,7 +337,6 @@ namespace Cocodrilo.IO
                         variables.Add(material_variable.Key, material_variable.Value);
 
                     material_dict.Add("name", material.Name);
-                    material_dict.Add("material_id", material.Id);
                     material_dict.Add("constitutive_law", material.GetKratosConstitutiveLaw());
 
                     if (material.HasKratosSubProperties())
@@ -772,6 +770,8 @@ namespace Cocodrilo.IO
                 var embedded_edges = new DictList();
 
                 var embedded_points_surface = user_data_surface.GetNumericalElements().Where(item => item.HasBrepId()).ToArray();
+
+                var embedded_points_surfac2e = user_data_surface.GetNumericalElements();
                 foreach (var embedded_point in embedded_points_surface)
                 {
                     this_trim_index_iterator++;

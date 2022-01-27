@@ -74,7 +74,16 @@ namespace Cocodrilo.UserData
                 DeleteNumericalElement(ThisProperty, ThisParameterLocation);
             mNumericalElements?.Add(new NumericalElement(ThisProperty, ThisParameterLocation));
         }
-
+        public void AddNumericalElementPoint(
+            ElementProperties.Property ThisProperty,
+            Elements.ParameterLocation ThisParameterLocation,
+            bool overwrite = true)
+        {
+            if (overwrite)
+                DeleteNumericalElement(ThisProperty, ThisParameterLocation);
+            mNumericalElements?.Add(new NumericalElementPoint(
+                ThisProperty, ThisParameterLocation as Elements.ParameterLocationSurface));
+        }
         public void DeleteNumericalElementOfPropertyType(
             System.Type ThisPropertyType)
         {

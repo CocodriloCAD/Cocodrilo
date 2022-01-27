@@ -77,7 +77,7 @@ namespace Cocodrilo.Commands
                                     GeometryType.SurfacePoint,
                                     load,
                                     time_interval);
-                                user_data_tuple.Item1.AddNumericalElement(
+                                user_data_tuple.Item1.AddNumericalElementPoint(
                                     property_load,
                                     user_data_tuple.Item2,
                                     overwrite);

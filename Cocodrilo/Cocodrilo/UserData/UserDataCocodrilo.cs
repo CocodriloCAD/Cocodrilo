@@ -106,6 +106,17 @@ namespace Cocodrilo.UserData
                 ThisParameterLocation,
                 Overwrite);
         }
+        public void AddNumericalElementPoint(
+            Property ThisProperty,
+            ParameterLocation ThisParameterLocation,
+            bool Overwrite = true,
+            int StageId = -1)
+        {
+            GetCurrentElementData(StageId).AddNumericalElementPoint(
+                ThisProperty,
+                ThisParameterLocation,
+                Overwrite);
+        }
         public abstract void AddNumericalElement(
             Property ThisProperty,
             bool Overwrite = true,

@@ -353,7 +353,7 @@ namespace Cocodrilo.PostProcessing
                         {
                             if (i < mNumberEvaluationPoints[brep_id])
                             {
-                                double x = PostProcessing.s_EvaluationPointList[brep_id][i].Value[0];
+                                 double x = PostProcessing.s_EvaluationPointList[brep_id][i].Value[0];
                                 double y = PostProcessing.s_EvaluationPointList[brep_id][i].Value[1];
                                 Point3d test_point;
                                 brep_face.Evaluate(x, y, 0, out test_point, out _);
@@ -444,7 +444,7 @@ namespace Cocodrilo.PostProcessing
         {
             var current_results = PostProcessing.s_CurrentResultInfo.Results;
             var evaluation_point_id = PostProcessing.s_EvaluationPointList[PatchId][point_index].Key;
-
+            //if (current_results == null) { return 0.0; }
             var current_result = current_results[evaluation_point_id];
             return (ResultIndex >= current_result.Length)
                     ? PostProcessingUtilities.GetVonMises(current_result)
@@ -467,7 +467,7 @@ namespace Cocodrilo.PostProcessing
                     evaluation_point_id = point.Key;
                 }
             }
-
+            //if (current_results == null) { return 0.0; }
             var closest_result = current_results[evaluation_point_id];
             return (ResultIndex >= closest_result.Length)
                 ? PostProcessingUtilities.GetVonMises(closest_result)
