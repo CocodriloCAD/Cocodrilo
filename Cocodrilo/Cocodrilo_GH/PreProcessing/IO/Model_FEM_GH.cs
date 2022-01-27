@@ -13,9 +13,9 @@ namespace Cocodrilo_GH.PreProcessing.IO
         /// Initializes a new instance of the Model_FEM_GH class.
         /// </summary>
         public Model_FEM_GH()
-          : base("Model_FEM_GH", "Nickname",
-              "Description",
-              "Cocodrilo", "FEM")
+          : base("FEM Model", "FEM",
+              "Mesh-based FEM Model",
+              "Cocodrilo", "Models")
         {
         }
 
@@ -32,6 +32,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddGenericParameter("FEM Model", "Model", "FEM Model", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -46,6 +47,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
             var output_fem = new OutputKratosFEM();
             output_fem.StartAnalysis(mesh_list);
 
+            DA.SetData(0, output_fem);
         }
 
         /// <summary>

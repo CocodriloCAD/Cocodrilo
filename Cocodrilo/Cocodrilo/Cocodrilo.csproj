@@ -71,10 +71,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analyses\Analysis.cs" />
+    <Compile Include="Analyses\AnalysisCoSimulation.cs" />
     <Compile Include="Analyses\AnalysisCuttingPattern.cs" />
+    <Compile Include="Analyses\AnalysisDem.cs" />
     <Compile Include="Analyses\AnalysisFormfinding.cs" />
     <Compile Include="ElementProperties\PropertyDem.cs" />
     <Compile Include="Elements\ParameterLocation.cs" />
+    <Compile Include="IO\OutputKratosCO_SIM.cs" />
     <Compile Include="IO\OutputKratosFEM.cs" />
     <Compile Include="IO\GeometryUtilties.cs" />
     <Compile Include="IO\Output.cs" />

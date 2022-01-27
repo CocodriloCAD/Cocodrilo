@@ -151,9 +151,9 @@ namespace Cocodrilo.PostProcessing
                             PostProcessingImportUtilities.LoadEvaluationPoints(
                                 file, ref s_EvaluationPointList, ref mCouplingEvaluationPointList);
                         }
-                        catch
+                        catch(Exception e)
                         {
-                            RhinoApp.WriteLine("ERROR: could not read evaluation points from file: " + file);
+                            RhinoApp.WriteLine("ERROR: could not read evaluation points from file: " + file + "\n" + e.ToString());
                         }
                     }
                 }
@@ -504,7 +504,14 @@ namespace Cocodrilo.PostProcessing
                         var ud = new_brep_face.UserData.Find(typeof(UserDataSurface)) as UserDataSurface;
                         if (ud == null)
                         {
-                            ud = ud_old;
+                            //ud = ud_old;
+                            //new_brep_face.UserData.Add(ud.BrepId = ud_old.BrepId);
+                        }
+                        if (ud.BrepId == -1)
+                        {
+                            //new_brep_face.UserData.Remove(ud_old);
+                            ud.BrepId = ud_old.BrepId;
+                            //new_brep_face.UserData.Add(ud);
                         }
 
                         if (s_BrepId_NodeId_Coordinates.ContainsKey(ud.BrepId))

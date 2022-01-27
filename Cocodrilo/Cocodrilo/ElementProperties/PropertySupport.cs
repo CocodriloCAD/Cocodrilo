@@ -11,17 +11,20 @@ namespace Cocodrilo.ElementProperties
     {
         public Support mSupport { get; set; }
         public TimeInterval mTimeInterval { get; set; }
+        public bool mOutputReactions { get; set; }
 
         public PropertySupport() : base() { }
 
         public PropertySupport(
             GeometryType ThisGeometryType,
             Support ThisSupport,
-            TimeInterval ThisTimeInterval
+            TimeInterval ThisTimeInterval,
+            bool OutputReactions = false
             ) : base(ThisGeometryType)
         {
             mSupport = ThisSupport;
             mTimeInterval = ThisTimeInterval;
+            mOutputReactions = OutputReactions;
         }
 
         public override string ToString()
@@ -29,10 +32,36 @@ namespace Cocodrilo.ElementProperties
             return "support property";
         }
 
+        public Dictionary<string, object> GetKratosProcessReaction()
+        {
+            var condition_variable_list = new List<string>();
+            if (mSupport.mIsSupportStrong == true)
+                condition_variable_list.Add("REACTION");
+            else if (mSupport.mSupportType == "SupportPenaltyCondition")
+                condition_variable_list.Add("PENALTY_REACTION_FORCE");
+            else if (mSupport.mSupportType == "SupportLagrangeCondition")
+                condition_variable_list.Add("VECTOR_LAGRANGE_MULTIPLIER");
+
+            var parameters = new Dictionary<string, object>
+                {
+                    {"output_file_name", mSupport.mSupportType + "_Reactions" },
+                    {"model_part_name", "IgaModelPart." + GetKratosModelPart() + "_Output" },
+                    {"condition_variable_list", condition_variable_list }
+                };
+
+            return new Dictionary<string, object>
+                    {
+                        { "kratos_module", "IgaApplication"},
+                        { "python_module", "get_reaction_process"},
+                        { "Parameters", parameters }
+                    };
+        }
+
         public override List<Dictionary<string, object>> GetKratosProcesses()
         {
             var interval = mTimeInterval.GetTimeIntervalVector();
             var supports = mSupport.GetSupportVector();
+            var list = new List<Dictionary<string, object>>();
 
             if (!mSupport.mIsSupportStrong)
             {
@@ -45,13 +74,12 @@ namespace Cocodrilo.ElementProperties
                     { "interval", interval }
                 };
 
-                var list = new List<Dictionary<string, object>>{ new Dictionary<string, object>
+                list.Add( new Dictionary<string, object>
                     {
                         { "kratos_module", "KratosMultiphysics"},
                         { "python_module", "assign_vector_variable_to_conditions_process"},
                         { "Parameters", parameters }
-                    }
-                };
+                    });
 
                 if (mSupport.mSupportRotation)
                 {
@@ -73,7 +101,6 @@ namespace Cocodrilo.ElementProperties
                         }
                     );
                 }
-                
                 if (mSupport.mSupportType == "SupportNitscheCondition")
                 {
                     var eigen_system_settings = new Dictionary<string, object>
@@ -97,8 +124,6 @@ namespace Cocodrilo.ElementProperties
                         }
                     );
                 }
-
-                return list;
             }
             else
             {
@@ -111,13 +136,12 @@ namespace Cocodrilo.ElementProperties
                     { "interval", interval }
                 };
 
-                var list = new List<Dictionary<string, object>>{ new Dictionary<string, object>
+                list.Add( new Dictionary<string, object>
                     {
                         { "kratos_module", "KratosMultiphysics"},
                         { "python_module", "assign_vector_variable_process"},
                         { "Parameters", parameters }
-                    }
-                };
+                    });
 
                 if (mSupport.mSupportRotation)
                 {
@@ -149,15 +173,68 @@ namespace Cocodrilo.ElementProperties
                         }
                     );
                 }
-                return list;
             }
+
+            if (mOutputReactions)
+                list.Add(GetKratosProcessReaction());
+
+            return list;
         }
 
-        public override List<Dictionary<string, object>> GetKratosPhysic(List<IO.BrepToParameterLocations> BrepToParameterLocations)
+        public List<Dictionary<string, object>> GetKratosPhysicReaction(List<IO.BrepToParameterLocations> BrepToParameterLocations)
         {
+            var list = new List<Dictionary<string, object>>();
             if (mSupport.mIsSupportStrong)
             {
-                var KratosPhysicList = new List<Dictionary<string, object>>();
+                foreach (var brep_to_parameter_location in BrepToParameterLocations)
+                {
+                    foreach (var parameter_location in brep_to_parameter_location.ParameterLocations)
+                    {
+                        Dictionary<string, object> Parameters = new Dictionary<string, object>
+                        {
+                            { "type", "condition"},
+                            { "quadrature_method", "GRID"},
+                            { "number_of_integration_points_per_span", 5},
+                            { "name", "OutputCondition"},
+                            { "shape_function_derivatives_order", 2},
+                            { "local_parameters", parameter_location.GetNormalizedParameters()},
+                        };
+                        list.Add(new Dictionary<string, object>
+                        {
+                            {"brep_id", brep_to_parameter_location.BrepId},
+                            {"geometry_type", "SurcaceIsoCurve" },
+                            {"iga_model_part", GetKratosModelPart() + "_Reaction" },
+                            {"parameters", Parameters}
+                        });
+                    }
+                }
+            }
+            else
+            {
+                List<int> BrepIds = BrepToParameterLocations.Select(item => item.BrepId).ToList();
+                Dictionary<string, object> Parameters = new Dictionary<string, object>
+                {
+                    { "type", "condition"},
+                    { "quadrature_method", "GRID"},
+                    { "number_of_integration_points_per_span", 5},
+                    { "name", "OutputCondition"},
+                    { "shape_function_derivatives_order", 2},
+                };
+                list.Add(new Dictionary<string, object>
+                {
+                    {"brep_ids", BrepIds},
+                    {"geometry_type", GeometryTypeString },
+                    {"iga_model_part", GetKratosModelPart() + "_Reaction" },
+                    {"parameters", Parameters}
+                });
+            }
+            return list;
+        }
+        public override List<Dictionary<string, object>> GetKratosPhysic(List<IO.BrepToParameterLocations> BrepToParameterLocations)
+        {
+            var list = new List<Dictionary<string, object>>();
+            if (mSupport.mIsSupportStrong  && mSupport.mSupportType != "DirectorInc5pShellSupport")
+            {
                 foreach (var brep_property in BrepToParameterLocations)
                 {
                     foreach (var parameter_loaction in brep_property.ParameterLocations)
@@ -168,30 +245,29 @@ namespace Cocodrilo.ElementProperties
                             ? "GeometryCurveNodes"
                             : "GeometrySurfaceNodes";
 
-                        KratosPhysicList.Add(new Dictionary<string, object>
-                        {
-                            {"brep_id", brep_property.BrepId },
-                            {"geometry_type", geometry_type },
-                            {"iga_model_part", GetKratosModelPart() },
-                            {"parameters", Parameters}
-                        });
+                        list.Add(new Dictionary<string, object>
+                            {
+                                {"brep_id", brep_property.BrepId },
+                                {"geometry_type", geometry_type },
+                                {"iga_model_part", GetKratosModelPart() },
+                                {"parameters", Parameters}
+                            });
 
                         if (mSupport.mSupportRotation)
                         {
                             string variation_type = "GeometrySurfaceVariationNodes";
                             if (mGeometryType == GeometryType.GeometryCurve)
                                 variation_type = "GeometryCurveVariationNodes";
-                            KratosPhysicList.Add(new Dictionary<string, object>()
-                    {
-                        {"brep_ids", brep_property},
-                        {"geometry_type", variation_type},
-                        {"iga_model_part", GetKratosModelPart() + "_Rotational" },
-                        {"parameters", Parameters}
-                    });
+                            list.Add(new Dictionary<string, object>()
+                                {
+                                    {"brep_id", brep_property.BrepId },
+                                    {"geometry_type", variation_type},
+                                    {"iga_model_part", GetKratosModelPart() + "_Rotational" },
+                                    {"parameters", Parameters}
+                                });
                         }
                     }
                 }
-                return KratosPhysicList;
             }
             else
             {
@@ -202,15 +278,17 @@ namespace Cocodrilo.ElementProperties
                     { "name", mSupport.mSupportType},
                     { "shape_function_derivatives_order", 2},
                 };
-
-                return new List<Dictionary<string, object>> { new Dictionary<string, object>
+                list.Add( new Dictionary<string, object>
                 {
                     {"brep_ids", BrepIds},
                     {"geometry_type", GeometryTypeString },
                     {"iga_model_part", GetKratosModelPart() },
                     {"parameters", Parameters}
-                } };
+                } );
             }
+            if (mOutputReactions)
+                list.AddRange(GetKratosPhysicReaction(BrepToParameterLocations));
+            return list;
         }
         public override string GetAdditionalDofs()
         {
@@ -330,6 +408,7 @@ namespace Cocodrilo.ElementProperties
                     support.mTimeInterval.Equals(mTimeInterval) &&
                     support.mGeometryType == mGeometryType &&
                     support.mMaterialId == mMaterialId &&
+                    support.mOutputReactions == mOutputReactions &&
                     support.mIsFormFinding == mIsFormFinding;
             }
         }

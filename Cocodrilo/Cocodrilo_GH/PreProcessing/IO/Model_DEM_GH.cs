@@ -12,19 +12,13 @@ namespace Cocodrilo_GH.PreProcessing.IO
     {
         public List<Point> mPointList = new List<Point>();
 
-        /// <summary>
-        /// Initializes a new instance of the Model_DEM_GH class.
-        /// </summary>
         public Model_DEM_GH()
-          : base("Model DEM", "Model DEM",
-              "Entire DEM model",
-              "Cocodrilo", "DEM")
+          : base("DEM Model", "DEM Model",
+              "Discrete Element Model",
+              "Cocodrilo", "Models")
         {
         }
 
-        /// <summary>
-        /// Registers all the input parameters for this component.
-        /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("Geometries", "Geoms", "DEM particles wrapped within geometries", GH_ParamAccess.list);
@@ -32,17 +26,11 @@ namespace Cocodrilo_GH.PreProcessing.IO
             pManager[1].Optional = true;
         }
 
-        /// <summary>
-        /// Registers all the output parameters for this component.
-        /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddGenericParameter("DEM Model", "Model", "DEM Model", GH_ParamAccess.item);
         }
 
-        /// <summary>
-        /// This is the method that actually does the work.
-        /// </summary>
-        /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             List<Geometries.Geometries> geometries_list = new List<Geometries.Geometries>();
@@ -61,15 +49,13 @@ namespace Cocodrilo_GH.PreProcessing.IO
                 }
             }
 
-            var output_dem = new OutputKratosDEM();
+            var output_dem = new OutputKratosDEM(new Cocodrilo.Analyses.AnalysisDem("DEM"));
             output_dem.StartAnalysis(point_list, mesh_list);
 
             mPointList = point_list;
+            DA.SetData(0, output_dem);
         }
 
-        /// <summary>
-        /// Provides an Icon for the component.
-        /// </summary>
         protected override System.Drawing.Bitmap Icon
         {
             get

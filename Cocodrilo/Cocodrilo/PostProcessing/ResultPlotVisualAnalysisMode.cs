@@ -4,6 +4,7 @@ using Rhino.Geometry;
 
 using System.Collections.Generic;
 using System.Linq;
+using Cocodrilo.UserData;
 
 namespace Cocodrilo.PostProcessing
 {
@@ -111,7 +112,10 @@ namespace Cocodrilo.PostProcessing
             // TODO: Remove this, when Kratos only provides trimmed ips
             foreach (var brep_face in brep.Faces)
             {
-                int brep_id = Cocodrilo.UserData.UserDataUtilities.GetOrCreateUserDataSurface(brep_face).BrepId;
+                var ud = brep_face.UserData.Find(typeof(UserDataSurface)) as UserDataSurface;
+                if (ud == null)
+                    continue;
+                int brep_id = ud.BrepId;
                 var nurbs_surface = brep_face.ToNurbsSurface();
                 List<KeyValuePair<int,List<double>>> points_to_remove = new List<KeyValuePair<int, List<double>>>();
                 foreach (var evaluation_point in PostProcessing.s_EvaluationPointList[brep_id])

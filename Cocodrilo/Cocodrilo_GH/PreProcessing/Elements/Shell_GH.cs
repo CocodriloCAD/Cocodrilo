@@ -23,7 +23,9 @@ namespace Cocodrilo_GH.PreProcessing.Elements
     public class Shell_GH : GH_Component
     {
         private FormulationType mFormulationType = FormulationType.Shell3p;
-        private double mThickness = 1.0;
+        private bool mCoupleRotations = true;
+        private double mPrestress1 = 1.0;
+        private double mPrestress2 = 1.0;
 
         public Shell_GH()
           : base("Shell", "Shell", "Shell Element", "Cocodrilo", "Elements")
@@ -34,6 +36,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
         {
             pManager.AddBrepParameter("Surface", "Sur", "Geometry of Element", GH_ParamAccess.list);
             pManager.AddGenericParameter("Material", "Mat", "Material of Element", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Thickness", "Thickness", "Thickness of shell element", GH_ParamAccess.item, 1.0);
         }
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
@@ -49,30 +52,29 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             Material material = null;
             if (!DA.GetData(1, ref material)) return;
 
+            double thickness = 1.0;
+            if (!DA.GetData(2, ref thickness)) return;
+
             Property this_property = null;
             if (mFormulationType == FormulationType.Membrane)
             {
                 MembraneProperties membrane_properties = new MembraneProperties(
-                    1, new double[] { 1, 0, 0 }, new double[] { 0, 1, 0 }, 0.0, 0.0);
-
+                    1, new double[] { 1, 0, 0 }, new double[] { 0, 1, 0 }, mPrestress1, mPrestress2);
                 this_property = new PropertyMembrane(material.Id, false, membrane_properties);
             }
             else if (mFormulationType == FormulationType.Shell3p)
             {
-                ShellProperties shell_properties = new ShellProperties(mThickness, true, "Shell3pElement");
-
+                ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell3pElement");
                 this_property = new PropertyShell(material.Id, shell_properties);
             }
             else if (mFormulationType == FormulationType.Shell5pHierarchic)
             {
-                ShellProperties shell_properties = new ShellProperties(mThickness, true, "Shell5pHierarchicElement");
-
+                ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell5pHierarchicElement");
                 this_property = new PropertyShell(material.Id, shell_properties);
             }
             else if (mFormulationType == FormulationType.Shell5p)
             {
-                ShellProperties shell_properties = new ShellProperties(mThickness, true, "Shell5pElement");
-
+                ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell5pElement");
                 this_property = new PropertyShell(material.Id, shell_properties);
             }
 
@@ -90,21 +92,38 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             foreach (FormulationType pt in Enum.GetValues(typeof(FormulationType)))
                 GH_Component.Menu_AppendItem(menu, pt.ToString(), Menu_FormulationTypeChanged, true, pt == mFormulationType).Tag = pt;
             Menu_AppendSeparator(menu);
-            Menu_AppendItem(menu, "Thickness:");
-            Menu_AppendTextItem(menu, Convert.ToString(mThickness), Menu_Thickness_KeyDown, Menu_Thickness_EventHandler, false);
+            if (mFormulationType == FormulationType.Membrane)
+            {
+                Menu_AppendItem(menu, "Prestress 1:");
+                Menu_AppendTextItem(menu, Convert.ToString(mPrestress1), Menu_Prestress1_KeyDown, Menu_Prestress1_EventHandler, false);
+                Menu_AppendItem(menu, "Prestress 2:");
+                Menu_AppendTextItem(menu, Convert.ToString(mPrestress2), Menu_Prestress2_KeyDown, Menu_Prestress2_EventHandler, false);
+            }
         }
-
-        private void Menu_Thickness_EventHandler(GH_MenuTextBox sender, string newText)
+        
+        private void Menu_Prestress1_EventHandler(GH_MenuTextBox sender, string newText)
         {
             if (newText != "")
             {
-                mThickness = Convert.ToDouble(newText);
+                mPrestress1 = Convert.ToDouble(newText);
             }
             else
-                mThickness = 1;
+                mPrestress1 = 1;
             ExpireSolution(true);
         }
-        private void Menu_Thickness_KeyDown(GH_MenuTextBox sender, KeyEventArgs e) {}
+        private void Menu_Prestress1_KeyDown(GH_MenuTextBox sender, KeyEventArgs e) {}
+
+        private void Menu_Prestress2_EventHandler(GH_MenuTextBox sender, string newText)
+        {
+            if (newText != "")
+            {
+                mPrestress2 = Convert.ToDouble(newText);
+            }
+            else
+                mPrestress2 = 1;
+            ExpireSolution(true);
+        }
+        private void Menu_Prestress2_KeyDown(GH_MenuTextBox sender, KeyEventArgs e) {}
 
         private void Menu_FormulationTypeChanged(object sender, EventArgs e)
         {
@@ -127,7 +146,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
         public override bool Write(GH_IO.Serialization.GH_IWriter writer)
         {
             writer.SetInt32("FormulationType", (int)mFormulationType);
-            writer.SetDouble("Thickness", this.mThickness);
+            writer.SetBoolean("CoupleRotations", mCoupleRotations);
             return base.Write(writer);
         }
 
@@ -136,8 +155,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             int formulation_type_index = -1;
             if (reader.TryGetInt32("FormulationType", ref formulation_type_index))
                 mFormulationType = (FormulationType)formulation_type_index;
-            reader.TryGetDouble("Thickness", ref mThickness);
-
+            reader.TryGetBoolean("CoupleRotations", ref mCoupleRotations);
             return base.Read(reader);
         }
 
