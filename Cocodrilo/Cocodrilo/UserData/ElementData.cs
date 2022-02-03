@@ -99,7 +99,7 @@ namespace Cocodrilo.UserData
             ElementProperties.Property ThisProperty,
             Elements.ParameterLocation ThisParameterLocation)
         {
-            mNumericalElements?.RemoveAll(item => item.GetProperty(out _).Equals(ThisProperty) &&
+            mNumericalElements?.RemoveAll(item => item.GetPropertyType() == ThisProperty.GetType() &&
                     item.mParameterLocation.Equals(ThisParameterLocation));
         }
         public void DeleteNumericalElements() => mNumericalElements?.Clear();
