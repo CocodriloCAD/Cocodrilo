@@ -1,25 +1,19 @@
 ﻿namespace Cocodrilo.Analyses
 {
-    public class AnalysisNonLinear : Analysis
+    public class AnalysisShapeOptimization : Analysis
     {
-        public double mSolverTolerance { get; set; }
-        public int mNumSimulationSteps { get; set; }
-        public int mMaxSolverIteration { get; set; }
+        public int mMaxOptimizationIterations { get; set; }
         public double mStepSize { get; set; }
 
-        public AnalysisNonLinear() { }
+        public AnalysisShapeOptimization() { }
 
-        public AnalysisNonLinear(
+        public AnalysisShapeOptimization(
             string Name,
-            int NumSimulationSteps,
-            int MaxSolverIteration,
-            double SolverTolerance,
+            int MaxOptimizationIterations,
             double StepSize)
         {
             this.Name = Name;
-            mNumSimulationSteps = NumSimulationSteps;
-            mMaxSolverIteration = MaxSolverIteration;
-            mSolverTolerance = SolverTolerance;
+            mMaxOptimizationIterations = MaxOptimizationIterations;
             mStepSize = StepSize;
         }
     }

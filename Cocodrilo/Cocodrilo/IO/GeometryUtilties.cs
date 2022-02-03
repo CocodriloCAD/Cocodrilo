@@ -463,6 +463,8 @@ namespace Cocodrilo.IO
                                 if (support_property.mSupport.mIsSupportStrong)
                                 {
                                     var nurbs_surface = GetIntersectedNurbsSurface(overlap_curve, Brep1);
+                                    if (nurbs_surface == null)
+                                        continue;
                                     var parameter_curve = nurbs_surface.Pullback(overlap_curve, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance);
                                     if (GeometryUtilities.TryGetParamaterLocationSurface(
                                         parameter_curve,
@@ -470,7 +472,11 @@ namespace Cocodrilo.IO
                                         out Elements.ParameterLocationSurface parameter_location))
                                     {
                                         user_data_surface.AddNumericalElement(property, parameter_location);
-                                        user_data_edge.DeleteNumericalElement(property);
+                                        // This check may be revised. It has been introduced to allow the definition of a single line which spans multiple patches.
+                                        if (Math.Abs(overlap_curve.GetLength() - nurbs_curve_1.GetLength()) < 0.01)
+                                        {
+                                            user_data_edge.DeleteNumericalElement(property);
+                                        }
                                     }
                                     else
                                     {
@@ -482,7 +488,10 @@ namespace Cocodrilo.IO
                                     user_data_edge_overlap_curve.AddNumericalElement(property);
                                     user_data_edge_overlap_curve.AddCoupling(user_data_surface.BrepId);
                                     rIntersectionCurveList.Add(overlap_curve);
-                                    user_data_edge.DeleteNumericalElement(property);
+                                    if (Math.Abs(overlap_curve.GetLength() - nurbs_curve_1.GetLength()) < 0.01)
+                                    {
+                                        user_data_edge.DeleteNumericalElement(property);
+                                    }
                                 }
                             }
                             else
@@ -490,7 +499,10 @@ namespace Cocodrilo.IO
                                 user_data_edge_overlap_curve.AddNumericalElement(property);
                                 user_data_edge_overlap_curve.AddCoupling(user_data_surface.BrepId);
                                 rIntersectionCurveList.Add(overlap_curve);
-                                user_data_edge.DeleteNumericalElement(property);
+                                if (Math.Abs(overlap_curve.GetLength() - nurbs_curve_1.GetLength()) < 0.01)
+                                {
+                                    user_data_edge.DeleteNumericalElement(property);
+                                }
                             }
                         }
                     }
@@ -923,6 +935,8 @@ namespace Cocodrilo.IO
                 out double t,
                 0.1,
                 out Vector3d normal);
+
+            var oao = component_index.ComponentIndexType.GetHashCode();
 
             if (component_index.ComponentIndexType.GetHashCode() == 3) //3 = BrepFace
             {

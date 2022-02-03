@@ -163,17 +163,40 @@ namespace Cocodrilo.PostProcessing
                 List<List<Point3d>> closed_edges = new List<List<Point3d>>();
                 foreach (var brep_edge_index in brep_face.AdjacentEdges())
                 {
-                    List<int> visited_indices = new List<int>();
-                    var tmp_brep = brep_face.Brep;
-                    foreach (var trim_index in tmp_brep.Edges[brep_edge_index].TrimIndices())
-                    {
-                        var trim_curve = tmp_brep.Trims[trim_index];
-                        int edge_index = trim_curve.Edge.EdgeIndex;
-                        //TODO: Maybe, it is useful to have some more parameters as user input.
-                        var poyline_curve = trim_curve.ToPolyline(0.2, 0.2, 0, MaximumEdgeLength);
+                    var edge = brep_face.Brep.Edges[brep_edge_index];
+
+                    double length = edge.GetLength();
+                    double segment_length = length / MaximumEdgeLength;
+
+                    var curve2d = brep_face.Brep.Trims[brep_face.Brep.Edges[brep_edge_index].TrimIndices()[0]];
+                    //List<int> visited_indices = new List<int>();
+                    //foreach (var trim_index in tmp_brep.Edges[brep_edge_index].TrimIndices())
+                    //{
+                    //    var trim_curve = tmp_brep.Trims[trim_index];
+                    //    int edge_index = trim_curve.Edge.EdgeIndex;
+                    //    var check = trim_curve.Edge.IsPolyline();
+                    //    var curve = trim_curve.Edge.EdgeCurve;
+                    PolylineCurve poyline_curve = null;
+                    Polyline polyline1;
+                    try
+                        {
+                            if (!curve2d.IsValidWithLog(out string log))
+                            {
+                                RhinoApp.WriteLine(log);
+                            }
+                            //TODO: Maybe, it is useful to have some more parameters as user input.
+                            var check = curve2d.TryGetPolyline(out polyline1);
+                        RhinoApp.WriteLine(check.ToString());
+                        //if(check)
+                            poyline_curve = curve2d.ToPolyline(-1,1,0.1,0.1, 0.1, 0.01, 0,MaximumEdgeLength, true);
+                        }
+                        catch(Exception e) {
+                            RhinoApp.WriteLine(e.ToString());
+                        }
                         Polyline polyline;
+                    var check3 = curve2d.TryGetPolyline(out polyline);
                         poyline_curve.TryGetPolyline(out polyline);
-                        foreach (var line in polyline.GetSegments())
+                    foreach (var line in polyline.GetSegments())
                         {
                             List<Point3d> line_segment = new List<Point3d>();
                             Point3d point1 = new Point3d(line.FromX, line.FromY, line.FromZ);
@@ -182,15 +205,15 @@ namespace Cocodrilo.PostProcessing
                             line_segment.Add(point2);
                             closed_edges.Add(line_segment);
                         }
-                        List<Point3d> line_segment_last = new List<Point3d>();
-                        var line_first = polyline.GetSegments().First();
-                        var line_last = polyline.GetSegments().Last();
-                        Point3d point1_last = new Point3d(line_last.ToX, line_last.ToY, line_last.ToZ);
-                        Point3d point2_last = new Point3d(line_first.FromX, line_first.FromY, line_first.FromZ);
-                        line_segment_last.Add(point1_last);
-                        line_segment_last.Add(point2_last);
-                        closed_edges.Add(line_segment_last);
-                    }
+                        //List<Point3d> line_segment_last = new List<Point3d>();
+                        //var line_first = polyline.GetSegments().First();
+                        //var line_last = polyline.GetSegments().Last();
+                        //Point3d point1_last = new Point3d(line_last.ToX, line_last.ToY, line_last.ToZ);
+                        //Point3d point2_last = new Point3d(line_first.FromX, line_first.FromY, line_first.FromZ);
+                        //line_segment_last.Add(point1_last);
+                        //line_segment_last.Add(point2_last);
+                        //closed_edges.Add(line_segment_last);
+                    //}
                 }
 
                 // Create Tesselation in Paramter space.

@@ -24,7 +24,7 @@
         public OutputOptions()
         {
             elements = true;
-            conditions = false;
+            conditions = true;
 
             displacements = true;
             cauchy_stress = true;

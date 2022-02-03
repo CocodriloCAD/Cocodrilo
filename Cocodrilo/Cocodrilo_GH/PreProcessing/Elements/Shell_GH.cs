@@ -99,8 +99,14 @@ namespace Cocodrilo_GH.PreProcessing.Elements
                 Menu_AppendItem(menu, "Prestress 2:");
                 Menu_AppendTextItem(menu, Convert.ToString(mPrestress2), Menu_Prestress2_KeyDown, Menu_Prestress2_EventHandler, false);
             }
+            else
+            {
+                Menu_AppendItem(menu, "Couple Rotations", Menu_DoClick_CoupleRotations, true, mCoupleRotations);
+            }
         }
-        
+
+        private void Menu_DoClick_CoupleRotations(object sender, EventArgs e) { mCoupleRotations = !mCoupleRotations; ExpireSolution(true); }
+
         private void Menu_Prestress1_EventHandler(GH_MenuTextBox sender, string newText)
         {
             if (newText != "")
