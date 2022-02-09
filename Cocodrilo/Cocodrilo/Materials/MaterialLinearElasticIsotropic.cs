@@ -24,7 +24,8 @@ namespace Cocodrilo.Materials
             return new Dictionary<string, object>
             {
                 {"YOUNG_MODULUS", YoungsModulus},
-                {"POISSON_RATIO", Nue}
+                {"POISSON_RATIO", Nue},
+                {"DENSITY", 1.0}
             };
         }
 

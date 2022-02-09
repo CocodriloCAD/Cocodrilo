@@ -24,18 +24,23 @@ namespace Cocodrilo_GH.PostProcessing
 
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Path", "Pat", "Path of Analysis", GH_ParamAccess.item);
+            pManager.AddTextParameter("Path", "Path", "Path of Analysis", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Displacement Scaling", "Displacement Scaling", "Displacement Scaling in Deformations.", GH_ParamAccess.item, 1.0);
         }
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("PostProcessing", "Pos", "PostProcessing of Apparent Solution", GH_ParamAccess.item);
+            pManager.AddGenericParameter("PostProcessing", "Post", "PostProcessing of Apparent Solution", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             string path = null;
             if (!DA.GetData(0, ref path)) return;
+
+            double displacement_scaling = 1.0;
+            if (!DA.GetData(1, ref displacement_scaling)) return;
+
             string[] files = System.IO.Directory.GetFiles(path, "*_kratos_0.georhino.json");
             if (files.Length > 0)
             {
@@ -49,7 +54,14 @@ namespace Cocodrilo_GH.PostProcessing
             Cocodrilo.PostProcessing.PostProcessing.s_MinMax[0] = mPostProcessing.CurrentMinMax[0];
             Cocodrilo.PostProcessing.PostProcessing.s_MinMax[1] = mPostProcessing.CurrentMinMax[1];
 
-            mPostProcessing.ShowPostProcessing(1,1e9,1, mShowResultColorPlot, mEvaluationPoints, mCouplingEvaluationPoints, false, false, false, false);
+            mPostProcessing.ShowPostProcessing(
+                displacement_scaling, 1e4,1,
+                mShowResultColorPlot,
+                mEvaluationPoints,
+                mCouplingEvaluationPoints,
+                false, false, false, false);
+
+            DA.SetData(0, mPostProcessing);
         }
         protected override void AppendAdditionalComponentMenuItems(System.Windows.Forms.ToolStripDropDown menu)
         {
@@ -130,8 +142,7 @@ namespace Cocodrilo_GH.PostProcessing
         }
         private void Menu_DoClick_UpdatePostProcessing(object sender, EventArgs e)
         {
-            mPostProcessing = null;
-            last_path = "";
+            mPostProcessing.ClearPostProcessing();
             ExpireSolution(true);
         }
 

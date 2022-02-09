@@ -111,8 +111,9 @@ namespace Cocodrilo.ElementProperties
         {
             return new Dictionary<string, object>();
         }
-        public virtual Dictionary<string, object> GetKratosOutputProcess(Cocodrilo.IO.OutputOptions ThisOutputOptions,
-            string AnalysisName,
+        public virtual Dictionary<string, object> GetKratosOutputProcess(
+            Cocodrilo.IO.OutputOptions ThisOutputOptions,
+            Analyses.Analysis ThisAnalysis,
             string ModelPartName)
         {
             return new Dictionary<string, object>();

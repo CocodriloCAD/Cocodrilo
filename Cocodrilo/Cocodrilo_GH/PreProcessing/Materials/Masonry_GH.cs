@@ -32,7 +32,7 @@ namespace Cocodrilo_GH.PreProcessing.Materials
 
         protected override System.Drawing.Bitmap Icon
         {
-            get { return Properties.Resources.Masonry; }
+            get { return Properties.Resources.material_masonry; }
         }
 
         /// <summary>

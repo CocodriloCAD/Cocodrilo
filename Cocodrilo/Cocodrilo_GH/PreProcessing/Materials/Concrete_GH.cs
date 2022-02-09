@@ -40,11 +40,7 @@ namespace Cocodrilo_GH.PreProcessing.Materials
         /// </summary>
         protected override System.Drawing.Bitmap Icon
         {
-            get
-            {
-                //You can add image files to your project resources and access them like this:
-                return null;
-            }
+            get { return Properties.Resources.materials_concrete; }
         }
 
         /// <summary>

@@ -1891,26 +1891,28 @@ namespace Cocodrilo.Panels
                 }
                 else
                 {
-                    if (ThisResultInfo.Results[1].GetLength(0) == 3)
+                    if (ThisResultInfo.Results.Count > 0)
                     {
-                        this.comboBoxPostProcessingDirection.Items.Add("11");
-                        this.comboBoxPostProcessingDirection.Items.Add("22");
-                        this.comboBoxPostProcessingDirection.Items.Add("12");
-                        this.comboBoxPostProcessingDirection.Items.Add("von Mises");
-                        this.comboBoxPostProcessingDirection.SelectedIndex = selected_index;
+                        if (ThisResultInfo.Results[1].GetLength(0) == 3)
+                        {
+                            this.comboBoxPostProcessingDirection.Items.Add("11");
+                            this.comboBoxPostProcessingDirection.Items.Add("22");
+                            this.comboBoxPostProcessingDirection.Items.Add("12");
+                            this.comboBoxPostProcessingDirection.Items.Add("von Mises");
+                            this.comboBoxPostProcessingDirection.SelectedIndex = selected_index;
+                        }
+                        else
+                        {
+                            this.comboBoxPostProcessingDirection.Items.Add("11");
+                            this.comboBoxPostProcessingDirection.Items.Add("22");
+                            this.comboBoxPostProcessingDirection.Items.Add("33");
+                            this.comboBoxPostProcessingDirection.Items.Add("12");
+                            this.comboBoxPostProcessingDirection.Items.Add("13");
+                            this.comboBoxPostProcessingDirection.Items.Add("23");
+                            this.comboBoxPostProcessingDirection.Items.Add("von Mises");
+                            this.comboBoxPostProcessingDirection.SelectedIndex = selected_index;
+                        }
                     }
-                    else
-                    {
-                        this.comboBoxPostProcessingDirection.Items.Add("11");
-                        this.comboBoxPostProcessingDirection.Items.Add("22");
-                        this.comboBoxPostProcessingDirection.Items.Add("33");
-                        this.comboBoxPostProcessingDirection.Items.Add("12");
-                        this.comboBoxPostProcessingDirection.Items.Add("13");
-                        this.comboBoxPostProcessingDirection.Items.Add("23");
-                        this.comboBoxPostProcessingDirection.Items.Add("von Mises");
-                        this.comboBoxPostProcessingDirection.SelectedIndex = selected_index;
-                    }
-
                 }
             }
             else
@@ -2128,9 +2130,8 @@ namespace Cocodrilo.Panels
         {
             CocodriloPlugIn.Instance.PostProcessingCocodrilo.RealMinMax();
             CocodriloPlugIn.Instance.PostProcessingCocodrilo.mUpdateResultPlot = true;
-            textBoxColorBarMin.Text = Convert.ToString(Cocodrilo.PostProcessing.PostProcessing.s_MinMax[0]);
-            textBoxColorBarMax.Text = Convert.ToString(Cocodrilo.PostProcessing.PostProcessing.s_MinMax[1]);
-
+            textBoxColorBarMin.Text = Cocodrilo.PostProcessing.PostProcessing.s_MinMax[0].ToString("0.0000e+00");
+            textBoxColorBarMax.Text = Cocodrilo.PostProcessing.PostProcessing.s_MinMax[1].ToString("0.0000e+00");
         }
     }
 }

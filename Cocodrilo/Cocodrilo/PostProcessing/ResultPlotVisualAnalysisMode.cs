@@ -286,8 +286,7 @@ namespace Cocodrilo.PostProcessing
                 {
                     mVizualizationMeshes[brep_id] = new_mesh;
                 }
-                //RhinoDoc.ActiveDoc.Objects.AddMesh(new_mesh);
-
+                // RhinoDoc.ActiveDoc.Objects.AddMesh(new_mesh);
             }
         }
 

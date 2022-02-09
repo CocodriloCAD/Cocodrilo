@@ -41,12 +41,12 @@ namespace Cocodrilo.PostProcessing
         public static Rhino.DocObjects.ObjectAttributes GetStressPatternObjectAttributes(double Stress, Rhino.Geometry.Interval StressMinMax)
         {
             var attributes = RhinoDoc.ActiveDoc.CreateDefaultAttributes();
-            if (Math.Abs(Stress) > 0.01)
-            {
-                attributes.ObjectDecoration = (Stress > 0)
-                        ? Rhino.DocObjects.ObjectDecoration.EndArrowhead
-                        : Rhino.DocObjects.ObjectDecoration.StartArrowhead;
-            }
+            //if (Math.Abs(Stress) > 0.01)
+            //{
+            //    attributes.ObjectDecoration = (Stress > 0)
+            //            ? Rhino.DocObjects.ObjectDecoration.EndArrowhead
+            //            : Rhino.DocObjects.ObjectDecoration.StartArrowhead;
+            //}
             attributes.ObjectColor = PostProcessingUtilities.FalseColor(Stress, StressMinMax);
             attributes.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromObject;
             return attributes;

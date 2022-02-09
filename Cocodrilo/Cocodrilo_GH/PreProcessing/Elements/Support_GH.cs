@@ -180,10 +180,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
         protected override System.Drawing.Bitmap Icon
         {
-            get
-            {
-                return null;
-            }
+            get { return Properties.Resources.elements_support; }
         }
 
         public override Guid ComponentGuid

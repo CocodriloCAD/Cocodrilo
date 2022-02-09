@@ -78,18 +78,10 @@ namespace Cocodrilo.IO
             //GET GEOMETRY JSON INPUT TEXT
             try
             {
-                string geometry_json = "";
-                string refinements_json = "";
                 var propert_ids_brep_ids = new PropertyIdDict();
 
-                GetGeometryJson(BrepList, CurveList, PointList,
-                    ref geometry_json, ref refinements_json, ref propert_ids_brep_ids);
-
-                System.IO.File.WriteAllLines(project_path + "/" + "geometry.cad.json",
-                    new List<string> { geometry_json });
-
-                System.IO.File.WriteAllLines(project_path + "/" + analysis.Name + "_kratos_0.georhino.json",
-                    new List<string> { geometry_json });
+                WriteGeometryJson(BrepList, CurveList, PointList,
+                    project_path, ref propert_ids_brep_ids);
 
                 List<string> nodal_variables = new List<string> { };
                 List<string> integration_point_variables = new List<string> { };
@@ -99,11 +91,7 @@ namespace Cocodrilo.IO
                 System.IO.File.WriteAllLines(project_path + "/" + "physics.iga.json",
                     new List<string> { GetPhysics(propert_ids_brep_ids) });
 
-                System.IO.File.WriteAllLines(project_path + "/" + "refinements.iga.json",
-                    new List<string> { refinements_json });
-
-                System.IO.File.WriteAllLines(project_path + "/" + "ProjectParameters.json",
-                    new List<string> { GetProjectParameter(propert_ids_brep_ids, nodal_variables) });
+                WriteProjectParameters(propert_ids_brep_ids, nodal_variables, project_path);
 
                 CocodriloPlugIn.Instance.ClearUnusedProperties(propert_ids_brep_ids.Keys.ToList());
             }
@@ -139,12 +127,11 @@ namespace Cocodrilo.IO
             }
         }
 
-        public void GetGeometryJson(
+        public void WriteGeometryJson(
             List<Brep> Breps,
             List<Curve> Curves,
             List<Point> PointList,
-            ref string rGeometryJson,
-            ref string rRefinementsJson,
+            string ProjectPath,
             ref PropertyIdDict rPropertyIdsBrepsIds)
         {
             int brep_ids = 1;
@@ -290,10 +277,14 @@ namespace Cocodrilo.IO
 
             var serializer = new JavaScriptSerializer();
             serializer.MaxJsonLength = 2147483643;
-            rGeometryJson += serializer.Serialize((object)dict);
+            var geometry_string = serializer.Serialize(dict);
+            System.IO.File.WriteAllLines(ProjectPath + "/" + "geometry.cad.json",
+                new List<string> { geometry_string });
 
             var refinement_dict = new Dict { { "refinements", all_refinements_dict } };
-            rRefinementsJson += serializer.Serialize((object)refinement_dict);
+            var refinement_string = serializer.Serialize(refinement_dict);
+            System.IO.File.WriteAllLines(ProjectPath + "/" + "refinements.iga.json",
+                new List<string> { refinement_string });
         }
 
         /// <summary>
@@ -398,9 +389,10 @@ namespace Cocodrilo.IO
         /// </summary>
         /// <param name="ElementConditionDictionary"></param>
         /// <returns></returns>
-        public string GetProjectParameter(
+        public void WriteProjectParameters(
             PropertyIdDict ElementConditionDictionary,
-            List<string> NodalVariables)
+            List<string> NodalVariables,
+            string ProjectPath)
         {
             string model_part_name = "IgaModelPart";
             string analysis_type = "linear";
@@ -416,7 +408,6 @@ namespace Cocodrilo.IO
             {
                 analysis_type = "linear";
             }
-
             if (this.analysis.GetType() == typeof(AnalysisNonLinear))
             {
                 var non_linear_analysis = analysis as AnalysisNonLinear;
@@ -440,6 +431,7 @@ namespace Cocodrilo.IO
             }
             else if (this.analysis.GetType() == typeof(AnalysisEigenvalue))
             {
+                analysis_type = "linear";
                 solver_type_analysis = "eigen_value";
             }
             else if (this.analysis.GetType() == typeof(AnalysisFormfinding))
@@ -452,6 +444,11 @@ namespace Cocodrilo.IO
                 residual_absolute_tolerance = formfinding_analysis.tolerance;
                 end_time = formfinding_analysis.maxSteps * step_size - step_size * 9 / 10;
                 compute_reactions = false;
+            }
+            else if (this.analysis.GetType() == typeof(AnalysisShapeOptimization))
+            {
+                analysis_type = "linear";
+                max_iteration = 1;
             }
 
             // 1. problem data block
@@ -520,6 +517,11 @@ namespace Cocodrilo.IO
                 { "Parameters", iga_modeler_parameters}
             });
 
+            if (this.analysis.GetType() == typeof(AnalysisShapeOptimization))
+            {
+                (this.analysis as AnalysisShapeOptimization).WriteOptimizationParameters(modelers, model_part_name, ProjectPath);
+                modelers.Clear();
+            }
 
             // 3. process block
             var dirichlet_process_list = new DictList();
@@ -572,7 +574,8 @@ namespace Cocodrilo.IO
 
                 // output processes
                 var output_process_dict = property.GetKratosOutputProcess(
-                    CocodriloPlugIn.Instance.OutputOptions, analysis.Name, model_part_name);
+                    CocodriloPlugIn.Instance.OutputOptions, analysis, model_part_name);
+
                 if (output_process_dict.Count > 0)
                     output_process_list.Add(output_process_dict);
             }
@@ -611,16 +614,26 @@ namespace Cocodrilo.IO
                 }
             }
 
+            var output_processes = new Dict { { "output_process_list", output_process_list } };
+
+            if (this.analysis.GetType() == typeof(AnalysisEigenvalue))
+            {
+                output_processes["output_process_list"] =  new ArrayList();
+
+                additional_processes.Add(new Dict {
+                    { "kratos_module", "IgaApplication" },
+                    { "python_module", "output_eigen_values_process" },
+                    { "Parameters", new Dict { 
+                        { "output_file_name", analysis.Name + "_kratos_eigen_values.post.res" },
+                        { "model_part_name", model_part_name }} },
+                });
+            }
+
             var processes = new Dict
             {
                 { "additional_processes", additional_processes},
                 { "dirichlet_process_list", dirichlet_process_list},
                 { "neumann_process_list",   neumann_process_list}
-            };
-
-            var output_processes = new Dict
-            {
-                { "output_process_list", output_process_list }
             };
 
             var solver_settings = new Dict
@@ -683,16 +696,13 @@ namespace Cocodrilo.IO
             if (this.analysis.GetType() == typeof(AnalysisEigenvalue))
             {
                 var eigenvalue_analysis = analysis as AnalysisEigenvalue;
-
                 var eigensolver_settings = new Dict
                 {
-                    {"solver_type", eigenvalue_analysis.SolverType },
-                    {"max_iteration", eigenvalue_analysis.MaxIter },
-                    {"tolerance", eigenvalue_analysis.tolerance },
-                    {"number_of_eigenvalues", eigenvalue_analysis.NumEigen },
+                    {"solver_type", eigenvalue_analysis.mSolverType },
+                    {"max_iteration", eigenvalue_analysis.mMaximumIterations },
+                    {"number_of_eigenvalues", eigenvalue_analysis.mNumEigenvalues },
                     {"echo_level", 4 }
                 };
-                
                 solver_settings.Remove("linear_solver_settings");
                 solver_settings.Add("eigensolver_settings", eigensolver_settings);
             }
@@ -720,9 +730,10 @@ namespace Cocodrilo.IO
             };
 
             var serializer = new JavaScriptSerializer();
-            string json = serializer.Serialize((object)dict);
+            string project_parameters_json = serializer.Serialize((object)dict);
 
-            return json;
+            System.IO.File.WriteAllLines(ProjectPath + "/" + "ProjectParameters.json",
+                new List<string> { project_parameters_json });
         }
 
         /// <summary>

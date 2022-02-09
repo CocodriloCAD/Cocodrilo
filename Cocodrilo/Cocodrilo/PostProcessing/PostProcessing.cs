@@ -32,13 +32,17 @@ namespace Cocodrilo.PostProcessing
         public List<Guid> PostprocessingObjectsForcePatterns { get; set; }
 
         /// Variables to detect the selected object
+        public Dictionary<int, double[]> CurrentDisplacements()
+            => ResultList.Find(r => r.LoadCaseNumber == s_CurrentResultInfo.LoadCaseNumber &&
+                                    r.ResultType == "\"DISPLACEMENT\"").Results;
         public List<string> CurrentDistinctResultTypes { get; set; }
         public List<string> DistinctLoadCaseTypes { get; set; }
         public List<int> DistinctLoadCaseNumbers { get; set; }
         public static RESULT_INFO s_CurrentResultInfo;
-        public RESULT_INFO ResultInfo(string LoadCaseType, int LoadCaseNumber, string ResultType) => ResultList.Find(p => p.LoadCaseType == LoadCaseType &&
-                                                       p.LoadCaseNumber == LoadCaseNumber &&
-                                                       p.ResultType == ResultType);
+        public RESULT_INFO ResultInfo(string LoadCaseType, int LoadCaseNumber, string ResultType)
+            => ResultList.Find(p => p.LoadCaseType == LoadCaseType &&
+                                    p.LoadCaseNumber == LoadCaseNumber &&
+                                    p.ResultType == ResultType);
         public static int s_SelectedCurrentResultDirectionIndex = 0;
 
         public double[] CurrentMinMax = new double[] { 0, 1 };
@@ -124,7 +128,7 @@ namespace Cocodrilo.PostProcessing
                 string analysis_name = analysis_geometry_name.Substring(0, pos_kratos_0_in_analysis_name);
 
                 string[] result_files = System.IO.Directory.GetFiles(analysis_folder, analysis_name + "*.post.res");
-                Parallel.ForEach(result_files, file =>
+                foreach (var file in result_files)
                 {
                     try
                     {
@@ -135,7 +139,7 @@ namespace Cocodrilo.PostProcessing
                     {
                         RhinoApp.WriteLine("ERROR: could not read results from file: " + file);
                     }
-                });
+                }
 
 
                 string[] evaluation_point_files = System.IO.Directory.GetFiles(analysis_folder, analysis_name + "*_integrationdomain.json");
@@ -215,8 +219,6 @@ namespace Cocodrilo.PostProcessing
             Interval tmp_min_max = new Interval(100000, -100000);
             int result_index = s_SelectedCurrentResultDirectionIndex;
 
-
-
             if(s_CurrentResultInfo.NodeOrGauss == "OnNodes")
             {
                 // Nodal values
@@ -291,7 +293,7 @@ namespace Cocodrilo.PostProcessing
 
         public void UpdateCurrentMinMax()
         {
-            if (s_CurrentResultInfo.Results == null)
+            if (s_CurrentResultInfo.Results == null || s_CurrentResultInfo.Results.Count == 0)
             {
                 CurrentMinMax[0] = 0;
                 CurrentMinMax[1] = 1;
@@ -374,9 +376,18 @@ namespace Cocodrilo.PostProcessing
             VisualizeCouplingPoints(ShowCouplingEvaluationPoints);
 
             if (ShowCauchyStresses)
-                VisualizeStressPatterns(true, ResultScaling, "\"CAUCHY_STRESS\"", ShowPrincipalStresses);
-            if (ShowPK2Stresses)
-                VisualizeStressPatterns(true, ResultScaling, "\"PK2_STRESS\"", ShowPrincipalStresses);
+            {
+                if (CurrentDistinctResultTypes.Contains("\"CAUCHY_STRESS\""))
+                    VisualizeStressPatterns(true, ResultScaling, "\"CAUCHY_STRESS\"", ShowPrincipalStresses);
+                else if (CurrentDistinctResultTypes.Contains("\"CAUCHY_STRESS_VECTOR\""))
+                    VisualizeStressPatterns(true, ResultScaling, "\"CAUCHY_STRESS_VECTOR\"", ShowPrincipalStresses);
+            }
+            if (ShowPK2Stresses) {
+                if (CurrentDistinctResultTypes.Contains("\"PK2_STRESS\""))
+                    VisualizeStressPatterns(true, ResultScaling, "\"PK2_STRESS\"", ShowPrincipalStresses);
+                else if (CurrentDistinctResultTypes.Contains("\"PK2_STRESS_VECTOR\""))
+                    VisualizeStressPatterns(true, ResultScaling, "\"PK2_STRESS_VECTOR\"", ShowPrincipalStresses);
+            }
 
             RhinoDoc.ActiveDoc.Views.Redraw();
         }
@@ -453,6 +464,83 @@ namespace Cocodrilo.PostProcessing
             }
         }
 
+        public Dictionary<int, Brep> GetDeformedGeometries(
+            double ScalingFactor,
+            double FlyingNodeLimit,
+            Dictionary<int, double[]> DisplacementResults)
+        {
+            var deformed_breps = new Dictionary<int, Brep>();
+            foreach (var brep in BrepId_Breps)
+            {
+                int index = 0;
+                foreach (var brep_face in brep.Value.Faces)
+                {
+                    Brep new_brep = brep.Value.DuplicateSubBrep(new List<int>() { index });
+                    index++;
+                    var new_brep_face = new_brep.Faces[0];
+                    var ud_old = UserData.UserDataUtilities.GetOrCreateUserDataSurface(brep_face);
+
+                    var ud = new_brep_face.UserData.Find(typeof(UserDataSurface)) as UserDataSurface;
+                    if (ud == null)
+                    {
+                        //ud = ud_old;
+                        //new_brep_face.UserData.Add(ud.BrepId = ud_old.BrepId);
+                    }
+                    if (ud.BrepId == -1)
+                    {
+                        //new_brep_face.UserData.Remove(ud_old);
+                        ud.BrepId = ud_old.BrepId;
+                        //new_brep_face.UserData.Add(ud);
+                    }
+
+                    if (s_BrepId_NodeId_Coordinates.ContainsKey(ud.BrepId))
+                    {
+                        var surface = new_brep_face.UnderlyingSurface();
+                        var nurbs_surface = surface.ToNurbsSurface();
+
+                        int u = 0;
+                        int v = 0;
+                        Brep this_updated_face_brep = new Brep();
+                        foreach (var control_point in s_BrepId_NodeId_Coordinates[ud.BrepId])
+                        {
+                            var ControlPointID = v * nurbs_surface.Points.CountU + u;
+
+                            var nodal_displacements = DisplacementResults.ContainsKey(control_point.Key)
+                                ? DisplacementResults[control_point.Key]
+                                : new double[] { 0, 0, 0 };
+
+                            /// avoid flying nodes
+                            double disp_x = Math.Min(FlyingNodeLimit, nodal_displacements[0]);
+                            double disp_y = Math.Min(FlyingNodeLimit, nodal_displacements[1]);
+                            double disp_z = Math.Min(FlyingNodeLimit, nodal_displacements[2]);
+
+                            nurbs_surface.Points.SetPoint(u, v,
+                                                            new Rhino.Geometry.Point3d(
+                                                                control_point.Value[0] + disp_x * ScalingFactor,
+                                                                control_point.Value[1] + disp_y * ScalingFactor,
+                                                                control_point.Value[2] + disp_z * ScalingFactor),
+                                                            control_point.Value[3]);
+
+                            u++;
+                            if (u >= nurbs_surface.Points.CountU)
+                            {
+                                u = 0;
+                                v++;
+                            }
+                            if (v >= nurbs_surface.Points.CountV)
+                                continue;
+                        }
+                        int surface_index = new_brep.AddSurface(nurbs_surface);
+                        new_brep_face.ChangeSurface(surface_index);
+                        new_brep_face.RebuildEdges(0.001, false, true);
+                        new_brep.CullUnusedSurfaces();
+                    }
+                    deformed_breps.Add(ud.BrepId, new_brep);
+                }
+            }
+            return deformed_breps;
+        }
+
         public void VisualizeGeometry(
             double ScalingFactor,
             double FlyingNodeLimit,
@@ -481,86 +569,7 @@ namespace Cocodrilo.PostProcessing
                 }
                 mPostprocessingObjects.Clear();
 
-
-                var displacement_results = ResultList.Find(r => r.LoadCaseNumber == s_CurrentResultInfo.LoadCaseNumber &&
-                                                                r.ResultType == "\"DISPLACEMENT\"").Results;
-
-                var deformed_breps = new Dictionary<int, Brep>();
-                foreach (var brep in BrepId_Breps)
-                //for (int i = 0; i < Breps.Count; i++)
-                {
-                    //    brep.Value.EnsurePrivateCopy();
-                    //    //Brep new_brep = new Brep();
-                    //    //new_brep = brep.Value;
-                    //    //new_brep.EnsurePrivateCopy();
-                    int index = 0;
-                    foreach (var brep_face in brep.Value.Faces)
-                    {
-                        Brep new_brep = brep.Value.DuplicateSubBrep(new List<int>() { index });
-                        index++;
-                        var new_brep_face = new_brep.Faces[0];
-                        var ud_old = UserData.UserDataUtilities.GetOrCreateUserDataSurface(brep_face);
-
-                        var ud = new_brep_face.UserData.Find(typeof(UserDataSurface)) as UserDataSurface;
-                        if (ud == null)
-                        {
-                            //ud = ud_old;
-                            //new_brep_face.UserData.Add(ud.BrepId = ud_old.BrepId);
-                        }
-                        if (ud.BrepId == -1)
-                        {
-                            //new_brep_face.UserData.Remove(ud_old);
-                            ud.BrepId = ud_old.BrepId;
-                            //new_brep_face.UserData.Add(ud);
-                        }
-
-                        if (s_BrepId_NodeId_Coordinates.ContainsKey(ud.BrepId))
-                        {
-                            var surface = new_brep_face.UnderlyingSurface();
-                            var nurbs_surface = surface.ToNurbsSurface();
-
-                            int u = 0;
-                            int v = 0;
-                            Brep this_updated_face_brep = new Brep();
-                            foreach (var control_point in s_BrepId_NodeId_Coordinates[ud.BrepId])
-                            {
-                                var ControlPointID = v * nurbs_surface.Points.CountU + u;
-
-                                var nodal_displacements = displacement_results.ContainsKey(control_point.Key)
-                                    ? displacement_results[control_point.Key]
-                                    : new double[] { 0, 0, 0 };
-
-                                /// avoid flying nodes
-                                double disp_x = Math.Min(FlyingNodeLimit, nodal_displacements[0]);
-                                double disp_y = Math.Min(FlyingNodeLimit, nodal_displacements[1]);
-                                double disp_z = Math.Min(FlyingNodeLimit, nodal_displacements[2]);
-
-                                nurbs_surface.Points.SetPoint(u, v,
-                                    new Rhino.Geometry.Point3d(
-                                        control_point.Value[0] + disp_x * ScalingFactor,
-                                        control_point.Value[1] + disp_y * ScalingFactor,
-                                        control_point.Value[2] + disp_z * ScalingFactor),
-                                    control_point.Value[3]);
-
-                                u++;
-                                if (u >= nurbs_surface.Points.CountU)
-                                {
-                                    u = 0;
-                                    v++;
-                                }
-                                if (v >= nurbs_surface.Points.CountV)
-                                    continue;
-                            }
-                            int surface_index = new_brep.AddSurface(nurbs_surface);
-                            new_brep_face.ChangeSurface(surface_index);
-                            new_brep_face.RebuildEdges(0.001, false, true);
-
-                            new_brep.CullUnusedSurfaces();
-                            //new_brep.Repair(0.0001);
-                        }
-                        deformed_breps.Add(ud.BrepId, new_brep);
-                    }
-                }
+                var deformed_breps = GetDeformedGeometries(ScalingFactor, FlyingNodeLimit, CurrentDisplacements());
 
                 DrawGeometries(deformed_breps, mPostprocessingObjects, System.Drawing.Color.FromArgb(90, 90, 90), "Geometries");
             }
@@ -1010,8 +1019,6 @@ namespace Cocodrilo.PostProcessing
                     }
                     else
                         layerIndex = layer_fp.Index;
-
-
                 }
             }
         }

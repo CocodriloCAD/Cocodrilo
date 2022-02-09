@@ -13,18 +13,26 @@ namespace Cocodrilo.ElementProperties
         public TimeInterval mTimeInterval { get; set; }
         public bool mOutputReactions { get; set; }
 
+        /// <summary>
+        /// mActiveSupport needed for ShapeOptimization and is required
+        /// to put damping, but not enforce the structural system.
+        /// </summary>
+        public bool mActiveSupport { get; set; }
+
         public PropertySupport() : base() { }
 
         public PropertySupport(
             GeometryType ThisGeometryType,
             Support ThisSupport,
             TimeInterval ThisTimeInterval,
-            bool OutputReactions = false
+            bool OutputReactions = false,
+            bool ActiveSupport = true
             ) : base(ThisGeometryType)
         {
             mSupport = ThisSupport;
             mTimeInterval = ThisTimeInterval;
             mOutputReactions = OutputReactions;
+            mActiveSupport = ActiveSupport;
         }
 
         public override string ToString()
@@ -56,7 +64,17 @@ namespace Cocodrilo.ElementProperties
                         { "Parameters", parameters }
                     };
         }
-
+        public Dictionary<string, object> GetKratosOptimizationDamping()
+        {
+            return new Dictionary<string, object> {
+                { "sub_model_part_name", GetKratosModelPart() },
+                { "damp_X", mSupport.mSupportX },
+                { "damp_Y", mSupport.mSupportY },
+                { "damp_Z", mSupport.mSupportZ },
+                { "damping_function_type", "cosine" },
+                { "damping_radius", 2 }
+            };
+        }
         public override List<Dictionary<string, object>> GetKratosProcesses()
         {
             var interval = mTimeInterval.GetTimeIntervalVector();
@@ -359,7 +377,7 @@ namespace Cocodrilo.ElementProperties
         }
         public override Dictionary<string, object> GetKratosOutputProcess(
             Cocodrilo.IO.OutputOptions ThisOutputOptions,
-            string AnalysisName,
+            Analyses.Analysis Analysis,
             string ModelPartName)
         {
             if (ThisOutputOptions.conditions)
@@ -373,7 +391,7 @@ namespace Cocodrilo.ElementProperties
                 {
                     { "nodal_results", nodal_results },
                     { "integration_point_results", integration_point_results},
-                    { "output_file_name", AnalysisName + "_kratos_support_" + mPropertyId + ".post.res"},
+                    { "output_file_name", Analysis.Name + "_kratos_support_" + mPropertyId + ".post.res"},
                     { "model_part_name", ModelPartName + "." + GetKratosModelPart() },
                     { "file_label", "step" },
                     { "output_control_type", "time" },

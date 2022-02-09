@@ -37,12 +37,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
 
         protected override System.Drawing.Bitmap Icon
         {
-            get
-            {
-                //You can add image files to your project resources and access them like this:
-                // return Resources.IconForThisComponent;
-                return null;
-            }
+            get { return Properties.Resources.analysis_cos; }
         }
 
         public override Guid ComponentGuid { get { return new Guid("03548239-FC4E-476A-8329-4DF7703703ED"); } }

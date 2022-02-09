@@ -218,7 +218,7 @@ namespace Cocodrilo.ElementProperties
         }
         public override Dictionary<string, object> GetKratosOutputProcess(
             Cocodrilo.IO.OutputOptions ThisOutputOptions,
-            string AnalysisName,
+            Analyses.Analysis ThisAnalysis,
             string ModelPartName)
         {
             var integration_point_results = new List<string> { };
@@ -240,12 +240,16 @@ namespace Cocodrilo.ElementProperties
             {
                 { "nodal_results", nodal_results },
                 { "integration_point_results", integration_point_results},
-                { "output_file_name", AnalysisName + "_kratos_shell_" + mPropertyId + ".post.res"},
+                { "output_file_name", ThisAnalysis.Name + "_kratos_shell_" + mPropertyId + ".post.res"},
                 { "model_part_name", ModelPartName + "." + GetKratosModelPart() },
                 { "file_label", "step" },
                 { "output_control_type", "time" },
                 { "output_frequency", CocodriloPlugIn.Instance.OutputOptions.output_frequency }
             };
+            if (ThisAnalysis.GetType() == typeof(Analyses.AnalysisFormfinding))
+            {
+                output_process_parameters.Add("is_formfinding", true);
+            }
             return new Dictionary<string, object>
                 {
                     { "kratos_module", "IgaApplication"},

@@ -144,7 +144,7 @@ namespace Cocodrilo.ElementProperties
         }
         public override Dictionary<string, object> GetKratosOutputProcess(
             Cocodrilo.IO.OutputOptions ThisOutputOptions,
-            string AnalysisName,
+            Analyses.Analysis Analysis,
             string ModelPartName)
         {
             var integration_point_results = new List<string> { };
@@ -160,7 +160,7 @@ namespace Cocodrilo.ElementProperties
             {
                 { "nodal_results", nodal_results },
                 { "integration_point_results", integration_point_results},
-                { "output_file_name", AnalysisName + "_kratos_membrane_" + mPropertyId + ".post.res"},
+                { "output_file_name", Analysis.Name + "_kratos_membrane_" + mPropertyId + ".post.res"},
                 { "model_part_name", ModelPartName + "." + GetKratosModelPart() },
                 { "file_label", "step" },
                 { "output_control_type", "time" },
