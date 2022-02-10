@@ -2028,6 +2028,14 @@ namespace Cocodrilo.Panels
         private void checkBoxShowGaussPoints_CheckedChanged(object sender, EventArgs e)
         {
             CocodriloPlugIn.Instance.PostProcessingCocodrilo.mUpdateGaussPoints = true;
+            if (checkBoxShowGaussPoints.Checked)
+            {
+                CocodriloPlugIn.Instance.PostProcessingCocodrilo.UpdateEvaluationPoints(true, true);
+            }
+            else
+            {
+                CocodriloPlugIn.Instance.PostProcessingCocodrilo.UpdateEvaluationPoints(false, true);
+            }
         }
 
         private void checkBoxShowCouplingPoints_TextChanged(object sender, EventArgs e)
@@ -2091,6 +2099,14 @@ namespace Cocodrilo.Panels
         private void checkBoxShowCouplingPoints_CheckedChanged(object sender, EventArgs e)
         {
             CocodriloPlugIn.Instance.PostProcessingCocodrilo.mUpdateCouplingPoints = true;
+            if (checkBoxShowCouplingPoints.Checked)
+            {
+                CocodriloPlugIn.Instance.PostProcessingCocodrilo.UpdateCouplingPoints(true, true);
+            }
+            else
+            {
+                CocodriloPlugIn.Instance.PostProcessingCocodrilo.UpdateCouplingPoints(false, true);
+            }
         }
 
         private void checkBoxShowCauchyStresses_CheckedChanged(object sender, EventArgs e)
@@ -2132,6 +2148,22 @@ namespace Cocodrilo.Panels
             CocodriloPlugIn.Instance.PostProcessingCocodrilo.mUpdateResultPlot = true;
             textBoxColorBarMin.Text = Cocodrilo.PostProcessing.PostProcessing.s_MinMax[0].ToString("0.0000e+00");
             textBoxColorBarMax.Text = Cocodrilo.PostProcessing.PostProcessing.s_MinMax[1].ToString("0.0000e+00");
+        }
+
+        private void checkBoxShowMesh_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxShowMesh.Checked)
+                CocodriloPlugIn.Instance.PostProcessingCocodrilo.UpdatePostProcessingMeshes(true);
+            else
+                CocodriloPlugIn.Instance.PostProcessingCocodrilo.UpdatePostProcessingMeshes(false);
+        }
+
+        private void checkBoxShowUndeformed_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxShowUndeformed.Checked)
+                CocodriloPlugIn.Instance.PostProcessingCocodrilo.UpdateInitialGeometry(true);
+            else
+                CocodriloPlugIn.Instance.PostProcessingCocodrilo.UpdateInitialGeometry(false);
         }
     }
 }

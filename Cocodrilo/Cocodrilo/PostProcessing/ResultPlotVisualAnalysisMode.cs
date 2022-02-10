@@ -30,7 +30,7 @@ namespace Cocodrilo.PostProcessing
             return false;
         }
 
-        public void ShowMeshBoundaryPoints(Rhino.DocObjects.RhinoObject obj, ref List<Guid> ids)
+        public void ShowMeshBoundaryPoints(Rhino.DocObjects.RhinoObject obj, ref List<Guid> PointGuids)
         {
             var brep = obj.Geometry as Brep;
 
@@ -46,7 +46,7 @@ namespace Cocodrilo.PostProcessing
 
                 for( int i = num; i < vertices.Count; i++)
                 {
-                    ids.Add(RhinoDoc.ActiveDoc.Objects.AddPoint(vertices[i]));
+                    PointGuids.Add(RhinoDoc.ActiveDoc.Objects.AddPoint(vertices[i]));
                 }
             }
         }
@@ -286,7 +286,6 @@ namespace Cocodrilo.PostProcessing
                 {
                     mVizualizationMeshes[brep_id] = new_mesh;
                 }
-                // RhinoDoc.ActiveDoc.Objects.AddMesh(new_mesh);
             }
         }
 

@@ -20,6 +20,7 @@ namespace Cocodrilo.PostProcessing
         //public Dictionary<int, NurbsSurface> BrepId_NurbsSurface = new Dictionary<int, NurbsSurface>();
 
         private Dictionary<int, Brep> BrepId_Breps;
+        private Dictionary<int, Brep> BrepId_Breps_deformed;
 
         public static Dictionary<int, List<KeyValuePair<int, List<double>>>> s_BrepId_NodeId_Coordinates = new Dictionary<int, List<KeyValuePair<int, List<double>>>>();
 
@@ -30,6 +31,8 @@ namespace Cocodrilo.PostProcessing
         public List<Guid> PostprocessingObjectsCouplingPoints { get; set; }
         public List<Guid> PostprocessingObjects1DResults { get; set; }
         public List<Guid> PostprocessingObjectsForcePatterns { get; set; }
+
+        public List<Guid> mPostprocessingMesh { get; set; }
 
         /// Variables to detect the selected object
         public Dictionary<int, double[]> CurrentDisplacements()
@@ -79,13 +82,11 @@ namespace Cocodrilo.PostProcessing
             var layer_post_processing = RhinoDoc.ActiveDoc.Layers.FindName("PostProcessing");
             if (layer_post_processing == null)
             {
-                int post_processing_index = RhinoDoc.ActiveDoc.Layers.Add("PostProcessing", System.Drawing.Color.Black);
-                layer_post_processing = RhinoDoc.ActiveDoc.Layers[post_processing_index];
+                RhinoDoc.ActiveDoc.Layers.Add("PostProcessing", System.Drawing.Color.Black);
             }
-            layer_post_processing.IsLocked = true;
 
             ReadData(path);
-            VisualizeInitialGeometry(true);
+            UpdateInitialGeometry(true);
 
             RhinoDoc.ActiveDoc.Views.Redraw();
         }
@@ -104,6 +105,8 @@ namespace Cocodrilo.PostProcessing
                 try
                 {
                     BrepId_Breps = new Dictionary<int, Brep>();
+                    BrepId_Breps_deformed = new Dictionary<int, Brep>();
+
                     s_BrepId_NodeId_Coordinates = new Dictionary<int, List<KeyValuePair<int, List<double>>>>();
                     if (System.IO.File.Exists(path))
                     {
@@ -192,23 +195,7 @@ namespace Cocodrilo.PostProcessing
             {
                 var attr = new Rhino.DocObjects.ObjectAttributes();
                 attr.Name = "Brep_" + brep.Key;
-                var geometry_layer = RhinoDoc.ActiveDoc.Layers.FindName(LayerName);
-                if (geometry_layer == null)
-                {
-                    attr.LayerIndex = RhinoDoc.ActiveDoc.Layers.Add(LayerName, LayerColor);
-                    geometry_layer = RhinoDoc.ActiveDoc.Layers[attr.LayerIndex];
-                    if (RhinoDoc.ActiveDoc.Layers.FindName("PostProcessing") != null)
-                    {
-                        geometry_layer.ParentLayerId = RhinoDoc.ActiveDoc.Layers.FindName("PostProcessing").Id;
-                    }
-                    else
-                    {
-                        int parent_layer_index = RhinoDoc.ActiveDoc.Layers.Add("PostProcessing", System.Drawing.Color.Black);
-                        geometry_layer.ParentLayerId = RhinoDoc.ActiveDoc.Layers[parent_layer_index].Id;
-                    }
-                }
-                else
-                    attr.LayerIndex = geometry_layer.Index;
+                attr.LayerIndex = GetLayerIndex(LayerName, LayerColor);
 
                 ObjectsList.Add(RhinoDoc.ActiveDoc.Objects.AddBrep(brep.Value, attr));
             }
@@ -346,7 +333,6 @@ namespace Cocodrilo.PostProcessing
 
                 (mVisualizationMode as ResultPlotVisualAnalysisMode).UpdateVizualizationMesh(objc, s_MaxDistanceVertexOnMeshEdge);
 
-
                 (mVisualizationMode as ResultPlotVisualAnalysisMode).ShowMeshBoundaryPoints(objc, ref ids);
             }
 
@@ -369,24 +355,24 @@ namespace Cocodrilo.PostProcessing
             bool ShowPrincipalStresses,
             bool ShowUndeformed)
         {
-            VisualizeInitialGeometry(ShowUndeformed);
+            UpdateInitialGeometry(ShowUndeformed);
 
             VisualizeGeometry(scalingFactor, flyingNodeLimit, ShowResultColorPlot);
-            VisualizeEvaluationPoints(ShowEvaluationPoints);
-            VisualizeCouplingPoints(ShowCouplingEvaluationPoints);
+            UpdateEvaluationPoints(ShowEvaluationPoints, true);
+            UpdateCouplingPoints(ShowCouplingEvaluationPoints, true);
 
             if (ShowCauchyStresses)
             {
                 if (CurrentDistinctResultTypes.Contains("\"CAUCHY_STRESS\""))
-                    VisualizeStressPatterns(true, ResultScaling, "\"CAUCHY_STRESS\"", ShowPrincipalStresses);
+                    VisualizeStressPatterns(true, ResultScaling, "\"CAUCHY_STRESS\"", ShowPrincipalStresses, true);
                 else if (CurrentDistinctResultTypes.Contains("\"CAUCHY_STRESS_VECTOR\""))
-                    VisualizeStressPatterns(true, ResultScaling, "\"CAUCHY_STRESS_VECTOR\"", ShowPrincipalStresses);
+                    VisualizeStressPatterns(true, ResultScaling, "\"CAUCHY_STRESS_VECTOR\"", ShowPrincipalStresses, true);
             }
             if (ShowPK2Stresses) {
                 if (CurrentDistinctResultTypes.Contains("\"PK2_STRESS\""))
-                    VisualizeStressPatterns(true, ResultScaling, "\"PK2_STRESS\"", ShowPrincipalStresses);
+                    VisualizeStressPatterns(true, ResultScaling, "\"PK2_STRESS\"", ShowPrincipalStresses, true);
                 else if (CurrentDistinctResultTypes.Contains("\"PK2_STRESS_VECTOR\""))
-                    VisualizeStressPatterns(true, ResultScaling, "\"PK2_STRESS_VECTOR\"", ShowPrincipalStresses);
+                    VisualizeStressPatterns(true, ResultScaling, "\"PK2_STRESS_VECTOR\"", ShowPrincipalStresses, true);
             }
 
             RhinoDoc.ActiveDoc.Views.Redraw();
@@ -395,7 +381,7 @@ namespace Cocodrilo.PostProcessing
         public void ClearPostProcessing()
         {
             ResultList.Clear();
-            var Results = new Dictionary<int, double[]> ();
+            var Results = new Dictionary<int, double[]>();
             Results.Add(0, new double[] { 0, 0, 0 });
             var default_result_info = new RESULT_INFO() { ResultType = "", LoadCaseNumber = 0, LoadCaseType = "", NodeOrGauss = "", VectorOrScalar = "", Results = Results };
             ResultList.Add(default_result_info);
@@ -409,18 +395,13 @@ namespace Cocodrilo.PostProcessing
             s_EvaluationPointList?.Clear();
             mCouplingEvaluationPointList?.Clear();
 
-            mPostprocessingObjects.ForEach(p => RhinoDoc.ActiveDoc.Objects.Delete(RhinoDoc.ActiveDoc.Objects.Find(p), false, true));
-            mPostprocessingObjects.Clear();
-            mPostprocessingInitialObjects.ForEach(p => RhinoDoc.ActiveDoc.Objects.Delete(RhinoDoc.ActiveDoc.Objects.Find(p), false, true));
-            mPostprocessingInitialObjects.Clear();
-            PostprocessingObjectsGaussPoints.ForEach(p => RhinoDoc.ActiveDoc.Objects.Delete(RhinoDoc.ActiveDoc.Objects.Find(p), false, true));
-            PostprocessingObjectsGaussPoints.Clear();
-            PostprocessingObjectsCouplingPoints.ForEach(p => RhinoDoc.ActiveDoc.Objects.Delete(RhinoDoc.ActiveDoc.Objects.Find(p), false, true));
-            PostprocessingObjectsCouplingPoints.Clear();
-            PostprocessingObjects1DResults.ForEach(p => RhinoDoc.ActiveDoc.Objects.Delete(RhinoDoc.ActiveDoc.Objects.Find(p), false, true));
-            PostprocessingObjects1DResults.Clear();
-            PostprocessingObjectsForcePatterns.ForEach(p => RhinoDoc.ActiveDoc.Objects.Delete(RhinoDoc.ActiveDoc.Objects.Find(p), false, true));
-            PostprocessingObjectsForcePatterns.Clear();
+            mPostprocessingObjects = DeleteGeometries(mPostprocessingObjects);
+            mPostprocessingInitialObjects = DeleteGeometries(mPostprocessingInitialObjects);
+            PostprocessingObjectsGaussPoints = DeleteGeometries(PostprocessingObjectsGaussPoints);
+            PostprocessingObjectsCouplingPoints = DeleteGeometries(PostprocessingObjectsCouplingPoints);
+            PostprocessingObjects1DResults = DeleteGeometries(PostprocessingObjects1DResults);
+            PostprocessingObjectsForcePatterns = DeleteGeometries(PostprocessingObjectsForcePatterns);
+            mPostprocessingMesh = DeleteGeometries(mPostprocessingMesh);
 
             var geometry_layer = RhinoDoc.ActiveDoc.Layers.FindName("PostProcessing");
             if (geometry_layer != null)
@@ -447,20 +428,82 @@ namespace Cocodrilo.PostProcessing
 
             RhinoDoc.ActiveDoc.Views.Redraw();
         }
-        public void VisualizeInitialGeometry(
-            bool ShowUndeformed)
-        {
-            if (ShowUndeformed)
-            {
-                mPostprocessingInitialObjects.ForEach(p => RhinoDoc.ActiveDoc.Objects.Delete(RhinoDoc.ActiveDoc.Objects.Find(p), false, true));
-                mPostprocessingInitialObjects.Clear();
 
-                DrawGeometries(BrepId_Breps, mPostprocessingInitialObjects, System.Drawing.Color.FromArgb(150, 150, 150), "GeometriesInitial");
+        public int GetLayerIndex(string LayerName, System.Drawing.Color LayerColor)
+        {
+            // Get respective layer
+            var layer = RhinoDoc.ActiveDoc.Layers.FindName(LayerName);
+            if (layer == null)
+            {
+                var new_layer = new Rhino.DocObjects.Layer();
+                new_layer.Name = LayerName;
+                new_layer.ParentLayerId = RhinoDoc.ActiveDoc.Layers.FindName("PostProcessing").Id;
+                new_layer.Color = LayerColor;
+                return RhinoDoc.ActiveDoc.Layers.Add(new_layer);
+            }
+            return layer.Index;
+        }
+
+        public bool CheckMissingGeometry(List<Guid> GeometryGuids)
+        {
+            for (int i = 0; i < GeometryGuids.Count; i++)
+            {
+                var objc = RhinoDoc.ActiveDoc.Objects.Find(GeometryGuids[i]);
+                if (objc == null)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public List<Guid> DeleteGeometries(List<Guid> GeometryGuids)
+        {
+            if (GeometryGuids != null)
+            {
+                GeometryGuids.ForEach(item => RhinoDoc.ActiveDoc.Objects.Delete(RhinoDoc.ActiveDoc.Objects.Find(item), false, true));
+                GeometryGuids.Clear();
+                RhinoDoc.ActiveDoc.Views.Redraw();
             }
             else
             {
-                mPostprocessingInitialObjects.ForEach(p => RhinoDoc.ActiveDoc.Objects.Delete(RhinoDoc.ActiveDoc.Objects.Find(p), false, true));
-                mPostprocessingInitialObjects.Clear();
+                GeometryGuids = new List<Guid>();
+            }
+            return GeometryGuids;
+        }
+
+        public void UpdatePostProcessingMeshes(bool show)
+        {
+            mPostprocessingMesh = DeleteGeometries(mPostprocessingMesh);
+
+            if (!show)
+                return;
+
+            for (int i = 0; i < mPostprocessingObjects.Count; i++)
+            {
+                var objc = RhinoDoc.ActiveDoc.Objects.Find(mPostprocessingObjects[i]);
+                if (objc == null)
+                    continue;
+
+                foreach (var mesh in (mVisualizationMode as ResultPlotVisualAnalysisMode).mVizualizationMeshes)
+                {
+                    var attr = new Rhino.DocObjects.ObjectAttributes();
+                    attr.Name = "Brep_" + mesh.Key + "_mesh";
+                    attr.LayerIndex = GetLayerIndex("PostProcessingMeshes", System.Drawing.Color.FromArgb(162, 173, 0));
+
+                    mPostprocessingMesh.Add(RhinoDoc.ActiveDoc.Objects.AddMesh(mesh.Value));
+                }
+            }
+            RhinoDoc.ActiveDoc.Views.Redraw();
+        }
+
+
+        public void UpdateInitialGeometry(bool Show)
+        {
+            mPostprocessingInitialObjects = DeleteGeometries(mPostprocessingInitialObjects);
+            if (Show)
+            {
+                DrawGeometries(BrepId_Breps, mPostprocessingInitialObjects, System.Drawing.Color.FromArgb(150, 150, 150), "GeometriesInitial");
             }
         }
 
@@ -546,32 +589,14 @@ namespace Cocodrilo.PostProcessing
             double FlyingNodeLimit,
             bool ShowResultColorPlot)
         {
-            bool check_geometries_missing = false;
-            if (!mUpdateGeometry)
+            bool check_missing_geometries = CheckMissingGeometry(mPostprocessingObjects);
+            if (mUpdateGeometry || check_missing_geometries)
             {
-                /// Checks if all geometries are apparent. If some are missing the whole viewport is being rebuilt.
-                for (int i = 0; i < mPostprocessingObjects.Count; i++)
-                {
-                    var objc = RhinoDoc.ActiveDoc.Objects.Find(mPostprocessingObjects[i]);
-                    if (objc == null)
-                    {
-                        check_geometries_missing = true;
-                        break;
-                    }
-                }
-            }
+                mPostprocessingObjects = DeleteGeometries(mPostprocessingObjects);
 
-            if (mUpdateGeometry || check_geometries_missing)
-            {
-                for (int i = 0; i < mPostprocessingObjects.Count; i++)
-                {
-                    var check = RhinoDoc.ActiveDoc.Objects.Delete(RhinoDoc.ActiveDoc.Objects.Find(mPostprocessingObjects[i]), false, true);
-                }
-                mPostprocessingObjects.Clear();
+                BrepId_Breps_deformed = GetDeformedGeometries(ScalingFactor, FlyingNodeLimit, CurrentDisplacements());
 
-                var deformed_breps = GetDeformedGeometries(ScalingFactor, FlyingNodeLimit, CurrentDisplacements());
-
-                DrawGeometries(deformed_breps, mPostprocessingObjects, System.Drawing.Color.FromArgb(90, 90, 90), "Geometries");
+                DrawGeometries(BrepId_Breps_deformed, mPostprocessingObjects, System.Drawing.Color.FromArgb(90, 90, 90), "Geometries");
             }
 /*            if (mUpdateGeometry || check_geometries_missing)
             {
@@ -612,7 +637,7 @@ namespace Cocodrilo.PostProcessing
                 string directory = "Z:/tmp/Internal_pressure/test.post.res";
                 CppWrapper.CageEdit(mPostprocessingObjects, directory, order_x, order_y, order_z, cp_x, cp_y, cp_z, ScalingFactor);
             }*/
-            if (mUpdateResultPlot || check_geometries_missing || mUpdateVisualizationMesh)
+            if (mUpdateResultPlot || check_missing_geometries || mUpdateVisualizationMesh)
             {
                 // Enables that color plot is being updated.
                 s_UpdateResultPlotInAnalysisMode = true;
@@ -647,7 +672,6 @@ namespace Cocodrilo.PostProcessing
                     if (mUpdateVisualizationMesh || mUpdateGeometry)
                     {
                         (mVisualizationMode as ResultPlotVisualAnalysisMode).UpdateVizualizationMesh(objc, s_MaxDistanceVertexOnMeshEdge);
-
                     }
                 }
 
@@ -808,77 +832,41 @@ namespace Cocodrilo.PostProcessing
             //////updateGeometry = false;
         }
 
-        public void VisualizeEvaluationPoints(bool show_evaluation_points)
+        public void UpdateEvaluationPoints(bool show_evaluation_points, bool Deformed)
         {
-            bool check_geometries_missing = false;
-            if (!mUpdateGaussPoints) // Check if points are missing in the active doc
+            if (mUpdateGaussPoints || CheckMissingGeometry(PostprocessingObjectsGaussPoints))
             {
-                for (int i = 0; i < PostprocessingObjectsGaussPoints.Count; i++)
-                {
-                    var objc = RhinoDoc.ActiveDoc.Objects.Find(PostprocessingObjectsGaussPoints[i]);
-                    if (objc == null)
-                    {
-                        check_geometries_missing = true;
-                        break;
-                    }
-                }
-            }
-            if (mUpdateGaussPoints || check_geometries_missing)
-            {
-                for (int i = 0; i < PostprocessingObjectsGaussPoints.Count; i++)
-                {
-                    RhinoDoc.ActiveDoc.Objects.Delete(RhinoDoc.ActiveDoc.Objects.Find(PostprocessingObjectsGaussPoints[i]), false, true);
-                }
-                PostprocessingObjectsGaussPoints.Clear();
+                PostprocessingObjectsGaussPoints = DeleteGeometries(PostprocessingObjectsGaussPoints);
 
                 if (show_evaluation_points)
                 {
-                    // Get respective layer
-                    var gauss_points_layer = RhinoDoc.ActiveDoc.Layers.FindName("EvaluationPoints");
-                    int gauss_points_layer_index;
-                    if (gauss_points_layer == null)
-                    {
-                        var gauss_points_layer_new = new Rhino.DocObjects.Layer();
-                        gauss_points_layer_new.Name = "EvaluationPoints";
-                        gauss_points_layer_new.ParentLayerId = RhinoDoc.ActiveDoc.Layers.FindName("PostProcessing").Id;
-                        gauss_points_layer_new.Color = System.Drawing.Color.FromArgb(0, 101, 189);
-                        gauss_points_layer_index = RhinoDoc.ActiveDoc.Layers.Add(gauss_points_layer_new);
-                    }
-                    else
-                        gauss_points_layer_index = gauss_points_layer.Index;
 
                     foreach (var brep_id_evaluation_points in s_EvaluationPointList)
                     {
                         List<Point3d> gp_list = new List<Point3d>();
 
-                        var geometry = GetGeometry(brep_id_evaluation_points.Key);
-                        if (geometry == null) continue;
-                        if (geometry is BrepFace)
-                        {
-                            var gp_pt = new Point3d();
+                        BrepFace brep_face = GetGeometry(brep_id_evaluation_points.Key, Deformed) as BrepFace;
+                        if (brep_face == null) continue;
 
-                            var nurbs_surface = (geometry as BrepFace).ToNurbsSurface();
-                            foreach (var evaluation_point in brep_id_evaluation_points.Value)
-                            {
-                                nurbs_surface.Evaluate(evaluation_point.Value[0], evaluation_point.Value[1], 0, out gp_pt, out _);
-                                gp_list.Add(gp_pt);
-                            }
+                        var nurbs_surface = brep_face.ToNurbsSurface();
+                        foreach (var evaluation_point in brep_id_evaluation_points.Value)
+                        {
+                            nurbs_surface.Evaluate(evaluation_point.Value[0], evaluation_point.Value[1], 0, out Point3d gp_pt, out _);
+                            gp_list.Add(gp_pt);
                         }
 
                         // Group points
                         var attr = new Rhino.DocObjects.ObjectAttributes();
                         attr.Name = "Points_" + brep_id_evaluation_points.Key;
-                        attr.LayerIndex = gauss_points_layer_index;
-                        if (gp_list != null)
+                        attr.LayerIndex = GetLayerIndex("EvaluationPoints", System.Drawing.Color.FromArgb(0, 101, 189));
+
+                        var point_guids = RhinoDoc.ActiveDoc.Objects.AddPoints(gp_list, attr);
+                        if (point_guids != null)
                         {
-                            var point_guids = RhinoDoc.ActiveDoc.Objects.AddPoints(gp_list, attr);
-                            if (point_guids != null)
-                            {
-                                string group_name = "Points_" + brep_id_evaluation_points.Key;
-                                RhinoDoc.ActiveDoc.Groups.Add(group_name, point_guids);
-                                PostprocessingObjectsGaussPoints.AddRange(point_guids);
-                                RhinoDoc.ActiveDoc.Views.Redraw();
-                            }
+                            string group_name = "Points_" + brep_id_evaluation_points.Key;
+                            RhinoDoc.ActiveDoc.Groups.Add(group_name, point_guids);
+                            PostprocessingObjectsGaussPoints.AddRange(point_guids);
+                            RhinoDoc.ActiveDoc.Views.Redraw();
                         }
                     }
                 }
@@ -890,51 +878,21 @@ namespace Cocodrilo.PostProcessing
             mUpdateGaussPoints = false;
         }
 
-        public void VisualizeCouplingPoints(bool show_coupling_evaluation_points)
+        public void UpdateCouplingPoints(bool show_coupling_evaluation_points, bool Deformed)
         {
-            bool check_geometries_missing = false;
-            if (!mUpdateCouplingPoints)
+            if (mUpdateCouplingPoints || CheckMissingGeometry(PostprocessingObjectsCouplingPoints))
             {
-                for (int i = 0; i < PostprocessingObjectsCouplingPoints.Count; i++)
-                {
-                    var objc = RhinoDoc.ActiveDoc.Objects.Find(PostprocessingObjectsCouplingPoints[i]);
-                    if (objc == null)
-                    {
-                        check_geometries_missing = true;
-                        break;
-                    }
-                }
-            }
-            if (mUpdateCouplingPoints || check_geometries_missing)
-            {
-                for (int i = 0; i < PostprocessingObjectsCouplingPoints.Count; i++)
-                {
-                    RhinoDoc.ActiveDoc.Objects.Delete(RhinoDoc.ActiveDoc.Objects.Find(PostprocessingObjectsCouplingPoints[i]), false, true);
-                }
-                PostprocessingObjectsCouplingPoints.Clear();
+                PostprocessingObjectsCouplingPoints = DeleteGeometries(PostprocessingObjectsCouplingPoints);
 
                 if (show_coupling_evaluation_points)
                 {
-                    var layer_gp = RhinoDoc.ActiveDoc.Layers.FindName("CouplingPoints");
-                    int layerIndex;
-                    if (layer_gp == null)
-                    {
-                        var layer_gp_new = new Rhino.DocObjects.Layer();
-                        layer_gp_new.Name = "CouplingPoints";
-                        layer_gp_new.ParentLayerId = RhinoDoc.ActiveDoc.Layers.FindName("PostProcessing").Id;
-                        layer_gp_new.Color = System.Drawing.Color.FromArgb(227, 114, 34);
-                        layerIndex = RhinoDoc.ActiveDoc.Layers.Add(layer_gp_new);
-                    }
-                    else
-                        layerIndex = layer_gp.Index;
-
                     foreach (var brep_ids in mCouplingEvaluationPointList)
                     {
                         List<Point3d> evaluation_point_list = new List<Point3d>();
                         List<Line> line_list = new List<Line>();
 
-                        var geometry_1 = GetGeometry(brep_ids.Key[0]);
-                        var geometry_2 = GetGeometry(brep_ids.Key[1]);
+                        var geometry_1 = GetGeometry(brep_ids.Key[0], Deformed);
+                        var geometry_2 = GetGeometry(brep_ids.Key[1], Deformed);
                         if (geometry_1 == null || geometry_2 == null) continue;
                         if (geometry_1 is BrepFace && geometry_2 is BrepFace)
                         {
@@ -955,7 +913,7 @@ namespace Cocodrilo.PostProcessing
 
                         var attr = new Rhino.DocObjects.ObjectAttributes();
                         attr.Name = "CouplingPoints_" + brep_ids.Key[0] + "_" + brep_ids.Key[1];
-                        attr.LayerIndex = layerIndex;
+                        attr.LayerIndex = GetLayerIndex("CouplingPoints", System.Drawing.Color.FromArgb(227, 114, 34));
 
                         if (evaluation_point_list.Count > 0)
                         {
@@ -979,182 +937,112 @@ namespace Cocodrilo.PostProcessing
 
             mUpdateCouplingPoints = false;
         }
-        public void VisualizeContactForces(
-            bool ShowForcePatterns,
-            double ResultScaling,
-            string ResultType,
-            bool ShowPrincipal)
-        {
-            bool check_geometries_missing = false;
-            if (!mUpdateStressPatterns)
-            {
-                for (int i = 0; i < PostprocessingObjectsForcePatterns.Count; i++)
-                {
-                    var objc = RhinoDoc.ActiveDoc.Objects.Find(PostprocessingObjectsForcePatterns[i]);
-                    if (objc == null)
-                    {
-                        check_geometries_missing = true;
-                        break;
-                    }
-                }
-            }
-            if (mUpdateStressPatterns || check_geometries_missing)
-            {
-                for (int i = 0; i < PostprocessingObjectsForcePatterns.Count; i++)
-                {
-                    RhinoDoc.ActiveDoc.Objects.Delete(RhinoDoc.ActiveDoc.Objects.Find(PostprocessingObjectsForcePatterns[i]), false, true);
-                }
-                PostprocessingObjectsForcePatterns.Clear();
-                if (ShowForcePatterns)
-                {
-                    var layer_fp = RhinoDoc.ActiveDoc.Layers.FindName("ForcePatterns");
-                    int layerIndex;
-                    if (layer_fp == null)
-                    {
-                        var layer_fp_new = new Rhino.DocObjects.Layer();
-                        layer_fp_new.Name = "ForcePatterns";
-                        layer_fp_new.ParentLayerId = RhinoDoc.ActiveDoc.Layers.FindName("PostProcessing").Id;
-                        layer_fp_new.Color = System.Drawing.Color.FromArgb(0, 0, 200);
-                        layerIndex = RhinoDoc.ActiveDoc.Layers.Add(layer_fp_new);
-                    }
-                    else
-                        layerIndex = layer_fp.Index;
-                }
-            }
-        }
 
         public void VisualizeStressPatterns(
             bool ShowForcePatterns,
             double ResultScaling,
             string ResultType,
-            bool ShowPrincipal)
+            bool ShowPrincipal,
+            bool Deformed)
         {
-            bool check_geometries_missing = false;
-            if (!mUpdateStressPatterns)
+            PostprocessingObjectsForcePatterns = DeleteGeometries(PostprocessingObjectsForcePatterns);
+
+            if (ShowForcePatterns && (mUpdateStressPatterns || CheckMissingGeometry(PostprocessingObjectsForcePatterns)))
             {
-                for (int i = 0; i < PostprocessingObjectsForcePatterns.Count; i++)
+                var stress_result_info = ResultList.Find(r => r.LoadCaseNumber == s_CurrentResultInfo.LoadCaseNumber &&
+                                                              r.ResultType == ResultType);
+
+                double current_min = (ShowPrincipal)
+                    ? stress_result_info.Results.Min(p => PostProcessingUtilities.GetVonMises(p.Value))
+                    : stress_result_info.Results.Min(p => p.Value.Min());
+                double current_max = (ShowPrincipal)
+                    ? stress_result_info.Results.Max(p => PostProcessingUtilities.GetVonMises(p.Value))
+                    : stress_result_info.Results.Max(p => p.Value.Max());
+
+                // To avoid numerical turbulances in the solution
+                if (Math.Abs(current_max - current_min) < 0.001)
                 {
-                    var objc = RhinoDoc.ActiveDoc.Objects.Find(PostprocessingObjectsForcePatterns[i]);
-                    if (objc == null)
-                    {
-                        check_geometries_missing = true;
-                        break;
-                    }
+                    current_max += 0.001;
+                    current_min -= 0.001;
                 }
-            }
-            if (mUpdateStressPatterns || check_geometries_missing)
-            {
-                for (int i = 0; i < PostprocessingObjectsForcePatterns.Count; i++)
+                Interval min_max_interval = new Interval(current_min, current_max);
+
+                foreach (var patch in s_EvaluationPointList)
                 {
-                    RhinoDoc.ActiveDoc.Objects.Delete(RhinoDoc.ActiveDoc.Objects.Find(PostprocessingObjectsForcePatterns[i]), false, true);
-                }
-                PostprocessingObjectsForcePatterns.Clear();
-                if (ShowForcePatterns)
-                {
-                    var layer_fp = RhinoDoc.ActiveDoc.Layers.FindName("ForcePatterns");
-                    int layerIndex;
-                    if (layer_fp == null)
+                    BrepFace this_brep_face = GetGeometry(patch.Key, Deformed) as BrepFace;
+                    if (this_brep_face != null)
                     {
-                        var layer_fp_new = new Rhino.DocObjects.Layer();
-                        layer_fp_new.Name = "ForcePatterns";
-                        layer_fp_new.ParentLayerId = RhinoDoc.ActiveDoc.Layers.FindName("PostProcessing").Id;
-                        layer_fp_new.Color = System.Drawing.Color.FromArgb(0, 0, 200);
-                        layerIndex = RhinoDoc.ActiveDoc.Layers.Add(layer_fp_new);
-                    }
-                    else
-                        layerIndex = layer_fp.Index;
-
-                    var stress_result_info = ResultList.Find(r => r.LoadCaseNumber == s_CurrentResultInfo.LoadCaseNumber &&
-                                                                  r.ResultType == ResultType);
-
-                    double current_min = (ShowPrincipal)
-                        ? stress_result_info.Results.Min(p => PostProcessingUtilities.GetVonMises(p.Value))
-                        : stress_result_info.Results.Min(p => p.Value.Min());
-                    double current_max = (ShowPrincipal)
-                        ? stress_result_info.Results.Max(p => PostProcessingUtilities.GetVonMises(p.Value))
-                        : stress_result_info.Results.Max(p => p.Value.Max());
-                    // To avoid numerical turbulances in the solution
-                    if (Math.Abs(current_max - current_min) < 0.001)
-                    {
-                        current_max += 0.001;
-                        current_min -= 0.001;
-                    }
-                    Interval min_max_interval = new Interval(current_min, current_max);
-
-                    foreach (var patch in s_EvaluationPointList)
-                    {
-                        BrepFace this_brep_face = null;
-                        foreach (var brep in BrepId_Breps)
+                        foreach (var evaluation_point in patch.Value)
                         {
-                            foreach (var brep_face in brep.Value.Faces)
+                            var result = stress_result_info.Results[evaluation_point.Key];
+
+                            var u = evaluation_point.Value[0];
+                            var v = evaluation_point.Value[1];
+
+                            this_brep_face.Evaluate(u, v, 1, out Point3d point_1, out Vector3d[] derivatives_1);
+
+                            var surface_normal = Vector3d.CrossProduct(derivatives_1[0], derivatives_1[1]);
+
+                            if (!ShowPrincipal)
                             {
-                                var ud = UserData.UserDataUtilities.GetOrCreateUserDataSurface(brep_face);
-                                if (ud.BrepId == patch.Key)
-                                {
-                                    this_brep_face = brep_face;
-                                    continue;
-                                }
+                                var direction_2_vector = derivatives_1[0];
+                                direction_2_vector.Rotate(Math.PI / 2, surface_normal);
+
+                                var line_1 = new Rhino.Geometry.Line(point_1, point_1 + derivatives_1[0] * result[0] * ResultScaling);
+                                var line_2 = new Rhino.Geometry.Line(point_1, point_1 + direction_2_vector * result[1] * ResultScaling);
+
+                                var attributes_1 = PostProcessingUtilities.GetStressPatternObjectAttributes(result[0], min_max_interval);
+                                PostprocessingObjectsForcePatterns.Add(RhinoDoc.ActiveDoc.Objects.AddLine(line_1, attributes_1));
+
+                                var attributes_2 = PostProcessingUtilities.GetStressPatternObjectAttributes(result[1], min_max_interval);
+                                PostprocessingObjectsForcePatterns.Add(RhinoDoc.ActiveDoc.Objects.AddLine(line_2, attributes_2));
                             }
-                        }
-                        if (this_brep_face != null)
-                        {
-                            foreach (var evaluation_point in patch.Value)
+                            else
                             {
-                                var result = stress_result_info.Results[evaluation_point.Key];
+                                double theta = Math.Atan(result[2] / (result[0] - result[1])) / 2;
+                                double sigma_max = ((result[0] + result[1]) / 2) + Math.Sqrt(Math.Pow((result[0] - result[1]) / 2, 2) + Math.Pow(result[2], 2));
+                                double sigma_min = ((result[0] + result[1]) / 2) - Math.Sqrt(Math.Pow((result[0] - result[1]) / 2, 2) + Math.Pow(result[2], 2));
 
-                                var u = evaluation_point.Value[0];
-                                var v = evaluation_point.Value[1];
+                                var direction_1_vector = derivatives_1[0];
+                                var direction_2_vector = derivatives_1[0];
+                                direction_1_vector.Rotate(theta, surface_normal);
+                                direction_2_vector.Rotate(theta + Math.PI / 2, surface_normal);
 
-                                this_brep_face.Evaluate(u, v, 1, out Point3d point_1, out Vector3d[] derivatives_1);
+                                var line_1 = new Rhino.Geometry.Line(point_1, point_1 + direction_1_vector * sigma_max * ResultScaling);
+                                var line_2 = new Rhino.Geometry.Line(point_1, point_1 + direction_2_vector * sigma_min * ResultScaling);
 
-                                var surface_normal = Vector3d.CrossProduct(derivatives_1[0], derivatives_1[1]);
+                                var attributes_1 = PostProcessingUtilities.GetStressPatternObjectAttributes(sigma_max, min_max_interval);
+                                PostprocessingObjectsForcePatterns.Add(RhinoDoc.ActiveDoc.Objects.AddLine(line_1, attributes_1));
 
-                                if (!ShowPrincipal)
-                                {
-                                    var direction_2_vector = derivatives_1[0];
-                                    direction_2_vector.Rotate(Math.PI / 2, surface_normal);
-
-                                    var line_1 = new Rhino.Geometry.Line(point_1, point_1 + derivatives_1[0] * result[0] * ResultScaling);
-                                    var line_2 = new Rhino.Geometry.Line(point_1, point_1 + direction_2_vector * result[1] * ResultScaling);
-
-                                    var attributes_1 = PostProcessingUtilities.GetStressPatternObjectAttributes(result[0], min_max_interval);
-                                    PostprocessingObjectsForcePatterns.Add(RhinoDoc.ActiveDoc.Objects.AddLine(line_1, attributes_1));
-
-                                    var attributes_2 = PostProcessingUtilities.GetStressPatternObjectAttributes(result[1], min_max_interval);
-                                    PostprocessingObjectsForcePatterns.Add(RhinoDoc.ActiveDoc.Objects.AddLine(line_2, attributes_2));
-                                }
-                                else
-                                {
-                                    double theta = Math.Atan(result[2] / (result[0] - result[1])) / 2;
-                                    double sigma_max = ((result[0] + result[1]) / 2) + Math.Sqrt(Math.Pow((result[0] - result[1]) / 2, 2) + Math.Pow(result[2], 2));
-                                    double sigma_min = ((result[0] + result[1]) / 2) - Math.Sqrt(Math.Pow((result[0] - result[1]) / 2, 2) + Math.Pow(result[2], 2));
-
-                                    var direction_1_vector = derivatives_1[0];
-                                    var direction_2_vector = derivatives_1[0];
-                                    direction_1_vector.Rotate(theta, surface_normal);
-                                    direction_2_vector.Rotate(theta + Math.PI / 2, surface_normal);
-
-                                    var line_1 = new Rhino.Geometry.Line(point_1, point_1 + direction_1_vector * sigma_max * ResultScaling);
-                                    var line_2 = new Rhino.Geometry.Line(point_1, point_1 + direction_2_vector * sigma_min * ResultScaling);
-
-                                    var attributes_1 = PostProcessingUtilities.GetStressPatternObjectAttributes(sigma_max, min_max_interval);
-                                    PostprocessingObjectsForcePatterns.Add(RhinoDoc.ActiveDoc.Objects.AddLine(line_1, attributes_1));
-
-                                    var attributes_2 = PostProcessingUtilities.GetStressPatternObjectAttributes(sigma_min, min_max_interval);
-                                    PostprocessingObjectsForcePatterns.Add(RhinoDoc.ActiveDoc.Objects.AddLine(line_2, attributes_2));
-                                }
-
+                                var attributes_2 = PostProcessingUtilities.GetStressPatternObjectAttributes(sigma_min, min_max_interval);
+                                PostprocessingObjectsForcePatterns.Add(RhinoDoc.ActiveDoc.Objects.AddLine(line_2, attributes_2));
                             }
-                        }
 
-                        string group_name = "Points_" + patch.Key;
-                        int index = RhinoDoc.ActiveDoc.Groups.Add(group_name, PostprocessingObjectsForcePatterns);
+                        }
                     }
+
+                    string group_name = "Points_" + patch.Key;
+                    int index = RhinoDoc.ActiveDoc.Groups.Add(group_name, PostprocessingObjectsForcePatterns);
                 }
             }
         }
-        GeometryBase GetGeometry(int BrepId)
+
+        GeometryBase GetGeometry(int BrepId, bool Deformed)
         {
+            if (Deformed)
+            {
+                foreach (var brep in BrepId_Breps_deformed)
+                {
+                    foreach (var brep_face in brep.Value.Faces)
+                    {
+                        var ud = UserData.UserDataUtilities.GetOrCreateUserDataSurface(brep_face);
+                        if (ud.BrepId == BrepId)
+                        {
+                            return brep_face;
+                        }
+                    }
+                }
+            }
             foreach (var brep in BrepId_Breps)
             {
                 foreach (var brep_face in brep.Value.Faces)
@@ -1167,41 +1055,6 @@ namespace Cocodrilo.PostProcessing
                 }
             }
             return null;
-        }
-
-        private bool IndexClosestPoint(Point3d unset, List<int> pos_gp_ids, Surface srf, out int ev_id)
-        {
-            // Function Core is copied from Grasshopper Source Code
-
-            int index1 = -1;
-            //double num1 = double.MaxValue;
-            //int num2 = 0;
-            //int num3 = checked(pos_gp_ids.Count - 1);
-            //int index2 = num2;
-            //while (index2 <= num3)
-            //{
-            //    //if (pos_gp_ids[index2] != null)
-            //    {
-            //        var evpt = Example.GeoRhino.EVAL_POINT_LIST[pos_gp_ids[index2]];
-            //        double num4 = unset.DistanceTo(srf.PointAt((double)evpt[1], (double)evpt[2]));
-            //        if (num4 < num1)
-            //        {
-            //            num1 = num4;
-            //            index1 = pos_gp_ids[index2];
-            //        }
-            //    }
-            //    checked { ++index2; }
-            //}
-
-            ev_id = index1;
-            //if (index1 < 0)
-            //{
-            //    return false;
-            //}
-            //else
-            //{
-            return true;
-            //}
         }
     }
 }
