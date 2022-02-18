@@ -34,9 +34,9 @@ namespace Cocodrilo_GH.PreProcessing.Elements
         {
             var breps = new List<Brep>();
             if (!DA.GetDataList(0, breps)) return;
-            int p = 1;
+            int p = 0;
             if (!DA.GetData(1, ref p)) return;
-            int q = 1;
+            int q = 0;
             if (!DA.GetData(2, ref q)) return;
             int insert_knot_u = 0;
             if (!DA.GetData(3, ref insert_knot_u)) return;
@@ -44,7 +44,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             if (!DA.GetData(4, ref insert_knot_v)) return;
 
             var refinement_surface = (mRefineWithinRhino)
-                ? new Cocodrilo.Refinement.RefinementSurface(p, q, 0, 0)
+                ? new Cocodrilo.Refinement.RefinementSurface(0, 0, 0, 0)
                 : new Cocodrilo.Refinement.RefinementSurface(p, q, insert_knot_u, insert_knot_v);
 
             var surface_list_out = new List<Brep>();
