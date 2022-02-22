@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Rhino;
@@ -534,19 +534,19 @@ namespace Cocodrilo.Panels
                 }
                 else if (tabControlAnalyses.SelectedTab.Text.ToString() == "EigenvalueAnalysis")
                 {
-                    //var Name = textBoxEigenvalueAnalysisName.Text;
-                    //var Acc = Convert.ToDouble(textBoxEigenvalueAnalysisAcc.Text);
-                    //var Num_eigen = Convert.ToInt32(textBoxEigenvalueAnalysisNumEigen.Text);
-                    //var Num_iter = Convert.ToInt32(textBoxEigenvalueAnalysisNumIter.Text);
-                    //var Solver_type = Convert.ToString(comboBoxEigenvalueAnalysisSolverType.Text);
+                    var Name = textBoxEigenvalueAnalysisName.Text;
+                    var Acc = Convert.ToDouble(textBoxEigenvalueAnalysisAcc.Text);
+                    var Num_eigen = Convert.ToInt32(textBoxEigenvalueAnalysisNumEigen.Text);
+                    var Num_iter = Convert.ToInt32(textBoxEigenvalueAnalysisNumIter.Text);
+                    var Solver_type = Convert.ToString(comboBoxEigenvalueAnalysisSolverType.Text);
 
                     var analysis = CocodriloPlugIn.Instance.findAnalysis(Name);
 
                     if (analysis != null)
                         throw new Exception();
 
-                    //var EigenvalueAnalysis = new Analyses.AnalysisEigenvalue(Name, Acc, Num_eigen, Num_iter, Solver_type);
-                    //CocodriloPlugIn.Instance.AddAnalysis(EigenvalueAnalysis);
+                    var EigenvalueAnalysis = new Analyses.AnalysisEigenvalue(Name, Acc, Num_eigen, Num_iter, Solver_type);
+                    CocodriloPlugIn.Instance.AddAnalysis(EigenvalueAnalysis);
                 }
                 else if (tabControlAnalyses.SelectedTab.Text.ToString() == "CutPattern")
                 {
@@ -621,13 +621,13 @@ namespace Cocodrilo.Panels
                 }
                 else if (tabControlAnalyses.SelectedTab.Text.ToString() == "EigenvalueAnalysis")
                 {
-                    //var analysis = CocodriloPlugIn.Instance.findAnalysis(textBoxEigenvalueAnalysisName.Text);
-                    //if (analysis == null)
-                    //    new Exception();
-                    //(analysis as AnalysisEigenvalue).MaxIter = Convert.ToInt32(textBoxEigenvalueAnalysisNumIter.Text);
-                    //(analysis as AnalysisEigenvalue).NumEigen = Convert.ToInt32(textBoxEigenvalueAnalysisNumEigen.Text);
-                    //(analysis as AnalysisEigenvalue).tolerance = Convert.ToDouble(textBoxEigenvalueAnalysisAcc.Text);
-                    //(analysis as AnalysisEigenvalue).SolverType = Convert.ToString(comboBoxEigenvalueAnalysisSolverType.Text);
+                    var analysis = CocodriloPlugIn.Instance.findAnalysis(textBoxEigenvalueAnalysisName.Text);
+                    if (analysis == null)
+                       new Exception();
+                    (analysis as AnalysisEigenvalue).mMaximumIterations = Convert.ToInt32(textBoxEigenvalueAnalysisNumIter.Text);
+                    (analysis as AnalysisEigenvalue).mNumEigenvalues = Convert.ToInt32(textBoxEigenvalueAnalysisNumEigen.Text);
+                    (analysis as AnalysisEigenvalue).mTolerance = Convert.ToDouble(textBoxEigenvalueAnalysisAcc.Text);
+                    (analysis as AnalysisEigenvalue).mSolverType = Convert.ToString(comboBoxEigenvalueAnalysisSolverType.Text);
                 }
                 if (tabControlAnalyses.SelectedTab.Text.ToString() == "CutPattern")
                 {
@@ -659,8 +659,8 @@ namespace Cocodrilo.Panels
                     analysis = CocodriloPlugIn.Instance.findAnalysis(textBoxNonLinStrucAnalysisName.Text);
                 else if (tabControlAnalyses.SelectedTab.Text.ToString() == "TransientAnalysis")
                     analysis = CocodriloPlugIn.Instance.findAnalysis(textBoxTransientAnalysisName.Text);
-                //else if (tabControlAnalyses.SelectedTab.Text.ToString() == "EigenvalueAnalysis")
-                //    analysis = CocodriloPlugIn.Instance.findAnalysis(textBoxEigenvalueAnalysisName.Text);
+                else if (tabControlAnalyses.SelectedTab.Text.ToString() == "EigenvalueAnalysis")
+                   analysis = CocodriloPlugIn.Instance.findAnalysis(textBoxEigenvalueAnalysisName.Text);
                 else if (tabControlAnalyses.SelectedTab.Text.ToString() == "CutPattern")
                     analysis = CocodriloPlugIn.Instance.findAnalysis(textBoxCutPatternAnalysisName.Text);
 
