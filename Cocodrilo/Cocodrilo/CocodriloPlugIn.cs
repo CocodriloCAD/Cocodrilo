@@ -180,7 +180,7 @@ namespace Cocodrilo
         #region Materials
         public void AddMaterial(int ID, String Name, String Type, double YoungsModulus = 200000, double Nue = 0.3, double _Density = 1.0, double _Alpha_T = 0.0)
         {
-            AddMaterial(new MaterialLinearElasticIsotropic(Name, YoungsModulus, Nue));
+            AddMaterial(new MaterialLinearElasticIsotropic(Name, YoungsModulus, Nue, _Density));
         }
 
         public void AddMaterial(Material material)
