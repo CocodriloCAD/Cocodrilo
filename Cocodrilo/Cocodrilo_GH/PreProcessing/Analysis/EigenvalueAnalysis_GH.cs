@@ -88,9 +88,6 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 
         public override bool Read(GH_IO.Serialization.GH_IReader reader)
         {
-            // int eigen_solver_type_index = -1;
-            // if (reader.TryGetInt32("EigenSolverType", ref eigen_solver_type_index))
-            //     mEigenSolverType = (string)eigen_solver_type_index;
             reader.TryGetString("EigenSolverType", ref mEigenSolverType);
             return base.Read(reader);
         }
