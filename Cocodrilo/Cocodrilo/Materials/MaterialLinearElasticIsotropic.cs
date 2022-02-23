@@ -7,16 +7,18 @@ namespace Cocodrilo.Materials
     {
         public double YoungsModulus { get; set; }
         public double Nue { get; set; }
+        public double Density { get; set; }
         public MaterialLinearElasticIsotropic()
         {
         }
 
         public MaterialLinearElasticIsotropic(
-            String Name, double YoungsModulus = 200000, double Nue = 0.0)
+            String Name, double YoungsModulus = 200000, double Nue = 0.0, double Density = 1.0)
             : base(Name)
         {
             this.YoungsModulus = YoungsModulus;
             this.Nue = Nue;
+            this.Density = Density;
         }
 
         public override Dictionary<string, object> GetKratosVariables()
@@ -25,7 +27,7 @@ namespace Cocodrilo.Materials
             {
                 {"YOUNG_MODULUS", YoungsModulus},
                 {"POISSON_RATIO", Nue},
-                {"DENSITY", 1.0}
+                {"DENSITY", Density}
             };
         }
 
@@ -43,7 +45,8 @@ namespace Cocodrilo.Materials
 
             return (base.Equals(mat) &&
                     mat.YoungsModulus == YoungsModulus &&
-                    mat.Nue == Nue); ;
+                    mat.Nue == Nue &&
+                    mat.Density == Density);
         }
     }
 }

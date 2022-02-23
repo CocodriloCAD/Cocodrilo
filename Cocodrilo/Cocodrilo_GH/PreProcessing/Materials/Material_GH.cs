@@ -19,6 +19,7 @@ namespace Cocodrilo_GH.PreProcessing.Materials
             pManager.AddTextParameter("Material Name", "N", "Name of Material", GH_ParamAccess.item, "Steel");
             pManager.AddNumberParameter("E", "E", "Young's modulus", GH_ParamAccess.item, 200000);
             pManager.AddNumberParameter("Nue", "N", "Poisson's Ratio", GH_ParamAccess.item, 0.0);
+            pManager.AddNumberParameter("rho", "rho", "Density", GH_ParamAccess.item, 1.0);
         }
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
@@ -33,9 +34,11 @@ namespace Cocodrilo_GH.PreProcessing.Materials
             double E = 0;
             if (!DA.GetData(1, ref E)) return;
             double nue = 0;
-            if (!DA.GetData(1, ref nue)) return;
+            if (!DA.GetData(2, ref nue)) return;
+            double rho = 0;
+            if (!DA.GetData(3, ref rho)) return;
 
-            var material = new MaterialLinearElasticIsotropic(name, E, nue);
+            var material = new MaterialLinearElasticIsotropic(name, E, nue, rho);
             Cocodrilo.CocodriloPlugIn.Instance.AddMaterial(material);
 
             DA.SetData(0, material);
