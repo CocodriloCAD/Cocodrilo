@@ -209,7 +209,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
                 var output_kratos_iga = new Cocodrilo.IO.OutputKratosIGA(this_analysis);
                 output_kratos_iga.StartAnalysis(mBrepList, mCurveList, point_list);
 
-                DA.SetData(1, output_kratos_iga);
+                DA.SetData(0, output_kratos_iga);
 
                 string project_path = Cocodrilo.UserData.UserDataUtilities.GetProjectPath(this_analysis.Name);
                 DA.SetData(1, project_path);

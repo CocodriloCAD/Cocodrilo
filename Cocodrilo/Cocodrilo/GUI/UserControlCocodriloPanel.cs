@@ -1887,13 +1887,25 @@ namespace Cocodrilo.Panels
                     this.comboBoxPostProcessingDirection.Items.Add("Y");
                     this.comboBoxPostProcessingDirection.Items.Add("Z");
                     this.comboBoxPostProcessingDirection.Items.Add("Length");
+                    if (selected_index >= this.comboBoxPostProcessingDirection.Items.Count)
+                        selected_index = this.comboBoxPostProcessingDirection.Items.Count - 1;
                     this.comboBoxPostProcessingDirection.SelectedIndex = selected_index;
                 }
                 else
                 {
                     if (ThisResultInfo.Results.Count > 0)
                     {
-                        if (ThisResultInfo.Results[1].GetLength(0) == 3)
+                        if (ThisResultInfo.ResultType == "\"DAMAGE_TENSION_VECTOR\"" || ThisResultInfo.ResultType == "\"DAMAGE_COMPRESSION_VECTOR\"")
+                        {
+                            for (int i = 0; i < ThisResultInfo.Results[1].GetLength(0); i++)
+                            {
+                                this.comboBoxPostProcessingDirection.Items.Add(i.ToString());
+                            }
+                            if (selected_index >= this.comboBoxPostProcessingDirection.Items.Count)
+                                selected_index = this.comboBoxPostProcessingDirection.Items.Count - 1;
+                            this.comboBoxPostProcessingDirection.SelectedIndex = selected_index;
+                        }
+                        else if (ThisResultInfo.Results[1].GetLength(0) == 3)
                         {
                             this.comboBoxPostProcessingDirection.Items.Add("11");
                             this.comboBoxPostProcessingDirection.Items.Add("22");

@@ -763,7 +763,7 @@ namespace Cocodrilo.Panels
             this.textBoxTransientAnalysisStepSize.Location = new System.Drawing.Point(214, 28);
             this.textBoxTransientAnalysisStepSize.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxTransientAnalysisStepSize.Name = "textBoxTransientAnalysisStepSize";
-            this.textBoxTransientAnalysisStepSize.Size = new System.Drawing.Size(86, 20);
+            this.textBoxTransientAnalysisStepSize.Size = new System.Drawing.Size(69, 20);
             this.textBoxTransientAnalysisStepSize.TabIndex = 102;
             this.textBoxTransientAnalysisStepSize.Text = "0.1";
             // 
@@ -783,7 +783,7 @@ namespace Cocodrilo.Panels
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxTransientAnalysisAdapStepCntrl.Location = new System.Drawing.Point(83, 103);
             this.textBoxTransientAnalysisAdapStepCntrl.Name = "textBoxTransientAnalysisAdapStepCntrl";
-            this.textBoxTransientAnalysisAdapStepCntrl.Size = new System.Drawing.Size(86, 20);
+            this.textBoxTransientAnalysisAdapStepCntrl.Size = new System.Drawing.Size(69, 20);
             this.textBoxTransientAnalysisAdapStepCntrl.TabIndex = 100;
             this.textBoxTransientAnalysisAdapStepCntrl.Text = "0";
             // 
@@ -813,7 +813,7 @@ namespace Cocodrilo.Panels
             this.textBoxTransientAnalysisNumIter.Location = new System.Drawing.Point(83, 52);
             this.textBoxTransientAnalysisNumIter.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxTransientAnalysisNumIter.Name = "textBoxTransientAnalysisNumIter";
-            this.textBoxTransientAnalysisNumIter.Size = new System.Drawing.Size(86, 20);
+            this.textBoxTransientAnalysisNumIter.Size = new System.Drawing.Size(69, 20);
             this.textBoxTransientAnalysisNumIter.TabIndex = 97;
             this.textBoxTransientAnalysisNumIter.Text = "100";
             // 
@@ -842,7 +842,7 @@ namespace Cocodrilo.Panels
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxTransientAnalysisAcc.Location = new System.Drawing.Point(83, 77);
             this.textBoxTransientAnalysisAcc.Name = "textBoxTransientAnalysisAcc";
-            this.textBoxTransientAnalysisAcc.Size = new System.Drawing.Size(86, 20);
+            this.textBoxTransientAnalysisAcc.Size = new System.Drawing.Size(69, 20);
             this.textBoxTransientAnalysisAcc.TabIndex = 94;
             this.textBoxTransientAnalysisAcc.Text = "0.001";
             // 
@@ -862,7 +862,7 @@ namespace Cocodrilo.Panels
             this.textBoxTransientAnalysisRayleighAlpha.Location = new System.Drawing.Point(83, 181);
             this.textBoxTransientAnalysisRayleighAlpha.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxTransientAnalysisRayleighAlpha.Name = "textBoxTransientAnalysisRayleighAlpha";
-            this.textBoxTransientAnalysisRayleighAlpha.Size = new System.Drawing.Size(86, 20);
+            this.textBoxTransientAnalysisRayleighAlpha.Size = new System.Drawing.Size(69, 20);
             this.textBoxTransientAnalysisRayleighAlpha.TabIndex = 94;
             this.textBoxTransientAnalysisRayleighAlpha.Text = "1.0";
             // 
@@ -883,7 +883,7 @@ namespace Cocodrilo.Panels
             this.textBoxTransientAnalysisRayleighBeta.Location = new System.Drawing.Point(83, 207);
             this.textBoxTransientAnalysisRayleighBeta.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxTransientAnalysisRayleighBeta.Name = "textBoxTransientAnalysisRayleighBeta";
-            this.textBoxTransientAnalysisRayleighBeta.Size = new System.Drawing.Size(86, 20);
+            this.textBoxTransientAnalysisRayleighBeta.Size = new System.Drawing.Size(69, 20);
             this.textBoxTransientAnalysisRayleighBeta.TabIndex = 94;
             this.textBoxTransientAnalysisRayleighBeta.Text = "1.0";
             // 
@@ -904,7 +904,7 @@ namespace Cocodrilo.Panels
             this.textBoxTransientAnalysisName.Location = new System.Drawing.Point(83, 4);
             this.textBoxTransientAnalysisName.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxTransientAnalysisName.Name = "textBoxTransientAnalysisName";
-            this.textBoxTransientAnalysisName.Size = new System.Drawing.Size(86, 20);
+            this.textBoxTransientAnalysisName.Size = new System.Drawing.Size(69, 20);
             this.textBoxTransientAnalysisName.TabIndex = 88;
             // 
             // labelTransientAnalysisName
@@ -931,7 +931,7 @@ namespace Cocodrilo.Panels
             this.comboBoxTransientAnalysisTimeIntegration.Location = new System.Drawing.Point(83, 129);
             this.comboBoxTransientAnalysisTimeIntegration.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxTransientAnalysisTimeIntegration.Name = "comboBoxTransientAnalysisTimeIntegration";
-            this.comboBoxTransientAnalysisTimeIntegration.Size = new System.Drawing.Size(86, 21);
+            this.comboBoxTransientAnalysisTimeIntegration.Size = new System.Drawing.Size(69, 21);
             this.comboBoxTransientAnalysisTimeIntegration.TabIndex = 22;
             this.comboBoxTransientAnalysisTimeIntegration.Text = "implicit";
             // 
@@ -961,7 +961,7 @@ namespace Cocodrilo.Panels
             this.comboBoxTransientAnalysisScheme.Location = new System.Drawing.Point(83, 155);
             this.comboBoxTransientAnalysisScheme.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxTransientAnalysisScheme.Name = "comboBoxTransientAnalysisScheme";
-            this.comboBoxTransientAnalysisScheme.Size = new System.Drawing.Size(86, 21);
+            this.comboBoxTransientAnalysisScheme.Size = new System.Drawing.Size(69, 21);
             this.comboBoxTransientAnalysisScheme.TabIndex = 22;
             this.comboBoxTransientAnalysisScheme.Text = "newmark";
             // 
@@ -992,7 +992,7 @@ namespace Cocodrilo.Panels
             this.textBoxTransientAnalysisDampingRatio0.Location = new System.Drawing.Point(83, 259);
             this.textBoxTransientAnalysisDampingRatio0.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxTransientAnalysisDampingRatio0.Name = "textBoxTransientAnalysisDampingRatio0";
-            this.textBoxTransientAnalysisDampingRatio0.Size = new System.Drawing.Size(86, 20);
+            this.textBoxTransientAnalysisDampingRatio0.Size = new System.Drawing.Size(69, 20);
             this.textBoxTransientAnalysisDampingRatio0.TabIndex = 94;
             this.textBoxTransientAnalysisDampingRatio0.Text = "0.001";
             // 
@@ -1013,7 +1013,7 @@ namespace Cocodrilo.Panels
             this.textBoxTransientAnalysisDampingRatio1.Location = new System.Drawing.Point(83, 285);
             this.textBoxTransientAnalysisDampingRatio1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxTransientAnalysisDampingRatio1.Name = "textBoxTransientAnalysisDampingRatio1";
-            this.textBoxTransientAnalysisDampingRatio1.Size = new System.Drawing.Size(86, 20);
+            this.textBoxTransientAnalysisDampingRatio1.Size = new System.Drawing.Size(69, 20);
             this.textBoxTransientAnalysisDampingRatio1.TabIndex = 94;
             this.textBoxTransientAnalysisDampingRatio1.Text = "-1.0";
             // 
@@ -1034,7 +1034,7 @@ namespace Cocodrilo.Panels
             this.textBoxTransientAnalysisNumEigen.Location = new System.Drawing.Point(83, 311);
             this.textBoxTransientAnalysisNumEigen.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxTransientAnalysisNumEigen.Name = "textBoxTransientAnalysisNumEigen";
-            this.textBoxTransientAnalysisNumEigen.Size = new System.Drawing.Size(86, 20);
+            this.textBoxTransientAnalysisNumEigen.Size = new System.Drawing.Size(69, 20);
             this.textBoxTransientAnalysisNumEigen.TabIndex = 94;
             this.textBoxTransientAnalysisNumEigen.Text = "15";
             // 
@@ -3364,7 +3364,7 @@ namespace Cocodrilo.Panels
             this.Controls.Add(this.TeDA_Plugin);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "UserControlCocodriloPanel";
-            this.Size = new System.Drawing.Size(432, 657);
+            this.Size = new System.Drawing.Size(432, 810);
             this.TeDA_Plugin.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.groupBoxAnalyses.ResumeLayout(false);

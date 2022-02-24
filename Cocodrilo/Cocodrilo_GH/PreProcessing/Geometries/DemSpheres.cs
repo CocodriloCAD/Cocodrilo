@@ -70,12 +70,7 @@ namespace Cocodrilo_GH.PreProcessing.Geometries
         /// </summary>
         protected override System.Drawing.Bitmap Icon
         {
-            get
-            {
-                //You can add image files to your project resources and access them like this:
-                // return Resources.IconForThisComponent;
-                return null;
-            }
+            get { return Properties.Resources.dem_spheres; }
         }
 
         /// <summary>

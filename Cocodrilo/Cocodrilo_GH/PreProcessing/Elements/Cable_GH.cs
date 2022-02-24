@@ -105,10 +105,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
         #endregion
         protected override System.Drawing.Bitmap Icon
         {
-            get
-            {
-                return null;
-            }
+            get { return Properties.Resources.elements_cable; }
         }
 
         public override bool Write(GH_IO.Serialization.GH_IWriter writer)

@@ -16,6 +16,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
     {
         Membrane,
         Shell3p,
+        Shell3pStressBased,
         Shell5pHierarchic,
         Shell5p
     }
@@ -143,10 +144,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
         #endregion
         protected override System.Drawing.Bitmap Icon
         {
-            get
-            {
-                return null;
-            }
+            get { return Properties.Resources.elements_shell; }
         }
 
         public override bool Write(GH_IO.Serialization.GH_IWriter writer)

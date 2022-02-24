@@ -50,10 +50,7 @@ namespace Cocodrilo_GH.PreProcessing.Materials
 
         protected override System.Drawing.Bitmap Icon
         {
-            get
-            {
-                return null;
-            }
+            get { return Properties.Resources.dem_spheres_mat; }
         }
 
         public override Guid ComponentGuid

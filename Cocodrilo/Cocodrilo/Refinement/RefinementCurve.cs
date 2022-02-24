@@ -12,12 +12,7 @@ namespace Cocodrilo.Refinement
         public RefinementCurve(int PolynomialDegree = 0, double KnotSubDivU = 1, int KnotInsertType = 0)
         {
             this.PolynomialDegree = PolynomialDegree;
-
-            if (KnotSubDivU == 0)
-                this.KnotSubDivU = 1;
-            else
-                this.KnotSubDivU = KnotSubDivU;
-
+            this.KnotSubDivU = KnotSubDivU;
             this.KnotInsertType = KnotInsertType;
         }
 

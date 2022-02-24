@@ -155,8 +155,7 @@ namespace Cocodrilo.PostProcessing
                 if (!mNumberEvaluationPoints.ContainsKey(brep_id))
                 {
                     mNumberEvaluationPoints.Add(brep_id, list_evaluation_points.Count);
-                } else
-                {
+                } else {
                     mNumberEvaluationPoints[brep_id] = list_evaluation_points.Count;
                 }
                 // Get closed edges around face.
@@ -166,53 +165,30 @@ namespace Cocodrilo.PostProcessing
                     var edge = brep_face.Brep.Edges[brep_edge_index];
 
                     double length = edge.GetLength();
-                    double segment_length = length / MaximumEdgeLength;
+                    int number_of_segments = (int) (length / MaximumEdgeLength);
 
                     var curve2d = brep_face.Brep.Trims[brep_face.Brep.Edges[brep_edge_index].TrimIndices()[0]];
-                    //List<int> visited_indices = new List<int>();
-                    //foreach (var trim_index in tmp_brep.Edges[brep_edge_index].TrimIndices())
-                    //{
-                    //    var trim_curve = tmp_brep.Trims[trim_index];
-                    //    int edge_index = trim_curve.Edge.EdgeIndex;
-                    //    var check = trim_curve.Edge.IsPolyline();
-                    //    var curve = trim_curve.Edge.EdgeCurve;
-                    PolylineCurve poyline_curve = null;
-                    Polyline polyline1;
-                    try
-                        {
-                            if (!curve2d.IsValidWithLog(out string log))
-                            {
-                                RhinoApp.WriteLine(log);
-                            }
-                            //TODO: Maybe, it is useful to have some more parameters as user input.
-                            var check = curve2d.TryGetPolyline(out polyline1);
-                        RhinoApp.WriteLine(check.ToString());
-                        //if(check)
-                            poyline_curve = curve2d.ToPolyline(-1,1,0.1,0.1, 0.1, 0.01, 0,MaximumEdgeLength, true);
-                        }
-                        catch(Exception e) {
-                            RhinoApp.WriteLine(e.ToString());
-                        }
-                        Polyline polyline;
-                    var check3 = curve2d.TryGetPolyline(out polyline);
-                        poyline_curve.TryGetPolyline(out polyline);
+                    double parameter_length = curve2d.GetLength();
+                    double max_parameter_segment_length = parameter_length / number_of_segments;
+                    PolylineCurve poyline_curve = curve2d.ToPolyline(
+                        -1, 1, 0.1, 0.1, 0.1, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance,
+                        0, max_parameter_segment_length, true);
+                    Polyline polyline;
+                    poyline_curve.TryGetPolyline(out polyline);
                     foreach (var line in polyline.GetSegments())
-                        {
-                            List<Point3d> line_segment = new List<Point3d>();
-                            Point3d point1 = new Point3d(line.FromX, line.FromY, line.FromZ);
-                            Point3d point2 = new Point3d(line.ToX, line.ToY, line.ToZ);
-                            line_segment.Add(point1);
-                            line_segment.Add(point2);
-                            closed_edges.Add(line_segment);
-                        }
-                        //List<Point3d> line_segment_last = new List<Point3d>();
-                        //var line_first = polyline.GetSegments().First();
-                        //var line_last = polyline.GetSegments().Last();
-                        //Point3d point1_last = new Point3d(line_last.ToX, line_last.ToY, line_last.ToZ);
-                        //Point3d point2_last = new Point3d(line_first.FromX, line_first.FromY, line_first.FromZ);
-                        //line_segment_last.Add(point1_last);
-                        //line_segment_last.Add(point2_last);
-                        //closed_edges.Add(line_segment_last);
+                    {
+                        closed_edges.Add(new List<Point3d> {
+                            new Point3d(line.FromX, line.FromY, line.FromZ),
+                            new Point3d(line.ToX, line.ToY, line.ToZ) });
+                    }
+                    //List<Point3d> line_segment_last = new List<Point3d>();
+                    //var line_first = polyline.GetSegments().First();
+                    //var line_last = polyline.GetSegments().Last();
+                    //Point3d point1_last = new Point3d(line_last.ToX, line_last.ToY, line_last.ToZ);
+                    //Point3d point2_last = new Point3d(line_first.FromX, line_first.FromY, line_first.FromZ);
+                    //line_segment_last.Add(point1_last);
+                    //line_segment_last.Add(point2_last);
+                    //closed_edges.Add(line_segment_last);
                     //}
                 }
 
@@ -291,7 +267,6 @@ namespace Cocodrilo.PostProcessing
 
         protected override void UpdateVertexColors(Rhino.DocObjects.RhinoObject obj, Mesh[] meshes)
         {
-
             // A "mapping tag" is used to determine if the colors need to be set
             Rhino.Render.MappingTag mt = GetMappingTag(obj.RuntimeSerialNumber);
 

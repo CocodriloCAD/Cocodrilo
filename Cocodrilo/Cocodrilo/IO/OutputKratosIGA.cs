@@ -614,6 +614,15 @@ namespace Cocodrilo.IO
                 }
             }
 
+
+            if (this.analysis.GetType() == typeof(AnalysisFormfinding))
+            {
+                foreach(var output_process in output_process_list)
+                {
+                    output_process.Add("form_finding", true);
+                }
+            }
+
             var output_processes = new Dict { { "output_process_list", output_process_list } };
 
             if (this.analysis.GetType() == typeof(AnalysisEigenvalue))

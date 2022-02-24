@@ -25,7 +25,7 @@ namespace Cocodrilo_GH.PostProcessing
         {
             pManager.AddGenericParameter("Post Processing", "Post", "PostProcessing of Apparent Solution", GH_ParamAccess.item);
             pManager.AddNumberParameter("Displacement Scaling", "Scaling", "Scaling Factor for the Apparent Solution", GH_ParamAccess.item, 1.0);
-            pManager.AddNumberParameter("Flying Node Limit", "FlyingNodeLimit", "Flying Node Limit for the Apparent Solution", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Flying Node Limit", "FlyingNodeLimit", "Flying Node Limit for the Apparent Solution", GH_ParamAccess.item, 1.0e4);
         }
 
         /// <summary>

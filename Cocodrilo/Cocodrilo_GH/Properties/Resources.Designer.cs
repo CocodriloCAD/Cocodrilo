@@ -133,6 +133,16 @@ namespace Cocodrilo_GH.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap analysis_mpm {
+            get {
+                object obj = ResourceManager.GetObject("analysis_mpm", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap analysis_nln {
             get {
                 object obj = ResourceManager.GetObject("analysis_nln", resourceCulture);
@@ -151,11 +161,51 @@ namespace Cocodrilo_GH.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap dem_spheres {
+            get {
+                object obj = ResourceManager.GetObject("dem_spheres", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap dem_spheres_mat {
+            get {
+                object obj = ResourceManager.GetObject("dem_spheres_mat", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die  ähnelt.
         /// </summary>
         internal static string Designer {
             get {
                 return ResourceManager.GetString("Designer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap elements_cable {
+            get {
+                object obj = ResourceManager.GetObject("elements_cable", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap elements_check {
+            get {
+                object obj = ResourceManager.GetObject("elements_check", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -172,9 +222,29 @@ namespace Cocodrilo_GH.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap elements_membrane {
+            get {
+                object obj = ResourceManager.GetObject("elements_membrane", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap elements_refinement {
             get {
                 object obj = ResourceManager.GetObject("elements_refinement", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap elements_shell {
+            get {
+                object obj = ResourceManager.GetObject("elements_shell", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -97,12 +97,16 @@ namespace Cocodrilo.PostProcessing
                                 else if (items.Count() == 7)
                                 {
                                     this_result = new double[] {
-                                Convert.ToDouble(items[1]), Convert.ToDouble(items[2]), Convert.ToDouble(items[3]),
-                                Convert.ToDouble(items[4]), Convert.ToDouble(items[5]), Convert.ToDouble(items[6]) };
+                                        Convert.ToDouble(items[1]), Convert.ToDouble(items[2]), Convert.ToDouble(items[3]),
+                                        Convert.ToDouble(items[4]), Convert.ToDouble(items[5]), Convert.ToDouble(items[6]) };
                                 }
                                 else
                                 {
                                     this_result = new double[] { };
+                                    for (int i = 1; i < items.Count(); i++)
+                                    {
+                                        this_result.Append(Convert.ToDouble(items[i]));
+                                    }
                                 }
                                 result_info.Results.Add(Convert.ToInt32(items[0]), this_result);
                             }

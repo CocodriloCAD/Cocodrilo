@@ -139,20 +139,41 @@
   <data name="analysis_l" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\analysis_l.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="analysis_mpm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\analysis_mpm.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="analysis_nln" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\analysis_nln.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="analysis_opt" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\analysis_opt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="dem_spheres" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\dem_spheres.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dem_spheres_mat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\dem_spheres_mat.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Designer" xml:space="preserve">
     <value />
+  </data>
+  <data name="elements_cable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\elements_cable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="elements_check" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\elements_check.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="elements_load" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\elements_load.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="elements_membrane" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\elements_membrane.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="elements_refinement" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\elements_refinement.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="elements_shell" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\elements_shell.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="elements_support" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\elements_support.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
