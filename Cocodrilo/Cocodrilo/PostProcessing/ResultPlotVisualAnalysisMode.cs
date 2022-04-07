@@ -20,6 +20,10 @@ namespace Cocodrilo.PostProcessing
         public override string Name { get { return "ResultPlot"; } }
         public override Rhino.Display.VisualAnalysisMode.AnalysisStyle Style { get { return AnalysisStyle.FalseColor; } }
 
+        public Dictionary<int, List<KeyValuePair<int, List<double>>>> mBrepId_NodeId_Coordinates;
+        public Dictionary<int, List<KeyValuePair<int, List<double>>>> mEvaluationPointList;
+        // Current Results need to be stored within this object.
+        public RESULT_INFO mCurrentResultInfo;
         public Dictionary<int, int> mNumberEvaluationPoints;
         public Dictionary<int, Mesh> mVizualizationMeshes;
 
@@ -51,13 +55,12 @@ namespace Cocodrilo.PostProcessing
             }
         }
 
-        public void RealMinMax(Rhino.DocObjects.RhinoObject obj, ref Interval tmp_min_max)
+        public void ComputeMinMax(Rhino.DocObjects.RhinoObject obj, ref Interval MinMax, int SelectedResultDirection)
         {
             var brep = obj.Geometry as Brep;
             if (brep == null)
                 return;
 
-            var result_index = PostProcessing.s_SelectedCurrentResultDirectionIndex;
             foreach (var brep_face in brep.Faces)
             {
                 int brep_id = Cocodrilo.UserData.UserDataUtilities.GetOrCreateUserDataSurface(brep_face).BrepId;
@@ -90,18 +93,109 @@ namespace Cocodrilo.PostProcessing
                     if (result_brep_id == -1) continue;
                     if (!result_surfaces.ContainsKey(result_brep_id))
                     {
-                        result_surfaces.Add(result_brep_id, CreateResultNurbsPatch(brep_face.ToNurbsSurface(), result_brep_id, result_index));
+                        result_surfaces.Add(result_brep_id, CreateResultNurbsPatch(
+                            brep_face.ToNurbsSurface(), result_brep_id, SelectedResultDirection, mBrepId_NodeId_Coordinates, mCurrentResultInfo));
                     }
                     result_surfaces[result_brep_id].Evaluate(s, t, 0, out result_uv, out _);
                     var value = result_uv.X;
-                    if (value < tmp_min_max[0])
-                        tmp_min_max[0] = value;
-                    if (value > tmp_min_max[1])
-                        tmp_min_max[1] = value;
+                    MinMax[0] = Math.Min(MinMax[0], value);
+                    MinMax[1] = Math.Max(MinMax[1], value);
                 }
             }
         }
+        public static void CreateRenderMesh(BrepFace ThisBrepFace,
+            Dictionary<int, List<KeyValuePair<int, List<double>>>> EvaluationPointList,
+            double MaximumEdgeLength)
+        {
+            List<Point3d> list_evaluation_points = new List<Point3d>();
 
+            /// Eventually additional brep loop requrired.
+
+            int brep_id = Cocodrilo.UserData.UserDataUtilities.GetOrCreateUserDataSurface(ThisBrepFace).BrepId;
+
+            var nurbs_surface = ThisBrepFace.ToNurbsSurface();
+            var tmp_evaluation_point = new Point3d();
+            foreach (var evaluation_point in EvaluationPointList[brep_id])
+            {
+                tmp_evaluation_point.X = evaluation_point.Value[0];
+                tmp_evaluation_point.Y = evaluation_point.Value[1];
+                tmp_evaluation_point.Z = 0.0;
+                list_evaluation_points.Add(tmp_evaluation_point);
+            }
+
+            // Get closed edges around face.
+            List<List<Point3d>> closed_edges = new List<List<Point3d>>();
+            foreach (var brep_edge_index in ThisBrepFace.AdjacentEdges())
+            {
+                var edge = ThisBrepFace.Brep.Edges[brep_edge_index];
+
+                double length = edge.GetLength();
+                int number_of_segments = (int)(length / MaximumEdgeLength);
+
+                var curve2d = ThisBrepFace.Brep.Trims[ThisBrepFace.Brep.Edges[brep_edge_index].TrimIndices()[0]];
+                double parameter_length = curve2d.GetLength();
+                double max_parameter_segment_length = parameter_length / number_of_segments;
+                PolylineCurve poyline_curve = curve2d.ToPolyline(
+                    -1, 1, 0.1, 0.1, 0.1, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance,
+                    0, max_parameter_segment_length, true);
+                Polyline polyline;
+                poyline_curve.TryGetPolyline(out polyline);
+                foreach (var line in polyline.GetSegments())
+                {
+                    closed_edges.Add(new List<Point3d> {
+                            new Point3d(line.FromX, line.FromY, line.FromZ),
+                            new Point3d(line.ToX, line.ToY, line.ToZ) });
+                }
+            }
+
+            // Create Tesselation in Paramter space.
+            Plane plane = new Plane();
+            Plane.FitPlaneToPoints(list_evaluation_points, out plane);
+            var new_mesh = Mesh.CreateFromTessellation(list_evaluation_points, closed_edges, plane, false);
+
+            // Remove all faces, which have only vertices on the edges. These are faces within the trimmed domain.
+            List<int> faces_to_remove = new List<int>();
+            int counter = 0;
+            foreach (var face in new_mesh.Faces)
+            {
+                int reference = list_evaluation_points.Count;
+                if (face.IsTriangle)
+                {
+                    if (face.A >= reference && face.B >= reference && face.C >= reference)
+                    {
+                        faces_to_remove.Add(counter);
+                    }
+                }
+                if (face.IsQuad)
+                {
+                    if (face.A >= reference && face.B >= reference && face.C >= reference && face.D >= reference)
+                    {
+                        faces_to_remove.Add(counter);
+                    }
+                }
+                counter++;
+            }
+            // This loop must be in revers order.
+            for (int i = faces_to_remove.Count - 1; i >= 0; --i)
+            {
+                new_mesh.Faces.RemoveAt(faces_to_remove[i]);
+            }
+
+            // Map mesh into global space
+            var global_coord = new Point3f();
+            for (int i = 0; i < new_mesh.Vertices.Count; i++)
+            {
+                var tmp_point = new_mesh.Vertices[i];
+                var result_point = new Point3d();
+                nurbs_surface.Evaluate(tmp_point.X, tmp_point.Y, 0, out result_point, out _);
+                global_coord.X = Convert.ToSingle(result_point.X);
+                global_coord.Y = Convert.ToSingle(result_point.Y);
+                global_coord.Z = Convert.ToSingle(result_point.Z);
+                new_mesh.Vertices[i] = global_coord;
+            }
+
+            ThisBrepFace.SetMesh(MeshType.Render, new_mesh);
+        }
         public void UpdateVizualizationMesh(Rhino.DocObjects.RhinoObject obj, double MaximumEdgeLength)
         {
             var brep = obj.Geometry as Brep;
@@ -118,7 +212,7 @@ namespace Cocodrilo.PostProcessing
                 int brep_id = ud.BrepId;
                 var nurbs_surface = brep_face.ToNurbsSurface();
                 List<KeyValuePair<int,List<double>>> points_to_remove = new List<KeyValuePair<int, List<double>>>();
-                foreach (var evaluation_point in PostProcessing.s_EvaluationPointList[brep_id])
+                foreach (var evaluation_point in mEvaluationPointList[brep_id])
                 {
 
                     var point_face_relation = brep_face.IsPointOnFace(evaluation_point.Value[0], evaluation_point.Value[1]);
@@ -127,11 +221,11 @@ namespace Cocodrilo.PostProcessing
                         points_to_remove.Add(evaluation_point);
                     }
                 }
-                var list_brep_evauation_points = PostProcessing.s_EvaluationPointList[brep_id];
-                foreach ( var point in points_to_remove)
-                {
-                    list_brep_evauation_points.Remove(point);
-                }
+                //var list_brep_evauation_points = mEvaluationPointList[brep_id];
+                //foreach ( var point in points_to_remove)
+                //{
+                //    list_brep_evauation_points.Remove(point);
+                //}
             }
 
             foreach (var brep_face in brep.Faces)
@@ -140,7 +234,7 @@ namespace Cocodrilo.PostProcessing
 
                 var nurbs_surface = brep_face.ToNurbsSurface();
                 var tmp_evaluation_point = new Point3d();
-                foreach (var evaluation_point in PostProcessing.s_EvaluationPointList[brep_id])
+                foreach (var evaluation_point in mEvaluationPointList[brep_id])
                 {
                     tmp_evaluation_point.X = evaluation_point.Value[0];
                     tmp_evaluation_point.Y = evaluation_point.Value[1];
@@ -162,12 +256,13 @@ namespace Cocodrilo.PostProcessing
                 List<List<Point3d>> closed_edges = new List<List<Point3d>>();
                 foreach (var brep_edge_index in brep_face.AdjacentEdges())
                 {
+                    var adjacent_edges = brep_face.AdjacentEdges();
                     var edge = brep_face.Brep.Edges[brep_edge_index];
 
-                    double length = edge.GetLength();
+   
+                     double length = edge.GetLength();
                     int number_of_segments = (int) (length / MaximumEdgeLength);
-
-                    var curve2d = brep_face.Brep.Trims[brep_face.Brep.Edges[brep_edge_index].TrimIndices()[0]];
+                var curve2d = brep_face.Brep.Trims[brep_face.Brep.Edges[brep_edge_index].TrimIndices()[0]];
                     double parameter_length = curve2d.GetLength();
                     double max_parameter_segment_length = parameter_length / number_of_segments;
                     PolylineCurve poyline_curve = curve2d.ToPolyline(
@@ -190,6 +285,13 @@ namespace Cocodrilo.PostProcessing
                     //line_segment_last.Add(point2_last);
                     //closed_edges.Add(line_segment_last);
                     //}
+                }
+                
+                if (closed_edges[0][0].DistanceTo(closed_edges.Last()[1]) > RhinoDoc.ActiveDoc.ModelAbsoluteTolerance)
+                {
+                    closed_edges.Add(new List<Point3d> {
+                            closed_edges.Last()[1],
+                            closed_edges[0][0] });
                 }
 
                 // Create Tesselation in Paramter space.
@@ -281,6 +383,8 @@ namespace Cocodrilo.PostProcessing
             foreach (var brep_face in brep.Faces)
             {
                 int brep_id = Cocodrilo.UserData.UserDataUtilities.GetOrCreateUserDataSurface(brep_face).BrepId;
+                if (brep_id == -1)
+                    continue;
                 Mesh custom_mesh = mVizualizationMeshes[brep_id];
 
                 // Replace active mesh
@@ -308,7 +412,7 @@ namespace Cocodrilo.PostProcessing
 
                     double[] res = new double[mesh.Vertices.Count];
 
-                    if (PostProcessing.s_CurrentResultInfo.NodeOrGauss == "OnNodes")
+                    if (mCurrentResultInfo.NodeOrGauss == "OnNodes")
                     {
                         Dictionary<int, NurbsSurface> result_surfaces = new Dictionary<int, NurbsSurface>();
                         Point3d result_uv;
@@ -336,7 +440,8 @@ namespace Cocodrilo.PostProcessing
                             if (result_brep_id == -1) continue;
                             if (!result_surfaces.ContainsKey(result_brep_id))
                             {
-                                result_surfaces.Add(result_brep_id, CreateResultNurbsPatch(brep_face.ToNurbsSurface(), result_brep_id, post_processing_index));
+                                result_surfaces.Add(result_brep_id, CreateResultNurbsPatch(
+                                    brep_face.ToNurbsSurface(), result_brep_id, post_processing_index, mBrepId_NodeId_Coordinates, mCurrentResultInfo));
                             }
                             result_surfaces[result_brep_id].Evaluate(s, t, 0, out result_uv, out _);
                             res[i] = result_uv.X;
@@ -353,8 +458,8 @@ namespace Cocodrilo.PostProcessing
                         {
                             if (i < mNumberEvaluationPoints[brep_id])
                             {
-                                 double x = PostProcessing.s_EvaluationPointList[brep_id][i].Value[0];
-                                double y = PostProcessing.s_EvaluationPointList[brep_id][i].Value[1];
+                                double x = mEvaluationPointList[brep_id][i].Value[0];
+                                double y = mEvaluationPointList[brep_id][i].Value[1];
                                 Point3d test_point;
                                 brep_face.Evaluate(x, y, 0, out test_point, out _);
 
@@ -442,8 +547,8 @@ namespace Cocodrilo.PostProcessing
 
         private double GetResultGP(int PatchId, int point_index, int ResultIndex)
         {
-            var current_results = PostProcessing.s_CurrentResultInfo.Results;
-            var evaluation_point_id = PostProcessing.s_EvaluationPointList[PatchId][point_index].Key;
+            var current_results = mCurrentResultInfo.Results;
+            var evaluation_point_id = mEvaluationPointList[PatchId][point_index].Key;
             //if (current_results == null) { return 0.0; }
             var current_result = current_results[evaluation_point_id];
             return (ResultIndex >= current_result.Length)
@@ -455,11 +560,12 @@ namespace Cocodrilo.PostProcessing
         {
             int evaluation_point_id = 0;
             var point_local_coordinates = new Point3d(u, v, 0);
-            var current_results = PostProcessing.s_CurrentResultInfo.Results;
-            var result_info = PostProcessing.s_CurrentResultInfo;
+            var current_results = mCurrentResultInfo.Results;
+            var result_info = mCurrentResultInfo;
             double min_dist = 1000000000;
-            foreach (var point in PostProcessing.s_EvaluationPointList[PatchId])
+            foreach (var point in mEvaluationPointList[PatchId])
             {
+                // Eventually only check the quadratic distance. Check if this is significant faster.
                 var dist_tmp = point_local_coordinates.DistanceTo(new Point3d(point.Value[0], point.Value[1], 0.0));
                 if (dist_tmp < min_dist)
                 {
@@ -474,15 +580,20 @@ namespace Cocodrilo.PostProcessing
                 : closest_result[ResultIndex];
         }
 
-        private NurbsSurface CreateResultNurbsPatch(NurbsSurface ThisNurbsSurface, int patch_id, int ResultIndex)
+        public static NurbsSurface CreateResultNurbsPatch(
+            NurbsSurface ThisNurbsSurface,
+            int patch_id,
+            int ResultIndex,
+            Dictionary<int, List<KeyValuePair<int, List<double>>>> BrepId_NodeId_Coordinates,
+            RESULT_INFO CurrentResultInfo)
         {
-            var nodes_per_patch_list = PostProcessing.s_BrepId_NodeId_Coordinates[patch_id];
+            var nodes_per_patch_list = BrepId_NodeId_Coordinates[patch_id];
             var result_surface = new NurbsSurface(ThisNurbsSurface);
 
             int num_points_u = result_surface.Points.CountU;
             int num_points_v = result_surface.Points.CountV;
 
-            var current_results = Cocodrilo.PostProcessing.PostProcessing.s_CurrentResultInfo.Results;
+            var current_results = CurrentResultInfo.Results;
 
             for (int point_u = 0; point_u < num_points_u; point_u++)
             {

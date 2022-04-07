@@ -171,6 +171,25 @@ namespace Cocodrilo.IO
                 user_data_point.BrepId = brep_ids;
                 brep_ids++;
             }
+            foreach (var brep in Breps)
+            {
+                foreach (var surface in brep.Surfaces)
+                {
+                    var user_data_surface = UserDataUtilities.GetOrCreateUserDataSurface(surface);
+                    var numerical_elements = user_data_surface.GetNumericalElements();
+                    foreach (var numerical_element in numerical_elements)
+                    {
+                        if (numerical_element.HasBrepId())
+                        {
+                            if (numerical_element.GetBrepId() == -1)
+                            {
+                                numerical_element.SetBrepId(brep_ids);
+                                brep_ids++;
+                            }
+                        }
+                    }
+                }
+            }
 
             CocodriloPlugIn.Instance.IntersectionCurveList = IntersectionCurveList;
             CocodriloPlugIn.Instance.IntersectionPointList = IntersectionPointList;

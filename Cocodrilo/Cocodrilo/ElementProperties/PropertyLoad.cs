@@ -48,7 +48,8 @@ namespace Cocodrilo.ElementProperties
             else if (mGeometryType == GeometryType.GeometrySurface)
                 variable_name = "SURFACE_LOAD";
             else if (mGeometryType == GeometryType.SurfacePoint
-                     || mGeometryType == GeometryType.CurvePoint)
+                     || mGeometryType == GeometryType.CurvePoint
+                     || mGeometryType == GeometryType.Point)
                 variable_name = "POINT_LOAD";
 
             string python_module = "assign_vector_variable_to_conditions_process";
@@ -63,13 +64,13 @@ namespace Cocodrilo.ElementProperties
                 }
                 value = mLoad.GetLoadProperyVector();
             }
-            else if (mLoad.mLoadType == "PRES")
+            else if (mLoad.mLoadType == "PRES" || mLoad.mLoadType == "PRESSURE_LOAD")
             {
                 variable_name = "PRESSURE";
                 python_module = "assign_scalar_variable_to_conditions_process";
                 value = mLoad.mLoadX;
             }
-            else if (mLoad.mLoadType == "PRES_FL")
+            else if (mLoad.mLoadType == "PRES_FL" || mLoad.mLoadType == "PRESSURE_LOAD_FL")
             {
                 variable_name = "PRESSURE_FOLLOWER_LOAD";
                 python_module = "assign_scalar_variable_to_conditions_process";
@@ -121,17 +122,17 @@ namespace Cocodrilo.ElementProperties
 
             Dictionary<string, object> Parameters = new Dictionary<string, object>
             {
-                { "type", "condition"},
-                { "name", name},
-                { "shape_function_derivatives_order", 2}
+                { "type", "condition" },
+                { "name", name },
+                { "shape_function_derivatives_order", 2 }
             };
 
             Dictionary<string, object> property_element = new Dictionary<string, object>
             {
-                {"brep_ids", BrepIds},
-                {"geometry_type", GeometryTypeString },
-                {"iga_model_part", GetKratosModelPart() },
-                {"parameters", Parameters}
+                { "brep_ids", BrepIds},
+                { "geometry_type", GeometryTypeString },
+                { "iga_model_part", GetKratosModelPart() },
+                { "parameters", Parameters }
             };
             return new List<Dictionary<string, object>> { property_element };
         }

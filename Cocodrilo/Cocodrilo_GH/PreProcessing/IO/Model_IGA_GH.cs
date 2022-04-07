@@ -84,15 +84,20 @@ namespace Cocodrilo_GH.PreProcessing.IO
                                     {
                                         foreach (var old_surface in old_brep.Surfaces)
                                         {
-                                            var ud2 = old_surface.UserData.Find(typeof(Cocodrilo.UserData.UserDataSurface)) as Cocodrilo.UserData.UserDataSurface;
+                                            var ud_old = old_surface.UserData.Find(typeof(Cocodrilo.UserData.UserDataSurface)) as Cocodrilo.UserData.UserDataSurface;
 
-                                            if (ReferenceEquals(ud2.GetCurrentElementData(), ud.GetCurrentElementData()))
+                                            if (ReferenceEquals(ud_old.GetCurrentElementData(), ud.GetCurrentElementData()))
+                                            {
                                                 add_brep = false;
+                                                ud_old.AddNumericalElement(brep.Value);
+                                            }
                                         }
                                     }
                                 }
-
-                                ud.AddNumericalElement(brep.Value);
+                                if (add_brep)
+                                {
+                                    ud.AddNumericalElement(brep.Value);
+                                }
                             }
                             if (add_brep)
                             {

@@ -639,8 +639,6 @@ namespace Cocodrilo.IO
                         if (test_point.DistanceTo(point.Location) < tolerance)
                             v_normalized = 1;
                     }
-                    double v_normalized2 = surface.Domain(1).NormalizedParameterAt(v+1);
-
                     var parameter_location = new Elements.ParameterLocationSurface(GeometryType.SurfacePoint, u, v, u_normalized, v_normalized);
 
                     var user_data_surface = UserDataUtilities.GetOrCreateUserDataSurface(surface);
@@ -650,7 +648,14 @@ namespace Cocodrilo.IO
                     {
                         var property = numerical_element.GetProperty(out _);
                         CocodriloPlugIn.Instance.AddProperty(property);
-                        user_data_surface.AddNumericalElement(property, parameter_location);
+                        if (parameter_location.IsOnNodes())
+                        {
+                            user_data_surface.AddNumericalElement(property, parameter_location);
+                        }
+                        else
+                        {
+                            user_data_surface.AddNumericalElementPoint(property, parameter_location);
+                        }
 
                         user_data_point.DeleteNumericalElement(property);
                         //if (property.GetType() == typeof(PropertySupport) && parameter_location.IsOnNodes())

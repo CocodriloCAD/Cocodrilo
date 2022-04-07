@@ -107,7 +107,7 @@ namespace Cocodrilo.ElementProperties
 
                         Dictionary<string, object> property_element = new Dictionary<string, object>
                         {
-                            {"brep_ids", brep_parameter_location_combination.BrepId},
+                            {"brep_id", brep_parameter_location_combination.BrepId},
                             {"geometry_type", GeometryTypeString },
                             {"iga_model_part", GetKratosModelPart() },
                             {"parameters", Parameters}

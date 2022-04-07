@@ -19,7 +19,7 @@ namespace Cocodrilo.UserData
         public static string GetProjectPath(string ProjectName)
         {
             var plugin_path = Rhino.PlugIns.PlugIn.PathFromId(
-                new Guid("ce983e9d-72de-4a79-8832-7c374e6e26de"));
+                new Guid("EA17C9B0-4049-4094-A812-13AF0C8FCB32"));
             var path_with_slash = plugin_path.Replace("\\", "/");
             var id_of_last_slash = path_with_slash.LastIndexOf("/");
             var path_without_last_slash =  path_with_slash.Substring(0, id_of_last_slash + 1);

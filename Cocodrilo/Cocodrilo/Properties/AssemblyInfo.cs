@@ -23,7 +23,7 @@ using Rhino.PlugIns;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Cocodrilo")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,7 +33,7 @@ using Rhino.PlugIns;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ce983e9d-72de-4a79-8832-7c374e6e26de")] // This will also be the Guid of the Rhino plug-in
+[assembly: Guid("EA17C9B0-4049-4094-A812-13AF0C8FCB32")] // This will also be the Guid of the Rhino plug-in
 
 // Version information for an assembly consists of the following four values:
 //

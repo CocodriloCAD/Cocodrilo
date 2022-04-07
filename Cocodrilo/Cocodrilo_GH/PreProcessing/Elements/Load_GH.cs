@@ -20,7 +20,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
     {
         private string mLoadX = "0.0";
         private string mLoadY = "0.0";
-        private string mLoadZ = "0.0";
+        private string mLoadZ = "-1.0";
 
         private LoadType mSelectedLoadType = LoadType.GEOMETRY_LOAD;
         public Load_GH()
@@ -40,6 +40,8 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             pManager[2].Optional = true;
             pManager.AddPointParameter("Points", "Pts", "Geometries", GH_ParamAccess.list);
             pManager[3].Optional = true;
+            pManager.AddTextParameter("Load", "L", "Scaling of Load", GH_ParamAccess.item, "1.0");
+            pManager[4].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
@@ -61,8 +63,10 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             List<Point3d> points = new List<Point3d>();
             DA.GetDataList(3, points);
 
-            var geometries = new Cocodrilo_GH.PreProcessing.Geometries.Geometries();
+            string load_factor = "";
+            DA.GetData(4, ref load_factor);
 
+            var geometries = new Cocodrilo_GH.PreProcessing.Geometries.Geometries();
 
             foreach (var brep in breps)
             {
@@ -71,7 +75,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
                 {
                     load_type = "SURFACE_LOAD";
                 }
-                var load = new Load(mLoadX, mLoadY, mLoadZ, "1.0", load_type);
+                var load = new Load( mLoadX, mLoadY, mLoadZ, load_factor, load_type);
 
                 var support_property = new PropertyLoad(
                     GeometryType.GeometrySurface, load, new TimeInterval());
@@ -86,7 +90,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
                 {
                     load_type = "LINE_LOAD";
                 }
-                var load = new Load(mLoadX, mLoadY, mLoadZ, "1.0", load_type);
+                var load = new Load(mLoadX, mLoadY, mLoadZ, load_factor, load_type);
 
                 var support_property = new PropertyLoad(
                     GeometryType.GeometryCurve, load, new TimeInterval());
@@ -101,7 +105,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
                 {
                     load_type = "LINE_LOAD";
                 }
-                var load = new Load(mLoadX, mLoadY, mLoadZ, "1.0", load_type);
+                var load = new Load(mLoadX, mLoadY, mLoadZ, load_factor, load_type);
 
                 var support_property = new PropertyLoad(
                     GeometryType.SurfaceEdge, load, new TimeInterval());
@@ -116,7 +120,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
                 {
                     load_type = "POINT_LOAD";
                 }
-                var load = new Load(mLoadX, mLoadY, mLoadZ, "1.0", load_type);
+                var load = new Load(mLoadX, mLoadY, mLoadZ, load_factor, load_type);
 
                 var support_property = new PropertyLoad(
                     GeometryType.Point, load, new TimeInterval());

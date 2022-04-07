@@ -14,7 +14,7 @@ namespace Cocodrilo.PostProcessing
     {
         public List<RESULT_INFO> ResultList = new List<RESULT_INFO>();
 
-        public static Dictionary<int, List<KeyValuePair<int, List<double>>>> s_EvaluationPointList;
+        public Dictionary<int, List<KeyValuePair<int, List<double>>>> mEvaluationPointList;
         public Dictionary<int[], List<KeyValuePair<int, List<double>>>> mCouplingEvaluationPointList;
 
         //public Dictionary<int, NurbsSurface> BrepId_NurbsSurface = new Dictionary<int, NurbsSurface>();
@@ -22,7 +22,7 @@ namespace Cocodrilo.PostProcessing
         private Dictionary<int, Brep> BrepId_Breps;
         private Dictionary<int, Brep> BrepId_Breps_deformed;
 
-        public static Dictionary<int, List<KeyValuePair<int, List<double>>>> s_BrepId_NodeId_Coordinates = new Dictionary<int, List<KeyValuePair<int, List<double>>>>();
+        public Dictionary<int, List<KeyValuePair<int, List<double>>>> mBrepId_NodeId_Coordinates = new Dictionary<int, List<KeyValuePair<int, List<double>>>>();
 
         /// Variables to keep track through the
         public List<Guid> mPostprocessingObjects { get; set; }
@@ -36,19 +36,20 @@ namespace Cocodrilo.PostProcessing
 
         /// Variables to detect the selected object
         public Dictionary<int, double[]> CurrentDisplacements()
-            => ResultList.Find(r => r.LoadCaseNumber == s_CurrentResultInfo.LoadCaseNumber &&
+            => ResultList.Find(r => r.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber &&
                                     r.ResultType == "\"DISPLACEMENT\"").Results;
         public List<string> CurrentDistinctResultTypes { get; set; }
         public List<string> DistinctLoadCaseTypes { get; set; }
         public List<int> DistinctLoadCaseNumbers { get; set; }
-        public static RESULT_INFO s_CurrentResultInfo;
+        public RESULT_INFO mCurrentResultInfo { get; private set; }
         public RESULT_INFO ResultInfo(string LoadCaseType, int LoadCaseNumber, string ResultType)
             => ResultList.Find(p => p.LoadCaseType == LoadCaseType &&
                                     p.LoadCaseNumber == LoadCaseNumber &&
                                     p.ResultType == ResultType);
+
         public static int s_SelectedCurrentResultDirectionIndex = 0;
 
-        public double[] CurrentMinMax = new double[] { 0, 1 };
+        public double[] mCurrentMinMax = new double[] { 0, 1 };
         public static Interval s_MinMax = new Interval(0, 1);
         public static double s_MaxDistanceVertexOnMeshEdge = 1.0;
 
@@ -63,7 +64,6 @@ namespace Cocodrilo.PostProcessing
         public bool mUpdateResultPlot = false;
         public bool mUpdateStressPatterns = true;
         public bool mUpdateVisualizationMesh = true;
-        private bool mRegisterVisualanalysisMode = true;
 
         /// <summary>
         /// Controls if the color plot is being updated during the ResultPlotVisualAnalysisMode.
@@ -107,11 +107,11 @@ namespace Cocodrilo.PostProcessing
                     BrepId_Breps = new Dictionary<int, Brep>();
                     BrepId_Breps_deformed = new Dictionary<int, Brep>();
 
-                    s_BrepId_NodeId_Coordinates = new Dictionary<int, List<KeyValuePair<int, List<double>>>>();
+                    mBrepId_NodeId_Coordinates = new Dictionary<int, List<KeyValuePair<int, List<double>>>>();
                     if (System.IO.File.Exists(path))
                     {
                         PostProcessingImportUtilities.LoadRhinoGeometries(
-                            path, ref BrepId_Breps, ref s_BrepId_NodeId_Coordinates);
+                            path, ref BrepId_Breps, ref mBrepId_NodeId_Coordinates);
                     }
                     else
                     {
@@ -146,7 +146,7 @@ namespace Cocodrilo.PostProcessing
 
 
                 string[] evaluation_point_files = System.IO.Directory.GetFiles(analysis_folder, analysis_name + "*_integrationdomain.json");
-                s_EvaluationPointList = new Dictionary<int, List<KeyValuePair<int, List<double>>>>();
+                mEvaluationPointList = new Dictionary<int, List<KeyValuePair<int, List<double>>>>();
                 mCouplingEvaluationPointList = new Dictionary<int[], List<KeyValuePair<int, List<double>>>>();
 
                 foreach (var file in evaluation_point_files)
@@ -156,7 +156,7 @@ namespace Cocodrilo.PostProcessing
                         try
                         {
                             PostProcessingImportUtilities.LoadEvaluationPoints(
-                                file, ref s_EvaluationPointList, ref mCouplingEvaluationPointList);
+                                file, ref mEvaluationPointList, ref mCouplingEvaluationPointList);
                         }
                         catch(Exception e)
                         {
@@ -166,6 +166,11 @@ namespace Cocodrilo.PostProcessing
                 }
             }
 
+            if (mVisualizationMode != null)
+            {
+                (mVisualizationMode as ResultPlotVisualAnalysisMode).mBrepId_NodeId_Coordinates = mBrepId_NodeId_Coordinates;
+                (mVisualizationMode as ResultPlotVisualAnalysisMode).mEvaluationPointList = mEvaluationPointList;
+            }
             if (!ResultList.Exists(p => p.LoadCaseNumber == 0))
             {
                 var Results = new Dictionary<int, double[]>();
@@ -174,10 +179,15 @@ namespace Cocodrilo.PostProcessing
                 ResultList.Add(default_result_info);
 
                 /// Set initial values.
-                s_CurrentResultInfo = default_result_info;
+                mCurrentResultInfo = default_result_info;
+
+                if (mVisualizationMode != null)
+                {
+                    (mVisualizationMode as ResultPlotVisualAnalysisMode).mCurrentResultInfo = default_result_info;
+                }
             }
             var load_cases_per_time_step = ResultList.Where(p =>
-                    p.LoadCaseNumber == s_CurrentResultInfo.LoadCaseNumber
+                    p.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber
                 && (p.NodeOrGauss == "\"OnNodes\"" || p.NodeOrGauss == "\"OnGaussPoints\"")).ToList();
             CurrentDistinctResultTypes = load_cases_per_time_step.Select(p => p.ResultType).Distinct().ToList();
             DistinctLoadCaseTypes = load_cases_per_time_step.Select(p => p.LoadCaseType).Distinct().ToList();
@@ -201,66 +211,31 @@ namespace Cocodrilo.PostProcessing
             }
         }
 
-        public void RealMinMax()
-        {
-            Interval tmp_min_max = new Interval(100000, -100000);
-            int result_index = s_SelectedCurrentResultDirectionIndex;
-
-            if(s_CurrentResultInfo.NodeOrGauss == "OnNodes")
-            {
-                // Nodal values
-                for (int i = 0; i < mPostprocessingObjects.Count; i++)
-                {
-                    var objc = RhinoDoc.ActiveDoc.Objects.Find(mPostprocessingObjects[i]);
-                    (mVisualizationMode as ResultPlotVisualAnalysisMode).RealMinMax(objc, ref tmp_min_max);
-                }
-            }
-            else
-            {
-                // Todo!! Past des?
-                // Gauss Poitn values
-                var current_results = PostProcessing.s_CurrentResultInfo.Results;
-                foreach (var brep_id in PostProcessing.s_EvaluationPointList.Keys)
-                {
-                    var brep_evaluation_point_list = PostProcessing.s_EvaluationPointList[brep_id];
-                    for (int point_index = 0; point_index < brep_evaluation_point_list.Count; ++point_index)
-                    {
-                        var evaluation_point_id = brep_evaluation_point_list[point_index].Key;
-                        var current_result = current_results[evaluation_point_id];
-                        var value = (result_index >= current_result.Length)
-                                        ? PostProcessingUtilities.GetVonMises(current_result)
-                                        : current_result[result_index];
-
-                        if (value < tmp_min_max[0])
-                            tmp_min_max[0] = value;
-                        if (value > tmp_min_max[1])
-                            tmp_min_max[1] = value;
-                    }
-                }
-            }
-            s_MinMax = tmp_min_max;
-        }
-
         public void UpdateCurrentResults(
             string LoadCaseType, int LoadCaseNumber, string ResultType)
         {
-            bool update_load_case_numbers = (s_CurrentResultInfo.LoadCaseNumber != LoadCaseNumber);
+            bool update_load_case_numbers = (mCurrentResultInfo.LoadCaseNumber != LoadCaseNumber);
 
             if (ResultType == "")
             {
-                ResultType = s_CurrentResultInfo.ResultType;
+                ResultType = mCurrentResultInfo.ResultType;
             }
 
             LoadCaseNumber = Math.Max(LoadCaseNumber, 1);
 
-            s_CurrentResultInfo = ResultList.Find(p => p.LoadCaseType == LoadCaseType &&
+            mCurrentResultInfo = ResultList.Find(p => p.LoadCaseType == LoadCaseType &&
                                                        p.LoadCaseNumber == LoadCaseNumber &&
                                                        p.ResultType == ResultType);
+
+            if (mVisualizationMode != null)
+            {
+                (mVisualizationMode as ResultPlotVisualAnalysisMode).mCurrentResultInfo = mCurrentResultInfo;
+            }
 
             if (update_load_case_numbers)
             {
                 var load_cases_per_time_step = ResultList.Where(p =>
-                        p.LoadCaseNumber == s_CurrentResultInfo.LoadCaseNumber
+                        p.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber
                     && (p.NodeOrGauss == "OnNodes" || p.NodeOrGauss == "OnGaussPoints")).ToList();
                 CurrentDistinctResultTypes = load_cases_per_time_step.Select(p => p.ResultType).Distinct().ToList();
                 // Stress pattern updates once a new load case is considered.
@@ -269,7 +244,7 @@ namespace Cocodrilo.PostProcessing
 
             UpdateCurrentMinMax();
 
-            if (s_CurrentResultInfo.ResultType == "\"DISPLACEMENT\"")
+            if (mCurrentResultInfo.ResultType == "\"DISPLACEMENT\"")
             {
                 mUpdateGeometry = true;
                 mUpdateGaussPoints = true;
@@ -280,32 +255,119 @@ namespace Cocodrilo.PostProcessing
 
         public void UpdateCurrentMinMax()
         {
-            if (s_CurrentResultInfo.Results == null || s_CurrentResultInfo.Results.Count == 0)
+            mCurrentMinMax = GetMinMax(mCurrentResultInfo, s_SelectedCurrentResultDirectionIndex);
+        }
+        public double[] GetMinMax(RESULT_INFO ResultInfo, int SelectedResultDirection)
+        {
+            double[] current_min_max = new double[] { 0, 0 };
+            if (ResultInfo.Results == null || ResultInfo.Results.Count == 0)
             {
-                CurrentMinMax[0] = 0;
-                CurrentMinMax[1] = 1;
+                return current_min_max;
             }
             else
             {
-                if (s_CurrentResultInfo.Results.First().Value.Length <= s_SelectedCurrentResultDirectionIndex)
+                if (ResultInfo.Results.First().Value.Length <= SelectedResultDirection)
                 {
-                    if (s_CurrentResultInfo.ResultType == "\"DISPLACEMENT\"")
+                    if (ResultInfo.ResultType == "\"DISPLACEMENT\"")
                     {
-                        CurrentMinMax[0] = s_CurrentResultInfo.Results.Min(p => PostProcessingUtilities.GetArrayLength(p.Value));
-                        CurrentMinMax[1] = s_CurrentResultInfo.Results.Max(p => PostProcessingUtilities.GetArrayLength(p.Value));
+                        current_min_max[0] = ResultInfo.Results.Min(p => PostProcessingUtilities.GetArrayLength(p.Value));
+                        current_min_max[1] = ResultInfo.Results.Max(p => PostProcessingUtilities.GetArrayLength(p.Value));
                     }
                     else
                     {
-                        CurrentMinMax[0] = s_CurrentResultInfo.Results.Min(p => PostProcessingUtilities.GetVonMises(p.Value));
-                        CurrentMinMax[1] = s_CurrentResultInfo.Results.Max(p => PostProcessingUtilities.GetVonMises(p.Value));
+                        current_min_max[0] = ResultInfo.Results.Min(p => PostProcessingUtilities.GetVonMises(p.Value));
+                        current_min_max[1] = ResultInfo.Results.Max(p => PostProcessingUtilities.GetVonMises(p.Value));
                     }
                 }
                 else
                 {
-                    CurrentMinMax[0] = s_CurrentResultInfo.Results.Min(p => p.Value[s_SelectedCurrentResultDirectionIndex]);
-                    CurrentMinMax[1] = s_CurrentResultInfo.Results.Max(p => p.Value[s_SelectedCurrentResultDirectionIndex]);
+                    current_min_max[0] = ResultInfo.Results.Min(p => p.Value[SelectedResultDirection]);
+                    current_min_max[1] = ResultInfo.Results.Max(p => p.Value[SelectedResultDirection]);
+                }
+
+                return current_min_max;
+            }
+        }
+
+        public void UpdateComputeMinMax()
+        {
+            s_MinMax = GetComputeMinMax(mCurrentResultInfo, s_SelectedCurrentResultDirectionIndex);
+        }
+        public Interval GetComputeMinMax(RESULT_INFO ResultInfo, int SelectedResultDirection)
+        {
+            Interval tmp_min_max = new Interval(1e10, -1e10);
+
+            if (mCurrentResultInfo.NodeOrGauss.Contains("OnNodes"))
+            {
+                foreach (var brep_key_pair in BrepId_Breps)
+                {
+                    var brep = brep_key_pair.Value;
+                    foreach (var brep_face in brep.Faces)
+                    {
+                        var mesh = brep_face.GetMesh(MeshType.Render);
+                        if (mesh== null)
+                        {
+                            ResultPlotVisualAnalysisMode.CreateRenderMesh(brep_face, mEvaluationPointList, 0.1);
+                            mesh = brep_face.GetMesh(MeshType.Render);
+                        }
+
+                        Dictionary<int, NurbsSurface> result_surfaces = new Dictionary<int, NurbsSurface>();
+                        Point3d result_uv;
+                        for (int i = 0; i < mesh.Vertices.Count; i++)
+                        {
+                            double s, t, dist = 0;
+                            ComponentIndex ci;
+                            brep.ClosestPoint(mesh.Vertices[i], out _, out ci, out s, out t, dist, out _);
+
+                            BrepFace result_brep_face;
+                            int result_brep_id;
+                            if (ci.ComponentIndexType == ComponentIndexType.BrepEdge)
+                            {
+                                var brep_edge = brep.Edges[ci.Index];
+                                result_brep_face = brep.Trims[brep_edge.TrimIndices()[0]].Face;
+                                result_brep_id = Cocodrilo.UserData.UserDataUtilities.GetOrCreateUserDataSurface(result_brep_face).BrepId;
+                                var local_coordinates = brep.Trims[brep_edge.TrimIndices()[0]].PointAt(s);
+                                s = local_coordinates[0];
+                                t = local_coordinates[1];
+                            }
+                            else
+                            {
+                                result_brep_face = brep.Faces[ci.Index];
+                                result_brep_id = Cocodrilo.UserData.UserDataUtilities.GetOrCreateUserDataSurface(result_brep_face).BrepId;
+                            }
+                            if (result_brep_id == -1) continue;
+                            if (!result_surfaces.ContainsKey(result_brep_id))
+                            {
+                                result_surfaces.Add(result_brep_id, ResultPlotVisualAnalysisMode.CreateResultNurbsPatch(
+                                    brep_face.ToNurbsSurface(), result_brep_id, SelectedResultDirection, mBrepId_NodeId_Coordinates, ResultInfo));
+                            }
+                            result_surfaces[result_brep_id].Evaluate(s, t, 0, out result_uv, out _);
+                            var value = result_uv.X;
+                            tmp_min_max[0] = Math.Min(tmp_min_max[0], value);
+                            tmp_min_max[1] = Math.Max(tmp_min_max[1], value);
+                        }
+                    }
+                }
+                RegisterVisualAnalysisMode();
+
+                // Nodal values
+                for (int i = 0; i < mPostprocessingObjects.Count; i++)
+                {
+                    var objc = RhinoDoc.ActiveDoc.Objects.Find(mPostprocessingObjects[i]);
+
+                    if (mVisualizationMode != null)
+                    {
+                        (mVisualizationMode as ResultPlotVisualAnalysisMode).ComputeMinMax(objc, ref tmp_min_max, SelectedResultDirection);
+                    }
                 }
             }
+            else
+            {
+                var min_max = GetMinMax(mCurrentResultInfo, SelectedResultDirection);
+                tmp_min_max[0] = min_max[0];
+                tmp_min_max[1] = min_max[1];
+            }
+            return tmp_min_max;
         }
 
         public void ShowMeshBoundaryPoints(ref List<Guid> ids)
@@ -385,14 +447,14 @@ namespace Cocodrilo.PostProcessing
             Results.Add(0, new double[] { 0, 0, 0 });
             var default_result_info = new RESULT_INFO() { ResultType = "", LoadCaseNumber = 0, LoadCaseType = "", NodeOrGauss = "", VectorOrScalar = "", Results = Results };
             ResultList.Add(default_result_info);
-            s_CurrentResultInfo = default_result_info;
+            mCurrentResultInfo = default_result_info;
             DistinctLoadCaseTypes = ResultList.Select(p => p.LoadCaseType).Distinct().ToList();
-            var load_cases_per_time_step = ResultList.Where(p => p.LoadCaseNumber == s_CurrentResultInfo.LoadCaseNumber).ToList();
+            var load_cases_per_time_step = ResultList.Where(p => p.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber).ToList();
             CurrentDistinctResultTypes = load_cases_per_time_step.Select(p => p.ResultType).Distinct().ToList();
             DistinctLoadCaseNumbers = ResultList.Select(p => p.LoadCaseNumber).Distinct().ToList();
-            CurrentMinMax = new double[] { 0, 1 };
+            mCurrentMinMax = new double[] { 0, 0 };
 
-            s_EvaluationPointList?.Clear();
+            mEvaluationPointList?.Clear();
             mCouplingEvaluationPointList?.Clear();
 
             mPostprocessingObjects = DeleteGeometries(mPostprocessingObjects);
@@ -415,7 +477,7 @@ namespace Cocodrilo.PostProcessing
         public void FreezePostProcessing()
         {
             ResultList.Clear();
-            s_EvaluationPointList.Clear();
+            mEvaluationPointList.Clear();
             mCouplingEvaluationPointList.Clear();
             CurrentDistinctResultTypes.Clear();
 
@@ -470,6 +532,18 @@ namespace Cocodrilo.PostProcessing
                 GeometryGuids = new List<Guid>();
             }
             return GeometryGuids;
+        }
+
+        private void RegisterVisualAnalysisMode()
+        {
+            if (mVisualizationMode == null)
+            {
+                // Colorplot
+                mVisualizationMode = Rhino.Display.VisualAnalysisMode.Register(typeof(ResultPlotVisualAnalysisMode));
+                (mVisualizationMode as ResultPlotVisualAnalysisMode).mBrepId_NodeId_Coordinates = mBrepId_NodeId_Coordinates;
+                (mVisualizationMode as ResultPlotVisualAnalysisMode).mEvaluationPointList = mEvaluationPointList;
+                (mVisualizationMode as ResultPlotVisualAnalysisMode).mCurrentResultInfo = mCurrentResultInfo;
+            }
         }
 
         public void UpdatePostProcessingMeshes(bool show)
@@ -536,7 +610,7 @@ namespace Cocodrilo.PostProcessing
                         //new_brep_face.UserData.Add(ud);
                     }
 
-                    if (s_BrepId_NodeId_Coordinates.ContainsKey(ud.BrepId))
+                    if (mBrepId_NodeId_Coordinates.ContainsKey(ud.BrepId))
                     {
                         var surface = new_brep_face.UnderlyingSurface();
                         var nurbs_surface = surface.ToNurbsSurface();
@@ -544,7 +618,7 @@ namespace Cocodrilo.PostProcessing
                         int u = 0;
                         int v = 0;
                         Brep this_updated_face_brep = new Brep();
-                        foreach (var control_point in s_BrepId_NodeId_Coordinates[ud.BrepId])
+                        foreach (var control_point in mBrepId_NodeId_Coordinates[ud.BrepId])
                         {
                             var ControlPointID = v * nurbs_surface.Points.CountU + u;
 
@@ -642,11 +716,7 @@ namespace Cocodrilo.PostProcessing
                 // Enables that color plot is being updated.
                 s_UpdateResultPlotInAnalysisMode = true;
 
-                if (mRegisterVisualanalysisMode)
-                {
-                    // Colorplot
-                    mVisualizationMode = Rhino.Display.VisualAnalysisMode.Register(typeof(ResultPlotVisualAnalysisMode));
-                }
+                RegisterVisualAnalysisMode();
                 int count = 0;
                 for (int i = 0; i < mPostprocessingObjects.Count; i++)
                 {
@@ -685,7 +755,6 @@ namespace Cocodrilo.PostProcessing
             mUpdateResultPlot = false;
             mUpdateGeometry = false;
             mUpdateVisualizationMesh = false;
-            mRegisterVisualanalysisMode = false;
 
             //////    //1D results
             //////    //delete old 1d results
@@ -841,7 +910,7 @@ namespace Cocodrilo.PostProcessing
                 if (show_evaluation_points)
                 {
 
-                    foreach (var brep_id_evaluation_points in s_EvaluationPointList)
+                    foreach (var brep_id_evaluation_points in mEvaluationPointList)
                     {
                         List<Point3d> gp_list = new List<Point3d>();
 
@@ -949,7 +1018,7 @@ namespace Cocodrilo.PostProcessing
 
             if (ShowForcePatterns && (mUpdateStressPatterns || CheckMissingGeometry(PostprocessingObjectsForcePatterns)))
             {
-                var stress_result_info = ResultList.Find(r => r.LoadCaseNumber == s_CurrentResultInfo.LoadCaseNumber &&
+                var stress_result_info = ResultList.Find(r => r.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber &&
                                                               r.ResultType == ResultType);
 
                 double current_min = (ShowPrincipal)
@@ -967,7 +1036,7 @@ namespace Cocodrilo.PostProcessing
                 }
                 Interval min_max_interval = new Interval(current_min, current_max);
 
-                foreach (var patch in s_EvaluationPointList)
+                foreach (var patch in mEvaluationPointList)
                 {
                     BrepFace this_brep_face = GetGeometry(patch.Key, Deformed) as BrepFace;
                     if (this_brep_face != null)

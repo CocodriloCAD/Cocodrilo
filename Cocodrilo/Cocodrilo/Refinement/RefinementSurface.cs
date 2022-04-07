@@ -12,13 +12,14 @@ namespace Cocodrilo.Refinement
 
         public RefinementSurface() { }
 
-        public RefinementSurface(int PDeg = 1, int QDeg = 1, int KnotSubDivU = 0, int KnotSubDivV = 0, int KnotInsertType=0)
+        public RefinementSurface(int PDeg = 0, int QDeg = 0, int KnotSubDivU = 0, int KnotSubDivV = 0, int KnotInsertType=0)
         {
             this.PDeg = PDeg;
             this.QDeg = QDeg;
 
             this.KnotSubDivU = KnotSubDivU;
             this.KnotSubDivV = KnotSubDivV;
+
             this.KnotInsertType = KnotInsertType;
         }
 
@@ -28,6 +29,8 @@ namespace Cocodrilo.Refinement
             {
                 { "insert_nb_per_span_u", KnotSubDivU},
                 { "insert_nb_per_span_v", KnotSubDivV},
+                { "increase_degree_u", PDeg},
+                { "increase_degree_v", QDeg}
             };
 
             return new Dictionary<string, object>

@@ -244,6 +244,9 @@ namespace Cocodrilo.ElementProperties
             else
                 load_vector[2] = 1;
 
+            if (Math.Abs(factor - 1) < 1e-6)
+                load_vector *= factor;
+
             return load_vector * factor;
         }
 
@@ -251,20 +254,54 @@ namespace Cocodrilo.ElementProperties
         {
             var load = new object[] { mLoadX, mLoadY, mLoadZ };
 
-            double load_x_double;
-            if (Double.TryParse(mLoadX, out load_x_double))
+            bool is_factor_double = Double.TryParse(mFactor, out double factor);
+
+            if (Double.TryParse(mLoadX, out double load_x_double))
             {
-                load[0] = load_x_double;
+                if (is_factor_double)
+                {
+                    load[0] = load_x_double * factor;
+                }
+                else
+                {
+                    load[0] = load_x_double.ToString() + "*(" + mFactor + ")";
+                }
+            }
+            else
+            {
+                load[0] = "(" + mLoadX + ")*" + mFactor;
             }
             double load_y_double;
             if (Double.TryParse(mLoadY, out load_y_double))
             {
-                load[1] = load_y_double;
+                if (is_factor_double)
+                {
+                    load[1] = load_y_double * factor;
+                }
+                else
+                {
+                    load[1] = load_y_double.ToString() + "*(" + mFactor + ")";
+                }
+            }
+            else
+            {
+                load[1] = "(" + mLoadY + ")*" + mFactor;
             }
             double load_z_double;
             if (Double.TryParse(mLoadZ, out load_z_double))
             {
-                load[2] = load_z_double;
+                if (is_factor_double)
+                {
+                    load[2] = load_z_double * factor;
+                }
+                else
+                {
+                    load[2] = load_z_double.ToString() + "*(" + mFactor + ")";
+                }
+            }
+            else
+            {
+                load[2] = "(" + mLoadZ + ")*" + mFactor;
             }
 
             return load;

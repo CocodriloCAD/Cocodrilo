@@ -1868,8 +1868,8 @@ namespace Cocodrilo.Panels
         private void UpdateMinMax()
         {
             CocodriloPlugIn.Instance.PostProcessingCocodrilo.UpdateCurrentMinMax();
-            this.textBoxColorBarMin.Text = CocodriloPlugIn.Instance.PostProcessingCocodrilo.CurrentMinMax[0].ToString("0.0000e+00");
-            this.textBoxColorBarMax.Text = CocodriloPlugIn.Instance.PostProcessingCocodrilo.CurrentMinMax[1].ToString("0.0000e+00");
+            this.textBoxColorBarMin.Text = CocodriloPlugIn.Instance.PostProcessingCocodrilo.mCurrentMinMax[0].ToString("0.0000e+00");
+            this.textBoxColorBarMax.Text = CocodriloPlugIn.Instance.PostProcessingCocodrilo.mCurrentMinMax[1].ToString("0.0000e+00");
         }
         private void UpdateComboBoxPostProcessingDirection(PostProcessing.RESULT_INFO ThisResultInfo)
         {
@@ -1877,55 +1877,18 @@ namespace Cocodrilo.Panels
                 ? 0
                 : this.comboBoxPostProcessingDirection.SelectedIndex;
             this.comboBoxPostProcessingDirection.Items.Clear();
+
             if (ThisResultInfo.VectorOrScalar == "Vector")
             {
                 this.comboBoxPostProcessingDirection.Enabled = true;
 
-                if (ThisResultInfo.NodeOrGauss == "OnNodes" || ThisResultInfo.NodeOrGauss == "\"OnNodes\"")
-                {
-                    this.comboBoxPostProcessingDirection.Items.Add("X");
-                    this.comboBoxPostProcessingDirection.Items.Add("Y");
-                    this.comboBoxPostProcessingDirection.Items.Add("Z");
-                    this.comboBoxPostProcessingDirection.Items.Add("Length");
-                    if (selected_index >= this.comboBoxPostProcessingDirection.Items.Count)
-                        selected_index = this.comboBoxPostProcessingDirection.Items.Count - 1;
-                    this.comboBoxPostProcessingDirection.SelectedIndex = selected_index;
-                }
-                else
-                {
-                    if (ThisResultInfo.Results.Count > 0)
-                    {
-                        if (ThisResultInfo.ResultType == "\"DAMAGE_TENSION_VECTOR\"" || ThisResultInfo.ResultType == "\"DAMAGE_COMPRESSION_VECTOR\"")
-                        {
-                            for (int i = 0; i < ThisResultInfo.Results[1].GetLength(0); i++)
-                            {
-                                this.comboBoxPostProcessingDirection.Items.Add(i.ToString());
-                            }
-                            if (selected_index >= this.comboBoxPostProcessingDirection.Items.Count)
-                                selected_index = this.comboBoxPostProcessingDirection.Items.Count - 1;
-                            this.comboBoxPostProcessingDirection.SelectedIndex = selected_index;
-                        }
-                        else if (ThisResultInfo.Results[1].GetLength(0) == 3)
-                        {
-                            this.comboBoxPostProcessingDirection.Items.Add("11");
-                            this.comboBoxPostProcessingDirection.Items.Add("22");
-                            this.comboBoxPostProcessingDirection.Items.Add("12");
-                            this.comboBoxPostProcessingDirection.Items.Add("von Mises");
-                            this.comboBoxPostProcessingDirection.SelectedIndex = selected_index;
-                        }
-                        else
-                        {
-                            this.comboBoxPostProcessingDirection.Items.Add("11");
-                            this.comboBoxPostProcessingDirection.Items.Add("22");
-                            this.comboBoxPostProcessingDirection.Items.Add("33");
-                            this.comboBoxPostProcessingDirection.Items.Add("12");
-                            this.comboBoxPostProcessingDirection.Items.Add("13");
-                            this.comboBoxPostProcessingDirection.Items.Add("23");
-                            this.comboBoxPostProcessingDirection.Items.Add("von Mises");
-                            this.comboBoxPostProcessingDirection.SelectedIndex = selected_index;
-                        }
-                    }
-                }
+                var result_indices = PostProcessing.PostProcessingUtilities.GetResultIndices(ThisResultInfo);
+
+                result_indices.ForEach(item => this.comboBoxPostProcessingDirection.Items.Add(item.ToString()));
+                selected_index = (selected_index >= this.comboBoxPostProcessingDirection.Items.Count)
+                    ? this.comboBoxPostProcessingDirection.Items.Count - 1
+                    : selected_index;
+                this.comboBoxPostProcessingDirection.SelectedIndex = selected_index;
             }
             else
             {
@@ -2156,7 +2119,7 @@ namespace Cocodrilo.Panels
 
         private void AutoMinMax(object sender, EventArgs e)
         {
-            CocodriloPlugIn.Instance.PostProcessingCocodrilo.RealMinMax();
+            CocodriloPlugIn.Instance.PostProcessingCocodrilo.UpdateComputeMinMax();
             CocodriloPlugIn.Instance.PostProcessingCocodrilo.mUpdateResultPlot = true;
             textBoxColorBarMin.Text = Cocodrilo.PostProcessing.PostProcessing.s_MinMax[0].ToString("0.0000e+00");
             textBoxColorBarMax.Text = Cocodrilo.PostProcessing.PostProcessing.s_MinMax[1].ToString("0.0000e+00");

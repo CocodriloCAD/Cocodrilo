@@ -52,6 +52,52 @@ namespace Cocodrilo.PostProcessing
             return attributes;
         }
 
+        public static List<string> GetResultIndices(RESULT_INFO ResultInfo)
+        {
+            List<string> result_indices = new List<string>();
+
+            if (ResultInfo.NodeOrGauss == "OnNodes" || ResultInfo.NodeOrGauss == "\"OnNodes\"")
+            {
+                result_indices.Add("X");
+                result_indices.Add("Y");
+                result_indices.Add("Z");
+                result_indices.Add("Length");
+            }
+            else
+            {
+                int result_length = (ResultInfo.Results.Count > 0)
+                    ? ResultInfo.Results[1].Length
+                    : 0;
+
+                if (ResultInfo.ResultType == "\"DAMAGE_TENSION_VECTOR\"" || ResultInfo.ResultType == "\"DAMAGE_COMPRESSION_VECTOR\"")
+                {
+                    for (int i = 0; i < result_length; i++)
+                    {
+                        result_indices.Add(i.ToString());
+                    }
+                }
+                else if (result_length == 3)
+                {
+                    result_indices.Add("11");
+                    result_indices.Add("22");
+                    result_indices.Add("12");
+                    result_indices.Add("von Mises");
+                }
+                else
+                {
+                    result_indices.Add("11");
+                    result_indices.Add("22");
+                    result_indices.Add("33");
+                    result_indices.Add("12");
+                    result_indices.Add("13");
+                    result_indices.Add("23");
+                    result_indices.Add("von Mises");
+                }
+            }
+
+            return result_indices;
+        }
+
         public static System.Drawing.Color FalseColor(double z, Rhino.Geometry.Interval MinMax)
         {
             // Simple example of one way to change a number into a color.

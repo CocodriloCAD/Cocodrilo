@@ -102,11 +102,12 @@ namespace Cocodrilo.PostProcessing
                                 }
                                 else
                                 {
-                                    this_result = new double[] { };
+                                    List<double> result_list = new List<double>();
                                     for (int i = 1; i < items.Count(); i++)
                                     {
-                                        this_result.Append(Convert.ToDouble(items[i]));
+                                        result_list.Add(Convert.ToDouble(items[i]));
                                     }
+                                    this_result = result_list.ToArray();
                                 }
                                 result_info.Results.Add(Convert.ToInt32(items[0]), this_result);
                             }

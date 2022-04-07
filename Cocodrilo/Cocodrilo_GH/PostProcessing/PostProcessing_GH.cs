@@ -24,9 +24,7 @@ namespace Cocodrilo_GH.PostProcessing
 
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Path", "Path", "Path of Analysis", GH_ParamAccess.item);
-            pManager.AddNumberParameter("Displacement Scaling", "Displacement Scaling", "Displacement Scaling in Deformations.", GH_ParamAccess.item, 1.0);
-        }
+            pManager.AddTextParameter("Path", "Path", "Path of Analysis", GH_ParamAccess.item);        }
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
@@ -38,9 +36,6 @@ namespace Cocodrilo_GH.PostProcessing
             string path = null;
             if (!DA.GetData(0, ref path)) return;
 
-            double displacement_scaling = 1.0;
-            if (!DA.GetData(1, ref displacement_scaling)) return;
-
             string[] files = System.IO.Directory.GetFiles(path, "*_kratos_0.georhino.json");
             if (files.Length > 0)
             {
@@ -50,16 +45,20 @@ namespace Cocodrilo_GH.PostProcessing
                     last_path = files[0];
                 }
             }
+            else
+            {
+                return;
+            }
 
-            Cocodrilo.PostProcessing.PostProcessing.s_MinMax[0] = mPostProcessing.CurrentMinMax[0];
-            Cocodrilo.PostProcessing.PostProcessing.s_MinMax[1] = mPostProcessing.CurrentMinMax[1];
+            //Cocodrilo.PostProcessing.PostProcessing.s_MinMax[0] = mPostProcessing.mCurrentMinMax[0];
+            //Cocodrilo.PostProcessing.PostProcessing.s_MinMax[1] = mPostProcessing.mCurrentMinMax[1];
 
-            mPostProcessing.ShowPostProcessing(
-                displacement_scaling, 1e4,1,
-                mShowResultColorPlot,
-                mEvaluationPoints,
-                mCouplingEvaluationPoints,
-                false, false, false, false);
+            //mPostProcessing.ShowPostProcessing(
+            //    1.0, 1e4,1,
+            //    mShowResultColorPlot,
+            //    mEvaluationPoints,
+            //    mCouplingEvaluationPoints,
+            //    false, false, false, false);
 
             DA.SetData(0, mPostProcessing);
         }
@@ -100,7 +99,7 @@ namespace Cocodrilo_GH.PostProcessing
                     }
                     else
                     {
-                        Menu_AppendItem(toolStripMenuItemPreProcessing.DropDown, result_type, Menu_DoClick_ResultTypes, mPostProcessing != null, Cocodrilo.PostProcessing.PostProcessing.s_CurrentResultInfo.ResultType == result_type).Tag = counter;
+                        Menu_AppendItem(toolStripMenuItemPreProcessing.DropDown, result_type, Menu_DoClick_ResultTypes, mPostProcessing != null, mPostProcessing.mCurrentResultInfo.ResultType == result_type).Tag = counter;
                         counter++;
                     }
                 }
@@ -119,8 +118,8 @@ namespace Cocodrilo_GH.PostProcessing
             if (sender is System.Windows.Forms.ToolStripMenuItem item && item.Tag is int)
             {
                 mPostProcessing.UpdateCurrentResults(
-                    Cocodrilo.PostProcessing.PostProcessing.s_CurrentResultInfo.LoadCaseType,
-                    Cocodrilo.PostProcessing.PostProcessing.s_CurrentResultInfo.LoadCaseNumber,
+                    mPostProcessing.mCurrentResultInfo.LoadCaseType,
+                    mPostProcessing.mCurrentResultInfo.LoadCaseNumber,
                     "\"CAUCHY_STRESS\"");
 
                 Cocodrilo.PostProcessing.PostProcessing.s_SelectedCurrentResultDirectionIndex = Convert.ToInt32(item.Tag);
@@ -132,8 +131,8 @@ namespace Cocodrilo_GH.PostProcessing
             if (sender is System.Windows.Forms.ToolStripMenuItem item && item.Tag is int)
             {
                 mPostProcessing.UpdateCurrentResults(
-                    Cocodrilo.PostProcessing.PostProcessing.s_CurrentResultInfo.LoadCaseType,
-                    Cocodrilo.PostProcessing.PostProcessing.s_CurrentResultInfo.LoadCaseNumber,
+                    mPostProcessing.mCurrentResultInfo.LoadCaseType,
+                    mPostProcessing.mCurrentResultInfo.LoadCaseNumber,
                     "\"PK2_STRESS\"");
 
                 Cocodrilo.PostProcessing.PostProcessing.s_SelectedCurrentResultDirectionIndex = Convert.ToInt32(item.Tag);
@@ -151,8 +150,8 @@ namespace Cocodrilo_GH.PostProcessing
             if (sender is System.Windows.Forms.ToolStripMenuItem item && item.Tag is int)
             {
                 mPostProcessing.UpdateCurrentResults(
-                    Cocodrilo.PostProcessing.PostProcessing.s_CurrentResultInfo.LoadCaseType,
-                    Cocodrilo.PostProcessing.PostProcessing.s_CurrentResultInfo.LoadCaseNumber,
+                    mPostProcessing.mCurrentResultInfo.LoadCaseType,
+                    mPostProcessing.mCurrentResultInfo.LoadCaseNumber,
                     "\"DISPLACEMENT\"");
 
                 Cocodrilo.PostProcessing.PostProcessing.s_SelectedCurrentResultDirectionIndex = Convert.ToInt32(item.Tag);
@@ -202,8 +201,8 @@ namespace Cocodrilo_GH.PostProcessing
 
                 string result_type = mPostProcessing.CurrentDistinctResultTypes[tag_id];
                 mPostProcessing.UpdateCurrentResults(
-                    Cocodrilo.PostProcessing.PostProcessing.s_CurrentResultInfo.LoadCaseType,
-                    Cocodrilo.PostProcessing.PostProcessing.s_CurrentResultInfo.LoadCaseNumber,
+                    mPostProcessing.mCurrentResultInfo.LoadCaseType,
+                    mPostProcessing.mCurrentResultInfo.LoadCaseNumber,
                     result_type);
 
                 ExpireSolution(true);

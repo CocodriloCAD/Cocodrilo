@@ -68,6 +68,11 @@ namespace Cocodrilo_GH.PreProcessing.Elements
                 ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell3pElement");
                 this_property = new PropertyShell(material.Id, shell_properties);
             }
+            else if (mFormulationType == FormulationType.Shell3pStressBased)
+            {
+                ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell3pStressBased");
+                this_property = new PropertyShell(material.Id, shell_properties);
+            }
             else if (mFormulationType == FormulationType.Shell5pHierarchic)
             {
                 ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell5pHierarchicElement");
