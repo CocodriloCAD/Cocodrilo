@@ -24,7 +24,9 @@ namespace Cocodrilo_GH.PreProcessing.IO
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
+            pManager.AddGenericParameter("Analysis", "Ana", "Analysis", GH_ParamAccess.item);
             pManager.AddMeshParameter("Wall", "Mesh", "DEM Wall", GH_ParamAccess.list);
+            pManager.AddBooleanParameter("Run", "Run", "Run output", GH_ParamAccess.item, false);
         }
 
         /// <summary>
@@ -41,10 +43,13 @@ namespace Cocodrilo_GH.PreProcessing.IO
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<Mesh> mesh_list = new List<Mesh>();
-            DA.GetDataList(0, mesh_list);
+            Cocodrilo.Analyses.Analysis this_analysis = null;
+            if ((!DA.GetData(0, ref this_analysis))) return;
 
-            var output_fem = new OutputKratosFEM();
+            List<Mesh> mesh_list = new List<Mesh>();
+            DA.GetDataList(1, mesh_list);
+
+            var output_fem = new OutputKratosFEM(this_analysis);
             output_fem.StartAnalysis(mesh_list);
 
             DA.SetData(0, output_fem);
