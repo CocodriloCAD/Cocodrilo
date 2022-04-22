@@ -90,6 +90,17 @@ namespace Cocodrilo.Panels
             this.labelTransientAnalysisDampingRatio1 = new System.Windows.Forms.Label();
             this.textBoxTransientAnalysisNumEigen = new System.Windows.Forms.TextBox();
             this.labelTransientAnalysisNumEigen = new System.Windows.Forms.Label();
+            this.tabPageEigenvalueAnalysis = new System.Windows.Forms.TabPage();
+            this.labelEigenvalueAnalysisNumIter = new System.Windows.Forms.Label();
+            this.textBoxEigenvalueAnalysisNumIter = new System.Windows.Forms.TextBox();
+            this.labelEigenvalueAnalysisNumEigen = new System.Windows.Forms.Label();
+            this.textBoxEigenvalueAnalysisNumEigen = new System.Windows.Forms.TextBox();
+            this.textBoxEigenvalueAnalysisAcc = new System.Windows.Forms.TextBox();
+            this.labelEigenvalueAnalysisAcc = new System.Windows.Forms.Label();
+            this.textBoxEigenvalueAnalysisName = new System.Windows.Forms.TextBox();
+            this.labelEigenvalueAnalysisName = new System.Windows.Forms.Label();
+            this.comboBoxEigenvalueAnalysisSolverType = new System.Windows.Forms.ComboBox();
+            this.labelEigenvalueAnalysisSolverType = new System.Windows.Forms.Label();
             this.tabPageCutPatternAnalysis = new System.Windows.Forms.TabPage();
             this.checkBoxCutPatternAnalysisPrestress = new System.Windows.Forms.CheckBox();
             this.textBoxCutPatternAnalysisName = new System.Windows.Forms.TextBox();
@@ -298,6 +309,7 @@ namespace Cocodrilo.Panels
             this.tabPageLinStructuralAnalysis.SuspendLayout();
             this.tabPageNonLinStrucAnalysis.SuspendLayout();
             this.tabPageTransientAnalysis.SuspendLayout();
+            this.tabPageEigenvalueAnalysis.SuspendLayout();
             this.tabPageCutPatternAnalysis.SuspendLayout();
             this.groupBoxOptions.SuspendLayout();
             this.groupBoxMaterials.SuspendLayout();
@@ -427,6 +439,7 @@ namespace Cocodrilo.Panels
             this.tabControlAnalyses.Controls.Add(this.tabPageLinStructuralAnalysis);
             this.tabControlAnalyses.Controls.Add(this.tabPageNonLinStrucAnalysis);
             this.tabControlAnalyses.Controls.Add(this.tabPageTransientAnalysis);
+            this.tabControlAnalyses.Controls.Add(this.tabPageEigenvalueAnalysis);
             this.tabControlAnalyses.Controls.Add(this.tabPageCutPatternAnalysis);
             this.tabControlAnalyses.Location = new System.Drawing.Point(4, 17);
             this.tabControlAnalyses.Margin = new System.Windows.Forms.Padding(2);
@@ -1047,6 +1060,137 @@ namespace Cocodrilo.Panels
             this.labelTransientAnalysisNumEigen.Size = new System.Drawing.Size(65, 13);
             this.labelTransientAnalysisNumEigen.TabIndex = 93;
             this.labelTransientAnalysisNumEigen.Text = "Num. Eigen:";
+            // 
+            // tabPageEigenvalueAnalysis
+            // 
+            this.tabPageEigenvalueAnalysis.AutoScroll = true;
+            this.tabPageEigenvalueAnalysis.Controls.Add(this.labelEigenvalueAnalysisNumIter);
+            this.tabPageEigenvalueAnalysis.Controls.Add(this.textBoxEigenvalueAnalysisNumIter);
+            this.tabPageEigenvalueAnalysis.Controls.Add(this.labelEigenvalueAnalysisNumEigen);
+            this.tabPageEigenvalueAnalysis.Controls.Add(this.textBoxEigenvalueAnalysisNumEigen);
+            this.tabPageEigenvalueAnalysis.Controls.Add(this.textBoxEigenvalueAnalysisAcc);
+            this.tabPageEigenvalueAnalysis.Controls.Add(this.labelEigenvalueAnalysisAcc);
+            this.tabPageEigenvalueAnalysis.Controls.Add(this.textBoxEigenvalueAnalysisName);
+            this.tabPageEigenvalueAnalysis.Controls.Add(this.labelEigenvalueAnalysisName);
+            this.tabPageEigenvalueAnalysis.Controls.Add(this.comboBoxEigenvalueAnalysisSolverType);
+            this.tabPageEigenvalueAnalysis.Controls.Add(this.labelEigenvalueAnalysisSolverType);
+            this.tabPageEigenvalueAnalysis.Location = new System.Drawing.Point(4, 22);
+            this.tabPageEigenvalueAnalysis.Margin = new System.Windows.Forms.Padding(2);
+            this.tabPageEigenvalueAnalysis.Name = "tabPageEigenvalueAnalysis";
+            this.tabPageEigenvalueAnalysis.Padding = new System.Windows.Forms.Padding(2);
+            this.tabPageEigenvalueAnalysis.Size = new System.Drawing.Size(327, 124);
+            this.tabPageEigenvalueAnalysis.TabIndex = 2;
+            this.tabPageEigenvalueAnalysis.Text = "EigenvalueAnalysis";
+            this.tabPageEigenvalueAnalysis.UseVisualStyleBackColor = true;
+            // 
+            // labelEigenvalueAnalysisNumIter
+            // 
+            this.labelEigenvalueAnalysisNumIter.AutoSize = true;
+            this.labelEigenvalueAnalysisNumIter.Location = new System.Drawing.Point(4, 55);
+            this.labelEigenvalueAnalysisNumIter.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelEigenvalueAnalysisNumIter.Name = "labelEigenvalueAnalysisNumIter";
+            this.labelEigenvalueAnalysisNumIter.Size = new System.Drawing.Size(79, 13);
+            this.labelEigenvalueAnalysisNumIter.TabIndex = 98;
+            this.labelEigenvalueAnalysisNumIter.Text = "Max. Iterations:";
+            // 
+            // textBoxEigenvalueAnalysisNumIter
+            // 
+            this.textBoxEigenvalueAnalysisNumIter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxEigenvalueAnalysisNumIter.Location = new System.Drawing.Point(83, 52);
+            this.textBoxEigenvalueAnalysisNumIter.Margin = new System.Windows.Forms.Padding(2);
+            this.textBoxEigenvalueAnalysisNumIter.Name = "textBoxEigenvalueAnalysisNumIter";
+            this.textBoxEigenvalueAnalysisNumIter.Size = new System.Drawing.Size(233, 20);
+            this.textBoxEigenvalueAnalysisNumIter.TabIndex = 97;
+            this.textBoxEigenvalueAnalysisNumIter.Text = "100";
+            // 
+            // labelEigenvalueAnalysisNumEigen
+            // 
+            this.labelEigenvalueAnalysisNumEigen.AutoSize = true;
+            this.labelEigenvalueAnalysisNumEigen.Location = new System.Drawing.Point(4, 31);
+            this.labelEigenvalueAnalysisNumEigen.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelEigenvalueAnalysisNumEigen.Name = "labelEigenvalueAnalysisNumEigen";
+            this.labelEigenvalueAnalysisNumEigen.Size = new System.Drawing.Size(65, 13);
+            this.labelEigenvalueAnalysisNumEigen.TabIndex = 96;
+            this.labelEigenvalueAnalysisNumEigen.Text = "Num. Eigen:";
+            // 
+            // textBoxEigenvalueAnalysisNumEigen
+            // 
+            this.textBoxEigenvalueAnalysisNumEigen.Location = new System.Drawing.Point(83, 28);
+            this.textBoxEigenvalueAnalysisNumEigen.Margin = new System.Windows.Forms.Padding(2);
+            this.textBoxEigenvalueAnalysisNumEigen.Name = "textBoxEigenvalueAnalysisNumEigen";
+            this.textBoxEigenvalueAnalysisNumEigen.Size = new System.Drawing.Size(233, 20);
+            this.textBoxEigenvalueAnalysisNumEigen.TabIndex = 95;
+            this.textBoxEigenvalueAnalysisNumEigen.Text = "1";
+            // 
+            // textBoxEigenvalueAnalysisAcc
+            // 
+            this.textBoxEigenvalueAnalysisAcc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxEigenvalueAnalysisAcc.Location = new System.Drawing.Point(83, 77);
+            this.textBoxEigenvalueAnalysisAcc.Name = "textBoxEigenvalueAnalysisAcc";
+            this.textBoxEigenvalueAnalysisAcc.Size = new System.Drawing.Size(233, 20);
+            this.textBoxEigenvalueAnalysisAcc.TabIndex = 94;
+            this.textBoxEigenvalueAnalysisAcc.Text = "0.001";
+            // 
+            // labelEigenvalueAnalysisAcc
+            // 
+            this.labelEigenvalueAnalysisAcc.AutoSize = true;
+            this.labelEigenvalueAnalysisAcc.Location = new System.Drawing.Point(4, 80);
+            this.labelEigenvalueAnalysisAcc.Name = "labelEigenvalueAnalysisAcc";
+            this.labelEigenvalueAnalysisAcc.Size = new System.Drawing.Size(58, 13);
+            this.labelEigenvalueAnalysisAcc.TabIndex = 93;
+            this.labelEigenvalueAnalysisAcc.Text = "Tolerance:";
+            // 
+            // textBoxEigenvalueAnalysisName
+            // 
+            this.textBoxEigenvalueAnalysisName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxEigenvalueAnalysisName.Location = new System.Drawing.Point(83, 4);
+            this.textBoxEigenvalueAnalysisName.Margin = new System.Windows.Forms.Padding(2);
+            this.textBoxEigenvalueAnalysisName.Name = "textBoxEigenvalueAnalysisName";
+            this.textBoxEigenvalueAnalysisName.Size = new System.Drawing.Size(233, 20);
+            this.textBoxEigenvalueAnalysisName.TabIndex = 88;
+            // 
+            // labelEigenvalueAnalysisName
+            // 
+            this.labelEigenvalueAnalysisName.AutoSize = true;
+            this.labelEigenvalueAnalysisName.Location = new System.Drawing.Point(4, 8);
+            this.labelEigenvalueAnalysisName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelEigenvalueAnalysisName.Name = "labelEigenvalueAnalysisName";
+            this.labelEigenvalueAnalysisName.Size = new System.Drawing.Size(38, 13);
+            this.labelEigenvalueAnalysisName.TabIndex = 87;
+            this.labelEigenvalueAnalysisName.Text = "Name:";
+            // 
+            // comboBoxEigenvalueAnalysisSolverType
+            // 
+            this.comboBoxEigenvalueAnalysisSolverType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxEigenvalueAnalysisSolverType.AutoCompleteCustomSource.AddRange(new string[] {
+            "eigen_eigensystem", 
+            "spectra_sym_g_eigs_shift", 
+            "feast"});
+            this.comboBoxEigenvalueAnalysisSolverType.FormattingEnabled = true;
+            this.comboBoxEigenvalueAnalysisSolverType.Items.AddRange(new object[] {
+            "eigen_eigensystem", 
+            "spectra_sym_g_eigs_shift", 
+            "feast"});
+            this.comboBoxEigenvalueAnalysisSolverType.Location = new System.Drawing.Point(83, 103);
+            this.comboBoxEigenvalueAnalysisSolverType.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxEigenvalueAnalysisSolverType.Name = "comboBoxEigenvalueAnalysisSolverType";
+            this.comboBoxEigenvalueAnalysisSolverType.Size = new System.Drawing.Size(233, 21);
+            this.comboBoxEigenvalueAnalysisSolverType.TabIndex = 22;
+            this.comboBoxEigenvalueAnalysisSolverType.Text = "eigen_eigensystem";
+            // 
+            // labelEigenvalueAnalysisSolverType
+            // 
+            this.labelEigenvalueAnalysisSolverType.AutoSize = true;
+            this.labelEigenvalueAnalysisSolverType.Location = new System.Drawing.Point(4, 106);
+            this.labelEigenvalueAnalysisSolverType.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelEigenvalueAnalysisSolverType.Name = "labelEigenvalueAnalysisSolverType";
+            this.labelEigenvalueAnalysisSolverType.Size = new System.Drawing.Size(67, 13);
+            this.labelEigenvalueAnalysisSolverType.TabIndex = 7;
+            this.labelEigenvalueAnalysisSolverType.Text = "Solver Type:";
             // 
             // tabPageCutPatternAnalysis
             // 
@@ -3378,6 +3522,8 @@ namespace Cocodrilo.Panels
             this.tabPageNonLinStrucAnalysis.PerformLayout();
             this.tabPageTransientAnalysis.ResumeLayout(false);
             this.tabPageTransientAnalysis.PerformLayout();
+            this.tabPageEigenvalueAnalysis.ResumeLayout(false);
+            this.tabPageEigenvalueAnalysis.PerformLayout();
             this.tabPageCutPatternAnalysis.ResumeLayout(false);
             this.tabPageCutPatternAnalysis.PerformLayout();
             this.groupBoxOptions.ResumeLayout(false);
@@ -3510,6 +3656,17 @@ namespace Cocodrilo.Panels
         private System.Windows.Forms.Label labelTransientAnalysisDampingRatio1;
         private System.Windows.Forms.TextBox textBoxTransientAnalysisNumEigen;
         private System.Windows.Forms.Label labelTransientAnalysisNumEigen;
+        private System.Windows.Forms.TabPage tabPageEigenvalueAnalysis;
+        private System.Windows.Forms.Label labelEigenvalueAnalysisNumIter;
+        private System.Windows.Forms.TextBox textBoxEigenvalueAnalysisNumIter;
+        private System.Windows.Forms.Label labelEigenvalueAnalysisNumEigen;
+        private System.Windows.Forms.TextBox textBoxEigenvalueAnalysisNumEigen;
+        private System.Windows.Forms.TextBox textBoxEigenvalueAnalysisAcc;
+        private System.Windows.Forms.Label labelEigenvalueAnalysisAcc;
+        private System.Windows.Forms.TextBox textBoxEigenvalueAnalysisName;
+        private System.Windows.Forms.Label labelEigenvalueAnalysisName;
+        private System.Windows.Forms.ComboBox comboBoxEigenvalueAnalysisSolverType;
+        private System.Windows.Forms.Label labelEigenvalueAnalysisSolverType;
         private System.Windows.Forms.TabPage tabPageCutPatternAnalysis;
         private System.Windows.Forms.CheckBox checkBoxCutPatternAnalysisPrestress;
         private System.Windows.Forms.TextBox textBoxCutPatternAnalysisName;
