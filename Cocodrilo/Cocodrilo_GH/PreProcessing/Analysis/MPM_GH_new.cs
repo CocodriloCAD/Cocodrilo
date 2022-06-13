@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using Rhino.Geometry;
 using Grasshopper.Kernel;
 
 using Cocodrilo.Materials;
@@ -35,12 +36,15 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Name", "Name", "Name of Analysis", GH_ParamAccess.item, "MpmAnalysis");
-			pManager.AddGenericParameter("Analysis Type", "Analysis Type", "Type of Analysis", GH_ParamAccess.item);
+			///Analysis type determines whether the analysis is static, dynamic or quasi-static
+			pManager.AddTextParameter("Analysis Type", "Analysis Type", "Type of Analysis", GH_ParamAccess.item);
 			
-			pManager.AddGenericParameter("Material", "Mat", "Material of Element", GH_ParamAccess.item);
+			pManager.AddTextParameter("Material", "Mat", "Material of Element", GH_ParamAccess.item);
 			pManager.AddTextParameter("Material law", "MatLaw", "Material law of Material", GH_ParamAccess.item);
 			pManager.AddTextParameter("Solver", "Solver", "Type of solver", GH_ParamAccess.item, "LinearSolver");
 			pManager.AddIntegerParameter("N_p", "N_p", "Number of particles per Element", GH_ParamAccess.item, 3);
+
+			pManager.AddMeshParameter("BodyMesh", "Mesh", "BodyMesh", GH_ParamAccess.list);
 
 			pManager.AddBooleanParameter("Run", "Run", "Run output", GH_ParamAccess.item, false);
 		}
@@ -65,6 +69,8 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 			string materialLaw = "";
 			int numberOfParticles = 0;
 			bool run = false;
+			List<Mesh> mesh_list = new List<Mesh>();
+			
 
 			//private bool run;
 			if (!DA.GetData(0, ref Name)) return;
@@ -74,7 +80,10 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 			if (!DA.GetData(3, ref materialLaw)) return;
 			if (!DA.GetData(4, ref solverType)) return;
 			if (!DA.GetData(5, ref numberOfParticles)) return;
-			if (!DA.GetData(6, ref run)) return;
+			
+			if (!DA.GetDataList(6, mesh_list)) return;
+
+			if (!DA.GetData(7, ref run)) return;
 
 			// Make name fit
 			if (Name.Contains(" "))
@@ -83,7 +92,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 				AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Spaces removed.");
 			}
 
-			DA.SetData(0, new Cocodrilo.Analyses.AnalysisMpm_new(Name, AnalysisType, material, materialLaw, solverType, numberOfParticles));
+			DA.SetData(0, new Cocodrilo.Analyses.AnalysisMpm_new(Name, AnalysisType, material, materialLaw, solverType, numberOfParticles, mesh_list));
 		}
 
 		//Replace Guid with real value

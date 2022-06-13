@@ -49,8 +49,8 @@ namespace Cocodrilo_GH.PreProcessing.IO
             List<Mesh> mesh_list = new List<Mesh>();
             DA.GetDataList(1, mesh_list);
 
-            var output_fem = new OutputKratosFEM(this_analysis);
-            output_fem.StartAnalysis(mesh_list);
+            var output_fem = new OutputKratosFEM();
+            output_fem.StartAnalysis(mesh_list, ref this_analysis);
 
             DA.SetData(0, output_fem);
         }
