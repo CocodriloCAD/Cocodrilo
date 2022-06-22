@@ -37,15 +37,13 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
         {
             pManager.AddTextParameter("Name", "Name", "Name of Analysis", GH_ParamAccess.item, "MpmAnalysis");
 			///Analysis type determines whether the analysis is static, dynamic or quasi-static
-			pManager.AddTextParameter("Analysis Type", "Analysis Type", "Type of Analysis", GH_ParamAccess.item);
-			
-			pManager.AddTextParameter("Material", "Mat", "Material of Element", GH_ParamAccess.item);
-			pManager.AddTextParameter("Material law", "MatLaw", "Material law of Material", GH_ParamAccess.item);
-			pManager.AddTextParameter("Solver", "Solver", "Type of solver", GH_ParamAccess.item, "LinearSolver");
-			pManager.AddIntegerParameter("N_p", "N_p", "Number of particles per Element", GH_ParamAccess.item, 3);
-
+			pManager.AddGenericParameter("Analysis Type", "Analysis Type", "Type of Analysis", GH_ParamAccess.item);
+			pManager.AddGenericParameter("Material", "Mat", "Material of Element", GH_ParamAccess.item);
+			//include material law in new material
+			//pManager.AddTextParameter("Material law", "MatLaw", "Material law of Material", GH_ParamAccess.item);
+			//include number of Gauss Points in new material
+			//pManager.AddIntegerParameter("N_p", "N_p", "Number of particles per Element", GH_ParamAccess.item, 3);
 			pManager.AddMeshParameter("BodyMesh", "Mesh", "BodyMesh", GH_ParamAccess.list);
-
 			pManager.AddBooleanParameter("Run", "Run", "Run output", GH_ParamAccess.item, false);
 		}
 		/// <summary>
@@ -64,26 +62,17 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 		{
 			string Name = "";
 			string AnalysisType = "";
-			string material ="";
-			string solverType ="";
-			string materialLaw = "";
-			int numberOfParticles = 0;
+			Material material = null;
 			bool run = false;
 			List<Mesh> mesh_list = new List<Mesh>();
 			
 
 			//private bool run;
 			if (!DA.GetData(0, ref Name)) return;
-
 			if (!DA.GetData(1, ref AnalysisType)) return;
 			if (!DA.GetData(2, ref material)) return;
-			if (!DA.GetData(3, ref materialLaw)) return;
-			if (!DA.GetData(4, ref solverType)) return;
-			if (!DA.GetData(5, ref numberOfParticles)) return;
-			
-			if (!DA.GetDataList(6, mesh_list)) return;
-
-			if (!DA.GetData(7, ref run)) return;
+			if (!DA.GetDataList(3, mesh_list)) return;
+			if (!DA.GetData(4, ref run)) return;
 
 			// Make name fit
 			if (Name.Contains(" "))
@@ -92,7 +81,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 				AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Spaces removed.");
 			}
 
-			DA.SetData(0, new Cocodrilo.Analyses.AnalysisMpm_new(Name, AnalysisType, material, materialLaw, solverType, numberOfParticles, mesh_list));
+			DA.SetData(0, new Cocodrilo.Analyses.AnalysisMpm_new(Name, AnalysisType, material, mesh_list));
 		}
 
 		//Replace Guid with real value

@@ -134,6 +134,7 @@
     <Compile Include="GUI\UserControlCocodriloPanel.Designer.cs">
       <DependentUpon>UserControlCocodriloPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Materials\MaterialNonLinear.cs" />
     <Compile Include="PostProcessing\CppWrapper.cs" />
     <Compile Include="PostProcessing\PostProcessingUtilities.cs" />
     <Compile Include="PostProcessing\PostProcessing.cs" />

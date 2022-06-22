@@ -46,20 +46,24 @@ namespace Cocodrilo.IO
                     new List<string> { GetFemMdpaFile(MeshList, ref property_id_dictionary) });
                 System.IO.File.WriteAllLines(project_path + "/" + "Materials.json",
                     new List<string> { "" });
-                System.IO.File.WriteAllLines(project_path + "/" + "ProjectParamaters.json",
-                    new List<string> { WriteProjectParameters(project_path,ref analysis) });
+                // Overload writeProjectParameters to work also with objects of type Analysis
+                //System.IO.File.WriteAllLines(project_path + "/" + "ProjectParamaters.json",
+               //     new List<string> { WriteProjectParameters(project_path,ref analysis) });
 
                 // body.mdpa bisher gleich zu Grid.mdpa; noch ändern!
                 // (analysis as Cocodrilo.Analyses.AnalysisMpm_new) == null;
                 ///extension of OutputKratosFEM for Material point method
                 if (analysis is Cocodrilo.Analyses.AnalysisMpm_new)
                 {
+                    //downcast to access Bodymesh
+                    Cocodrilo.Analyses.AnalysisMpm_new outputCopy = (Cocodrilo.Analyses.AnalysisMpm_new)analysis;
                   System.IO.File.WriteAllLines(project_path + "/" + "Body.mdpa",
-
-                      // Hier mit GetDAta und IGH_Data DA versuchen auf Bodymesh zuzugreifen
-                  new List<string> { GetFemMdpaFile(Cocodrilo.Analyses.AnalysisMpm_new.analysis.BodyMesh, ref property_id_dictionary) });
+                    new List<string> { GetFemMdpaFile(outputCopy.BodyMesh, ref property_id_dictionary) });
+                    //call of WriteProjectParameters with downcasted analysis to access class members
+                    System.IO.File.WriteAllLines(project_path + "/" + "ProjectParamaters.json",
+                   new List<string> { WriteProjectParameters(project_path, ref outputCopy) });
                 }
-              
+                                             
             }
             catch (Exception ex)
             {
@@ -265,7 +269,7 @@ namespace Cocodrilo.IO
         #endregion
 
 
-        public string WriteProjectParameters(string ProjectPath, ref Cocodrilo.Analyses.Analysis analysis)
+        public string WriteProjectParameters(string ProjectPath, ref Cocodrilo.Analyses.AnalysisMpm_new analysis)
         {
             string model_part_name = "MPM_Material";
             string analysis_type = "linear";
@@ -318,7 +322,7 @@ namespace Cocodrilo.IO
                 };
 
 
-            /// until now LinearSolversApplication is hardcoded; discuss if other options should be available
+            /// until now LinearSolversApplication is hardcoded; discuss if other options should be available -> No 22.06
             var linear_solver_settings =
                 new Dict {
                             { "solver_type", "LinearSolversApplication.sparse_lu" },
@@ -622,10 +626,11 @@ namespace Cocodrilo.IO
             var serializer = new JavaScriptSerializer();
             string project_parameters_json = serializer.Serialize((object)dict);
 
-            System.IO.File.WriteAllLines(ProjectPath + "/" + "ProjectParameters.json",
-            new List<string> { project_parameters_json });
+            //System.IO.File.WriteAllLines(ProjectPath + "/" + "ProjectParameters.json",
+            //new List<string> { project_parameters_json });
 
             return project_parameters_json;
+                        
         }
     }
 }
