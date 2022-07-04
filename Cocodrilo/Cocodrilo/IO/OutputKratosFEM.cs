@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
+using Cocodrilo.Analyses;
 
 namespace Cocodrilo.IO
 {
@@ -42,28 +43,31 @@ namespace Cocodrilo.IO
             {
                 PropertyIdDict property_id_dictionary = new PropertyIdDict();
 
+                ///Identical output files for FEM and MPM
                 System.IO.File.WriteAllLines(project_path + "/" + "Grid.mdpa",
                     new List<string> { GetFemMdpaFile(MeshList, ref property_id_dictionary) });
                 System.IO.File.WriteAllLines(project_path + "/" + "Materials.json",
                     new List<string> { "" });
-                // Overload writeProjectParameters to work also with objects of type Analysis
-                //System.IO.File.WriteAllLines(project_path + "/" + "ProjectParamaters.json",
-               //     new List<string> { WriteProjectParameters(project_path,ref analysis) });
-
-                // body.mdpa bisher gleich zu Grid.mdpa; noch ändern!
-                // (analysis as Cocodrilo.Analyses.AnalysisMpm_new) == null;
-                ///extension of OutputKratosFEM for Material point method
+                       
+                ///Different output files for FEM and MPM
                 if (analysis is Cocodrilo.Analyses.AnalysisMpm_new)
                 {
                     //downcast to access Bodymesh
                     Cocodrilo.Analyses.AnalysisMpm_new outputCopy = (Cocodrilo.Analyses.AnalysisMpm_new)analysis;
-                  System.IO.File.WriteAllLines(project_path + "/" + "Body.mdpa",
-                    new List<string> { GetFemMdpaFile(outputCopy.BodyMesh, ref property_id_dictionary) });
+
+                    System.IO.File.WriteAllLines(project_path + "/" + "Body.mdpa", new List<string> { GetFemMdpaFile(outputCopy.BodyMesh, ref property_id_dictionary) });
+
                     //call of WriteProjectParameters with downcasted analysis to access class members
-                    System.IO.File.WriteAllLines(project_path + "/" + "ProjectParamaters.json",
-                   new List<string> { WriteProjectParameters(project_path, ref outputCopy) });
+                    System.IO.File.WriteAllLines(project_path + "/" + "ProjectParamaters.json", new List<string> { WriteProjectParameters(project_path, ref outputCopy) });
+
                 }
-                                             
+                else
+                {
+                    //Overload writeProjectParameters to work also with objects of type Analysis
+                    //System.IO.File.WriteAllLines(project_path + "/" + "ProjectParamaters.json",
+                    //new List<string> { WriteProjectParameters(project_path,ref analysis) });
+                }
+
             }
             catch (Exception ex)
             {
@@ -267,37 +271,63 @@ namespace Cocodrilo.IO
                     } } };
         }
         #endregion
-
-
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
         public string WriteProjectParameters(string ProjectPath, ref Cocodrilo.Analyses.AnalysisMpm_new analysis)
         {
-            string model_part_name = "MPM_Material";
-            string analysis_type = "linear";
-            string solver_type_analysis = "static";
-            double step_size = 0.001;
-            int max_iteration = 1;
-            double displacement_absolute_tolerance = 1.0e-9;
-            double residual_absolute_tolerance = 1.0e-9;
-            double end_time = 1.0;
-            bool compute_reactions = true;
-            bool rotation_dofs = false;
-
-            //case differentiation: static, dynamic, quasi-static necessary
-            //if (this.analysis.GetType() == typeof(AnalysisLinear))
-            //{
-            //    analysis_type = "linear";
-            //}
-            // 1. problem data block
             var problem_data = new Dict
                     {
                         { "problem_name", analysis.Name},
                         { "parallel_type", "OpenMP"},
                         { "echo_level", 1 },
                         { "start_time", 0.0},
-                        { "end_time", end_time}
                     };
 
+
             // solver setting block
+
+            var solver_settings = new Dict();
+            var time_stepping = new Dict();
+
+            if (analysis.mAnalysisType_static_dynamic_quasi_static is Analyses.AnalysisTransient)
+            {
+                /// Downcast to access attributes of Analysis Transient
+
+                Cocodrilo.Analyses.AnalysisTransient copyForAccess = (Cocodrilo.Analyses.AnalysisTransient)analysis.mAnalysisType_static_dynamic_quasi_static;
+
+                problem_data.Add("end_time", copyForAccess.Time);
+
+                solver_settings.Add("solver_type", "Dynamic");
+                solver_settings.Add("model_part_name", "MPM_Material");
+
+                solver_settings.Add("domain_size", 2);
+                solver_settings.Add("echo_level", 1);
+                solver_settings.Add("analysis_type", "non_linear");
+                solver_settings.Add("time_integration_method", copyForAccess.TimeInteg);
+
+                solver_settings.Add("scheme_type", copyForAccess.Scheme);
+
+                time_stepping.Add("time_step", copyForAccess.mStepSize);
+                               
+            }
+
+            else if (analysis.mAnalysisType_static_dynamic_quasi_static is Analyses.AnalysisLinear)
+            {
+                /// Fixed end-time for linear Analysis
+                problem_data.Add("end_time", 1.0);
+
+                solver_settings.Add("solver_type", "Static");
+                solver_settings.Add("model_part_name", "MPM_Material");
+                solver_settings.Add("domain_size", 2);
+                solver_settings.Add("echo_level", 1);
+                solver_settings.Add("analysis_type", "linear");
+
+                /// Fixed timestep for linear Analysis since so far no the class Linear analysis does not contain an attribute 'timestep'
+                time_stepping.Add("time_step", 1.0);
+
+            }
+
+            /// Add further cases/exceptions for analysis-types that cannot be handled
 
             var model_import_settings =
                 new Dict { { "input_type", "mdpa" },
@@ -305,9 +335,6 @@ namespace Cocodrilo.IO
 
             var material_import_settings =
                 new Dict { { "materials_filename", "ParticleMaterials.json" } };
-
-            var time_stepping = new Dict
-                        { { "time_step", step_size} };
 
             var grid_model_import_settings = new Dict
                     {
@@ -329,31 +356,23 @@ namespace Cocodrilo.IO
                             { "max_iteration", 500 },
                             { "tolerance", 1e-9 },
                             { "scaling", false },
-                            { "verbosity", 1 } };
-
-            var solver_settings = new Dict
-                    {
-                        { "solver_type", "Dynamic" },
-                        { "model_part_name", "MPM_Material" },
-                        { "domain_size", 2 },
-                        { "echo_level", 1 },
-                        { "analysis_type", "non_linear"},
-                        { "time_integration_method", "implicit" },
-                        { "scheme_type", "newmark" },
-                        { "model_import_settings", model_import_settings },
-                        { "material_import_settings", material_import_settings },
-                        { "time_stepping", time_stepping },
-                        { "convergence_criterion", "residual criterion" },
-                        { "displacement_relative_tolerance", 0.0001  },
-                        { "displacement_absolute_tolerance", 1e-9 },
-                        { "residual_relative_tolerance", 0.0001 },
-                        { "residual_absolute_tolerance", 1e-9 },
-                        { "max_iteration", 10 },
-                        { "grid_model_import_settings", grid_model_import_settings },
-                        { "pressure_dofs", false },
-                        { "auxiliary_variables_list", auxiliary_variables_list }
-                    };
-
+                            { "verbosity", 1 } 
+                };
+                      
+            solver_settings.Add("model_import_settings", model_import_settings);
+            solver_settings.Add("material_import_settings", material_import_settings);
+            solver_settings.Add("time_stepping", time_stepping);
+            solver_settings.Add("convergence_criterion", "residual criterion");
+            solver_settings.Add("displacement_relative_tolerance", 0.0001);
+            solver_settings.Add("displacement_absolute_tolerance", 1e-9);
+            solver_settings.Add("residual_relative_tolerance", 0.0001);
+            solver_settings.Add("residual_absolute_tolerance", 1e-9);
+            solver_settings.Add("max_iteration", 10);
+            solver_settings.Add("grid_model_import_settings", grid_model_import_settings);
+            solver_settings.Add("pressure_dofs", false);
+            solver_settings.Add("linear_solver_settings", linear_solver_settings);
+            solver_settings.Add("auxiliary_variables_list", auxiliary_variables_list);
+                    
             //Processes block
 
             //constraint_process_list

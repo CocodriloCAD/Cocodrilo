@@ -3,18 +3,12 @@ using System.Collections.Generic;
 using Rhino.Geometry;
 using Grasshopper.Kernel;
 
+using Cocodrilo.Analyses;
 using Cocodrilo.Materials;
 //using Cocodrilo.Analyses.AnalysisMPM_new;
 
 namespace Cocodrilo_GH.PreProcessing.Analysis
-{
-	//enum AnalysisType
- //  {
-	//	Static,
-	//	QuasiStatic,
-	//	Dynamic
- //  }
-	
+{		
 	public class MPM_GH_new : GH_Component
 	{
 		//empty constructor to override base class constructor
@@ -49,7 +43,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 		/// <summary>
 		/// Registers all the output parameters for this component.
 		/// </summary>
-		protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
+		protected override void RegisterOutputParams(GH_OutputParamManager pManager)
 		{
 			pManager.AddGenericParameter("Analysis", "A", "MPM_new", GH_ParamAccess.item);
 		}
@@ -61,7 +55,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 		protected override void SolveInstance(IGH_DataAccess DA)
 		{
 			string Name = "";
-			string AnalysisType = "";
+			Cocodrilo.Analyses.Analysis AnalysisType = null;
 			Material material = null;
 			bool run = false;
 			List<Mesh> mesh_list = new List<Mesh>();

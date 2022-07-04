@@ -8,39 +8,41 @@ using Rhino.Geometry;
 
 namespace Cocodrilo.Analyses
 {
-
-    //enum AnalysisType
-    //{
-    //    Static,
-    //    QuasiStatic,
-    //    Dynamic
-    //}
-
-    public class AnalysisMpm_new : Analysis
+	public class AnalysisMpm_new : Analysis
 	{
-		//attribute Name is inherited by base class Analysis
-
 		// Not yet finished: change datatype so that only "static, dynamic and quasi-static" can
 		// be chosen for analysisType
-		public string mAnalysisType_static_dynamic_quasi_static { get; set; }
+		public Analysis mAnalysisType_static_dynamic_quasi_static { get; set; }
 		public Material mMaterial { get; set; }
 		public List<Mesh> BodyMesh { get; set; }
 
+		public double stepSize { get; set; }
+
 		public AnalysisMpm_new() { }
-		
+
 		public AnalysisMpm_new(
-			string name, 
-			string analysisType,
+			string name,
+			Analysis analysisType,
 			Material material,
 			List<Mesh> bodymesh)
-        {
-			this.Name = name;
+		{
+			this.Name = name; //Accessing of inherited attribute
 			mAnalysisType_static_dynamic_quasi_static = analysisType;
 			mMaterial = material;
 			BodyMesh = bodymesh;
+		}
 
-        }
-
+		public AnalysisMpm_new(
+			string name,
+			AnalysisTransient analysisType,
+			Material material,
+			List<Mesh> bodymesh)
+		{
+			this.Name = name; //Accessing of inherited attribute
+			mAnalysisType_static_dynamic_quasi_static = analysisType;
+			mMaterial = material;
+			BodyMesh = bodymesh;
+		}
 
 
 
