@@ -43,8 +43,7 @@ namespace Cocodrilo.Materials
             this.particlesPerElement = NumberOfParticles;
         }
 
-
-        // What does this function?
+        
         public override Dictionary<string, object> GetKratosVariables()
         {
             return new Dictionary<string, object>
@@ -58,12 +57,12 @@ namespace Cocodrilo.Materials
             };
         }
 
-        //What does this function?
+        
         public override Dictionary<string, object> GetKratosConstitutiveLaw()
         {
             return new Dictionary<string, object>
             {
-                {"name", "LinearElasticPlaneStress2DLaw"}
+                {"name", constitutiveLaw}
             };
         }
         

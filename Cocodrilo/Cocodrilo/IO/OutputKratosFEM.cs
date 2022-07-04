@@ -66,6 +66,7 @@ namespace Cocodrilo.IO
                     //Overload writeProjectParameters to work also with objects of type Analysis
                     //System.IO.File.WriteAllLines(project_path + "/" + "ProjectParamaters.json",
                     //new List<string> { WriteProjectParameters(project_path,ref analysis) });
+                    // Cocodrilo Warnung ausgeben!!
                 }
 
             }
@@ -147,6 +148,7 @@ namespace Cocodrilo.IO
         /// </summary>
         /// <param name="ElementConditionDictionary"></param>
         /// <returns></returns>
+        /// 
         public string GetMaterials(PropertyIdDict ElementConditionDictionary)
         {
             var property_dict_list = new DictList();
@@ -208,6 +210,67 @@ namespace Cocodrilo.IO
 
             return json;
         }
+        //public string GetMaterials(PropertyIdDict ElementConditionDictionary)
+        //{
+        //    var property_dict_list = new DictList();
+        //    foreach (var property_id in ElementConditionDictionary.Keys)
+        //    {
+        //        var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
+        //        if (!success)
+        //        {
+        //            RhinoApp.WriteLine("InputJSON::GetMaterials: Property with Id: " + property_id + " does not exist.");
+        //            continue;
+        //        }
+
+        //        //some properties do not need materials and properties
+        //        if (!this_property.HasKratosMaterial())
+        //            continue;
+
+        //        var variables = this_property.GetKratosVariables();
+
+        //        var property_dict = new Dict
+        //            {
+        //                {"model_part_name", "IgaModelPart." + this_property.GetKratosModelPart()},
+        //                {"properties_id", this_property.mPropertyId},
+        //            };
+
+        //        var material_dict = new Dict { };
+
+        //        int material_id = this_property.GetMaterialId();
+        //        if (material_id >= 0)
+        //        {
+        //            var material = CocodriloPlugIn.Instance.GetMaterial(material_id);
+        //            var material_variables = material.GetKratosVariables();
+        //            foreach (var material_variable in material_variables)
+        //                variables.Add(material_variable.Key, material_variable.Value);
+
+        //            material_dict.Add("name", material.Name);
+        //            material_dict.Add("material_id", material.Id);
+        //            material_dict.Add("constitutive_law", material.GetKratosConstitutiveLaw());
+
+        //            if (material.HasKratosSubProperties())
+        //            {
+        //                property_dict.Add("sub_properties", material.GetKratosSubProperties());
+        //            }
+        //        }
+
+        //        material_dict.Add("Variables", variables);
+        //        material_dict.Add("Tables", new Dict { });
+
+        //        property_dict.Add("Material", material_dict);
+
+        //        property_dict_list.Add(property_dict);
+        //    }
+
+        //    var dict = new Dict
+        //    {
+        //        {"properties", property_dict_list }
+        //    };
+        //    var serializer = new JavaScriptSerializer();
+        //    string json = serializer.Serialize((object)dict);
+
+        //    return json;
+        //}
 
         #region CO SIMULATION
         public override Dictionary<string, object> GetCouplingSequence(
@@ -311,7 +374,7 @@ namespace Cocodrilo.IO
                                
             }
 
-            else if (analysis.mAnalysisType_static_dynamic_quasi_static is Analyses.AnalysisLinear)
+            else // if (analysis.mAnalysisType_static_dynamic_quasi_static is Analyses.AnalysisLinear)
             {
                 /// Fixed end-time for linear Analysis
                 problem_data.Add("end_time", 1.0);
@@ -324,7 +387,8 @@ namespace Cocodrilo.IO
 
                 /// Fixed timestep for linear Analysis since so far no the class Linear analysis does not contain an attribute 'timestep'
                 time_stepping.Add("time_step", 1.0);
-
+                //RhinoApp.WriteLine("")
+                // Cocodrilo Warnung
             }
 
             /// Add further cases/exceptions for analysis-types that cannot be handled

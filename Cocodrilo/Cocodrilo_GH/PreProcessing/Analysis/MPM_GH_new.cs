@@ -5,6 +5,10 @@ using Grasshopper.Kernel;
 
 using Cocodrilo.Analyses;
 using Cocodrilo.Materials;
+using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Types;
+
+using Cocodrilo.ElementProperties;
 //using Cocodrilo.Analyses.AnalysisMPM_new;
 
 namespace Cocodrilo_GH.PreProcessing.Analysis
@@ -30,15 +34,16 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Name", "Name", "Name of Analysis", GH_ParamAccess.item, "MpmAnalysis");
+
 			///Analysis type determines whether the analysis is static, dynamic or quasi-static
 			pManager.AddGenericParameter("Analysis Type", "Analysis Type", "Type of Analysis", GH_ParamAccess.item);
+
 			pManager.AddGenericParameter("Material", "Mat", "Material of Element", GH_ParamAccess.item);
-			//include material law in new material
-			//pManager.AddTextParameter("Material law", "MatLaw", "Material law of Material", GH_ParamAccess.item);
-			//include number of Gauss Points in new material
-			//pManager.AddIntegerParameter("N_p", "N_p", "Number of particles per Element", GH_ParamAccess.item, 3);
-			pManager.AddMeshParameter("BodyMesh", "Mesh", "BodyMesh", GH_ParamAccess.list);
+					
+			
+			pManager.AddGeometryParameter("BodyMesh", "Mesh", "BodyMesh", GH_ParamAccess.list);
 			pManager.AddBooleanParameter("Run", "Run", "Run output", GH_ParamAccess.item, false);
+
 		}
 		/// <summary>
 		/// Registers all the output parameters for this component.
@@ -58,14 +63,17 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 			Cocodrilo.Analyses.Analysis AnalysisType = null;
 			Material material = null;
 			bool run = false;
-			List<Mesh> mesh_list = new List<Mesh>();
 			
-
 			//private bool run;
 			if (!DA.GetData(0, ref Name)) return;
+
 			if (!DA.GetData(1, ref AnalysisType)) return;
+
 			if (!DA.GetData(2, ref material)) return;
-			if (!DA.GetDataList(3, mesh_list)) return;
+
+			if (!DA.GetDataTree(3, out GH_Structure<IGH_Goo> geometries)) return;
+			var geometries_flat = geometries.FlattenData();
+
 			if (!DA.GetData(4, ref run)) return;
 
 			// Make name fit
@@ -75,7 +83,9 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 				AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Spaces removed.");
 			}
 
-			DA.SetData(0, new Cocodrilo.Analyses.AnalysisMpm_new(Name, AnalysisType, material, mesh_list));
+			DA.SetData(0, geometries);
+			//DA.SetData(0, new Cocodrilo.Analyses.AnalysisMpm_new(Name, AnalysisType, material, mesh_list));
+			Cocodrilo.Analyses.AnalysisMpm_new newAnalysis = new Cocodrilo.Analyses.AnalysisMpm_new(Name, AnalysisType, material); //, mesh_list)
 		}
 
 		//Replace Guid with real value
