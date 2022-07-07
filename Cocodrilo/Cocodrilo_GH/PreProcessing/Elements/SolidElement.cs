@@ -23,7 +23,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddMeshParameter("Mesh", "Mesh", "Meshed Geometry of Element", GH_ParamAccess.list);
+            pManager.AddMeshParameter("Bodymesh", "Mesh", "Meshed Geometry of Body-Element", GH_ParamAccess.list);
             pManager.AddGenericParameter("Material", "Mat", "Material of Element", GH_ParamAccess.item);
             pManager.AddNumberParameter("Thickness", "Thickness", "Thickness of shell element", GH_ParamAccess.item, 1.0);
         }

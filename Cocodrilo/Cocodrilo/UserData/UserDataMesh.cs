@@ -47,7 +47,7 @@ namespace Cocodrilo.UserData
             bool Overwrite = true,
             int StageId = -1)
         {
-            var parameter_location_surface = new ParameterLocationSurface(GeometryType.GeometrySurface, -1, -1, -1, -1);
+            var parameter_location_surface = new ParameterLocationSurface(GeometryType.Mesh, -1, -1, -1, -1);
 
             GetCurrentElementData(StageId).AddNumericalElement(
                 ThisProperty,

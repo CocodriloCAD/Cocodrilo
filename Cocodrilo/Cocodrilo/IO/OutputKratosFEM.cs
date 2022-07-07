@@ -21,6 +21,12 @@ namespace Cocodrilo.IO
         {
         }
 
+        public OutputKratosFEM(Analyses.Analysis analysis):base(analysis)
+        {
+            this.analysis = analysis;
+        }
+
+        
         // Wofür war diese Funktion? Scheint nicht mehr benötigt zu werden.
         //public void StartAnalysis(List<Mesh> MeshList, ref Cocodrilo.Analyses.Analysis analysis)
         //{
@@ -55,7 +61,7 @@ namespace Cocodrilo.IO
                     //downcast to access Bodymesh
                     Cocodrilo.Analyses.AnalysisMpm_new outputCopy = (Cocodrilo.Analyses.AnalysisMpm_new)analysis;
 
-                    System.IO.File.WriteAllLines(project_path + "/" + "Body.mdpa", new List<string> { GetFemMdpaFile(outputCopy.BodyMesh, ref property_id_dictionary) });
+                    System.IO.File.WriteAllLines(project_path + "/" + "Body.mdpa", new List<string> { GetFemMdpaFile(outputCopy.mBodyMesh, ref property_id_dictionary) });
 
                     //call of WriteProjectParameters with downcasted analysis to access class members
                     System.IO.File.WriteAllLines(project_path + "/" + "ProjectParamaters.json", new List<string> { WriteProjectParameters(project_path, ref outputCopy) });
