@@ -8,6 +8,8 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 {
     public class EigenvalueAnalysis_GH : GH_Component
     {
+        private string mEigenSolverType = "eigen_eigensystem";
+
         /// <summary>
         /// Initializes a new instance of the EigenvalueAnalysis_GH class.
         /// </summary>
@@ -57,7 +59,37 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Spaces removed.");
             }
 
-            DA.SetData(0, new Cocodrilo.Analyses.AnalysisEigenvalue(Name, 0.001, NumEigenvalues, MaximumIterations, "spectra_sym_g_eigs_shift"));
+            DA.SetData(0, new Cocodrilo.Analyses.AnalysisEigenvalue(Name, 0.001, NumEigenvalues, MaximumIterations, mEigenSolverType));
+        }
+
+        protected override void AppendAdditionalComponentMenuItems(System.Windows.Forms.ToolStripDropDown menu)
+        {
+            var toolStripMenuItemSolverType = GH_DocumentObject.Menu_AppendItem(menu, "Eigen Solver Type");
+            GH_Component.Menu_AppendItem(toolStripMenuItemSolverType.DropDown, "eigen_eigensystem", Menu_SolverTypeChanged, true, "eigen_eigensystem" == mEigenSolverType).Tag = "eigen_eigensystem";
+            GH_Component.Menu_AppendItem(toolStripMenuItemSolverType.DropDown, "spectra_sym_g_eigs_shift", Menu_SolverTypeChanged, true, "spectra_sym_g_eigs_shift" == mEigenSolverType).Tag = "spectra_sym_g_eigs_shift";
+            GH_Component.Menu_AppendItem(toolStripMenuItemSolverType.DropDown, "feast", Menu_SolverTypeChanged, true, "feast" == mEigenSolverType).Tag = "feast";    
+        }
+
+        private void Menu_SolverTypeChanged(object sender, EventArgs e)
+        {
+            if (sender is System.Windows.Forms.ToolStripMenuItem item && item.Tag is string)
+            {
+                mEigenSolverType = (string)item.Tag;
+                item.Checked = true;
+                ExpireSolution(true);
+            }
+        }
+
+        public override bool Write(GH_IO.Serialization.GH_IWriter writer)
+        {
+            writer.SetString("EigenSolverType", mEigenSolverType);
+            return base.Write(writer);
+        }
+
+        public override bool Read(GH_IO.Serialization.GH_IReader reader)
+        {
+            reader.TryGetString("EigenSolverType", ref mEigenSolverType);
+            return base.Read(reader);
         }
 
         /// <summary>
