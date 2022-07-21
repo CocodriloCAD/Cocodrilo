@@ -65,8 +65,9 @@ namespace Cocodrilo.PostProcessing
             }
             else
             {
+                var result = ResultInfo.Results.First();
                 int result_length = (ResultInfo.Results.Count > 0)
-                    ? ResultInfo.Results[1].Length
+                    ? result.Value.Length
                     : 0;
 
                 if (ResultInfo.ResultType == "\"DAMAGE_TENSION_VECTOR\"" || ResultInfo.ResultType == "\"DAMAGE_COMPRESSION_VECTOR\"")

@@ -212,13 +212,16 @@ namespace Cocodrilo.PostProcessing
                 int brep_id = ud.BrepId;
                 var nurbs_surface = brep_face.ToNurbsSurface();
                 List<KeyValuePair<int,List<double>>> points_to_remove = new List<KeyValuePair<int, List<double>>>();
-                foreach (var evaluation_point in mEvaluationPointList[brep_id])
+                if (mEvaluationPointList.ContainsKey(brep_id))
                 {
-
-                    var point_face_relation = brep_face.IsPointOnFace(evaluation_point.Value[0], evaluation_point.Value[1]);
-                    if (point_face_relation == Rhino.Geometry.PointFaceRelation.Exterior )
+                    foreach (var evaluation_point in mEvaluationPointList[brep_id])
                     {
-                        points_to_remove.Add(evaluation_point);
+
+                        var point_face_relation = brep_face.IsPointOnFace(evaluation_point.Value[0], evaluation_point.Value[1]);
+                        if (point_face_relation == Rhino.Geometry.PointFaceRelation.Exterior)
+                        {
+                            points_to_remove.Add(evaluation_point);
+                        }
                     }
                 }
                 //var list_brep_evauation_points = mEvaluationPointList[brep_id];
@@ -233,13 +236,16 @@ namespace Cocodrilo.PostProcessing
                 int brep_id = Cocodrilo.UserData.UserDataUtilities.GetOrCreateUserDataSurface(brep_face).BrepId;
 
                 var nurbs_surface = brep_face.ToNurbsSurface();
-                var tmp_evaluation_point = new Point3d();
-                foreach (var evaluation_point in mEvaluationPointList[brep_id])
+                var tmp_evaluation_point = new Point3d(0.0,0.0,0.0);
+                if (mEvaluationPointList.ContainsKey(brep_id))
                 {
-                    tmp_evaluation_point.X = evaluation_point.Value[0];
-                    tmp_evaluation_point.Y = evaluation_point.Value[1];
-                    tmp_evaluation_point.Z = 0.0;
-                    list_evaluation_points.Add(tmp_evaluation_point);
+                    foreach (var evaluation_point in mEvaluationPointList[brep_id])
+                    {
+                        tmp_evaluation_point.X = evaluation_point.Value[0];
+                        tmp_evaluation_point.Y = evaluation_point.Value[1];
+                        tmp_evaluation_point.Z = 0.0;
+                        list_evaluation_points.Add(tmp_evaluation_point);
+                    }
                 }
 
                 if( mNumberEvaluationPoints == null)
