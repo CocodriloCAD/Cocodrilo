@@ -7,13 +7,8 @@ using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using Cocodrilo.ElementProperties;
 
-
 using Cocodrilo.Analyses;
 using Cocodrilo.Materials;
-
-
-
-
 
 namespace Cocodrilo_GH.PreProcessing.Analysis
 {		
@@ -71,10 +66,10 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 				Name = Name.Replace(" ", "");
 				AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Spaces removed.");
 			}
-			
+
 			Cocodrilo.Analyses.Analysis AnalysisType = null;
 			if (!DA.GetData(1, ref AnalysisType)) return;
-			
+
 			if (!DA.GetDataTree(2, out GH_Structure<IGH_Goo> geometries)) return;
 			var geometries_flat = geometries.FlattenData();
 
@@ -82,7 +77,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 			if (!DA.GetData(3, ref run_analysis)) return;
 
 			if (run_analysis)
-            {
+			{
 				/// Resets the entire user data stored on the geometries 
 				//ResetUserData(geometries_flat); - not yet implemented
 
@@ -92,78 +87,88 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 				mNewAnalysis.Name = Name;
 				mNewAnalysis.mAnalysisType_static_dynamic_quasi_static = AnalysisType;
 
-				foreach ( var obj in geometries_flat)
-                {
+				foreach (var obj in geometries_flat)
+				{
 					bool success = obj.CastTo(out Cocodrilo_GH.PreProcessing.Geometries.Geometries geoms);
 					if (success)
-                    {
-						foreach(var mesh in geoms.meshes)
-                        {
+					{
+						foreach (var mesh in geoms.meshes)
+						{
 							bool add_mesh = true;
 							var ud = mesh.Key.UserData.Find(typeof(Cocodrilo.UserData.UserDataMesh)) as Cocodrilo.UserData.UserDataMesh;
-							
-							if(ud==null)
-                            {
+
+							if (ud == null)
+							{
 								ud = new Cocodrilo.UserData.UserDataMesh();
 								mesh.Key.UserData.Add(ud);
-                            }
+							}
 							else
-                            {
-								foreach(var old_mesh in mMeshList)
-                                {
+							{
+								foreach (var old_mesh in mMeshList)
+								{
 									var ud2 = old_mesh.UserData.Find(typeof(Cocodrilo.UserData.UserDataCurve)) as Cocodrilo.UserData.UserDataMesh;
 
 									if (ReferenceEquals(ud2.GetCurrentElementData(), ud.GetCurrentElementData()))
 										add_mesh = false;
-                                }
-                            }
+								}
+							}
 
 							ud.AddNumericalElement(mesh.Value);
 
 							if (add_mesh)
 								mMeshList.Add(mesh.Key);
-                        }
-                    }
+						}
+					}
 					else
-                    {
-						if(obj is GH_Mesh)
-                        {
+					{
+						if (obj is GH_Mesh)
+						{
 							Mesh mesh = null;
 							GH_Convert.ToMesh(obj, ref mesh, GH_Conversion.Primary);
 							if (!mMeshList.Contains(mesh))
-                            {
+							{
 								mMeshList.Add(mesh);
-                            }
-                        }
+							}
+						}
 
 						/// Add error message in case none of the above mentioned cases fits
 					}
-                }
+				}
 
 				mNewAnalysis.mBodyMesh = mMeshList;
-
 				var castedAnalysis = (Cocodrilo.Analyses.Analysis)mNewAnalysis;
-
-				//string project_path = Cocodrilo.UserData.UserDataUtilities.GetProjectPath(mNewAnalysis.Name);
-
-				//var output_kratos_fem = new Cocodrilo.IO.OutputKratosFEM(AnalysisType);
-
-				//output_kratos_fem.StartAnalysis(project_path, mMeshList, ref castedAnalysis);
-
 				DA.SetData(0, castedAnalysis);
-				
-				//DA.SetData(1, project_path);
-
 			}
-
-			
-
-			//DA.SetData(0, geometries);
-			//DA.SetData(0, new Cocodrilo.Analyses.AnalysisMpm_new(Name, AnalysisType, material, mesh_list));
-			//Cocodrilo.Analyses.AnalysisMpm_new newAnalysis = new Cocodrilo.Analyses.AnalysisMpm_new(Name, AnalysisType, material, meshList);// geometries.); //, mesh_list)
+		}	
+				/////////////////////////////////////////////////////////////////////////////////////////////////
+				/// <summary>
+				/// Resets the UserData of the geometries.
+				///
+				/// Required once paths are removed to clear the obsulete memory.
+				/// </summary>
+				/// <param name="geometries_flat">list of 'Geometries' objects</param>
+		private void ResetUserData(List<IGH_Goo> geometries_flat)
+		{
+			foreach (var obj in geometries_flat)
+			{
+				bool success = obj.CastTo(out Cocodrilo_GH.PreProcessing.Geometries.Geometries geoms);
+				if (success)
+				{
+					foreach (var mesh in geoms.meshes)
+					{
+						var ud = mesh.Key.UserData.Find(typeof(Cocodrilo.UserData.UserDataCurve)) as Cocodrilo.UserData.UserDataCurve;
+						ud?.DeleteNumericalElements();
+						if (ud != null)
+						{
+							ud.BrepId = -1;
+						}
+					}
+					
+				}
+			}
+						
 		}
-
-		
+				
 		public override Guid ComponentGuid
 		{
 			get { return new Guid("19A7EA35-DC3A-456A-A7B2-14EC582B1CA4"); }
