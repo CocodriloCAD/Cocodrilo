@@ -9,6 +9,10 @@
   </PropertyGroup>
 	
   <ItemGroup>
+    <Compile Remove="PreProcessing\Materials\Material_MPM_GH.cs" />
+  </ItemGroup>
+	
+  <ItemGroup>
     <PackageReference Include="Grasshopper" Version="7.12.21313.6341" />
   </ItemGroup>
   

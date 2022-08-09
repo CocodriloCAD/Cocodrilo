@@ -83,8 +83,8 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 
 			if (run_analysis)
             {
-				/// Resets the entire user data stored on the geometries
-				//ResetUserData(geometries_flat);
+				/// Resets the entire user data stored on the geometries 
+				//ResetUserData(geometries_flat); - not yet implemented
 
 				mMeshList = new List<Mesh>();
 				mNewAnalysis = new AnalysisMpm_new();
@@ -144,13 +144,13 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 
 				var castedAnalysis = (Cocodrilo.Analyses.Analysis)mNewAnalysis;
 
-				string project_path = Cocodrilo.UserData.UserDataUtilities.GetProjectPath(mNewAnalysis.Name);
+				//string project_path = Cocodrilo.UserData.UserDataUtilities.GetProjectPath(mNewAnalysis.Name);
 
-				var output_kratos_fem = new Cocodrilo.IO.OutputKratosFEM(AnalysisType);
+				//var output_kratos_fem = new Cocodrilo.IO.OutputKratosFEM(AnalysisType);
 
-				output_kratos_fem.StartAnalysis(project_path, mMeshList, ref castedAnalysis);
+				//output_kratos_fem.StartAnalysis(project_path, mMeshList, ref castedAnalysis);
 
-				DA.SetData(0, output_kratos_fem);
+				DA.SetData(0, castedAnalysis);
 				
 				//DA.SetData(1, project_path);
 
@@ -163,10 +163,10 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 			//Cocodrilo.Analyses.AnalysisMpm_new newAnalysis = new Cocodrilo.Analyses.AnalysisMpm_new(Name, AnalysisType, material, meshList);// geometries.); //, mesh_list)
 		}
 
-		//Replace Guid with real value
+		
 		public override Guid ComponentGuid
 		{
-			get { return new Guid("1234ABCD-123A-4BAC-B912-A1B2C3D4E5F6"); }
+			get { return new Guid("19A7EA35-DC3A-456A-A7B2-14EC582B1CA4"); }
 		}
 
 	}

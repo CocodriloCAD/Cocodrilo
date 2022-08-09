@@ -10,7 +10,6 @@ using Rhino.Geometry;
 using Cocodrilo.Materials;
 using Cocodrilo.ElementProperties;
 
-
 namespace Cocodrilo_GH.PreProcessing.Elements
 {
     public class SolidElement_GH : GH_Component
@@ -42,7 +41,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             if (!DA.GetData(1, ref material)) return;
 
             double thickness = 0;
-            if (DA.GetData(2, ref thickness)) return;
+            if (DA.GetData(2, ref thickness));
 
             SolidElementProperties this_properties = new SolidElementProperties(thickness);
 
@@ -59,7 +58,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
         // Enter meaningful Guid!!! 
         public override Guid ComponentGuid
         {
-            get { return new Guid("A108FC46-10F7-40F8-8EF5-17C7F6ACC332"); }
+            get { return new Guid("0E52B112-E6F8-4ACD-A534-F2421F1098EB"); }
         }
     }
 

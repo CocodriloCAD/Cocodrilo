@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
+using Rhino;
 
 using Cocodrilo.IO;
 
@@ -44,7 +45,11 @@ namespace Cocodrilo_GH.PreProcessing.IO
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             Cocodrilo.Analyses.Analysis this_analysis = null;
-            if ((!DA.GetData(0, ref this_analysis))) return;
+            //DA.GetData(0)
+            if ((!DA.GetData(0, ref this_analysis)))
+            { RhinoApp.WriteLine("Typecast not possible");
+                return;
+            }; 
 
             List<Mesh> mesh_list = new List<Mesh>();
             DA.GetDataList(1, mesh_list);
