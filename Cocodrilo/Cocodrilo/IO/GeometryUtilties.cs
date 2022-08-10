@@ -264,7 +264,8 @@ namespace Cocodrilo.IO
                 {
                     GetBrepPointIntersections(
                         Breps[i],
-                        PointList);
+                        PointList,
+                        ref IntersectionPointList);
                 }
             }
 
@@ -607,7 +608,8 @@ namespace Cocodrilo.IO
 
         public static void GetBrepPointIntersections(
             Brep Brep,
-            List<Point> PointList)
+            List<Point> PointList,
+            ref List<Point> rIntersectionPointList)
         {
             double tolerance = RhinoDoc.ActiveDoc.ModelAbsoluteTolerance;
 
@@ -616,10 +618,55 @@ namespace Cocodrilo.IO
                 var user_data_point = point.UserData.Find(typeof(UserDataPoint)) as UserDataPoint;
                 if (user_data_point == null)
                     continue;
-                if (user_data_point.GetNumericalElements().Count == 0)
+                var numerical_elements = user_data_point.GetNumericalElements();
+                if (numerical_elements.Count == 0)
                     continue;
 
                 Brep.FindCoincidentBrepComponents(point.Location, tolerance, out int[] face_ids, out int[] edge_ids, out int[] vertice_ids);
+
+                if (edge_ids.Count() > 0)
+                {
+                    var edge = Brep.Edges[edge_ids[0]];
+
+                    var trimIndex = edge.TrimIndices()[0];
+                    var trim = edge.Brep.Trims[trimIndex];
+                    var curve = edge.Brep.Curves2D[trim.TrimCurveIndex];
+
+                    var user_data_edge = UserDataUtilities.GetOrCreateUserDataEdge(curve);
+
+                    edge.ClosestPoint(point.Location, out double t);
+
+                    edge.NormalizedLengthParameter(t, out double t_normalized);
+
+                    var parameter_location_edge = new Elements.ParameterLocationCurve(GeometryType.CurvePoint, t, t_normalized);
+
+                    foreach (var numerical_element in numerical_elements.ToList())
+                    {
+                        var property = numerical_element.GetProperty(out _);
+                        CocodriloPlugIn.Instance.AddProperty(property);
+
+                        if (property.GetType() == typeof(PropertyConnector))
+                        {
+                            var old_point = rIntersectionPointList.Find(item => item.Location.Equals(point.Location));
+                            if (old_point != null)
+                            {
+                                var user_data_point_old = UserDataUtilities.GetOrCreateUserDataPoint(old_point);
+
+                                user_data_point_old.AddCoupling(user_data_edge.BrepId);
+                                user_data_point.GetCoupling().TryAddTrimIndexToBrepId(user_data_edge.BrepId, t, 0.0, 0.0);
+                            }
+                            else
+                            {
+                                //user_data_point.DeleteNumericalElement(property);
+                                //user_data_point.AddNumericalElementPoint(property, parameter_location_edge);
+                                user_data_point.AddCoupling(user_data_edge.BrepId);
+                                user_data_point.GetCoupling().TryAddTrimIndexToBrepId(user_data_edge.BrepId, t, 0.0, 0.0);
+                                rIntersectionPointList.Add(point);
+                            }
+                        }
+                    }
+                }
+
                 if (face_ids.Length > 0)
                 {
                     var brep_face = Brep.Faces[face_ids[0]];
@@ -643,35 +690,44 @@ namespace Cocodrilo.IO
 
                     var user_data_surface = UserDataUtilities.GetOrCreateUserDataSurface(surface);
 
-                    var numerical_elements = user_data_point.GetNumericalElements();
                     foreach (var numerical_element in numerical_elements.ToList())
                     {
                         var property = numerical_element.GetProperty(out _);
                         CocodriloPlugIn.Instance.AddProperty(property);
-                        if (parameter_location.IsOnNodes())
+
+                        bool can_be_strong = (property.GetType() == typeof(PropertySupport))
+                            ? (property as PropertySupport).mSupport.mIsSupportStrong
+                            : true;
+
+                        if (property.GetType() == typeof(PropertyConnector))
+                        {
+                            /// To be added if surface to surface connectors are considered.
+                            //var old_point = rIntersectionPointList.Find(item => item.Location.Equals(point.Location));
+                            //if (old_point != null)
+                            //{
+                            //    var user_data_point_old = UserDataUtilities.GetOrCreateUserDataPoint(old_point);
+
+                            //    user_data_point_old.AddCoupling(
+                            //        user_data_surface.BrepId);
+                            //}
+                            //else
+                            //{
+                            //    user_data_point.AddNumericalElementPoint(property, parameter_location);
+                            //    user_data_point.AddCoupling(
+                            //        user_data_surface.BrepId);
+                            //    rIntersectionPointList.Add(point);
+                            //}
+                        }
+                        else if (parameter_location.IsOnNodes() && can_be_strong)
                         {
                             user_data_surface.AddNumericalElement(property, parameter_location);
+                            user_data_point.DeleteNumericalElement(property);
                         }
                         else
                         {
                             user_data_surface.AddNumericalElementPoint(property, parameter_location);
+                            user_data_point.DeleteNumericalElement(property);
                         }
-
-                        user_data_point.DeleteNumericalElement(property);
-                        //if (property.GetType() == typeof(PropertySupport) && parameter_location.IsOnNodes())
-                        //{
-                        //    var support_property = property as PropertySupport;
-                        //    var support_properties = new Support(support_property.mSupport);
-                        //    support_properties.mIsSupportStrong = true;
-                        //    var new_property_property = new PropertySupport(
-                        //        GeometryType.SurfacePoint, support_properties, support_property.mTimeInterval);
-                        //    CocodriloPlugIn.Instance.AddProperty(new_property_property);
-                        //    user_data_surface.AddNumericalElement(new_property_property, parameter_location);
-                        //}
-                        //else
-                        //{
-                        //    user_data_surface.AddNumericalElement(property, parameter_location);
-                        //}
                     }
                 }
             }
