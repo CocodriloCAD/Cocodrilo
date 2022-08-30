@@ -36,7 +36,7 @@ namespace Cocodrilo_GH.PostProcessing
             string path = null;
             if (!DA.GetData(0, ref path)) return;
 
-            string[] files = System.IO.Directory.GetFiles(path, "*_kratos_0.georhino.json");
+            string[] files = System.IO.Directory.GetFiles(path, "*.georhino.json");
             if (files.Length > 0)
             {
                 if (last_path != files[0])

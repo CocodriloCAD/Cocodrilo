@@ -119,7 +119,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
                                 {
                                     var ud2 = old_curve.UserData.Find(typeof(Cocodrilo.UserData.UserDataCurve)) as Cocodrilo.UserData.UserDataCurve;
 
-                                    if (ReferenceEquals(ud2.GetCurrentElementData(), ud.GetCurrentElementData()))
+                                    if (ReferenceEquals(ud2?.GetCurrentElementData(), ud.GetCurrentElementData()))
                                         add_curve = false;
                                 }
                             }
@@ -146,7 +146,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
                                 {
                                     var ud2 = old_edge.UserData.Find(typeof(Cocodrilo.UserData.UserDataEdge)) as Cocodrilo.UserData.UserDataEdge;
 
-                                    if (ReferenceEquals(ud2.GetCurrentElementData(), ud.GetCurrentElementData()))
+                                    if (ReferenceEquals(ud2?.GetCurrentElementData(), ud.GetCurrentElementData()))
                                         add_edge = false;
                                 }
                             }

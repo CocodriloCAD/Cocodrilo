@@ -17,7 +17,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
     {
         private double mArea = 1.0;
         private double mPrestress = 1.0;
-
+        private CableCouplingType mCouplingType = CableCouplingType.EntireCurve;
         public Cable_GH()
           : base("Cable", "Cable", "Cable Element", "Cocodrilo", "Elements")
         {
@@ -54,14 +54,14 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
             foreach (var edge in edges)
             {
-                CableProperties cable_properties = new CableProperties(mPrestress, mArea);
+                CableProperties cable_properties = new CableProperties(mPrestress, mArea, mCouplingType);
                 this_property = new PropertyCable(GeometryType.SurfaceEdge ,material.Id, cable_properties, false);
                 geometries.edges.Add(new KeyValuePair<Curve, Property>(edge, this_property));
             }
 
             foreach (var curve in curves)
             {
-                CableProperties cable_properties = new CableProperties(mPrestress, mArea);
+                CableProperties cable_properties = new CableProperties(mPrestress, mArea, mCouplingType);
                 this_property = new PropertyCable(GeometryType.SurfaceEdge ,material.Id, cable_properties, false);
                 geometries.curves.Add(new KeyValuePair<Curve, Property>(curve, this_property));
             }
@@ -76,6 +76,9 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             Menu_AppendTextItem(menu, Convert.ToString(mArea), Menu_Area_KeyDown, Menu_Area_EventHandler, false);
             Menu_AppendItem(menu, "Prestress:");
             Menu_AppendTextItem(menu, Convert.ToString(mPrestress), Menu_Prestress_KeyDown, Menu_Prestress_EventHandler, false);
+            Menu_AppendSeparator(menu);
+            foreach (CableCouplingType pt in Enum.GetValues(typeof(CableCouplingType)))
+                GH_Component.Menu_AppendItem(menu, pt.ToString(), Menu_CouplingTypeChanged, true, pt == mCouplingType).Tag = pt;
         }
 
         private void Menu_Area_EventHandler(GH_MenuTextBox sender, string newText)
@@ -101,6 +104,16 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             ExpireSolution(true);
         }
         private void Menu_Prestress_KeyDown(GH_MenuTextBox sender, KeyEventArgs e) {}
+
+        private void Menu_CouplingTypeChanged(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem item && item.Tag is CableCouplingType)
+            {
+                mCouplingType = (CableCouplingType)item.Tag;
+                item.Checked = true;
+                ExpireSolution(true);
+            }
+        }
 
         #endregion
         protected override System.Drawing.Bitmap Icon

@@ -193,7 +193,6 @@ namespace Cocodrilo.PostProcessing
                 global_coord.Z = Convert.ToSingle(result_point.Z);
                 new_mesh.Vertices[i] = global_coord;
             }
-
             ThisBrepFace.SetMesh(MeshType.Render, new_mesh);
         }
         public void UpdateVizualizationMesh(Rhino.DocObjects.RhinoObject obj, double MaximumEdgeLength)

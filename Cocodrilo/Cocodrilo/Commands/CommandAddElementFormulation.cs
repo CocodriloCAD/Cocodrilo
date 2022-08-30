@@ -42,7 +42,7 @@ namespace Cocodrilo.Commands
                     foreach (var user_data_surface in UserDataSurfaceList)
                     {
                         var shell_properties = panel.GetShellProperties();
-                        var shell_property = new PropertyShell(material_id, shell_properties);
+                        var shell_property = new PropertyShell(material_id, shell_properties, false);
                         user_data_surface.AddNumericalElement(
                             shell_property);
                     }

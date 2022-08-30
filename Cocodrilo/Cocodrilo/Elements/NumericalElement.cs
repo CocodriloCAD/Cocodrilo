@@ -13,7 +13,7 @@ namespace Cocodrilo.Elements
         public NumericalElement(Property ThisProperty, ParameterLocation ThisParameterLocation)
         {
             CocodriloPlugIn.Instance.AddProperty(ThisProperty);
-            Rhino.RhinoApp.WriteLine("Property: " + ThisProperty.ToString() + " with id: " + ThisProperty.mPropertyId + " was added.");
+            Rhino.RhinoApp.WriteLine("Property: " + ThisProperty.ToString() + " with id: " + ThisProperty.mPropertyId + " and material id: " + ThisProperty.mMaterialId + " was added.");
             mPropertyId = ThisProperty.mPropertyId;
             mParameterLocation = ThisParameterLocation;
         }

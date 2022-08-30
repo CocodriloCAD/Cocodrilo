@@ -1,4 +1,5 @@
 ﻿using Rhino;
+using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,78 @@ namespace Cocodrilo.PostProcessing
 {
     public static class PostProcessingUtilities
     {
+        public static Mesh CreatePostProcessingMesh(BrepFace ThisBrepFace,
+            Dictionary<int, List<KeyValuePair<int, List<double>>>> EvaluationPointList,
+            bool ConsiderEdges, double MaxEdgeLength)
+        {
+            List<Point3d> list_evaluation_points = new List<Point3d>();
+
+            int brep_id = Cocodrilo.UserData.UserDataUtilities.GetOrCreateUserDataSurface(ThisBrepFace).BrepId;
+
+            var nurbs_surface = ThisBrepFace.ToNurbsSurface();
+            var tmp_evaluation_point = new Point3d();
+            foreach (var evaluation_point in EvaluationPointList[brep_id])
+            {
+                tmp_evaluation_point.X = evaluation_point.Value[0];
+                tmp_evaluation_point.Y = evaluation_point.Value[1];
+                tmp_evaluation_point.Z = 0.0;
+                list_evaluation_points.Add(tmp_evaluation_point);
+            }
+
+            List<List<Point3d>> closed_edges = new List<List<Point3d>>();
+            if (ConsiderEdges)
+            {
+                foreach (var brep_edge_index in ThisBrepFace.AdjacentEdges())
+                {
+                    var adjacent_edges = ThisBrepFace.AdjacentEdges();
+                    var edge = ThisBrepFace.Brep.Edges[brep_edge_index];
+
+
+                    double length = edge.GetLength();
+                    int number_of_segments = (int)(length / MaxEdgeLength);
+                    var curve2d = ThisBrepFace.Brep.Trims[ThisBrepFace.Brep.Edges[brep_edge_index].TrimIndices()[0]];
+                    double parameter_length = curve2d.GetLength();
+                    double max_parameter_segment_length = parameter_length / number_of_segments;
+                    PolylineCurve poyline_curve = curve2d.ToPolyline(
+                        -1, 1, 0.1, 0.1, 0.1, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance,
+                        0, max_parameter_segment_length, true);
+                    Polyline polyline;
+                    poyline_curve.TryGetPolyline(out polyline);
+                    foreach (var line in polyline.GetSegments())
+                    {
+                        closed_edges.Add(new List<Point3d> {
+                                new Point3d(line.FromX, line.FromY, line.FromZ),
+                                new Point3d(line.ToX, line.ToY, line.ToZ) });
+                    }
+                }
+
+                if (closed_edges[0][0].DistanceTo(closed_edges.Last()[1]) > RhinoDoc.ActiveDoc.ModelAbsoluteTolerance)
+                {
+                    closed_edges.Add(new List<Point3d> {
+                                closed_edges.Last()[1],
+                                closed_edges[0][0] });
+                }
+            }
+
+            // Create Tesselation in Paramter space.
+            Plane plane = new Plane();
+            Plane.FitPlaneToPoints(list_evaluation_points, out plane);
+            var new_mesh = Mesh.CreateFromTessellation(list_evaluation_points, closed_edges, plane, false);
+
+            for (int i = 0; i < new_mesh.Vertices.Count; i++)
+            {
+                var mesh_point = new_mesh.Vertices[i];
+                nurbs_surface.Evaluate(mesh_point.X, mesh_point.Y, 0, out Point3d result_point, out _);
+                var global_mesh_vertex_coordinates = new Point3f(
+                    Convert.ToSingle(result_point.X),
+                    Convert.ToSingle(result_point.Y),
+                    Convert.ToSingle(result_point.Z));
+                new_mesh.Vertices[i] = global_mesh_vertex_coordinates;
+            }
+
+            return new_mesh;
+        }
+
         /// <summary>
         /// Computes the length of an array.
         /// Ideal for the computation of lengths.

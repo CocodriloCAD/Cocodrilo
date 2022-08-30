@@ -1190,7 +1190,8 @@ namespace Cocodrilo.Panels
         {
             return new CableProperties(
                 Convert.ToDouble(textBoxCablePrestress.Text),
-                Convert.ToDouble(textBoxCableArea.Text));
+                Convert.ToDouble(textBoxCableArea.Text),
+                CableCouplingType.EntireCurve);
         }
         public string getSelectedElementType() => tabControlElement.SelectedTab.Text.ToString();
         public GeometryType getCableTopologyType()
@@ -2139,6 +2140,14 @@ namespace Cocodrilo.Panels
                 CocodriloPlugIn.Instance.PostProcessingCocodrilo.UpdateInitialGeometry(true);
             else
                 CocodriloPlugIn.Instance.PostProcessingCocodrilo.UpdateInitialGeometry(false);
+        }
+
+        private void checkBoxCouplingStresses_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxCouplingStresses.Checked)
+                CocodriloPlugIn.Instance.PostProcessingCocodrilo.VisualizeCouplingStresses(true, Convert.ToDouble(textBoxResScale.Text));
+            else
+                CocodriloPlugIn.Instance.PostProcessingCocodrilo.VisualizeCouplingStresses(true, Convert.ToDouble(textBoxResScale.Text));
         }
     }
 }

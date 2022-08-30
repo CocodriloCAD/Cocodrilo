@@ -15,6 +15,7 @@ namespace Cocodrilo.ElementProperties
         public int mPropertyId { get; set; }
         public int mMaterialId { get; set; }
         public bool mIsFormFinding { get; set; }
+        public bool mIsUniqueProperty { get; set; }
 
         /// <summary>
         /// public constructor for serializer
@@ -26,11 +27,13 @@ namespace Cocodrilo.ElementProperties
         protected Property(
             GeometryType ThisGeometryType,
             int MaterialId = -1,
-            bool IsFormFinding = false)
+            bool IsFormFinding = false,
+            bool IsUniqueProperty = false)
         {
             mGeometryType = ThisGeometryType;
             mMaterialId = MaterialId;
             mIsFormFinding = IsFormFinding;
+            mIsUniqueProperty = IsUniqueProperty;
         }
 
         public virtual bool Equals(Property ThisProperty)

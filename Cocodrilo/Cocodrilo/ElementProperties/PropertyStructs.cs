@@ -7,26 +7,6 @@ using System.Threading.Tasks;
 
 namespace Cocodrilo.ElementProperties
 {
-    public struct CableProperties : IEquatable<CableProperties>
-    {
-        public double mPrestress { get; set; }
-        public double mArea { get; set; }
-
-
-        public CableProperties(
-            double Prestress,
-            double Area)
-        {
-            mPrestress = Prestress;
-            mArea = Area;
-        }
-
-        public bool Equals(CableProperties comp)
-        {
-            return comp.mPrestress == mPrestress &&
-                   comp.mArea == mArea;
-        }
-    }
 
     public enum BeamType
     {
