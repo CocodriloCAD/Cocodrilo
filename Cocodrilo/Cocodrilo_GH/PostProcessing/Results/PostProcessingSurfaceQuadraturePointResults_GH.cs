@@ -86,7 +86,21 @@ namespace Cocodrilo_GH.PostProcessing
                 {
                     if (this_result_info.Results.ContainsKey(evaluation_point.Key))
                     {
-                        result_tree.Add(this_result_info.Results[evaluation_point.Key][ResultDirectionIndex], path);
+                        if (this_result_info.Results.First().Value.Length <= ResultDirectionIndex)
+                        {
+                            if (this_result_info.ResultType == "\"DISPLACEMENT\"")
+                            {
+                                result_tree.Add(Cocodrilo.PostProcessing.PostProcessingUtilities.GetArrayLength(this_result_info.Results[evaluation_point.Key]), path);
+                            }
+                            else
+                            {
+                                result_tree.Add(Cocodrilo.PostProcessing.PostProcessingUtilities.GetVonMises(this_result_info.Results[evaluation_point.Key]), path);
+                            }
+                        }
+                        else
+                        {
+                            result_tree.Add(this_result_info.Results[evaluation_point.Key][ResultDirectionIndex], path);
+                        }
                     }
                 }
             }

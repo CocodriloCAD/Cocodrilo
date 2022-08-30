@@ -27,6 +27,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
         private bool mCoupleRotations = true;
         private double mPrestress1 = 1.0;
         private double mPrestress2 = 1.0;
+        private bool mUniqueProperty = false;
 
         public Shell_GH()
           : base("Shell", "Shell", "Shell Element", "Cocodrilo", "Elements")
@@ -66,22 +67,22 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             else if (mFormulationType == FormulationType.Shell3p)
             {
                 ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell3pElement");
-                this_property = new PropertyShell(material.Id, shell_properties);
+                this_property = new PropertyShell(material.Id, shell_properties, mUniqueProperty);
             }
             else if (mFormulationType == FormulationType.Shell3pStressBased)
             {
-                ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell3pStressBased");
-                this_property = new PropertyShell(material.Id, shell_properties);
+                ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell3pStressBasedElement");
+                this_property = new PropertyShell(material.Id, shell_properties, mUniqueProperty);
             }
             else if (mFormulationType == FormulationType.Shell5pHierarchic)
             {
                 ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell5pHierarchicElement");
-                this_property = new PropertyShell(material.Id, shell_properties);
+                this_property = new PropertyShell(material.Id, shell_properties, mUniqueProperty);
             }
             else if (mFormulationType == FormulationType.Shell5p)
             {
                 ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell5pElement");
-                this_property = new PropertyShell(material.Id, shell_properties);
+                this_property = new PropertyShell(material.Id, shell_properties, mUniqueProperty);
             }
 
             var geometries = new Cocodrilo_GH.PreProcessing.Geometries.Geometries();
@@ -109,9 +110,11 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             {
                 Menu_AppendItem(menu, "Couple Rotations", Menu_DoClick_CoupleRotations, true, mCoupleRotations);
             }
+            Menu_AppendItem(menu, "Add Unique Properties", Menu_DoClick_AddUniqueProperties, true, mUniqueProperty);
         }
 
         private void Menu_DoClick_CoupleRotations(object sender, EventArgs e) { mCoupleRotations = !mCoupleRotations; ExpireSolution(true); }
+        private void Menu_DoClick_AddUniqueProperties(object sender, EventArgs e) { mUniqueProperty = !mUniqueProperty; ExpireSolution(true); }
 
         private void Menu_Prestress1_EventHandler(GH_MenuTextBox sender, string newText)
         {
@@ -156,6 +159,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
         {
             writer.SetInt32("FormulationType", (int)mFormulationType);
             writer.SetBoolean("CoupleRotations", mCoupleRotations);
+            writer.SetBoolean("UniqueProperty", mUniqueProperty);
             return base.Write(writer);
         }
 
@@ -165,6 +169,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             if (reader.TryGetInt32("FormulationType", ref formulation_type_index))
                 mFormulationType = (FormulationType)formulation_type_index;
             reader.TryGetBoolean("CoupleRotations", ref mCoupleRotations);
+            reader.TryGetBoolean("UniqueProperty", ref mUniqueProperty);
             return base.Read(reader);
         }
 

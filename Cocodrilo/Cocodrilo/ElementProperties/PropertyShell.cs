@@ -45,10 +45,13 @@ namespace Cocodrilo.ElementProperties
 
         public PropertyShell(
             int mMaterialId,
-            ShellProperties ThisShellProperties) 
+            ShellProperties ThisShellProperties,
+            bool IsUniqueProperty)
             : base(
                 GeometryType.GeometrySurface,
-                mMaterialId)
+                mMaterialId,
+                false,
+                IsUniqueProperty)
         {
             mShellProperties = ThisShellProperties;
 
@@ -77,7 +80,8 @@ namespace Cocodrilo.ElementProperties
                 return false;
             var shell = ThisProperty as PropertyShell;
             return shell.mMaterialId == mMaterialId &&
-                    shell.mShellProperties.Equals(mShellProperties);
+                    shell.mShellProperties.Equals(mShellProperties) &&
+                    !mIsUniqueProperty;
         }
 
         public override List<Dictionary<string, object>> GetKratosPhysic(List<int> BrepIds)

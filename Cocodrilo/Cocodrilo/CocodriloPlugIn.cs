@@ -127,7 +127,7 @@ namespace Cocodrilo
             {
                 if (prop.GetType() == property.GetType())
                 {
-                    if (property.Equals(prop))
+                    if (property.Equals(prop) && !prop.mIsUniqueProperty)
                     {
                         property.mPropertyId = prop.mPropertyId;
                         return prop.mPropertyId;

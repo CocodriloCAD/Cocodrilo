@@ -6,6 +6,33 @@ using Rhino;
 
 namespace Cocodrilo.ElementProperties
 {
+    public enum CableCouplingType
+    {
+        StartAndEnd,
+        EntireCurve
+    }
+    public struct CableProperties : IEquatable<CableProperties>
+    {
+        public double mPrestress { get; set; }
+        public double mArea { get; set; }
+        public CableCouplingType mCableCouplingTypes { get; set; }
+
+        public CableProperties(
+            double Prestress,
+            double Area,
+            CableCouplingType CableCouplingType)
+        {
+            mPrestress = Prestress;
+            mArea = Area;
+            mCableCouplingTypes = CableCouplingType;
+        }
+
+        public bool Equals(CableProperties comp)
+        {
+            return comp.mPrestress == mPrestress &&
+                   comp.mArea == mArea;
+        }
+    }
     public class PropertyCable : Property
     {
         public CableProperties mCableProperties { get; set; }

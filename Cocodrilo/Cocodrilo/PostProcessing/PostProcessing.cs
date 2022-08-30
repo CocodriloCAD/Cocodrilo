@@ -19,7 +19,7 @@ namespace Cocodrilo.PostProcessing
 
         //public Dictionary<int, NurbsSurface> BrepId_NurbsSurface = new Dictionary<int, NurbsSurface>();
 
-        private Dictionary<int, Brep> BrepId_Breps;
+        public Dictionary<int, Brep> BrepId_Breps;
         private Dictionary<int, Brep> BrepId_Breps_deformed;
 
         public Dictionary<int, List<KeyValuePair<int, List<double>>>> mBrepId_NodeId_Coordinates = new Dictionary<int, List<KeyValuePair<int, List<double>>>>();
@@ -1005,6 +1005,96 @@ namespace Cocodrilo.PostProcessing
             }
 
             mUpdateCouplingPoints = false;
+        }
+
+        public void VisualizeCouplingStresses(
+            bool Deformed,
+            double ResultScaling)
+        {
+            var stress_result_tangent_1_info = ResultList.Find(r => r.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber &&
+                                                          r.ResultType == "\"PENALTY_FACTOR_TANGENT_1\"");
+            var stress_result_tangent_2_info = ResultList.Find(r => r.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber &&
+                                                          r.ResultType == "\"PENALTY_FACTOR_TANGENT_2\"");
+            var stress_result_normal_info = ResultList.Find(r => r.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber &&
+                                                          r.ResultType == "\"PENALTY_FACTOR_NORMAL\"");
+
+            double current_min_tangent_1 = stress_result_tangent_1_info.Results.Min(p => p.Value.Min());
+            double current_max_tangent_1 = stress_result_tangent_1_info.Results.Max(p => p.Value.Max());
+
+            double current_min_tangent_2 = stress_result_tangent_2_info.Results.Min(p => p.Value.Min());
+            double current_max_tangent_2 = stress_result_tangent_2_info.Results.Max(p => p.Value.Max());
+
+            double current_min_normal = stress_result_normal_info.Results.Min(p => p.Value.Min());
+            double current_max_normal = stress_result_normal_info.Results.Max(p => p.Value.Max());
+
+            Interval min_max_interval_tangent_1 = new Interval(current_min_tangent_1, current_max_tangent_1);
+            Interval min_max_interval_tangent_2 = new Interval(current_min_tangent_2, current_max_tangent_2);
+            Interval min_max_interval_normal = new Interval(current_min_normal, current_max_normal);
+
+            //PostprocessingObjectsCouplingPoints = DeleteGeometries(PostprocessingObjectsCouplingPoints);
+
+            foreach (var brep_ids in mCouplingEvaluationPointList)
+            {
+                List<Point3d> evaluation_point_list = new List<Point3d>();
+                List<Line> line_list = new List<Line>();
+
+                var geometry_1 = GetGeometry(brep_ids.Key[0], Deformed);
+                if (geometry_1 == null) continue;
+                if (geometry_1 is BrepFace)
+                {
+                    var nurbs_surface_1 = (geometry_1 as BrepFace).ToNurbsSurface();
+                    var brep = (geometry_1 as BrepFace).Brep;
+
+
+                    foreach (var evaluation_point in brep_ids.Value)
+                    {
+                        var result_tangent_1 = stress_result_tangent_1_info.Results[evaluation_point.Key];
+                        var result_tangent_2 = stress_result_tangent_2_info.Results[evaluation_point.Key];
+                        var result_normal = stress_result_normal_info.Results[evaluation_point.Key];
+
+                        nurbs_surface_1.Evaluate(evaluation_point.Value[0], evaluation_point.Value[1], 0, out Point3d point_1, out _);
+                        var surface_normal = nurbs_surface_1.NormalAt(evaluation_point.Value[0], evaluation_point.Value[1]);
+                        surface_normal.Unitize();
+                        brep.FindCoincidentBrepComponents(point_1, 1e-1, out int[] faces, out int[] edges, out int[] vertices);
+                        if (edges.Length > 0)
+                        {
+                            var brep_edge = brep.Edges[edges[0]];
+                            brep_edge.ClosestPoint(point_1, out double t_edge);
+                            var coordinate_2 = brep_edge.PointAt(t_edge + 0.001);
+                            //var coordinate_2 = brep_edge.EdgeCurve.PointAt(t_edge + 0.01);
+                            //var local_coordinate_2 = brep.Trims[brep_edge.TrimIndices()[0]].PointAt(t_edge + 0.001);
+
+                            //nurbs_surface_1.Evaluate(coordinate_2[0], coordinate_2[1], 0, out Point3d point_direction_t2, out _);
+
+                            Vector3d tangent_2 = coordinate_2 - point_1;
+                            tangent_2.Unitize();
+
+                            var tangent_1 = Vector3d.CrossProduct(surface_normal, tangent_2);
+
+                            var line_1 = new Rhino.Geometry.Line(point_1, point_1 + tangent_1 * result_tangent_1[0] * ResultScaling);
+
+                            var attributes_tangent_1 = PostProcessingUtilities.GetStressPatternObjectAttributes(result_tangent_1[0], min_max_interval_tangent_1);
+                            PostprocessingObjectsForcePatterns.Add(RhinoDoc.ActiveDoc.Objects.AddLine(line_1, attributes_tangent_1));
+
+                            var line_2 = new Rhino.Geometry.Line(point_1, point_1 + tangent_2 * result_tangent_2[0] * ResultScaling);
+
+                            var attributes_tangent_2 = PostProcessingUtilities.GetStressPatternObjectAttributes(result_tangent_2[0], min_max_interval_tangent_2);
+                            PostprocessingObjectsForcePatterns.Add(RhinoDoc.ActiveDoc.Objects.AddLine(line_2, attributes_tangent_2));
+
+                            var line_3 = new Rhino.Geometry.Line(point_1, point_1 + surface_normal * result_normal[0] * ResultScaling);
+
+                            var attributes_normal = PostProcessingUtilities.GetStressPatternObjectAttributes(result_normal[0], min_max_interval_normal);
+                            PostprocessingObjectsForcePatterns.Add(RhinoDoc.ActiveDoc.Objects.AddLine(line_3, attributes_normal));
+                        }
+                    }
+                }
+                //var attr = new Rhino.DocObjects.ObjectAttributes();
+                //attr.Name = "CouplingForces_" + brep_ids.Key[0] + "_" + brep_ids.Key[1];
+                //attr.LayerIndex = GetLayerIndex("CouplingForces", System.Drawing.Color.FromArgb(227, 114, 34));
+
+                string group_name = "CouplingForces_" + brep_ids.Key[0] + "_" + brep_ids.Key[1];
+                int index = RhinoDoc.ActiveDoc.Groups.Add(group_name, PostprocessingObjectsForcePatterns);
+            }
         }
 
         public void VisualizeStressPatterns(

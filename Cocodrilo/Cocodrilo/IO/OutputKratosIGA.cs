@@ -150,6 +150,7 @@ namespace Cocodrilo.IO
                 IntersectionCurveList,
                 IntersectionPointList);
 
+            // Assign Ids to newly found intersection
             foreach (var intersection_curve in IntersectionCurveList)
             {
                 var user_data_edge = intersection_curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
@@ -242,8 +243,8 @@ namespace Cocodrilo.IO
 
             var curves_dict = new DictList();
 
-            var curve_list = GeometryUtilities.GetCurveList();
-            foreach (var curve in curve_list)
+            //var curve_list = GeometryUtilities.GetCurveList();
+            foreach (var curve in Curves)
             {
                 GetNurbsGeometriesCurvesJSON(
                     curve,
@@ -331,13 +332,13 @@ namespace Cocodrilo.IO
 
                 var variables = this_property.GetKratosVariables();
 
-                int material_id = this_property.GetMaterialId();
                 var property_dict = new Dict
                     {
                         {"model_part_name", "IgaModelPart." + this_property.GetKratosModelPart()},
-                        {"properties_id", material_id},
+                        {"properties_id", property_id},
                     };
 
+                int material_id = this_property.GetMaterialId();
                 var material_dict = new Dict{};
                 if(material_id >= 0)
                 {
@@ -1057,7 +1058,7 @@ namespace Cocodrilo.IO
         }
 
         /// <summary>
-        /// 
+        /// Writes only curves with a UserData CURVE.
         /// </summary>
         /// <param name="ThisCurve"></param>
         /// <param name="rCpId"></param>
