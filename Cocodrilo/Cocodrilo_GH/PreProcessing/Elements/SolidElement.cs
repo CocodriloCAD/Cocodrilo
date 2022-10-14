@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Grasshopper.Kernel;
 using Rhino.Geometry;
@@ -55,10 +52,10 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
             DA.SetData(0, geometries);
         }
-        // Enter meaningful Guid!!! 
+        
         public override Guid ComponentGuid
         {
-            get { return new Guid("0E52B112-E6F8-4ACD-A534-F2421F1098EB"); }
+            get { return new Guid("33EEB850-FFEC-4C9B-BD00-A778C9CDC6DB"); }
         }
     }
 

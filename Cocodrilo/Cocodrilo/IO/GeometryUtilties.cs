@@ -11,7 +11,7 @@ namespace Cocodrilo.IO
 {
     public static class GeometryUtilities
     {
-        public static void AssignBrepIds(List<Brep> rBreps, List<Curve> rCurves, List<Point> rPoints, ref int rBrepId)
+        public static void AssignBrepIds(List<Brep> rBreps, List<Curve> rCurves, List<Point> rPoints, List<Mesh> rMeshes, ref int rBrepId)
         {
             foreach (var brep in rBreps)
             {
@@ -102,6 +102,12 @@ namespace Cocodrilo.IO
                 var user_data_point = UserDataUtilities.GetOrCreateUserDataPoint(point);
                 user_data_point
                     .BrepId = rBrepId;
+                rBrepId++;
+            }
+            foreach (var mesh in rMeshes)
+            {
+                var user_data_brep = UserDataUtilities.GetOrCreateUserDataBrep(mesh);
+                user_data_brep.BrepId = rBrepId;
                 rBrepId++;
             }
         }

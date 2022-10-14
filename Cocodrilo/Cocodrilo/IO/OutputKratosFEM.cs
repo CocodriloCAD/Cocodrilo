@@ -49,6 +49,8 @@ namespace Cocodrilo.IO
             {
                 PropertyIdDict property_id_dictionary = new PropertyIdDict();
 
+
+
                 ///Identical output files for FEM and MPM
                 System.IO.File.WriteAllLines(project_path + "/" + "Grid.mdpa",
                     new List<string> { GetFemMdpaFile(MeshList, ref property_id_dictionary) });
