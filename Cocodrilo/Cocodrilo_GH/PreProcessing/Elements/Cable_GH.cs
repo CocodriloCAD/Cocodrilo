@@ -16,7 +16,6 @@ namespace Cocodrilo_GH.PreProcessing.Elements
     public class Cable_GH : GH_Component
     {
         private double mArea = 1.0;
-        private double mPrestress = 1.0;
         private CableCouplingType mCouplingType = CableCouplingType.EntireCurve;
         public Cable_GH()
           : base("Cable", "Cable", "Cable Element", "Cocodrilo", "Elements")
@@ -25,11 +24,13 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddCurveParameter("Curves", "Cur", "Geometries", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Curves", "C", "Geometries", GH_ParamAccess.list);
             pManager[0].Optional = true;
-            pManager.AddCurveParameter("Edges", "Edg", "Geometries", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Edges", "E", "Geometries", GH_ParamAccess.list);
             pManager[1].Optional = true;
-            pManager.AddGenericParameter("Material", "Mat", "Material of Element", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Material", "M", "Material of element", GH_ParamAccess.item);
+            pManager[2].Optional = true;
+            pManager.AddNumberParameter("Prestress", "P", "Cauchy pre-stress within truss/cable", GH_ParamAccess.item, 0.0);
         }
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
@@ -49,20 +50,23 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             Material material = null;
             if (!DA.GetData(2, ref material)) return;
 
+            double prestress = 0.0;
+            if (!DA.GetData(3, ref prestress)) return;
+
             Property this_property = null;
             var geometries = new Cocodrilo_GH.PreProcessing.Geometries.Geometries();
 
             foreach (var edge in edges)
             {
-                CableProperties cable_properties = new CableProperties(mPrestress, mArea, mCouplingType);
+                CableProperties cable_properties = new CableProperties(prestress, mArea, mCouplingType);
                 this_property = new PropertyCable(GeometryType.SurfaceEdge ,material.Id, cable_properties, false);
                 geometries.edges.Add(new KeyValuePair<Curve, Property>(edge, this_property));
             }
 
             foreach (var curve in curves)
             {
-                CableProperties cable_properties = new CableProperties(mPrestress, mArea, mCouplingType);
-                this_property = new PropertyCable(GeometryType.SurfaceEdge ,material.Id, cable_properties, false);
+                CableProperties cable_properties = new CableProperties(prestress, mArea, mCouplingType);
+                this_property = new PropertyCable(GeometryType.GeometryCurve ,material.Id, cable_properties, false);
                 geometries.curves.Add(new KeyValuePair<Curve, Property>(curve, this_property));
             }
             
@@ -74,8 +78,6 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             Menu_AppendSeparator(menu);
             Menu_AppendItem(menu, "Area:");
             Menu_AppendTextItem(menu, Convert.ToString(mArea), Menu_Area_KeyDown, Menu_Area_EventHandler, false);
-            Menu_AppendItem(menu, "Prestress:");
-            Menu_AppendTextItem(menu, Convert.ToString(mPrestress), Menu_Prestress_KeyDown, Menu_Prestress_EventHandler, false);
             Menu_AppendSeparator(menu);
             foreach (CableCouplingType pt in Enum.GetValues(typeof(CableCouplingType)))
                 GH_Component.Menu_AppendItem(menu, pt.ToString(), Menu_CouplingTypeChanged, true, pt == mCouplingType).Tag = pt;
@@ -92,18 +94,6 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             ExpireSolution(true);
         }
         private void Menu_Area_KeyDown(GH_MenuTextBox sender, KeyEventArgs e) {}
-
-        private void Menu_Prestress_EventHandler(GH_MenuTextBox sender, string newText)
-        {
-            if (newText != "")
-            {
-                mPrestress = Convert.ToDouble(newText);
-            }
-            else
-                mPrestress = 1;
-            ExpireSolution(true);
-        }
-        private void Menu_Prestress_KeyDown(GH_MenuTextBox sender, KeyEventArgs e) {}
 
         private void Menu_CouplingTypeChanged(object sender, EventArgs e)
         {
@@ -124,14 +114,12 @@ namespace Cocodrilo_GH.PreProcessing.Elements
         public override bool Write(GH_IO.Serialization.GH_IWriter writer)
         {
             writer.SetDouble("Area", this.mArea);
-            writer.SetDouble("Prestress", this.mPrestress);
             return base.Write(writer);
         }
 
         public override bool Read(GH_IO.Serialization.GH_IReader reader)
         {
             reader.TryGetDouble("Area", ref mArea);
-            reader.TryGetDouble("Prestress", ref mPrestress);
             return base.Read(reader);
         }
 

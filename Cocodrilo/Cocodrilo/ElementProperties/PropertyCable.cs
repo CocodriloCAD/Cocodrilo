@@ -83,11 +83,22 @@ namespace Cocodrilo.ElementProperties
 
         public override Dictionary<string, object> GetKratosVariables()
         {
-            return new Dictionary<string, object>
+            if (GeometryType.GeometryCurve == mGeometryType)
             {
-                { "CROSS_AREA", mCableProperties.mArea},
-                { "PRESTRESS_CAUCHY", mCableProperties.mPrestress}
-            };
+                return new Dictionary<string, object>
+                {
+                    { "CROSS_AREA", mCableProperties.mArea},
+                    { "TRUSS_PRESTRESS_CAUCHY", mCableProperties.mPrestress}
+                };
+            }
+            else
+            {
+                return new Dictionary<string, object>
+                {
+                    { "CROSS_AREA", mCableProperties.mArea},
+                    { "PRESTRESS_CAUCHY", mCableProperties.mPrestress}
+                };
+            }
         }
 
         public override string GetKratosModelPart()

@@ -3,4 +3,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug64|AnyCPU'">
     <StartProgram>C:\Program Files\Rhino 7\System\Rhino.exe</StartProgram>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <StartWorkingDirectory>
+    </StartWorkingDirectory>
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files\Rhino 7\System\Rhino.exe</StartProgram>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <RemoteDebugEnabled>false</RemoteDebugEnabled>
+  </PropertyGroup>
 </Project>

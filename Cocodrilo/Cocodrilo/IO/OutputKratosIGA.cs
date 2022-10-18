@@ -256,6 +256,7 @@ namespace Cocodrilo.IO
                     ref rPropertyIdsBrepsIds);
             }
 
+            
             GetIntersectionPointsJSON(
                 IntersectionPointList,
                 ref cp_id,
@@ -1098,14 +1099,17 @@ namespace Cocodrilo.IO
             var embedded_points_curve = user_data_curve.GetNumericalElements();
             foreach (var embedded_point in embedded_points_curve)
             {
-                this_trim_index_iterator++;
+                if (embedded_point.HasBrepId())
+                {
+                    this_trim_index_iterator++;
 
-                var parameter_location = embedded_point.mParameterLocation.GetParameters();
+                    var parameter_location = embedded_point.mParameterLocation.GetParameters();
 
-                rVerticesDictionary.Add(OutputUtilitiesJSON.CreateVertexDictionary(
-                    embedded_point.GetBrepId(),
-                    new Coupling(this_curve_id, this_trim_index_iterator, 1),
-                    parameter_location[0]));
+                    rVerticesDictionary.Add(OutputUtilitiesJSON.CreateVertexDictionary(
+                        embedded_point.GetBrepId(),
+                        new Coupling(this_curve_id, this_trim_index_iterator, 1),
+                        parameter_location[0]));
+                }
             }
 
             foreach (var coupling_point in IntersectionPointList)

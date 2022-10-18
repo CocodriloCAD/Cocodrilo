@@ -29,7 +29,7 @@ namespace Cocodrilo_GH.PreProcessing.Materials
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var material = new Cocodrilo.Materials.MaterialLinearElasticIsotropic("Concrete", 30000, 0.0);
+            var material = new Cocodrilo.Materials.MaterialLinearElasticIsotropic("Concrete", 3e7, 0.0);
             Cocodrilo.CocodriloPlugIn.Instance.AddMaterial(material);
 
             DA.SetData(0, material);

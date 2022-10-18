@@ -535,6 +535,8 @@ namespace Cocodrilo.IO
                         {
                             Brep1.ClosestPoint(point_parameter_pair.Key, out Point3d closest_point, out ComponentIndex component_index, out double u, out double v, 0.01, out _);
 
+                            if (component_index.ComponentIndexType == ComponentIndexType.InvalidType) continue;
+
                             var intersection_point = new Point(closest_point);
 
                             var user_data_point = UserDataUtilities.GetOrCreateUserDataPoint(intersection_point);
@@ -550,7 +552,9 @@ namespace Cocodrilo.IO
                             }
                             else
                             {
+                                var variable = Brep1.Faces[component_index.Index].UnderlyingSurface();
                                 user_data_surface = Cocodrilo.UserData.UserDataUtilities.GetOrCreateUserDataSurface(Brep1.Faces[component_index.Index]);
+                                user_data_surface = Cocodrilo.UserData.UserDataUtilities.GetOrCreateUserDataSurface(variable);
                             }
 
                             user_data_point.AddCoupling(
