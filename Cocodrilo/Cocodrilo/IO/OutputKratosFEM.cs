@@ -56,10 +56,9 @@ namespace Cocodrilo.IO
                 PropertyIdDict property_id_dictionary = new PropertyIdDict();
                 PropertyIdDict rPropertyIdsBrepsIds = new PropertyIdDict();
 
-
                 ///Identical output files for FEM and MPM
                 System.IO.File.WriteAllLines(project_path + "/" + "Grid.mdpa",
-                    new List<string> { GetFemMdpaFile(MeshList, ref property_id_dictionary) });
+                    new List<string> { GetFemMdpaFile(MeshList, new List<Curve>(), ref property_id_dictionary) });
                 System.IO.File.WriteAllLines(project_path + "/" + "Materials.json",
                     new List<string> { "" });
                        
@@ -69,10 +68,13 @@ namespace Cocodrilo.IO
                     //downcast to access Bodymesh
                     Cocodrilo.Analyses.AnalysisMpm_new outputCopy = (Cocodrilo.Analyses.AnalysisMpm_new)analysis;
 
-                    System.IO.File.WriteAllLines(project_path + "/" + "Body.mdpa", new List<string> { GetFemMdpaFile(outputCopy.mBodyMesh, ref property_id_dictionary) });
+                    System.IO.File.WriteAllLines(project_path + "/" + "Body.mdpa", new List<string> {
+                        GetFemMdpaFile(outputCopy.mBodyMesh, outputCopy.mCurveList, ref property_id_dictionary) });
 
                     //call of WriteProjectParameters with downcasted analysis to access class members
                     System.IO.File.WriteAllLines(project_path + "/" + "ProjectParamaters.json", new List<string> { WriteProjectParameters(project_path, ref outputCopy) });
+                    
+                    System.IO.File.WriteAllLines(project_path + "/" + "Materials.json", new List<string> { GetMaterials(property_id_dictionary) });
 
                 }
                 else
@@ -93,7 +95,7 @@ namespace Cocodrilo.IO
 
         ///new WriteGeometryJson-Function, similiar to the one of OutputKratosIGA:
         
-        public void WriteGeometryJson(
+        public void WriteGeometryMdpaFile(
             List<Brep> Breps,
             List<Curve> Curves,
             List<Point> PointList,
@@ -122,8 +124,43 @@ namespace Cocodrilo.IO
         }
 
 
-        private string GetFemMdpaFile(List<Mesh> MeshList, ref PropertyIdDict PropertyIdDictionary)
+        private string GetFemMdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary)
         {
+            int brep_ids = 1;
+
+            //GeometryUtilities.AssignBrepIds(Breps, Curves, PointList, ref brep_ids);
+
+            //value of brep_ids should be changed after calling GeomteryUtilities.AssignBrepIds
+            GeometryUtilities.AssignBrepIdToMesh(MeshList, ref brep_ids);
+
+            //Rhino.Geometry.Collections.MeshTopologyEdgeList mesh_edges = brep.Meshes;
+            // Iteration über richtige Netze? 
+
+            string embedded_mdpa_file;
+
+            foreach (var curve in CurveList)
+            {
+                foreach (var mesh in MeshList)
+                {
+                    var polyline = mesh.PullCurve(curve, 0.01);
+
+                    var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
+
+                    user_data_edge.TryGetKratosPropertyIdsBrepIds(
+                        ref PropertyIdDictionary);
+
+                    polyline.PullToMesh(mesh, 0.01);
+                }
+            }
+
+            foreach (var mesh in MeshList)
+            {
+                var user_data_mesh = mesh.UserData.Find(typeof(UserDataMesh)) as UserDataMesh;
+
+                user_data_mesh.TryGetKratosPropertyIdsBrepIds(
+                    ref PropertyIdDictionary);
+            }
+
             string mdpa_file;
 
             mdpa_file = "Begin ModelPartData\n"
@@ -165,6 +202,7 @@ namespace Cocodrilo.IO
                 }
                 sub_model_part_string += "End SubModelPartNodes\n";
                 sub_model_part_string += "Begin SubModelPartConditions\n";
+
                 foreach (var face in mesh.Faces)
                 {
                     element_string += "    " + id_element_counter + "  " + (m + 2).ToString() + "  " + (face.A + id_node_counter) + "  " + (face.B + id_node_counter) + "  " + (face.C + id_node_counter) + "\n";

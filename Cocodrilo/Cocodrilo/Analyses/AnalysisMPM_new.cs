@@ -19,6 +19,7 @@ namespace Cocodrilo.Analyses
 		//public Material mMaterial { get; set; } now in element already included
 
 		public List<Mesh> mBodyMesh { get; set; }
+		public List<Curve> mCurveList { get; set; }
 
 		//public Cocodrilo_GH.PreProcessing.Geometries Geometry { get; set; }
 

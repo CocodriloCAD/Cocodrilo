@@ -15,6 +15,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 	public class MPM_GH_new : GH_Component
 	{
 		private List<Mesh> mMeshList = new List<Mesh>();
+		private List<Curve> mCurveList = new List<Curve>();
 		public Cocodrilo.Analyses.AnalysisMpm_new mNewAnalysis = new Cocodrilo.Analyses.AnalysisMpm_new();
 
 		/// empty constructor to override base class constructor
@@ -82,6 +83,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 				//ResetUserData(geometries_flat); - not yet implemented
 
 				mMeshList = new List<Mesh>();
+				mCurveList = new List<Curve>();
 				mNewAnalysis = new AnalysisMpm_new();
 
 				mNewAnalysis.Name = Name;
@@ -118,6 +120,33 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 							if (add_mesh)
 								mMeshList.Add(mesh.Key);
 						}
+						foreach (var edge in geoms.edges)
+						{
+							bool add_edge = true;
+							var ud = edge.Key.UserData.Find(typeof(Cocodrilo.UserData.UserDataEdge)) as Cocodrilo.UserData.UserDataEdge;
+							if (ud == null)
+							{
+								ud = new Cocodrilo.UserData.UserDataEdge();
+								edge.Key.UserData.Add(ud);
+							}
+							else
+							{
+								foreach (var old_edge in mCurveList)
+								{
+									var ud2 = old_edge.UserData.Find(typeof(Cocodrilo.UserData.UserDataEdge)) as Cocodrilo.UserData.UserDataEdge;
+
+									if (ReferenceEquals(ud2.GetCurrentElementData(), ud.GetCurrentElementData()))
+										add_edge = false;
+								}
+							}
+
+							ud.AddNumericalElement(edge.Value);
+
+							if (add_edge)
+							{
+								mCurveList.Add(edge.Key);
+							}
+						}
 					}
 					else
 					{
@@ -136,8 +165,9 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 				}
 
 				mNewAnalysis.mBodyMesh = mMeshList;
-				var castedAnalysis = (Cocodrilo.Analyses.Analysis)mNewAnalysis;
-				DA.SetData(0, castedAnalysis);
+				mNewAnalysis.mCurveList = mCurveList;
+				//var castedAnalysis = (Cocodrilo.Analyses.Analysis)mNewAnalysis;
+				DA.SetData(0, mNewAnalysis);
 			}
 		}	
 				/////////////////////////////////////////////////////////////////////////////////////////////////
