@@ -1,6 +1,7 @@
 ﻿using Cocodrilo.UserData;
 using Rhino;
 using Rhino.Geometry;
+using System.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using Cocodrilo.Analyses;
+using System.IO;
+using Cocodrilo.ElementProperties;
+
 
 namespace Cocodrilo.IO
 {
@@ -48,7 +52,7 @@ namespace Cocodrilo.IO
             try
             {
                 PropertyIdDict property_id_dictionary = new PropertyIdDict();
-
+                PropertyIdDict rPropertyIdsBrepsIds = new PropertyIdDict();
 
 
                 ///Identical output files for FEM and MPM
@@ -84,6 +88,37 @@ namespace Cocodrilo.IO
                 RhinoApp.WriteLine(ex.ToString());
             }
         }
+
+        ///new WriteGeometryJson-Function, similiar to the one of OutputKratosIGA:
+        
+        public void WriteGeometryJson(
+            List<Brep> Breps,
+            List<Curve> Curves,
+            List<Point> PointList,
+            List<Mesh> MeshList,
+            string ProjectPath,
+            ref PropertyIdDict rPropertyIdsBrepsIds)
+        {
+            int brep_ids = 1;
+
+            GeometryUtilities.AssignBrepIds(Breps, Curves, PointList, ref brep_ids);
+
+            //value of brep_ids should be changed after calling GeomteryUtilities.AssignBrepIds
+            GeometryUtilities.AssignBrepIdToMesh(MeshList, ref brep_ids);
+
+            //Rhino.Geometry.Collections.MeshTopologyEdgeList mesh_edges = brep.Meshes;
+            // Iteration über richtige Netze? 
+
+            foreach (var mesh in MeshList)
+            {
+                var user_data_mesh = mesh.UserData.Find(typeof(UserDataMesh)) as UserDataMesh;
+
+                user_data_mesh.TryGetKratosPropertyIdsBrepIds(
+                    ref rPropertyIdsBrepsIds);
+            }
+
+        }
+
 
         private string GetFemMdpaFile(List<Mesh> MeshList, ref PropertyIdDict PropertyIdDictionary)
         {
