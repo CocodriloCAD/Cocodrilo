@@ -1186,7 +1186,7 @@ namespace Cocodrilo.PostProcessing
             }
         }
 
-        GeometryBase GetGeometry(int BrepId, bool Deformed)
+        public GeometryBase GetGeometry(int BrepId, bool Deformed)
         {
             if (Deformed)
             {
