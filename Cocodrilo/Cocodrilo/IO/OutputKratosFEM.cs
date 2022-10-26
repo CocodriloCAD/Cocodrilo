@@ -55,30 +55,42 @@ namespace Cocodrilo.IO
             {
                 PropertyIdDict property_id_dictionary = new PropertyIdDict();
                 PropertyIdDict rPropertyIdsBrepsIds = new PropertyIdDict();
-
-                ///Identical output files for FEM and MPM
-                System.IO.File.WriteAllLines(project_path + "/" + "Grid.mdpa",
-                    new List<string> { GetFemMdpaFile(MeshList, new List<Curve>(), ref property_id_dictionary) });
-                System.IO.File.WriteAllLines(project_path + "/" + "Materials.json",
-                    new List<string> { "" });
-                       
+                         
                 ///Different output files for FEM and MPM
+                
                 if (analysis is Cocodrilo.Analyses.AnalysisMpm_new)
                 {
-                    //downcast to access Bodymesh
+                    // downcast to access Bodymesh
                     Cocodrilo.Analyses.AnalysisMpm_new outputCopy = (Cocodrilo.Analyses.AnalysisMpm_new)analysis;
 
+                    // meshing quantities: get physical values via referencing in WriteBodyMesh, think of more elegant way later!
+                    // WriteBodyMdpaFile obtains reference to bodyMesh as nodes of BodyMesh are required in background grid, too.
+
+                    Mesh bodyMesh = null;
+                    
                     System.IO.File.WriteAllLines(project_path + "/" + "Body.mdpa", new List<string> {
-                        GetFemMdpaFile(outputCopy.mBodyMesh, outputCopy.mCurveList, ref property_id_dictionary) });
+                        WriteBodyMdpaFile(outputCopy.mBodyMesh, outputCopy.mCurveList, ref property_id_dictionary, ref bodyMesh) });
+                    
 
                     //call of WriteProjectParameters with downcasted analysis to access class members
+
                     System.IO.File.WriteAllLines(project_path + "/" + "ProjectParamaters.json", new List<string> { WriteProjectParameters(project_path, ref outputCopy) });
                     
                     System.IO.File.WriteAllLines(project_path + "/" + "Materials.json", new List<string> { GetMaterials(property_id_dictionary) });
 
+
+                    
+                   
+                    //System.IO.File.WriteAllLines(project_path + "/" + "Grid.mdpa",
+                    //    new List<string> { GetFemMdpaFile(MeshList, new List<Curve>(), ref property_id_dictionary) });
+                                        
                 }
                 else
                 {
+                    System.IO.File.WriteAllLines(project_path + "/" + "Grid.mdpa",
+                       new List<string> { GetFemMdpaFile(MeshList, new List<Curve>(), ref property_id_dictionary) });
+                    System.IO.File.WriteAllLines(project_path + "/" + "Materials.json",
+                        new List<string> { "" });
                     //Overload writeProjectParameters to work also with objects of type Analysis
                     //System.IO.File.WriteAllLines(project_path + "/" + "ProjectParamaters.json",
                     //new List<string> { WriteProjectParameters(project_path,ref analysis) });
@@ -94,33 +106,94 @@ namespace Cocodrilo.IO
         }
 
         ///new WriteGeometryJson-Function, similiar to the one of OutputKratosIGA:
-        
-        public void WriteGeometryMdpaFile(
-            List<Brep> Breps,
-            List<Curve> Curves,
-            List<Point> PointList,
+
+        private string WriteBodyMdpaFile(
             List<Mesh> MeshList,
-            string ProjectPath,
-            ref PropertyIdDict rPropertyIdsBrepsIds)
+            List<Curve> CurveList,
+            ref PropertyIdDict rPropertyIdsBrepsIds,
+            ref Mesh bodyMesh)
+
         {
             int brep_ids = 1;
-
-            GeometryUtilities.AssignBrepIds(Breps, Curves, PointList, ref brep_ids);
 
             //value of brep_ids should be changed after calling GeomteryUtilities.AssignBrepIds
             GeometryUtilities.AssignBrepIdToMesh(MeshList, ref brep_ids);
 
-            //Rhino.Geometry.Collections.MeshTopologyEdgeList mesh_edges = brep.Meshes;
-            // Iteration über richtige Netze? 
+            string mdpa_file;
 
+            mdpa_file = "Begin ModelPartData\n"
+                        + "//  VARIABLE_NAME value\n"
+                        + "End ModelPartData\n\n";
+
+            
             foreach (var mesh in MeshList)
             {
                 var user_data_mesh = mesh.UserData.Find(typeof(UserDataMesh)) as UserDataMesh;
 
                 user_data_mesh.TryGetKratosPropertyIdsBrepIds(
                     ref rPropertyIdsBrepsIds);
+                          
             }
 
+            for (int i = 0; i < MeshList.Count; i++)
+            {
+                mdpa_file += "Begin Properties " + i.ToString() + "\n End Properties \n";
+            }
+            mdpa_file += "\n\n";
+
+
+            string node_string = "Begin Nodes\n";
+
+
+            string element_string = "Begin Elements UpdatedLagrangian2D4N// ";
+
+            //assign correct model part name to model: still hardcoded - remove in later version!
+            element_string += "GUI group identifier: Solid Auto1 \n";
+
+            int id_node_counter = 1;
+            int id_element_counter = 1;
+
+            int sub_model_part_counter = 1;
+
+            string sub_model_part_string = "";
+
+            for (int m = 0; m < MeshList.Count; m++)
+            {
+
+                sub_model_part_string += "Begin SubModelPart Parts_Solid_Solid_Auto1 // Group Solid Auto1 // Subtree Parts_Solid\n";
+                                
+                var mesh = MeshList[m];
+
+                for (int i = 0; i < mesh.Vertices.Count; i++)
+                {
+                    node_string += "    " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
+                    sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n";
+                }
+
+                sub_model_part_string += "End SubModelPartNodes\n";
+                sub_model_part_string += "Begin SubModelPartConditions\n";
+
+                foreach (var face in mesh.Faces)
+                {
+                    element_string += "    " + id_element_counter + "  " + (0).ToString() + "  " + (face.A + id_node_counter) + "  " + (face.B + id_node_counter) + "  " + (face.C + id_node_counter) + "   " + (face.D + id_node_counter) + "\n";
+                    sub_model_part_string += "     " + id_element_counter.ToString() + "\n";
+                    id_element_counter++;
+                }
+
+                sub_model_part_string += "End SubModelPartConditions\n";
+                sub_model_part_string += "End SubModelPart\n\n";
+
+                id_node_counter += mesh.Vertices.Count;
+                sub_model_part_counter++;
+            }
+            node_string += "End Nodes\n\n";
+            element_string += "End Elements\n\n";
+
+            mdpa_file += node_string;
+            mdpa_file += element_string;
+            mdpa_file += sub_model_part_string;
+
+            return mdpa_file;
         }
 
 
@@ -167,6 +240,8 @@ namespace Cocodrilo.IO
                         + "//  VARIABLE_NAME value\n"
                         + "End ModelPartData\n\n";
 
+            //Why does for-loop start at two here? In GiD -.mdpa file, starts at properties 0
+
             for (int i = 2; i < MeshList.Count + 2; i++)
             {
                 mdpa_file += "Begin Properties " + i.ToString() + "\n End Properties \n";
@@ -200,6 +275,7 @@ namespace Cocodrilo.IO
                     node_string += "    " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
                     sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n";
                 }
+
                 sub_model_part_string += "End SubModelPartNodes\n";
                 sub_model_part_string += "Begin SubModelPartConditions\n";
 
