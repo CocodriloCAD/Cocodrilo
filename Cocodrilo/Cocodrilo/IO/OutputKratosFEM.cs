@@ -77,12 +77,9 @@ namespace Cocodrilo.IO
                     System.IO.File.WriteAllLines(project_path + "/" + "ProjectParamaters.json", new List<string> { WriteProjectParameters(project_path, ref outputCopy) });
                     
                     System.IO.File.WriteAllLines(project_path + "/" + "Materials.json", new List<string> { GetMaterials(property_id_dictionary) });
-
-
-                    
-                   
-                    //System.IO.File.WriteAllLines(project_path + "/" + "Grid.mdpa",
-                    //    new List<string> { GetFemMdpaFile(MeshList, new List<Curve>(), ref property_id_dictionary) });
+                              
+                    System.IO.File.WriteAllLines(project_path + "/" + "Grid.mdpa",
+                        new List<string> { GetFemMdpaFile(MeshList, new List<Curve>(), ref property_id_dictionary) });
                                         
                 }
                 else
@@ -208,9 +205,7 @@ namespace Cocodrilo.IO
 
             //Rhino.Geometry.Collections.MeshTopologyEdgeList mesh_edges = brep.Meshes;
             // Iteration über richtige Netze? 
-
-            string embedded_mdpa_file;
-
+                        
             foreach (var curve in CurveList)
             {
                 foreach (var mesh in MeshList)
@@ -242,14 +237,14 @@ namespace Cocodrilo.IO
 
             //Why does for-loop start at two here? In GiD -.mdpa file, starts at properties 0
 
-            for (int i = 2; i < MeshList.Count + 2; i++)
+            for (int i = 0; i < MeshList.Count; i++)
             {
                 mdpa_file += "Begin Properties " + i.ToString() + "\n End Properties \n";
             }
             mdpa_file += "\n\n";
 
             string node_string = "Begin Nodes\n";
-            string element_string = "Begin Conditions RigidFace3D3N\n";
+            string element_string = "Begin Conditions Element2D4N// GUI group identifier: Grid Auto1 \n";
             int id_node_counter = 1;
             int id_element_counter = 1;
 
@@ -260,14 +255,10 @@ namespace Cocodrilo.IO
             for (int m = 0; m < MeshList.Count; m++)
             {
 
-                sub_model_part_string += "Begin SubModelPart " + sub_model_part_counter + " // GUI DEM-FEM-Wall - DEM-FEM-Wall - group identifier: Parts_membran_oben\n"
-                    + "  Begin SubModelPartData // DEM-FEM-Wall. Group name: Parts_membran_oben\n"
-                    + "    IS_GHOST false\n"
-                    + "    IDENTIFIER Parts_membran_oben\n"
-                    + "    FORCE_INTEGRATION_GROUP 0\n"
-                    + "  End SubModelPartData\n"
-                    + "  Begin SubModelPartNodes\n";
-
+                // Group Name and Submodelpart Name must become dynamic parameters
+                sub_model_part_string += "Begin SubModelPart Parts_Solid_Solid_Auto1 // Group Grid Auto1 // Subtree Parts_Grid\n" +
+                                         "  Begin SubModelPartNodes\n";
+                
                 var mesh = MeshList[m];
 
                 for (int i = 0; i < mesh.Vertices.Count; i++)
@@ -277,20 +268,27 @@ namespace Cocodrilo.IO
                 }
 
                 sub_model_part_string += "End SubModelPartNodes\n";
-                sub_model_part_string += "Begin SubModelPartConditions\n";
+                sub_model_part_string += "Begin SubModelPartElements\n";
 
                 foreach (var face in mesh.Faces)
                 {
-                    element_string += "    " + id_element_counter + "  " + (m + 2).ToString() + "  " + (face.A + id_node_counter) + "  " + (face.B + id_node_counter) + "  " + (face.C + id_node_counter) + "\n";
+                    element_string += "    " + id_element_counter + "  " + (0).ToString() + "  " + (face.A + id_node_counter) + "  " + (face.B + id_node_counter) + "  " + (face.C + id_node_counter) + "   " + (face.D + id_node_counter) + "\n";
                     sub_model_part_string += "     " + id_element_counter.ToString() + "\n";
                     id_element_counter++;
                 }
 
+                sub_model_part_string += "End SubModelPartElements\n";
+                sub_model_part_string += "Begin SubModelPartConditions\n";
                 sub_model_part_string += "End SubModelPartConditions\n";
                 sub_model_part_string += "End SubModelPart\n\n";
 
+                // Add displacement boundary conditions resp. grid-conforming boundary conditions HERE!!!!11!!!!1!!!
+
                 id_node_counter += mesh.Vertices.Count;
                 sub_model_part_counter++;
+
+               
+
             }
             node_string += "End Nodes\n\n";
             element_string += "End Elements\n\n";
