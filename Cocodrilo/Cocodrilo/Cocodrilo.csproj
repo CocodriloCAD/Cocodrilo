@@ -85,6 +85,7 @@
     <Compile Include="IO\GeometryUtilties.cs" />
     <Compile Include="IO\Output.cs" />
     <Compile Include="IO\OutputKratosIGA.cs" />
+    <Compile Include="IO\OutputPythonScripts.cs" />
     <Compile Include="IO\OutputUtilitiesJSON.cs" />
     <Compile Include="IO\OutputKratosDEM.cs" />
     <Compile Include="IO\OutputOptions.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="EventWatcher.cs" />
     <Compile Include="Materials\Material.cs" />
     <Compile Include="Materials\MaterialDem.cs" />
+    <Compile Include="Materials\MaterialLinearElasticIsotropicAdvanced.cs" />
     <Compile Include="Materials\MaterialMasonryOrthotropicDamage.cs" />
     <Compile Include="Materials\MaterialLinearElasticIsotropic.cs" />
     <Compile Include="GUI\UserControlCocodriloPanel.cs">

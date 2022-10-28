@@ -57,39 +57,51 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             double thickness = 1.0;
             if (!DA.GetData(2, ref thickness)) return;
 
-            Property this_property = null;
+            var geometries = new Cocodrilo_GH.PreProcessing.Geometries.Geometries();
+            //Property this_property = null;
             if (mFormulationType == FormulationType.Membrane)
             {
                 MembraneProperties membrane_properties = new MembraneProperties(
                     1, new double[] { 1, 0, 0 }, new double[] { 0, 1, 0 }, mPrestress1, mPrestress2);
-                this_property = new PropertyMembrane(material.Id, false, membrane_properties);
+                foreach (var brep in breps)
+                {
+                    geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, new PropertyMembrane(material.Id, false, membrane_properties)));
+                }
             }
             else if (mFormulationType == FormulationType.Shell3p)
             {
                 ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell3pElement");
-                this_property = new PropertyShell(material.Id, shell_properties, mUniqueProperty);
+                foreach (var brep in breps)
+                {
+                    geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, new PropertyShell(material.Id, shell_properties, mUniqueProperty)));
+                }
             }
             else if (mFormulationType == FormulationType.Shell3pStressBased)
             {
                 ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell3pStressBasedElement");
-                this_property = new PropertyShell(material.Id, shell_properties, mUniqueProperty);
+                foreach (var brep in breps)
+                {
+                    geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, new PropertyShell(material.Id, shell_properties, mUniqueProperty)));
+                }
             }
             else if (mFormulationType == FormulationType.Shell5pHierarchic)
             {
                 ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell5pHierarchicElement");
-                this_property = new PropertyShell(material.Id, shell_properties, mUniqueProperty);
+                foreach (var brep in breps)
+                {
+                    geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, new PropertyShell(material.Id, shell_properties, mUniqueProperty)));
+                }
             }
             else if (mFormulationType == FormulationType.Shell5p)
             {
                 ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell5pElement");
-                this_property = new PropertyShell(material.Id, shell_properties, mUniqueProperty);
+                foreach (var brep in breps)
+                {
+                    geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, new PropertyShell(material.Id, shell_properties, mUniqueProperty)));
+                }
             }
 
-            var geometries = new Cocodrilo_GH.PreProcessing.Geometries.Geometries();
-            foreach (var brep in breps)
-            {
-                geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, this_property));
-            }
+
 
             DA.SetData(0, geometries);
         }

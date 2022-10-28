@@ -49,21 +49,22 @@ namespace Cocodrilo.IO
             this.analysis = analysis;
         }
 
+        public string GetProjectPath()
+        {
+            return UserDataUtilities.GetProjectPath(analysis.Name);
+        }
+
         public override void StartAnalysis()
         {
-            string project_path = UserDataUtilities.GetProjectPath(analysis.Name);
-
             var brep_list = GeometryUtilities.GetBrepList();
             var curve_list = GeometryUtilities.GetCurveList();
 
-            StartAnalysis(project_path, brep_list, curve_list, new List<Point>());
+            StartAnalysis(GetProjectPath(), brep_list, curve_list, new List<Point>());
         }
         public override void StartAnalysis(
             List<Brep> BrepList, List<Curve> CurveList, List<Point> PointList)
         {
-            string project_path = UserDataUtilities.GetProjectPath(analysis.Name);
-
-            StartAnalysis(project_path, BrepList, CurveList, PointList);
+            StartAnalysis(GetProjectPath(), BrepList, CurveList, PointList);
         }
 
         public void StartAnalysis(string ProjectPath)
@@ -123,8 +124,28 @@ namespace Cocodrilo.IO
             }
             catch
             {
-                RhinoApp.WriteLine("No Kratos scripts found. Needs python (.py) files in the folder: KRATOS_TEMPLATES.");
+                RhinoApp.WriteLine("No Kratos scripts found in the folder: KRATOS_TEMPLATES.\nkratos_main_iga.py is created internally.");
+                OutputPythonScripts.WriteKratosMainIga(project_path + "/" + "kratos_main_iga.py");
             }
+        }
+
+        public void WriteOptimizationFiles(
+            List<int> MaterialIds)
+        {
+            string project_path = GetProjectPath();
+            //GET GEOMETRY JSON INPUT TEXT
+            try
+            {
+                System.IO.File.WriteAllLines(project_path + "/" + "optimization_materials.json",
+                    new List<string> { GetOptimizationMaterials(MaterialIds) });
+            }
+            catch (Exception ex)
+            {
+                RhinoApp.WriteLine("Optimization materials output not possible.");
+                RhinoApp.WriteLine(ex.ToString());
+            }
+
+            OutputPythonScripts.WriteKratosOptimization(project_path + "/" + "kratos_main_optimization.py", MaterialIds);
         }
 
         public void WriteGeometryJson(
@@ -372,6 +393,54 @@ namespace Cocodrilo.IO
             {
                 {"properties", property_dict_list }
             };
+            var serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize((object)dict);
+
+            return json;
+        }
+
+        public string GetOptimizationMaterials(List<int> MaterialIds)
+        {
+            var property_dict_list = new DictList();
+            foreach (var material_id in MaterialIds)
+            {
+                var property_dict = new Dict
+                    {
+                        {"model_part_name", "IgaModelPart"},
+                        {"properties_id", material_id},
+                    };
+
+                var material_dict = new Dict { };
+                var variables = new Dict { };
+                if (material_id >= 0)
+                {
+                    var material = CocodriloPlugIn.Instance.GetMaterial(material_id);
+                    var material_variables = material.GetKratosVariables();
+                    foreach (var material_variable in material_variables)
+                        variables.Add(material_variable.Key, material_variable.Value);
+
+                    material_dict.Add("name", material.Name);
+                    material_dict.Add("constitutive_law", material.GetKratosConstitutiveLaw());
+
+                    if (material.HasKratosSubProperties())
+                    {
+                        property_dict.Add("sub_properties", material.GetKratosSubProperties());
+                    }
+                }
+
+                material_dict.Add("Variables", variables);
+                material_dict.Add("Tables", new Dict { });
+
+                property_dict.Add("Material", material_dict);
+
+                property_dict_list.Add(property_dict);
+            }
+
+            var dict = new Dict
+            {
+                {"properties", property_dict_list }
+            };
+
             var serializer = new JavaScriptSerializer();
             string json = serializer.Serialize((object)dict);
 
