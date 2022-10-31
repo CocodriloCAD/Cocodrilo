@@ -21,6 +21,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
         private bool mShowCouplings = true;
         private bool mShowIds = false;
 
+        private string mPathName = "";
         public Model_IGA_GH()
           : base("IGA Model", "IGA Model",
               "Isogeometric analysis model.",
@@ -211,14 +212,14 @@ namespace Cocodrilo_GH.PreProcessing.IO
                     }
                 }
 
-                var output_kratos_iga = new Cocodrilo.IO.OutputKratosIGA(this_analysis);
+                Cocodrilo.IO.OutputKratosIGA output_kratos_iga = new Cocodrilo.IO.OutputKratosIGA(this_analysis);
                 output_kratos_iga.StartAnalysis(mBrepList, mCurveList, point_list);
 
                 DA.SetData(0, output_kratos_iga);
 
-                string project_path = Cocodrilo.UserData.UserDataUtilities.GetProjectPath(this_analysis.Name);
-                DA.SetData(1, project_path);
+                mPathName = output_kratos_iga.GetProjectPath();
             }
+            DA.SetData(1, mPathName);
         }
 
         /// <summary>
