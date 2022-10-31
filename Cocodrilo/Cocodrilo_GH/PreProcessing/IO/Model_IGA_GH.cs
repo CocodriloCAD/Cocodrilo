@@ -360,6 +360,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
             writer.SetBoolean("ShowLoads", mShowLoads);
             writer.SetBoolean("ShowCouplings", mShowCouplings);
             writer.SetBoolean("ShowIds", mShowIds);
+            writer.SetString("PathName", mPathName);
             return base.Write(writer);
         }
 
@@ -371,6 +372,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
             reader.TryGetBoolean("ShowLoads", ref mShowLoads);
             reader.TryGetBoolean("ShowCouplings", ref mShowCouplings);
             reader.TryGetBoolean("ShowIds", ref mShowIds);
+            reader.TryGetString("PathName", ref mPathName);
             return base.Read(reader);
         }
 

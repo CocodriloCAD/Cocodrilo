@@ -74,7 +74,6 @@ namespace Cocodrilo_GH.PostProcessing
 
             int ResultDirectionIndex = 0;
             if (!DA.GetData(3, ref ResultDirectionIndex)) return;
-            ResultDirectionIndex -= 1;
 
 
             var this_result_info = ThisPostProcessing.ResultList.Find(item => 

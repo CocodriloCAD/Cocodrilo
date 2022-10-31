@@ -221,7 +221,7 @@ namespace Cocodrilo.ElementProperties
         {
             if (ThisOutputOptions.conditions)
             {
-                var integration_point_results = new List<string> { };
+                var integration_point_results = new List<string> { "PENALTY_REACTION_FORCE" };
                 string[] nodal_results = new string[] { };
 
                 var output_process_parameters = new Dictionary<string, object>
