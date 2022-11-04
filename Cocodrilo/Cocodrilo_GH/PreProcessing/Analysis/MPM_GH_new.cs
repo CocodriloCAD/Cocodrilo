@@ -120,6 +120,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 							if (add_mesh)
 								mMeshList.Add(mesh.Key);
 						}
+						
 						foreach (var edge in geoms.edges)
 						{
 							bool add_edge = true;
@@ -131,6 +132,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 							}
 							else
 							{
+								// what is the purpose of this for-loop? Is it okay that it goes over mCurveList??
 								foreach (var old_edge in mCurveList)
 								{
 									var ud2 = old_edge.UserData.Find(typeof(Cocodrilo.UserData.UserDataEdge)) as Cocodrilo.UserData.UserDataEdge;
@@ -145,6 +147,35 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 							if (add_edge)
 							{
 								mCurveList.Add(edge.Key);
+							}
+						}
+
+						//Change 04.11: adding of curves to represent strong boundary conditions
+						foreach (var curve in geoms.curves)
+						{
+							bool add_curve = true;
+							var ud = curve.Key.UserData.Find(typeof(Cocodrilo.UserData.UserDataCurve)) as Cocodrilo.UserData.UserDataCurve;
+							if (ud == null)
+							{
+								ud = new Cocodrilo.UserData.UserDataCurve();
+								curve.Key.UserData.Add(ud);
+							}
+							else
+							{
+								foreach (var old_curve in mCurveList)
+								{
+									var ud2 = old_curve.UserData.Find(typeof(Cocodrilo.UserData.UserDataCurve)) as Cocodrilo.UserData.UserDataCurve;
+
+									if (ReferenceEquals(ud2.GetCurrentElementData(), ud.GetCurrentElementData()))
+										add_curve = false;
+								}
+							}
+
+							ud.AddNumericalElement(curve.Value);
+
+							if (add_curve)
+							{
+								mCurveList.Add(curve.Key);
 							}
 						}
 					}

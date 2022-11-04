@@ -61,7 +61,7 @@ namespace Cocodrilo.IO
                 if (analysis is Cocodrilo.Analyses.AnalysisMpm_new)
                 {
                     // downcast to access Bodymesh
-                    Cocodrilo.Analyses.AnalysisMpm_new outputCopy = (Cocodrilo.Analyses.AnalysisMpm_new)analysis;
+                    Cocodrilo.Analyses.AnalysisMpm_new outputCopy = (Cocodrilo.Analyses.AnalysisMpm_new) analysis;
 
                     // meshing quantities: get physical values via referencing in WriteBodyMesh, think of more elegant way later!
                     // WriteBodyMdpaFile obtains reference to bodyMesh as nodes of BodyMesh are required in background grid, too.
@@ -79,7 +79,7 @@ namespace Cocodrilo.IO
                     System.IO.File.WriteAllLines(project_path + "/" + "Materials.json", new List<string> { GetMaterials(property_id_dictionary) });
                               
                     System.IO.File.WriteAllLines(project_path + "/" + "Grid.mdpa",
-                        new List<string> { GetFemMdpaFile(MeshList, new List<Curve>(), ref property_id_dictionary) });
+                        new List<string> { GetFemMdpaFile(MeshList, outputCopy.mCurveList, ref property_id_dictionary) });
                                         
                 }
                 else
@@ -129,7 +129,7 @@ namespace Cocodrilo.IO
 
                 user_data_mesh.TryGetKratosPropertyIdsBrepIds(
                     ref rPropertyIdsBrepsIds);
-                          
+                        
             }
 
             for (int i = 0; i < MeshList.Count; i++)
@@ -198,26 +198,83 @@ namespace Cocodrilo.IO
         {
             int brep_ids = 1;
 
-            //GeometryUtilities.AssignBrepIds(Breps, Curves, PointList, ref brep_ids);
+            //Creation of new (empty) lists of Breps and Points to use already existing function AssignBrepIds
+            GeometryUtilities.AssignBrepIds(new List<Brep>(), CurveList, new List<Point>(), ref brep_ids);
 
             //value of brep_ids should be changed after calling GeomteryUtilities.AssignBrepIds
             GeometryUtilities.AssignBrepIdToMesh(MeshList, ref brep_ids);
 
             //Rhino.Geometry.Collections.MeshTopologyEdgeList mesh_edges = brep.Meshes;
             // Iteration über richtige Netze? 
-                        
+
+            // Tables for points belonging to edges and curves
+
+            Hashtable nodes_of_edges = new Hashtable();
+            Hashtable nodes_of_curves = new Hashtable();
+
             foreach (var curve in CurveList)
             {
-                foreach (var mesh in MeshList)
+                var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
+
+                if (user_data_edge != null)
                 {
-                    var polyline = mesh.PullCurve(curve, 0.01);
+                    foreach (var mesh in MeshList)
+                    {
+                        // Gets a polyline approximation of the input curve and then moves its control points
+                        // to the closest point on the mesh. Then it "connects the points" over edges so
+                        // that a polyline on the mesh is formed.
 
-                    var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
+                        var polyline = mesh.PullCurve(curve, 0.01);
 
-                    user_data_edge.TryGetKratosPropertyIdsBrepIds(
-                        ref PropertyIdDictionary);
+                        // get PropertyIds and BrepIds used by Kratos of the element user_data_edge
+                        user_data_edge.TryGetKratosPropertyIdsBrepIds(
+                            ref PropertyIdDictionary);
 
-                    polyline.PullToMesh(mesh, 0.01);
+                        // Makes a polyline approximation of the curve and gets the closest point on the
+                        // mesh for each point on the curve. Then it "connects the points" so that you have
+                        // a polyline on the mesh.
+
+                        // Returns undelying polyline or points
+                        var polyLineCurve = polyline.PullToMesh(mesh, 0.01);
+
+
+                        // Give meaningful names!!
+                        Polyline pol = polyLineCurve.ToPolyline();
+
+                        
+                        foreach (var point in pol)
+                        {
+                            var closest_point = mesh.ClosestMeshPoint(point, 0.01);
+                            closest_point.GetHashCode();
+                            nodes_of_edges.Add(closest_point.GetHashCode(), closest_point);
+                        }
+
+                    }
+                }
+
+                          
+                var user_data_curve = curve.UserData.Find(typeof(UserDataCurve)) as UserDataCurve;
+
+                if (user_data_curve != null)
+                {
+                    foreach (var mesh in MeshList)
+                    {
+                        var polyline = mesh.PullCurve(curve, 0.01);
+
+                        user_data_curve.TryGetKratosPropertyIdsBrepIds(
+                            ref PropertyIdDictionary);
+
+                        var poly_curve = polyline.PullToMesh(mesh, 0.000000001);
+
+                        Polyline pol = poly_curve.ToPolyline();
+
+                        foreach (var point in pol)
+                        {
+                            var closest_point = mesh.ClosestMeshPoint(point, 0.0000001);
+                            closest_point.GetHashCode();
+                            nodes_of_curves.Add(closest_point.GetHashCode(), closest_point);
+                        }
+                    }
                 }
             }
 
@@ -249,26 +306,67 @@ namespace Cocodrilo.IO
             int id_element_counter = 1;
 
             int sub_model_part_counter = 1;
+            //How to get total number of submodelparts?
 
+            List<string> submodelparts = new List<string>();
+
+            foreach (var property_id in PropertyIdDictionary.Keys)
+            {
+                var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
+
+                submodelparts.Add(this_property.GetKratosModelPart());
+            };
+
+
+            
             string sub_model_part_string = "";
+            string sub_model_part_displacement_boundary = "";
 
             for (int m = 0; m < MeshList.Count; m++)
             {
 
                 // Group Name and Submodelpart Name must become dynamic parameters
+                // use here "Begin"+CocodriloPlugIn.Instance.GetProperty(property_id, out bool success)+"...
+
                 sub_model_part_string += "Begin SubModelPart Parts_Solid_Solid_Auto1 // Group Grid Auto1 // Subtree Parts_Grid\n" +
                                          "  Begin SubModelPartNodes\n";
-                
+
+                //make modelpartname, group and subtree automatic
+                sub_model_part_displacement_boundary += "Begin SubModelPart DISPLACEMENT_Displacement_Auto1 // Group Displacement Auto1 // Subtree DISPLACEMENT\n" +
+                                         "  Begin SubModelPartNodes\n";
+
                 var mesh = MeshList[m];
 
                 for (int i = 0; i < mesh.Vertices.Count; i++)
                 {
+                    //mesh.Vertices[i].GetHashCode();
+
                     node_string += "    " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
                     sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n";
+
+                    // if loop to iterate over different submodelparts 
+
+                    //if(==) hashcode is in the hashtable of a submodelpart, then do check for index of the respective node in overall node numbering
+                    //    sub_model_list(indexer ==).Add(sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n")
+
+                    bool a = nodes_of_curves.ContainsKey(mesh.Vertices[i].GetHashCode());
+
+                    if (nodes_of_curves.ContainsKey(mesh.Vertices[i].GetHashCode()))
+                    {
+                        sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "\n";
+                    }
+                    else if (nodes_of_edges.ContainsKey(mesh.Vertices[i].GetHashCode()))
+                    {
+                        //add to some edge submodelpart
+                    }
+
                 }
 
                 sub_model_part_string += "End SubModelPartNodes\n";
+                sub_model_part_displacement_boundary += "End SubModelPartNodes\n";
+
                 sub_model_part_string += "Begin SubModelPartElements\n";
+                sub_model_part_displacement_boundary += "Begin SubModelPartElements\n";
 
                 foreach (var face in mesh.Faces)
                 {
@@ -281,6 +379,15 @@ namespace Cocodrilo.IO
                 sub_model_part_string += "Begin SubModelPartConditions\n";
                 sub_model_part_string += "End SubModelPartConditions\n";
                 sub_model_part_string += "End SubModelPart\n\n";
+
+
+                sub_model_part_displacement_boundary += "End SubModelPartElements\n";
+                sub_model_part_displacement_boundary += "Begin SubModelPartConditions\n";
+                sub_model_part_displacement_boundary += "End SubModelPartConditions\n";
+                sub_model_part_displacement_boundary += "End SubModelPart\n\n";
+
+
+
 
                 // Add displacement boundary conditions resp. grid-conforming boundary conditions HERE!!!!11!!!!1!!!
 
@@ -296,6 +403,7 @@ namespace Cocodrilo.IO
             mdpa_file += node_string;
             mdpa_file += element_string;
             mdpa_file += sub_model_part_string;
+            mdpa_file += sub_model_part_displacement_boundary;
 
             return mdpa_file;
         }
