@@ -212,6 +212,8 @@ namespace Cocodrilo.IO
             Hashtable nodes_of_edges = new Hashtable();
             Hashtable nodes_of_curves = new Hashtable();
 
+            List<Point3d> nodesCurves = new List<Point3d>();
+
             foreach (var curve in CurveList)
             {
                 var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
@@ -247,12 +249,13 @@ namespace Cocodrilo.IO
                             var closest_point = mesh.ClosestMeshPoint(point, 0.01);
                             closest_point.GetHashCode();
                             nodes_of_edges.Add(closest_point.GetHashCode(), closest_point);
+                                           
+                            
                         }
 
                     }
                 }
-
-                          
+                                          
                 var user_data_curve = curve.UserData.Find(typeof(UserDataCurve)) as UserDataCurve;
 
                 if (user_data_curve != null)
@@ -264,16 +267,45 @@ namespace Cocodrilo.IO
                         user_data_curve.TryGetKratosPropertyIdsBrepIds(
                             ref PropertyIdDictionary);
 
-                        var poly_curve = polyline.PullToMesh(mesh, 0.000000001);
+                        var poly_curve = polyline.PullToMesh(mesh, 0.01);
 
                         Polyline pol = poly_curve.ToPolyline();
 
+                        
+
                         foreach (var point in pol)
                         {
-                            var closest_point = mesh.ClosestMeshPoint(point, 0.0000001);
+                            // hashcodes of MeshPoints and Points3d seem to differ 
+                            var closestMeshPoint = mesh.ClosestMeshPoint(point, 0.00001);
+                            closestMeshPoint.GetHashCode();
+                            nodes_of_curves.Add(closestMeshPoint.GetHashCode(), closestMeshPoint);
+
+                            var closest_point = mesh.ClosestPoint(point);
                             closest_point.GetHashCode();
                             nodes_of_curves.Add(closest_point.GetHashCode(), closest_point);
+
+                            //mesh.d
+
+
                         }
+                        //for (int i = 1; i < polyline.PointCount - 1; i++)
+                        //{
+                        //    //round depending on size of mesh
+                        //    //double tempRoundX = Math.Round(pol[i].X, 2);
+                        //    //double tempRoundY = Math.Round(pol[i].Y, 2);
+                        //    //double tempRoundZ = Math.Round(pol[i].Z, 2);
+
+                        //    //var point = new Point3d(tempRoundZ, tempRoundY, tempRoundZ);
+
+                        //    //relate maximum distance to size of mesh
+                        //    var closest_point = mesh.ClosestPoint(pol[i]);
+                        //    closest_point.GetHashCode();
+                        //    nodes_of_curves.Add(closest_point.GetHashCode(), closest_point);
+
+                        //    nodesCurves.Add(closest_point);
+
+
+                        //}
                     }
                 }
             }
@@ -353,12 +385,26 @@ namespace Cocodrilo.IO
 
                     if (nodes_of_curves.ContainsKey(mesh.Vertices[i].GetHashCode()))
                     {
+                        var hash = mesh.Vertices[i].GetHashCode();
+
+                       
+                        
+
                         sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "\n";
                     }
                     else if (nodes_of_edges.ContainsKey(mesh.Vertices[i].GetHashCode()))
                     {
                         //add to some edge submodelpart
                     }
+
+                    Point3d testpoint = mesh.Vertices[i];
+                    var testhash = testpoint.GetHashCode();
+
+                    if (nodes_of_curves.ContainsKey(testhash))
+                    {
+                        sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "testhash \n";
+                    }
+                                        
 
                 }
 

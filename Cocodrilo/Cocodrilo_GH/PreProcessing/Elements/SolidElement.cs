@@ -22,6 +22,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             pManager.AddMeshParameter("Bodymesh", "Mesh", "Meshed Geometry of Body-Element", GH_ParamAccess.list);
             pManager.AddGenericParameter("Material", "Mat", "Material of Element", GH_ParamAccess.item);
             pManager.AddNumberParameter("Thickness", "Thickness", "Thickness of shell element", GH_ParamAccess.item, 1.0);
+            pManager.AddGenericParameter("Support", "BCs", "Support Conditions on Body Mesh", GH_ParamAccess.tree);
         }
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
@@ -39,6 +40,8 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 
             double thickness = 0;
             if (DA.GetData(2, ref thickness));
+
+
 
             SolidElementProperties this_properties = new SolidElementProperties(thickness);
 
