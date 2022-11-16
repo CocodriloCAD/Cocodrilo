@@ -381,30 +381,39 @@ namespace Cocodrilo.IO
                     //if(==) hashcode is in the hashtable of a submodelpart, then do check for index of the respective node in overall node numbering
                     //    sub_model_list(indexer ==).Add(sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n")
 
-                    bool a = nodes_of_curves.ContainsKey(mesh.Vertices[i].GetHashCode());
+                    //bool a = nodes_of_curves.ContainsKey(mesh.Vertices[i].GetHashCode());
 
-                    if (nodes_of_curves.ContainsKey(mesh.Vertices[i].GetHashCode()))
-                    {
-                        var hash = mesh.Vertices[i].GetHashCode();
+                    //if (nodes_of_curves.ContainsKey(mesh.Vertices[i].GetHashCode()))
+                    //{
+                    //    var hash = mesh.Vertices[i].GetHashCode();
 
-                       
-                        
+                    //    sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "\n";
+                    //}
+                    //else if (nodes_of_edges.ContainsKey(mesh.Vertices[i].GetHashCode()))
+                    //{
+                    //    //add to some edge submodelpart
+                    //}
 
-                        sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "\n";
-                    }
-                    else if (nodes_of_edges.ContainsKey(mesh.Vertices[i].GetHashCode()))
-                    {
-                        //add to some edge submodelpart
-                    }
+                    //create testpoint to see if current mesh-vertex is included in boundary conditions. This seems to be necessary as 
+                    //vertices and points seem to have different hash-codes
 
                     Point3d testpoint = mesh.Vertices[i];
-                    var testhash = testpoint.GetHashCode();
 
-                    if (nodes_of_curves.ContainsKey(testhash))
+                    if (nodes_of_curves.ContainsKey(testpoint.GetHashCode()))
                     {
-                        sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "testhash \n";
+                        var variable_test = nodes_of_curves[testpoint.GetHashCode()];
+                        Point3d node_from_curve = (Point3d) nodes_of_curves[testpoint.GetHashCode()];
+
+                        if (node_from_curve == null)
+                            continue;
+
+                        //maybe try make threshold depended on mesh size
+
+                        if (node_from_curve.DistanceToSquared(mesh.Vertices[i]) < 0.01)
+                            sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "testhash \n";                   
+
                     }
-                                        
+
 
                 }
 
@@ -435,7 +444,7 @@ namespace Cocodrilo.IO
 
 
 
-                // Add displacement boundary conditions resp. grid-conforming boundary conditions HERE!!!!11!!!!1!!!
+                // Add displacement boundary conditions resp. grid-conforming boundary conditions HERE!
 
                 id_node_counter += mesh.Vertices.Count;
                 sub_model_part_counter++;
