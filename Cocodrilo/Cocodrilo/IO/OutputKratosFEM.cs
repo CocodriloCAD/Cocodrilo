@@ -212,7 +212,7 @@ namespace Cocodrilo.IO
             Hashtable nodes_of_edges = new Hashtable();
             Hashtable nodes_of_curves = new Hashtable();
 
-            List<Point3d> nodesCurves = new List<Point3d>();
+            List<Point3d> startEndPointsCurve = new List<Point3d>();
 
             foreach (var curve in CurveList)
             {
@@ -262,31 +262,24 @@ namespace Cocodrilo.IO
                 {
                     foreach (var mesh in MeshList)
                     {
-                        var polyline = mesh.PullCurve(curve, 0.01);
+                        var polyline = mesh.PullCurve(curve, 0.05);
 
                         user_data_curve.TryGetKratosPropertyIdsBrepIds(
                             ref PropertyIdDictionary);
 
-                        var poly_curve = polyline.PullToMesh(mesh, 0.01);
+                        var poly_curve = polyline.PullToMesh(mesh, 0.05);
 
                         Polyline pol = poly_curve.ToPolyline();
 
+                        startEndPointsCurve.Add(pol.First());
+                        startEndPointsCurve.Add(pol.Last());
                         
-
                         foreach (var point in pol)
                         {
-                            // hashcodes of MeshPoints and Points3d seem to differ 
-                            var closestMeshPoint = mesh.ClosestMeshPoint(point, 0.00001);
-                            closestMeshPoint.GetHashCode();
-                            nodes_of_curves.Add(closestMeshPoint.GetHashCode(), closestMeshPoint);
-
                             var closest_point = mesh.ClosestPoint(point);
                             closest_point.GetHashCode();
                             nodes_of_curves.Add(closest_point.GetHashCode(), closest_point);
-
-                            //mesh.d
-
-
+                                   
                         }
                         //for (int i = 1; i < polyline.PointCount - 1; i++)
                         //{
@@ -371,8 +364,6 @@ namespace Cocodrilo.IO
 
                 for (int i = 0; i < mesh.Vertices.Count; i++)
                 {
-                    //mesh.Vertices[i].GetHashCode();
-
                     node_string += "    " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
                     sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n";
 
@@ -381,39 +372,64 @@ namespace Cocodrilo.IO
                     //if(==) hashcode is in the hashtable of a submodelpart, then do check for index of the respective node in overall node numbering
                     //    sub_model_list(indexer ==).Add(sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n")
 
-                    //bool a = nodes_of_curves.ContainsKey(mesh.Vertices[i].GetHashCode());
 
-                    //if (nodes_of_curves.ContainsKey(mesh.Vertices[i].GetHashCode()))
-                    //{
-                    //    var hash = mesh.Vertices[i].GetHashCode();
+                    // bool to decide whether to check if current vertex corresponds to an inner point of a 
+                    // boundary condition
 
-                    //    sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "\n";
-                    //}
-                    //else if (nodes_of_edges.ContainsKey(mesh.Vertices[i].GetHashCode()))
-                    //{
-                    //    //add to some edge submodelpart
-                    //}
+                    bool checkForInnerPointOfBoundaryCondition = true;
+
+                    //Get node fo mesh that is closest to 1st and last point of curve
+
+                    foreach (Point3d startEndPoint in startEndPointsCurve)
+                    {
+                        if (startEndPoint.DistanceToSquared(mesh.Vertices[i]) < 0.01)
+                        {
+                            sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + " Start/End-Point \n";
+                            checkForInnerPointOfBoundaryCondition = false;
+                        }
+
+                    }
 
                     //create testpoint to see if current mesh-vertex is included in boundary conditions. This seems to be necessary as 
                     //vertices and points seem to have different hash-codes
 
-                    Point3d testpoint = mesh.Vertices[i];
 
-                    if (nodes_of_curves.ContainsKey(testpoint.GetHashCode()))
+                    if (checkForInnerPointOfBoundaryCondition)
                     {
-                        var variable_test = nodes_of_curves[testpoint.GetHashCode()];
-                        Point3d node_from_curve = (Point3d) nodes_of_curves[testpoint.GetHashCode()];
+                        Point3d testpoint = mesh.Vertices[i];
 
-                        if (node_from_curve == null)
-                            continue;
+                        // Add correct submodelpart for nodes from edges
+                        if (nodes_of_edges.ContainsKey(testpoint.GetHashCode()))
+                        {
+                            var variable_test = nodes_of_edges[testpoint.GetHashCode()];
+                            Point3d node_from_edge = (Point3d)nodes_of_edges[testpoint.GetHashCode()];
 
-                        //maybe try make threshold depended on mesh size
+                            if (node_from_edge == null)
+                                continue;
 
-                        if (node_from_curve.DistanceToSquared(mesh.Vertices[i]) < 0.01)
-                            sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "testhash \n";                   
+                            //maybe try make threshold depended on mesh size
+
+                            if (node_from_edge.DistanceToSquared(mesh.Vertices[i]) < 0.01)
+                                sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "testhash \n";
+
+                        }
+                        else if (nodes_of_curves.ContainsKey(testpoint.GetHashCode()))
+                        {
+                            var variable_test = nodes_of_curves[testpoint.GetHashCode()];
+                            Point3d node_from_curve = (Point3d)nodes_of_curves[testpoint.GetHashCode()];
+
+                            if (node_from_curve == null)
+                                continue;
+
+                            //maybe try make threshold depended on mesh size
+
+                            if (node_from_curve.DistanceToSquared(mesh.Vertices[i]) < 0.01)
+                                sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "inner Point \n";
+
+
+                        }
 
                     }
-
 
                 }
 
