@@ -209,8 +209,10 @@ namespace Cocodrilo.IO
 
             // Tables for points belonging to edges and curves
 
-            Hashtable nodes_of_edges = new Hashtable();
+            Hashtable table_of_edges = new Hashtable();
             Hashtable nodes_of_curves = new Hashtable();
+
+            //Dictionary<int, List<Point3d>> nodes_of_edges = new Dictionary<int, List<Point3d>>();
 
             List<Point3d> startEndPointsCurve = new List<Point3d>();
 
@@ -220,55 +222,38 @@ namespace Cocodrilo.IO
 
                 if (user_data_edge != null)
                 {
-                    foreach (var mesh in MeshList)
+                    if (curve.GetType() is Polyline)
                     {
-                        // Gets a polyline approximation of the input curve and then moves its control points
-                        // to the closest point on the mesh. Then it "connects the points" over edges so
-                        // that a polyline on the mesh is formed.
-
-                        var polyline = mesh.PullCurve(curve, 0.01);
-
-                        // get PropertyIds and BrepIds used by Kratos of the element user_data_edge
-                        user_data_edge.TryGetKratosPropertyIdsBrepIds(
-                            ref PropertyIdDictionary);
-
-                        // Makes a polyline approximation of the curve and gets the closest point on the
-                        // mesh for each point on the curve. Then it "connects the points" so that you have
-                        // a polyline on the mesh.
-
-                        // Returns undelying polyline or points
-                        var polyLineCurve = polyline.PullToMesh(mesh, 0.01);
-
-
-                        // Give meaningful names!!
-                        Polyline pol = polyLineCurve.ToPolyline();
-
-                        
-                        foreach (var point in pol)
-                        {
-                            var closest_point = mesh.ClosestMeshPoint(point, 0.01);
-                            closest_point.GetHashCode();
-                            nodes_of_edges.Add(closest_point.GetHashCode(), closest_point);
-                                           
-                            
-                        }
-
+                        table_of_edges.Add(curve.GetHashCode(), curve);
                     }
-                }
-                                          
+                    else
+                    {
+                        //throw error alert in Rhino
+                    }
+                }                     
+                                                                           
                 var user_data_curve = curve.UserData.Find(typeof(UserDataCurve)) as UserDataCurve;
 
                 if (user_data_curve != null)
                 {
                     foreach (var mesh in MeshList)
                     {
+                        // Gets a polyline approximation of the input curve and then moves its control points
+                        // to the closest point on the mesh. Then it "connects the points" over edges so
+                        // that a polyline on the mesh is formed.
                         var polyline = mesh.PullCurve(curve, 0.05);
 
+                        // get PropertyIds and BrepIds used by Kratos of the element user_data_edge
                         user_data_curve.TryGetKratosPropertyIdsBrepIds(
                             ref PropertyIdDictionary);
 
+                        // Returns undelying polyline or points
                         var poly_curve = polyline.PullToMesh(mesh, 0.05);
 
+
+                        // Makes a polyline approximation of the curve and gets the closest point on the
+                        // mesh for each point on the curve. Then it "connects the points" so that you have
+                        // a polyline on the mesh.
                         Polyline pol = poly_curve.ToPolyline();
 
                         startEndPointsCurve.Add(pol.First());
@@ -277,7 +262,6 @@ namespace Cocodrilo.IO
                         foreach (var point in pol)
                         {
                             var closest_point = mesh.ClosestPoint(point);
-                            closest_point.GetHashCode();
                             nodes_of_curves.Add(closest_point.GetHashCode(), closest_point);
                                    
                         }
@@ -424,7 +408,7 @@ namespace Cocodrilo.IO
                             //maybe try make threshold depended on mesh size
 
                             if (node_from_curve.DistanceToSquared(mesh.Vertices[i]) < 0.01)
-                                sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "inner Point \n";
+                                sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + " inner Point \n";
 
 
                         }
