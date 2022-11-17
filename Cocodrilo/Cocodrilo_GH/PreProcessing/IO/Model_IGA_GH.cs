@@ -6,6 +6,11 @@ using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using Cocodrilo.ElementProperties;
+using System.Diagnostics;
+using Cocodrilo.IO;
+using Rhino;
+using System.IO;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Cocodrilo_GH.PreProcessing.IO
 {
@@ -33,14 +38,15 @@ namespace Cocodrilo_GH.PreProcessing.IO
         {
             pManager.AddGenericParameter("Analysis", "Ana", "Analysis", GH_ParamAccess.item);
             pManager.AddGenericParameter("Geometries", "Geo", "Geometries", GH_ParamAccess.tree);
-            pManager.AddBooleanParameter("Run", "Run", "Run output", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Write Input Files", "W", "Write input files for the simulation", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Run Analysis", "R", "Runs the analysis", GH_ParamAccess.item, false);
         }
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("IGA Model", "Model", "IGA Model", GH_ParamAccess.item);
+            pManager.AddGenericParameter("IGA Model", "M", "Passes the IGA model. This may be required for multistage or multiphysics analyses.", GH_ParamAccess.item);
             pManager[0].Optional = true;
-            pManager.AddGenericParameter("Path", "Path", "Path to input files.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Path", "P", "Path to input files.", GH_ParamAccess.item);
             pManager[1].Optional = true;
         }
 
@@ -52,10 +58,13 @@ namespace Cocodrilo_GH.PreProcessing.IO
             if (!DA.GetDataTree(1, out GH_Structure<IGH_Goo> geometries)) return;
             var geometries_flat = geometries.FlattenData();
 
-            bool run_analysis = false;
-            if (!DA.GetData(2, ref run_analysis)) return;
+            bool write_input_files = false;
+            if (!DA.GetData(2, ref write_input_files)) return;
 
-            if (run_analysis)
+            bool run_analysis = false;
+            if (!DA.GetData(3, ref run_analysis)) return;
+
+            if (write_input_files)
             {
                 /// Resets the entire user data stored on the geometries.
                 ResetUserData(geometries_flat);
@@ -220,6 +229,25 @@ namespace Cocodrilo_GH.PreProcessing.IO
                 mPathName = output_kratos_iga.GetProjectPath();
             }
             DA.SetData(1, mPathName);
+
+            if (run_analysis)
+            {
+                Process proc = null;
+                try
+                {
+                    proc = new Process();
+                    proc.StartInfo.WorkingDirectory = mPathName + "/";
+                    proc.StartInfo.FileName = mPathName + "\\run_kratos.bat";
+                    proc.StartInfo.CreateNoWindow = true;
+                    proc.Start();
+                }
+                catch (Exception ex)
+                {
+                    RhinoApp.WriteLine(ex.StackTrace.ToString());
+                }
+
+                Message = "Kratos started.";
+            }
         }
 
         /// <summary>

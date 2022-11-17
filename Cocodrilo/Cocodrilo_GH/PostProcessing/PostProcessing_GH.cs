@@ -14,17 +14,18 @@ namespace Cocodrilo_GH.PostProcessing
         bool mEvaluationPoints = false;
         bool mCouplingEvaluationPoints = false;
 
-        string last_path = "";
         public PostProcessing_GH()
           : base("PostProcessing", "PostProcessing",
-              "Controls the PostProcessing",
+              "Creates and controls the Post-Processing",
               "Cocodrilo", "PostProcessing")
         {
         }
 
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Path", "Path", "Path of Analysis", GH_ParamAccess.item);        }
+            pManager.AddTextParameter("Path", "P", "Path of analysis", GH_ParamAccess.item);
+            pManager.AddBooleanParameter("Read Data", "R", "Read and renew data", GH_ParamAccess.item, true);
+        }
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
@@ -36,29 +37,21 @@ namespace Cocodrilo_GH.PostProcessing
             string path = null;
             if (!DA.GetData(0, ref path)) return;
 
-            string[] files = System.IO.Directory.GetFiles(path, "*.georhino.json");
-            if (files.Length > 0)
+            bool read_data = true;
+            if (!DA.GetData(1, ref read_data)) return;
+
+            if (read_data)
             {
-                if (last_path != files[0])
+                string[] files = System.IO.Directory.GetFiles(path, "*.georhino.json");
+                if (files.Length > 0)
                 {
                     mPostProcessing = new Cocodrilo.PostProcessing.PostProcessing(files[0]);
-                    last_path = files[0];
+                }
+                else
+                {
+                    return;
                 }
             }
-            else
-            {
-                return;
-            }
-
-            //Cocodrilo.PostProcessing.PostProcessing.s_MinMax[0] = mPostProcessing.mCurrentMinMax[0];
-            //Cocodrilo.PostProcessing.PostProcessing.s_MinMax[1] = mPostProcessing.mCurrentMinMax[1];
-
-            //mPostProcessing.ShowPostProcessing(
-            //    1.0, 1e4,1,
-            //    mShowResultColorPlot,
-            //    mEvaluationPoints,
-            //    mCouplingEvaluationPoints,
-            //    false, false, false, false);
 
             DA.SetData(0, mPostProcessing);
         }

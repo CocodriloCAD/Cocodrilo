@@ -37,7 +37,8 @@ namespace Cocodrilo_GH.PostProcessing.Results
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddNumberParameter("QP Results", "R", "Results at Quadrature Point", GH_ParamAccess.tree);
+            pManager.AddGenericParameter("CP results with control point id", "R", "Results at each control point with corresponding Id.", GH_ParamAccess.item);
+            pManager.AddNumberParameter("CP results per patch", "R", "Results at control point.", GH_ParamAccess.tree);
             pManager.AddNumberParameter("Min Max", "M", "Min and Max values of selected result type.", GH_ParamAccess.list);
         }
 
@@ -75,6 +76,8 @@ namespace Cocodrilo_GH.PostProcessing.Results
             var result_indices = Cocodrilo.PostProcessing.PostProcessingUtilities.GetResultIndices(this_result_info);
             SetResultIndices(result_indices);
 
+            DA.SetData(0, this_result_info.Results);
+
             Grasshopper.DataTree<double> result_tree = new Grasshopper.DataTree<double>();
             foreach (var patch in ThisPostProcessing.mBrepId_NodeId_Coordinates)
             {
@@ -89,10 +92,10 @@ namespace Cocodrilo_GH.PostProcessing.Results
                 }
             }
 
-            DA.SetDataTree(0, result_tree);
+            DA.SetDataTree(1, result_tree);
 
             var min_max = ThisPostProcessing.GetComputeMinMax(this_result_info, ResultDirectionIndex);
-            DA.SetDataList(1, new double[] {min_max[0], min_max[1]});
+            DA.SetDataList(2, new double[] {min_max[0], min_max[1]});
         }
 
         private void SetStepSlider(List<int> ResultSteps, ref int StepIndex)

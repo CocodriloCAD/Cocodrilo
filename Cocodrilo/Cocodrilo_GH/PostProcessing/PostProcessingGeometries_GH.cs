@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 
 namespace Cocodrilo_GH.PostProcessing
@@ -23,9 +26,10 @@ namespace Cocodrilo_GH.PostProcessing
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Post Processing", "Post", "PostProcessing of Apparent Solution", GH_ParamAccess.item);
-            pManager.AddNumberParameter("Displacement Scaling", "Scaling", "Scaling Factor for the Apparent Solution", GH_ParamAccess.item, 1.0);
-            pManager.AddNumberParameter("Flying Node Limit", "FlyingNodeLimit", "Flying Node Limit for the Apparent Solution", GH_ParamAccess.item, 1.0e4);
+            pManager.AddGenericParameter("Post Processing", "P", "Post-processing of apparent solution", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Results", "R", "Control point results.", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Displacement Scaling", "S", "Scaling factor for the apparent solution", GH_ParamAccess.item, 1.0);
+            pManager.AddNumberParameter("Flying Node Limit", "F", "Flying node limit for the apparent solution", GH_ParamAccess.item, 1.0e4);
         }
 
         /// <summary>
@@ -33,7 +37,7 @@ namespace Cocodrilo_GH.PostProcessing
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddBrepParameter("Breps", "Breps", "Breps of the current solution.", GH_ParamAccess.list);
+            pManager.AddBrepParameter("Breps", "B", "Breps of the current solution", GH_ParamAccess.tree);
         }
 
         /// <summary>
@@ -45,17 +49,27 @@ namespace Cocodrilo_GH.PostProcessing
             Cocodrilo.PostProcessing.PostProcessing post_processing = null;
             if (!DA.GetData(0, ref post_processing)) return;
 
+            Dictionary<int, double[]> results = new Dictionary<int, double[]>();
+            bool results_received = DA.GetData(1, ref results);
+
             double displacement_scaling = 1.0;
-            if (!DA.GetData(1, ref displacement_scaling)) return;
+            if (!DA.GetData(2, ref displacement_scaling)) return;
 
             double flying_node_limit = 1.0e6;
-            if (!DA.GetData(2, ref flying_node_limit)) return;
+            if (!DA.GetData(3, ref flying_node_limit)) return;
 
-            var geometries = post_processing.GetDeformedGeometries(displacement_scaling, flying_node_limit, post_processing.CurrentDisplacements());
+            var geometries = (results_received)
+                ? post_processing.GetDeformedGeometries(displacement_scaling, flying_node_limit, results)
+                : post_processing.BrepId_Breps;
 
-            var breps = geometries.Values.ToList();
+            Grasshopper.DataTree<Brep> result_tree = new Grasshopper.DataTree<Brep>();
+            foreach (var geometry in geometries)
+            {
+                Grasshopper.Kernel.Data.GH_Path path = new Grasshopper.Kernel.Data.GH_Path(geometry.Key);
+                result_tree.Add(geometry.Value, path);
+            }
 
-            DA.SetDataList(0, breps);
+            DA.SetDataTree(0, result_tree);
         }
 
         /// <summary>

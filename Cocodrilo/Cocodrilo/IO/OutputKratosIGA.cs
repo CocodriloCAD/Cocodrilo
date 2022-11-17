@@ -9,6 +9,8 @@ using System.Web.Script.Serialization;
 using Cocodrilo.ElementProperties;
 using Cocodrilo.UserData;
 using Cocodrilo.Analyses;
+using Rhino.ApplicationSettings;
+using Rhino.Render.ChangeQueue;
 
 namespace Cocodrilo.IO
 {
@@ -126,6 +128,26 @@ namespace Cocodrilo.IO
             {
                 RhinoApp.WriteLine("No Kratos scripts found in the folder: KRATOS_TEMPLATES.\nkratos_main_iga.py is created internally.");
                 OutputPythonScripts.WriteKratosMainIga(project_path + "/" + "kratos_main_iga.py");
+            }
+
+            //CREATE .bat FILE
+            try
+            {
+                System.IO.File.WriteAllLines(project_path + "/" + "run_kratos.bat",
+                new List<string> {
+                    ":: Adds the kratos installation path temporaryly to environmental variable \"PATH\"",
+                    "@echo off",
+                    "",
+                    ":: Runs kratos with the input file",
+                    "..\\kratos_main\\kratos_main.exe",
+                    "",
+                    ":: Keep console open",
+                    "rem pause"
+                    });
+            }
+            catch
+            {
+                RhinoApp.WriteLine("Not possible to write run_kratos.bat file.");
             }
         }
 
