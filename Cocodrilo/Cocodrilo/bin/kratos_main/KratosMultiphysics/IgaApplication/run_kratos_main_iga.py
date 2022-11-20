@@ -1,0 +1,1 @@
+exec(open("kratos_main_iga.py").read())
