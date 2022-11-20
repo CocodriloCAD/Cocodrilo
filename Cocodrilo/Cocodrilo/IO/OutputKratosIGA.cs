@@ -167,7 +167,7 @@ namespace Cocodrilo.IO
                 RhinoApp.WriteLine(ex.ToString());
             }
 
-            OutputPythonScripts.WriteKratosOptimization(project_path + "/" + "kratos_main_optimization.py", MaterialIds);
+            OutputPythonScripts.WriteKratosOptimization(project_path + "/" + "kratos_main_iga.py", MaterialIds);
         }
 
         public void WriteGeometryJson(
