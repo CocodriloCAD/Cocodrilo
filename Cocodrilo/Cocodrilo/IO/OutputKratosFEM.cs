@@ -216,15 +216,24 @@ namespace Cocodrilo.IO
 
             List<Point3d> startEndPointsCurve = new List<Point3d>();
 
+            // couple this somehow with meshlength
+            double max_parameter_segment_length = 0.4; 
+
             foreach (var curve in CurveList)
             {
                 var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
 
+                
                 if (user_data_edge != null)
-                {
-                    if (curve.GetType() is Polyline)
+                {                    
+                    if (curve is PolylineCurve)
                     {
-                        table_of_edges.Add(curve.GetHashCode(), curve);
+                        //Polyline pol = curve.ToPolyline(0.1, 0.1, 0.01, 1.0);
+                        PolylineCurve poyline_curve = curve.ToPolyline(-1, 1, 0.1, 0.1, 0.1, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance, 0, max_parameter_segment_length, true);
+                        Polyline polyline;
+                        poyline_curve.TryGetPolyline(out polyline);
+                                      
+                        table_of_edges.Add(curve.GetHashCode(), polyline);
                     }
                     else
                     {
@@ -383,21 +392,21 @@ namespace Cocodrilo.IO
                         Point3d testpoint = mesh.Vertices[i];
 
                         // Add correct submodelpart for nodes from edges
-                        if (nodes_of_edges.ContainsKey(testpoint.GetHashCode()))
-                        {
-                            var variable_test = nodes_of_edges[testpoint.GetHashCode()];
-                            Point3d node_from_edge = (Point3d)nodes_of_edges[testpoint.GetHashCode()];
+                        //if (nodes_of_edges.ContainsKey(testpoint.GetHashCode()))
+                        //{
+                        //    var variable_test = nodes_of_edges[testpoint.GetHashCode()];
+                        //    Point3d node_from_edge = (Point3d)nodes_of_edges[testpoint.GetHashCode()];
 
-                            if (node_from_edge == null)
-                                continue;
+                        //    if (node_from_edge == null)
+                        //        continue;
 
-                            //maybe try make threshold depended on mesh size
+                        //    //maybe try make threshold depended on mesh size
 
-                            if (node_from_edge.DistanceToSquared(mesh.Vertices[i]) < 0.01)
-                                sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "testhash \n";
+                        //    if (node_from_edge.DistanceToSquared(mesh.Vertices[i]) < 0.01)
+                        //        sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "testhash \n";
 
-                        }
-                        else if (nodes_of_curves.ContainsKey(testpoint.GetHashCode()))
+                        //}
+                        if (nodes_of_curves.ContainsKey(testpoint.GetHashCode()))
                         {
                             var variable_test = nodes_of_curves[testpoint.GetHashCode()];
                             Point3d node_from_curve = (Point3d)nodes_of_curves[testpoint.GetHashCode()];
