@@ -79,7 +79,7 @@ namespace Cocodrilo.IO
                     System.IO.File.WriteAllLines(project_path + "/" + "Materials.json", new List<string> { GetMaterials(property_id_dictionary) });
                               
                     System.IO.File.WriteAllLines(project_path + "/" + "Grid.mdpa",
-                        new List<string> { GetFemMdpaFile(MeshList, outputCopy.mCurveList, ref property_id_dictionary) });
+                        new List<string> { GetMPM_MdpaFile(MeshList, outputCopy.mCurveList, ref property_id_dictionary, outputCopy.mBodyMesh) });
                                         
                 }
                 else
@@ -116,9 +116,9 @@ namespace Cocodrilo.IO
             //value of brep_ids should be changed after calling GeomteryUtilities.AssignBrepIds
             GeometryUtilities.AssignBrepIdToMesh(MeshList, ref brep_ids);
 
-            string mdpa_file;
+            string body_mdpa_file;
 
-            mdpa_file = "Begin ModelPartData\n"
+            body_mdpa_file = "Begin ModelPartData\n"
                         + "//  VARIABLE_NAME value\n"
                         + "End ModelPartData\n\n";
 
@@ -134,9 +134,9 @@ namespace Cocodrilo.IO
 
             for (int i = 0; i < MeshList.Count; i++)
             {
-                mdpa_file += "Begin Properties " + i.ToString() + "\n End Properties \n";
+                body_mdpa_file += "Begin Properties " + i.ToString() + "\n End Properties \n";
             }
-            mdpa_file += "\n\n";
+            body_mdpa_file += "\n\n";
 
 
             string node_string = "Begin Nodes\n";
@@ -186,11 +186,11 @@ namespace Cocodrilo.IO
             node_string += "End Nodes\n\n";
             element_string += "End Elements\n\n";
 
-            mdpa_file += node_string;
-            mdpa_file += element_string;
-            mdpa_file += sub_model_part_string;
+            body_mdpa_file += node_string;
+            body_mdpa_file += element_string;
+            body_mdpa_file += sub_model_part_string;
 
-            return mdpa_file;
+            return body_mdpa_file;
         }
 
 
@@ -471,6 +471,87 @@ namespace Cocodrilo.IO
 
             return mdpa_file;
         }
+
+        ///
+        /// Function overload of function GetFemMdpaFile
+        /// Reason: To use this function for MPM, the nodes of the bodymesh need to be added to the file grid mdpa, but function shall also be usable 
+        /// to generate mdpa files for fem. Therefore I created this function overload: the function without the List<Mesh> Bodymesh input can be used (maybe needs to be adapted still)
+        /// for FEM mdpa files, the function with the List<Mesh> Bodymesh input argument is to be used for the generation of the grid.mpda for MPM ~ phfranz, Nov '22
+        /// 
+
+        private string GetMPM_MdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary, List<Mesh> BodyMeshList)
+        {
+            string basicGridMdpa = GetFemMdpaFile(MeshList, CurveList, ref PropertyIdDictionary);
+
+            //public static string getBetween(string strSource, string strStart, string strEnd)
+            //{
+            //    if (strSource.Contains(strStart) && strSource.Contains(strEnd))
+            //    {
+            //        int Start, End;
+            //        Start = strSource.IndexOf(strStart, 0) + strStart.Length;
+            //        End = strSource.IndexOf(strEnd, Start);
+            //        return strSource.Substring(Start, End - Start);
+            //    }
+
+            //    return "";
+            //}
+
+            int indexEnd = basicGridMdpa.IndexOf("End Nodes");
+
+
+            ///Get index of last node of background grid
+
+            int number_nodes_background_grid = 0;
+
+            foreach (var mesh in MeshList)
+            {
+                number_nodes_background_grid += mesh.Vertices.Count;
+
+            }
+
+            /// The following code is from the function WriteBodyMdpaFile and slightly apated to only add the nodes of the 
+            /// body mesh to the grid mdpa file            
+
+            int brep_ids = 1;
+
+            //value of brep_ids should be changed after calling GeomteryUtilities.AssignBrepIds
+            GeometryUtilities.AssignBrepIdToMesh(MeshList, ref brep_ids);
+
+            string nodes_of_body_mdpa_file= " \n";
+                   
+            string node_string = null;
+                        
+            int id_node_counter = number_nodes_background_grid+1;
+            
+            for (int m = 0; m < BodyMeshList.Count; m++)
+            {
+                var mesh = BodyMeshList[m];
+
+                for (int i = 0; i < mesh.Vertices.Count-1; i++)
+                {
+                    node_string += "    " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
+                }
+
+                node_string += "    " + (id_node_counter + mesh.Vertices.Count-1).ToString() + " " + mesh.Vertices[mesh.Vertices.Count-1].X + " " + mesh.Vertices[mesh.Vertices.Count - 1].Y + " " + mesh.Vertices[mesh.Vertices.Count - 1].Z;
+
+                id_node_counter += mesh.Vertices.Count;
+            }
+
+            nodes_of_body_mdpa_file += node_string;
+
+            // now basicGridMpda is completed by adding the nodes of the body mesh
+
+            string completeGridMdpa = basicGridMdpa.Insert(indexEnd-1, nodes_of_body_mdpa_file);
+
+            return completeGridMdpa;
+        }
+
+
+
+
+
+
+
 
         /// <summary>
         /// 
