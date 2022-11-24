@@ -194,7 +194,7 @@ namespace Cocodrilo.IO
         }
 
 
-        private string GetFemMdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary)
+        private string GetFemMdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary, int number_of_body_mesh_nodes = 1 ,int number_of_body_mesh_elements = 1)
         {
             int brep_ids = 1;
 
@@ -274,24 +274,6 @@ namespace Cocodrilo.IO
                             nodes_of_curves.Add(closest_point.GetHashCode(), closest_point);
                                    
                         }
-                        //for (int i = 1; i < polyline.PointCount - 1; i++)
-                        //{
-                        //    //round depending on size of mesh
-                        //    //double tempRoundX = Math.Round(pol[i].X, 2);
-                        //    //double tempRoundY = Math.Round(pol[i].Y, 2);
-                        //    //double tempRoundZ = Math.Round(pol[i].Z, 2);
-
-                        //    //var point = new Point3d(tempRoundZ, tempRoundY, tempRoundZ);
-
-                        //    //relate maximum distance to size of mesh
-                        //    var closest_point = mesh.ClosestPoint(pol[i]);
-                        //    closest_point.GetHashCode();
-                        //    nodes_of_curves.Add(closest_point.GetHashCode(), closest_point);
-
-                        //    nodesCurves.Add(closest_point);
-
-
-                        //}
                     }
                 }
             }
@@ -320,8 +302,20 @@ namespace Cocodrilo.IO
 
             string node_string = "Begin Nodes\n";
             string element_string = "Begin Conditions Element2D4N// GUI group identifier: Grid Auto1 \n";
-            int id_node_counter = 1;
-            int id_element_counter = 1;
+
+            int id_node_counter = 0;
+            int id_element_counter = 0;
+
+            if (number_of_body_mesh_nodes != 1)
+                id_node_counter = number_of_body_mesh_nodes + 1;
+            else
+                id_node_counter = 1;
+
+            if (number_of_body_mesh_elements != 1)
+                id_element_counter = number_of_body_mesh_elements + 1;
+            else
+                id_element_counter = 1;
+           
 
             int sub_model_part_counter = 1;
             //How to get total number of submodelparts?
@@ -457,9 +451,7 @@ namespace Cocodrilo.IO
 
                 id_node_counter += mesh.Vertices.Count;
                 sub_model_part_counter++;
-
-               
-
+                               
             }
             node_string += "End Nodes\n\n";
             element_string += "End Elements\n\n";
@@ -481,7 +473,24 @@ namespace Cocodrilo.IO
 
         private string GetMPM_MdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary, List<Mesh> BodyMeshList)
         {
-            string basicGridMdpa = GetFemMdpaFile(MeshList, CurveList, ref PropertyIdDictionary);
+            int number_nodes_body_mesh = 0;
+
+            int number_of_elements_body_mesh = 0;
+
+            foreach (var mesh in BodyMeshList)
+            {
+                number_nodes_body_mesh += mesh.Vertices.Count;
+
+                foreach (var face in mesh.Faces)
+                {
+                    number_of_elements_body_mesh++;
+                }
+            }
+
+
+            string basicGridMdpa = GetFemMdpaFile(MeshList, CurveList, ref PropertyIdDictionary, number_nodes_body_mesh, number_of_elements_body_mesh);
+
+
 
             //public static string getBetween(string strSource, string strStart, string strEnd)
             //{
@@ -496,18 +505,18 @@ namespace Cocodrilo.IO
             //    return "";
             //}
 
-            int indexEnd = basicGridMdpa.IndexOf("End Nodes");
+            int indexEnd = basicGridMdpa.IndexOf("Begin Nodes");
 
 
             ///Get index of last node of background grid
 
-            int number_nodes_background_grid = 0;
+            //int number_nodes_background_grid = 0;
 
-            foreach (var mesh in MeshList)
-            {
-                number_nodes_background_grid += mesh.Vertices.Count;
+            //foreach (var mesh in MeshList)
+            //{
+            //    number_nodes_background_grid += mesh.Vertices.Count;
 
-            }
+            //}
 
             /// The following code is from the function WriteBodyMdpaFile and slightly apated to only add the nodes of the 
             /// body mesh to the grid mdpa file            
@@ -521,7 +530,7 @@ namespace Cocodrilo.IO
                    
             string node_string = null;
                         
-            int id_node_counter = number_nodes_background_grid+1;
+            int id_node_counter = 1;
             
             for (int m = 0; m < BodyMeshList.Count; m++)
             {
@@ -541,7 +550,7 @@ namespace Cocodrilo.IO
 
             // now basicGridMpda is completed by adding the nodes of the body mesh
 
-            string completeGridMdpa = basicGridMdpa.Insert(indexEnd-1, nodes_of_body_mdpa_file);
+            string completeGridMdpa = basicGridMdpa.Insert(indexEnd+11, nodes_of_body_mdpa_file);
 
             return completeGridMdpa;
         }
