@@ -158,7 +158,8 @@ namespace Cocodrilo.IO
             {
 
                 sub_model_part_string += "Begin SubModelPart Parts_Solid_Solid_Auto1 // Group Solid Auto1 // Subtree Parts_Solid\n";
-                                
+                sub_model_part_string += "  Begin SubModelPartNodes\n";
+
                 var mesh = MeshList[m];
 
                 for (int i = 0; i < mesh.Vertices.Count; i++)
@@ -167,8 +168,8 @@ namespace Cocodrilo.IO
                     sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n";
                 }
 
-                sub_model_part_string += "End SubModelPartNodes\n";
-                sub_model_part_string += "Begin SubModelPartConditions\n";
+                sub_model_part_string += "  End SubModelPartNodes\n";
+                sub_model_part_string += "  Begin SubModelPartElements\n";
 
                 foreach (var face in mesh.Faces)
                 {
@@ -177,7 +178,9 @@ namespace Cocodrilo.IO
                     id_element_counter++;
                 }
 
-                sub_model_part_string += "End SubModelPartConditions\n";
+                sub_model_part_string += "  End SubModelPartElements\n";
+                sub_model_part_string += "  Begin SubModelPartConditions\n";
+                sub_model_part_string += "  End SubModelPartConditions\n";
                 sub_model_part_string += "End SubModelPart\n\n";
 
                 id_node_counter += mesh.Vertices.Count;
@@ -340,7 +343,7 @@ namespace Cocodrilo.IO
                 // Group Name and Submodelpart Name must become dynamic parameters
                 // use here "Begin"+CocodriloPlugIn.Instance.GetProperty(property_id, out bool success)+"...
 
-                sub_model_part_string += "Begin SubModelPart Parts_Solid_Solid_Auto1 // Group Grid Auto1 // Subtree Parts_Grid\n" +
+                sub_model_part_string += "Begin SubModelPart Parts_Grid_Grid_Auto1 // Group Grid Auto1 // Subtree Parts_Grid\n" +
                                          "  Begin SubModelPartNodes\n";
 
                 //make modelpartname, group and subtree automatic
@@ -371,7 +374,7 @@ namespace Cocodrilo.IO
                     {
                         if (startEndPoint.DistanceToSquared(mesh.Vertices[i]) < 0.01)
                         {
-                            sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + " Start/End-Point \n";
+                            sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "\n";
                             checkForInnerPointOfBoundaryCondition = false;
                         }
 
@@ -411,7 +414,7 @@ namespace Cocodrilo.IO
                             //maybe try make threshold depended on mesh size
 
                             if (node_from_curve.DistanceToSquared(mesh.Vertices[i]) < 0.01)
-                                sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + " inner Point \n";
+                                sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + " \n";
 
 
                         }
@@ -588,7 +591,7 @@ namespace Cocodrilo.IO
 
                 var property_dict = new Dict
                     {
-                        {"model_part_name", "IgaModelPart." + this_property.GetKratosModelPart()},
+                        {"model_part_name", "Initial_MPM_Material." + this_property.GetKratosModelPart()},
                         {"properties_id", this_property.mPropertyId},
                     };
 
