@@ -22,6 +22,8 @@ namespace Cocodrilo.Materials
 
         public int particlesPerElement { get; set; }
 
+        public double thickness { get; set; }
+
 
 
         public MaterialNonLinear()
@@ -30,7 +32,7 @@ namespace Cocodrilo.Materials
 
         public MaterialNonLinear(
             String Name, string ConstitutiveLaw, double Density = 1.0, double YoungsModulus = 200000, double Nue = 0.0, double Cohesion = 0.0, double InternalFrictionAngle = 0.0, 
-            double InternalDilatationAngle = 0.0, int NumberOfParticles = 3)
+            double InternalDilatationAngle = 0.0, int NumberOfParticles = 3, double Thickness = 1.0)
             : base(Name)
         {
             this.constitutiveLaw = ConstitutiveLaw;
@@ -41,6 +43,7 @@ namespace Cocodrilo.Materials
             this.internalFrictionAngle = InternalFrictionAngle;
             this.internalDilatancyAngle = InternalDilatationAngle;
             this.particlesPerElement = NumberOfParticles;
+            this.thickness = Thickness;
         }
 
         
@@ -48,6 +51,7 @@ namespace Cocodrilo.Materials
         {
             return new Dictionary<string, object>
             {
+                {"THICKNESS", thickness },
                 {"YOUNG_MODULUS", youngsModulus},
                 {"POISSON_RATIO", poissonRatio},
                 {"DENSITY", density},
@@ -62,7 +66,7 @@ namespace Cocodrilo.Materials
         {
             return new Dictionary<string, object>
             {
-                {"name", constitutiveLaw}
+                {"NAME", constitutiveLaw}
             };
         }
         

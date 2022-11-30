@@ -605,8 +605,8 @@ namespace Cocodrilo.IO
                     foreach (var material_variable in material_variables)
                         variables.Add(material_variable.Key, material_variable.Value);
 
-                    material_dict.Add("name", material.Name);
-                    material_dict.Add("material_id", material.Id);
+                    //material_dict.Add("name", material.Name);
+                    //material_dict.Add("material_id", material.Id);
                     material_dict.Add("constitutive_law", material.GetKratosConstitutiveLaw());
 
                     if (material.HasKratosSubProperties())
