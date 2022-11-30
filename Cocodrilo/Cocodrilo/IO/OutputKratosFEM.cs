@@ -68,17 +68,17 @@ namespace Cocodrilo.IO
 
                     Mesh bodyMesh = null;
                     
-                    System.IO.File.WriteAllLines(project_path + "/" + "Body.mdpa", new List<string> {
+                    System.IO.File.WriteAllLines(project_path + "/"+ outputCopy.Name + "_Body.mdpa", new List<string> {
                         WriteBodyMdpaFile(outputCopy.mBodyMesh, outputCopy.mCurveList, ref property_id_dictionary, ref bodyMesh) });
                     
 
                     //call of WriteProjectParameters with downcasted analysis to access class members
 
-                    System.IO.File.WriteAllLines(project_path + "/" + "ProjectParamaters.json", new List<string> { WriteProjectParameters(project_path, ref outputCopy) });
+                    System.IO.File.WriteAllLines(project_path + "/" + "ProjectParameters.json", new List<string> { WriteProjectParameters(project_path, ref outputCopy) });
                     
-                    System.IO.File.WriteAllLines(project_path + "/" + "Materials.json", new List<string> { GetMaterials(property_id_dictionary) });
+                    System.IO.File.WriteAllLines(project_path + "/" + "ParticleMaterials.json", new List<string> { GetMaterials(property_id_dictionary) });
                               
-                    System.IO.File.WriteAllLines(project_path + "/" + "Grid.mdpa",
+                    System.IO.File.WriteAllLines(project_path + "/" + outputCopy.Name + "_Grid.mdpa",
                         new List<string> { GetMPM_MdpaFile(MeshList, outputCopy.mCurveList, ref property_id_dictionary, outputCopy.mBodyMesh) });
                                         
                 }
@@ -304,7 +304,7 @@ namespace Cocodrilo.IO
             mdpa_file += "\n\n";
 
             string node_string = "Begin Nodes\n";
-            string element_string = "Begin Conditions Element2D4N// GUI group identifier: Grid Auto1 \n";
+            string element_string = "Begin Elements Element2D4N// GUI group identifier: Grid Auto1 \n";
 
             int id_node_counter = 0;
             int id_element_counter = 0;
@@ -591,7 +591,7 @@ namespace Cocodrilo.IO
 
                 var property_dict = new Dict
                     {
-                        {"model_part_name", "Initial_MPM_Material." + this_property.GetKratosModelPart()},
+                        {"model_part_name", "Initial_MPM_Material.Parts_Solid_Solid_Auto1" },// + this_property.GetKratosModelPart()},
                         {"properties_id", this_property.mPropertyId},
                     };
 
@@ -782,9 +782,11 @@ namespace Cocodrilo.IO
 
                 problem_data.Add("end_time", copyForAccess.Time);
 
+                time_stepping.Add("time_step", copyForAccess.mStepSize);
+
+                solver_settings.Add("time_stepping", time_stepping);
                 solver_settings.Add("solver_type", "Dynamic");
                 solver_settings.Add("model_part_name", "MPM_Material");
-
                 solver_settings.Add("domain_size", 2);
                 solver_settings.Add("echo_level", 1);
                 solver_settings.Add("analysis_type", "non_linear");
@@ -792,7 +794,7 @@ namespace Cocodrilo.IO
 
                 solver_settings.Add("scheme_type", copyForAccess.Scheme);
 
-                time_stepping.Add("time_step", copyForAccess.mStepSize);
+                
                                
             }
 
@@ -844,10 +846,10 @@ namespace Cocodrilo.IO
                             { "scaling", false },
                             { "verbosity", 1 } 
                 };
-                      
+
+            //     solver_settings.Add("time_stepping", time_stepping);
             solver_settings.Add("model_import_settings", model_import_settings);
             solver_settings.Add("material_import_settings", material_import_settings);
-            solver_settings.Add("time_stepping", time_stepping);
             solver_settings.Add("convergence_criterion", "residual criterion");
             solver_settings.Add("displacement_relative_tolerance", 0.0001);
             solver_settings.Add("displacement_absolute_tolerance", 1e-9);
@@ -1119,13 +1121,15 @@ namespace Cocodrilo.IO
 
             //end grid output
 
+
+
             var dict = new Dict
                         {
                             {"problem_data", problem_data},
                             {"solver_settings", solver_settings},
                             {"processes", processes },
                             {"output_processes", output_processes},
-
+                            {"analysis_stage", "KratosMultiphysics.ParticleMechanicsApplication.particle_mechanics_analysis"}
                         };
 
             var serializer = new JavaScriptSerializer();

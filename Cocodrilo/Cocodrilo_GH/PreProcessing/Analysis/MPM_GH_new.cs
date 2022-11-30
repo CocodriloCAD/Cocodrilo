@@ -69,7 +69,8 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 			}
 
 			Cocodrilo.Analyses.Analysis AnalysisType = null;
-			if (!DA.GetData(1, ref AnalysisType)) return;
+			DA.GetData(1, ref AnalysisType);
+			//if (!DA.GetData(1, ref AnalysisType)) return;
 
 			if (!DA.GetDataTree(2, out GH_Structure<IGH_Goo> geometries)) return;
 			var geometries_flat = geometries.FlattenData();

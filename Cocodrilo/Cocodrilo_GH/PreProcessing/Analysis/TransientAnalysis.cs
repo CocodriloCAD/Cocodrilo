@@ -42,19 +42,19 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
             pManager.AddBooleanParameter("AutomaticRayleigh", "AutomaticRayleigh", "?", GH_ParamAccess.item, false);
 
             //public double DampingRatio0 { get; set; }
-            pManager.AddNumberParameter("DampingRatio0", "Damping Ratio 0", "?", GH_ParamAccess.item, 1);
+            pManager.AddNumberParameter("DampingRatio0", "Damping Ratio 0", "alpha", GH_ParamAccess.item, 1);
 
             //public double DampingRatio1 { get; set; }
-            pManager.AddNumberParameter("DampingRatio1", "Damping Ratio 1", "?", GH_ParamAccess.item, 1);
+            pManager.AddNumberParameter("DampingRatio1", "Damping Ratio 1", "beta", GH_ParamAccess.item, 1);
 
             //public double NumEigen { get; set; }
-            pManager.AddNumberParameter("NumEigen", "Number of Eigenvalues", "?", GH_ParamAccess.item, 1);
+            pManager.AddNumberParameter("NumEigen", "Number of Eigenvalues", "Number of Eigenvalues", GH_ParamAccess.item, 1);
 
-            //public int Time { get; set; }
-            pManager.AddIntegerParameter("Time", "Start Time", "Duration of simulation in [s]", GH_ParamAccess.item, 0);
+            //public number Time { get; set; }
+            pManager.AddNumberParameter("Time", "End Time", "Duration of simulation in [s]", GH_ParamAccess.item, 1.0);
 
             //public double Value { get; set; }
-            pManager.AddNumberParameter("Value", "?", "?", GH_ParamAccess.item, 1);
+            pManager.AddNumberParameter("Value", "Value", "Value", GH_ParamAccess.item, 1);
             
             //End time
 
@@ -117,8 +117,8 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
             double numEigen = 0;
             if (!DA.GetData(13, ref numEigen)) return;
                        
-            int time = 0;
-            if (!DA.GetData(14, ref time)) return;
+            double endTime = 0;
+            if (!DA.GetData(14, ref endTime)) return;
 
             double value = 0;
             if (!DA.GetData(15, ref value)) return;
@@ -131,8 +131,10 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Spaces removed.");
             }
 
-            DA.SetData(0, new Cocodrilo.Analyses.AnalysisTransient(name, numberOfSimulationSteps, maxSolverIteration, solverTolerance, time, value, adaptiveMaxLevel, rayleighAlpha, rayleighBeta, timeIntegration, scheme, automaticRayleigh, dampingRatio0, dampingRatio1,
-            numEigen, stepSize=0.1));
+            var analysis2 = new Cocodrilo.Analyses.AnalysisTransient(name, numberOfSimulationSteps, maxSolverIteration, solverTolerance, endTime, value, adaptiveMaxLevel, rayleighAlpha, rayleighBeta, timeIntegration, scheme, automaticRayleigh, dampingRatio0, dampingRatio1,
+            numEigen, stepSize = 0.1);
+
+            DA.SetData(0, analysis2);
         }
 
         /// <summary>

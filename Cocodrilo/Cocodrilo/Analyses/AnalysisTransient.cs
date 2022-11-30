@@ -3,7 +3,7 @@
     public class AnalysisTransient : Analysis
     {
         public double tolerance { get; set; }
-        public int Time { get; set; }
+        public double Time { get; set; }
         public double mValue { get; set; }
         public int NumStep { get; set; }
         public int MaxIter { get; set; }
@@ -27,7 +27,7 @@
             int NumStep,
             int NumIter,
             double _acc,
-            int Time,
+            double Time,
             double Value,
             int Adaptive_Max_Level,
             double RayleighAlpha,
