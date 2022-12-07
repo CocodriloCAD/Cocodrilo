@@ -66,7 +66,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
             /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Analysis", "Ana", "NonLinearStaticAnalysis", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Analysis", "Ana", "TransientAnalysis", GH_ParamAccess.item);
         }
 
         /// <summary>

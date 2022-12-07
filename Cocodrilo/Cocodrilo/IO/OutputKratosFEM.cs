@@ -840,6 +840,7 @@ namespace Cocodrilo.IO
             /// until now LinearSolversApplication is hardcoded; discuss if other options should be available -> No 22.06
             var linear_solver_settings =
                 new Dict {
+                            { "time_stepping", time_stepping },
                             { "solver_type", "LinearSolversApplication.sparse_lu" },
                             { "max_iteration", 500 },
                             { "tolerance", 1e-9 },
@@ -939,7 +940,7 @@ namespace Cocodrilo.IO
             var gravity_parameters = new Dict
                         {
                             { "model_part_name", "MPM_Material" },
-                            { "variable_name", "MPM_VOLUME_ACCELERATION" },
+                            { "variable_name", "MP_VOLUME_ACCELERATION" },
                             { "modulus", 9.81 },
                             { "direction", gravity_direction }
                         };
@@ -984,7 +985,7 @@ namespace Cocodrilo.IO
             var gauss_points_results =
                 new System.Collections.ArrayList()
                 {
-                                       "MP_Velocity","MP_Displacement"
+                                       "MP_VELOCITY", "MP_DISPLACEMENT"
                 };
 
             var nodal_historical_results =
