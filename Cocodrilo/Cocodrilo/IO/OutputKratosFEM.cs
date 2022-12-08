@@ -612,6 +612,9 @@ namespace Cocodrilo.IO
                     if (material.HasKratosSubProperties())
                     {
                         property_dict.Add("sub_properties", material.GetKratosSubProperties());
+
+                        //make number of particles variable
+                        property_dict.Add("PARTICLES_PER_ELEMENT", 3);
                     }
                 }
 
@@ -851,7 +854,7 @@ namespace Cocodrilo.IO
             //     solver_settings.Add("time_stepping", time_stepping);
             solver_settings.Add("model_import_settings", model_import_settings);
             solver_settings.Add("material_import_settings", material_import_settings);
-            solver_settings.Add("convergence_criterion", "residual criterion");
+            solver_settings.Add("convergence_criterion", "residual_criterion");
             solver_settings.Add("displacement_relative_tolerance", 0.0001);
             solver_settings.Add("displacement_absolute_tolerance", 1e-9);
             solver_settings.Add("residual_relative_tolerance", 0.0001);

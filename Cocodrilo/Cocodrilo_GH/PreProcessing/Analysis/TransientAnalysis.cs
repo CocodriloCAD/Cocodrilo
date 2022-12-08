@@ -51,7 +51,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
             pManager.AddNumberParameter("NumEigen", "Number of Eigenvalues", "Number of Eigenvalues", GH_ParamAccess.item, 1);
 
             //public number Time { get; set; }
-            pManager.AddNumberParameter("Time", "End Time", "Duration of simulation in [s]", GH_ParamAccess.item, 1.0);
+            pManager.AddNumberParameter("End Time", "Time", "Duration of simulation in [s]", GH_ParamAccess.item, 1);
 
             //public double Value { get; set; }
             pManager.AddNumberParameter("Value", "Value", "Value", GH_ParamAccess.item, 1);
@@ -118,7 +118,8 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
             if (!DA.GetData(13, ref numEigen)) return;
                        
             double endTime = 0;
-            if (!DA.GetData(14, ref endTime)) return;
+            //if (!DA.GetData(14, ref endTime)) return;
+            DA.GetData(14, ref endTime);
 
             double value = 0;
             if (!DA.GetData(15, ref value)) return;
