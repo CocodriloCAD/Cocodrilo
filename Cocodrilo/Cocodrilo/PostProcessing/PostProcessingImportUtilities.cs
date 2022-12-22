@@ -20,7 +20,8 @@ namespace Cocodrilo.PostProcessing
             return (result_info.ResultType == ResultType) &&
                 (result_info.LoadCaseType == LoadCaseType) &&
                 (result_info.LoadCaseNumber == LoadCaseNumber) &&
-                (result_info.VectorOrScalar == VectorOrScalar);
+                (result_info.VectorOrScalar == VectorOrScalar) &&
+                (result_info.NodeOrGauss == NodeOrGauss);
         }
     }
 

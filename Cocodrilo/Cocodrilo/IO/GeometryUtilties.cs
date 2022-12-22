@@ -312,113 +312,117 @@ namespace Cocodrilo.IO
             List<Curve> PreviousIntersectionCurveList,
             List<Point> PreviousIntersectionPointList)
         {
-            var Intersection = Rhino.Geometry.Intersect.Intersection.BrepBrep(
-                Brep1,
-                Brep2,
-                RhinoDoc.ActiveDoc.ModelAbsoluteTolerance*15,
-                out var overlap_curves,
-                out var intersection_points);
+            //var intersection_brep = BoundingBox.Intersection(Brep1.GetBoundingBox(true), Brep2.GetBoundingBox(true));
+            //if (intersection_brep.Volume > 0.0)
+            //{
+                var Intersection = Rhino.Geometry.Intersect.Intersection.BrepBrep(
+                    Brep1,
+                    Brep2,
+                    RhinoDoc.ActiveDoc.ModelAbsoluteTolerance*10,
+                    out var overlap_curves,
+                    out var intersection_points);
 
-            for (var index = 0; index < overlap_curves.Length; index++)
-            {
-                var overlap_curve = overlap_curves[index];
-                var user_data_surface_1 = GetIntersectedSurface(overlap_curve, Brep1);
-                var user_data_surface_2 = GetIntersectedSurface(overlap_curve, Brep2);
-
-                if (user_data_surface_1 == null || user_data_surface_2 == null)
-                    continue;
-
-                foreach (var previous_curve in PreviousIntersectionCurveList)
+                for (var index = 0; index < overlap_curves.Length; index++)
                 {
-                    if (overlap_curve.Equals(previous_curve))
-                        overlap_curve = previous_curve;
+                    var overlap_curve = overlap_curves[index];
+                    var user_data_surface_1 = GetIntersectedSurface(overlap_curve, Brep1);
+                    var user_data_surface_2 = GetIntersectedSurface(overlap_curve, Brep2);
+
+                    if (user_data_surface_1 == null || user_data_surface_2 == null)
+                        continue;
+
+                    foreach (var previous_curve in PreviousIntersectionCurveList)
+                    {
+                        if (overlap_curve.Equals(previous_curve))
+                            overlap_curve = previous_curve;
+                    }
+
+                    var user_data_edge = UserDataUtilities.GetOrCreateUserDataEdge(overlap_curve);
+
+                    user_data_edge.AddCoupling(
+                        user_data_surface_1.BrepId,
+                        user_data_surface_2.BrepId);
+
+                    if (user_data_surface_1.IsBrepGroupCoupledWith(
+                            user_data_surface_2.GetThisBrepGroupCouplingId())
+                     && user_data_surface_2.IsBrepGroupCoupledWith(
+                            user_data_surface_1.GetThisBrepGroupCouplingId()))
+                    {
+                        bool rotational_continuity = user_data_surface_1.CheckRotationalContinuity()
+                                                     && user_data_surface_2.CheckRotationalContinuity();
+
+                        var this_support = new Support(
+                            true, true, true,
+                            "0.0", "0.0", "0.0",
+                            rotational_continuity, false);
+
+                        var property_edge_coupling = new PropertyCoupling(
+                            GeometryType.SurfaceEdgeSurfaceEdge,
+                            this_support,
+                            new TimeInterval());
+
+                        user_data_edge.AddNumericalElement(property_edge_coupling);
+                    }
+                    else
+                    {
+                        user_data_edge.DeleteNumericalElementOfPropertyType(typeof(PropertyCoupling));
+                    }
+
+                    IntersectionCurveList.Add(overlap_curve);
+
+                    //if(Panels.UserControlCocodriloPanel.Instance.getIsEdgeCoupling())
+                    //{
+                    //    GetEdgeEdgeIntersection(overlap_curve, Brep1, Brep2, ref IntersectionPointList, PreviousIntersectionPointList);
+                    //}
                 }
 
-                var user_data_edge = UserDataUtilities.GetOrCreateUserDataEdge(overlap_curve);
-
-                user_data_edge.AddCoupling(
-                    user_data_surface_1.BrepId,
-                    user_data_surface_2.BrepId);
-
-                if (user_data_surface_1.IsBrepGroupCoupledWith(
-                        user_data_surface_2.GetThisBrepGroupCouplingId())
-                 && user_data_surface_2.IsBrepGroupCoupledWith(
-                        user_data_surface_1.GetThisBrepGroupCouplingId()))
+                for (var i = 0; i < intersection_points.Length; i++)
                 {
-                    bool rotational_continuity = user_data_surface_1.CheckRotationalContinuity()
-                                                 && user_data_surface_2.CheckRotationalContinuity();
+                    var user_data_surface_1 = GetIntersectedSurface(intersection_points[i], Brep1);
+                    var user_data_surface_2 = GetIntersectedSurface(intersection_points[i], Brep2);
 
-                    var this_support = new Support(
-                        true, true, true,
-                        "0.0", "0.0", "0.0",
-                        rotational_continuity, false);
+                    Point intersection_point = new Point(intersection_points[i]);
+                    foreach (var previous_point in PreviousIntersectionPointList)
+                    {
+                        if (previous_point.Location.Equals(intersection_points[i]))
+                            intersection_point = previous_point;
+                    }
 
-                    var property_edge_coupling = new PropertyCoupling(
-                        GeometryType.SurfaceEdgeSurfaceEdge,
-                        this_support,
-                        new TimeInterval());
+                    var user_data_point = UserDataUtilities.GetOrCreateUserDataPoint(
+                        intersection_point);
 
-                    user_data_edge.AddNumericalElement(property_edge_coupling);
+                    user_data_point.AddCoupling(
+                        user_data_surface_1.BrepId,
+                        user_data_surface_2.BrepId);
+
+                    if (user_data_surface_1.IsBrepGroupCoupledWith(
+                            user_data_surface_2.GetThisBrepGroupCouplingId())
+                     && user_data_surface_2.IsBrepGroupCoupledWith(
+                            user_data_surface_1.GetThisBrepGroupCouplingId()))
+                    {
+                        bool rotational_continuity = user_data_surface_1.CheckRotationalContinuity()
+                                                     && user_data_surface_2.CheckRotationalContinuity();
+
+                        var this_support = new Support(
+                            true, true, true,
+                            "0.0", "0.0", "0.0",
+                            rotational_continuity, false);
+
+                        var property_coupling = new PropertyCoupling(
+                            GeometryType.SurfaceEdgeSurfaceEdge,
+                            this_support,
+                            new TimeInterval());
+
+                        user_data_point.AddNumericalElement(property_coupling);
+                    }
+                    else
+                    {
+                        user_data_point.DeleteNumericalElementOfPropertyType(typeof(PropertyCoupling));
+                    }
+
+                    IntersectionPointList.Add(intersection_point);
                 }
-                else
-                {
-                    user_data_edge.DeleteNumericalElementOfPropertyType(typeof(PropertyCoupling));
-                }
-
-                IntersectionCurveList.Add(overlap_curve);
-
-                //if(Panels.UserControlCocodriloPanel.Instance.getIsEdgeCoupling())
-                //{
-                //    GetEdgeEdgeIntersection(overlap_curve, Brep1, Brep2, ref IntersectionPointList, PreviousIntersectionPointList);
-                //}
-            }
-
-            for (var i = 0; i < intersection_points.Length; i++)
-            {
-                var user_data_surface_1 = GetIntersectedSurface(intersection_points[i], Brep1);
-                var user_data_surface_2 = GetIntersectedSurface(intersection_points[i], Brep2);
-
-                Point intersection_point = new Point(intersection_points[i]);
-                foreach (var previous_point in PreviousIntersectionPointList)
-                {
-                    if (previous_point.Location.Equals(intersection_points[i]))
-                        intersection_point = previous_point;
-                }
-                
-                var user_data_point = UserDataUtilities.GetOrCreateUserDataPoint(
-                    intersection_point);
-
-                user_data_point.AddCoupling(
-                    user_data_surface_1.BrepId,
-                    user_data_surface_2.BrepId);
-
-                if (user_data_surface_1.IsBrepGroupCoupledWith(
-                        user_data_surface_2.GetThisBrepGroupCouplingId())
-                 && user_data_surface_2.IsBrepGroupCoupledWith(
-                        user_data_surface_1.GetThisBrepGroupCouplingId()))
-                {
-                    bool rotational_continuity = user_data_surface_1.CheckRotationalContinuity()
-                                                 && user_data_surface_2.CheckRotationalContinuity();
-
-                    var this_support = new Support(
-                        true, true, true,
-                        "0.0", "0.0", "0.0",
-                        rotational_continuity, false);
-
-                    var property_coupling = new PropertyCoupling(
-                        GeometryType.SurfaceEdgeSurfaceEdge,
-                        this_support,
-                        new TimeInterval());
-
-                    user_data_point.AddNumericalElement(property_coupling);
-                }
-                else
-                {
-                    user_data_point.DeleteNumericalElementOfPropertyType(typeof(PropertyCoupling));
-                }
-
-                IntersectionPointList.Add(intersection_point);
-            }
+            //}
         }
 
 
@@ -783,11 +787,17 @@ namespace Cocodrilo.IO
                         }
                         else if (parameter_location.IsOnNodes() && can_be_strong)
                         {
+                            if (property.GetType() == typeof(PropertyCheck))
+                                (property as PropertyCheck).mOnNode = true;
+
                             user_data_surface.AddNumericalElement(property, parameter_location);
                             user_data_point.DeleteNumericalElement(property);
                         }
                         else
                         {
+                            if (property.GetType() == typeof(PropertyCheck))
+                                (property as PropertyCheck).mOnNode = false;
+
                             user_data_surface.AddNumericalElementPoint(property, parameter_location);
                             user_data_point.DeleteNumericalElement(property);
                         }

@@ -11,6 +11,7 @@ using Cocodrilo.UserData;
 using Cocodrilo.Analyses;
 using Rhino.ApplicationSettings;
 using Rhino.Render.ChangeQueue;
+using System.Security.Cryptography;
 
 namespace Cocodrilo.IO
 {
@@ -149,25 +150,21 @@ namespace Cocodrilo.IO
             {
                 RhinoApp.WriteLine("Not possible to write run_kratos.bat file.");
             }
-        }
 
-        public void WriteOptimizationFiles(
-            List<int> MaterialIds)
-        {
-            string project_path = GetProjectPath();
-            //GET GEOMETRY JSON INPUT TEXT
+            // REMOVE OLD RESULT FILES
             try
             {
-                System.IO.File.WriteAllLines(project_path + "/" + "optimization_materials.json",
-                    new List<string> { GetOptimizationMaterials(MaterialIds) });
+                string[] old_res_files = System.IO.Directory.GetFiles(project_path, "*.post.res");
+                foreach (var old_file in old_res_files)
+                    File.Delete(old_file);
+                string[] old_integrationdomain_files = System.IO.Directory.GetFiles(project_path, "*integrationdomain.json");
+                foreach (var old_file in old_integrationdomain_files)
+                    File.Delete(old_file);
             }
-            catch (Exception ex)
+            catch
             {
-                RhinoApp.WriteLine("Optimization materials output not possible.");
-                RhinoApp.WriteLine(ex.ToString());
+                RhinoApp.WriteLine("Not possible to delete all old res files.");
             }
-
-            OutputPythonScripts.WriteKratosOptimization(project_path + "/" + "kratos_main_iga.py", MaterialIds);
         }
 
         public void WriteGeometryJson(
@@ -415,54 +412,6 @@ namespace Cocodrilo.IO
             {
                 {"properties", property_dict_list }
             };
-            var serializer = new JavaScriptSerializer();
-            string json = serializer.Serialize((object)dict);
-
-            return json;
-        }
-
-        public string GetOptimizationMaterials(List<int> MaterialIds)
-        {
-            var property_dict_list = new DictList();
-            foreach (var material_id in MaterialIds)
-            {
-                var property_dict = new Dict
-                    {
-                        {"model_part_name", "IgaModelPart"},
-                        {"properties_id", material_id},
-                    };
-
-                var material_dict = new Dict { };
-                var variables = new Dict { };
-                if (material_id >= 0)
-                {
-                    var material = CocodriloPlugIn.Instance.GetMaterial(material_id);
-                    var material_variables = material.GetKratosVariables();
-                    foreach (var material_variable in material_variables)
-                        variables.Add(material_variable.Key, material_variable.Value);
-
-                    material_dict.Add("name", material.Name);
-                    material_dict.Add("constitutive_law", material.GetKratosConstitutiveLaw());
-
-                    if (material.HasKratosSubProperties())
-                    {
-                        property_dict.Add("sub_properties", material.GetKratosSubProperties());
-                    }
-                }
-
-                material_dict.Add("Variables", variables);
-                material_dict.Add("Tables", new Dict { });
-
-                property_dict.Add("Material", material_dict);
-
-                property_dict_list.Add(property_dict);
-            }
-
-            var dict = new Dict
-            {
-                {"properties", property_dict_list }
-            };
-
             var serializer = new JavaScriptSerializer();
             string json = serializer.Serialize((object)dict);
 
@@ -731,7 +680,7 @@ namespace Cocodrilo.IO
             {
                 foreach(var output_process in output_process_list)
                 {
-                    output_process.Add("form_finding", true);
+                    (output_process["Parameters"] as Dict).Add("form_finding", true);
                 }
             }
 

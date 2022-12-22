@@ -10,7 +10,8 @@ namespace Cocodrilo.ElementProperties
     {
         public PropertyDem(
             GeometryType ThisGeometryType,
-            int MaterialId) :base(ThisGeometryType, MaterialId)
+            int MaterialId)
+            : base(ThisGeometryType, MaterialId)
         {
 
         }

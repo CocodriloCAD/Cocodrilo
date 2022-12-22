@@ -11,15 +11,27 @@ namespace Cocodrilo.ElementProperties
         public double mThickness { get; set; }
         public bool mCoupleRotations { get; set; }
         public string mType { get; set; }
+        public bool mOutputMaterialIds { get; set; }
 
         public ShellProperties(
             double Thickness,
             bool CoupleRotations,
-            string Type = "Shell3pElement")
+            string Type,
+            bool OutputMaterialIds)
         {
             mThickness = Thickness;
             mCoupleRotations = CoupleRotations;
             mType = Type;
+            mOutputMaterialIds = OutputMaterialIds;
+        }
+
+        public ShellProperties(
+            ShellProperties previousShellProperties)
+        {
+            mThickness = previousShellProperties.mThickness;
+            mCoupleRotations = previousShellProperties.mCoupleRotations;
+            mType = previousShellProperties.mType;
+            mOutputMaterialIds = previousShellProperties.mOutputMaterialIds;
         }
 
         public bool Equals(ShellProperties comp)
@@ -36,7 +48,7 @@ namespace Cocodrilo.ElementProperties
         /// This Id is used to connect all shell formulations with a coupling information.
         /// Needed if discontinuities within a patch can occur.
         /// </summary>
-        public PropertyCoupling mPropertyCoupling { get; set; }
+        //public PropertyCoupling mPropertyCoupling { get; set; }
         public ShellProperties mShellProperties { get; set; }
 
         public PropertyShell() : base()
@@ -59,15 +71,26 @@ namespace Cocodrilo.ElementProperties
                 false,
                 false,
                 false,
-                SupportRotation:true);
+                SupportRotation: true);
 
-            mPropertyCoupling = new PropertyCoupling(
-                GeometryType.SurfaceEdgeSurfaceEdge,
-                this_support);
+            //mPropertyCoupling = new PropertyCoupling(
+            //    GeometryType.SurfaceEdgeSurfaceEdge,
+            //    this_support);
 
-            CocodriloPlugIn.Instance.AddProperty(
-                mPropertyCoupling);
+            //CocodriloPlugIn.Instance.AddProperty(
+            //    mPropertyCoupling);
         }
+
+        public PropertyShell(
+            PropertyShell previousPropertyShell)
+            : base(previousPropertyShell)
+        {
+            mShellProperties = previousPropertyShell.mShellProperties;
+            //mPropertyCoupling = previousPropertyShell.mPropertyCoupling;
+        }
+
+        public override Property Clone() =>
+            new PropertyShell(this);
 
         public override string ToString()
         {
@@ -174,25 +197,6 @@ namespace Cocodrilo.ElementProperties
             return mMaterialId;
         }
 
-        public override List<string> GetKratosOutputValuesIntegrationPoints(
-            Cocodrilo.IO.OutputOptions ThisOutputOptions)
-        {
-            var variable_list = new List<string> { };
-            if (ThisOutputOptions.cauchy_stress) {
-                variable_list.Add("CAUCHY_STRESS");
-            }
-            if (ThisOutputOptions.pk2_stress)
-            {
-                variable_list.Add("PK2_STRESS");
-            }
-            if (ThisOutputOptions.moments)
-            {
-                variable_list.Add("INTERNAL_MOMENT_XX");
-                variable_list.Add("INTERNAL_MOMENT_YY");
-                variable_list.Add("INTERNAL_MOMENT_XY");
-            }
-            return variable_list;
-        }
         public override Dictionary<string, object> GetKratosOutputIntegrationDomainProcess(
             Cocodrilo.IO.OutputOptions ThisOutputOptions,
             string AnalysisName,
@@ -226,12 +230,18 @@ namespace Cocodrilo.ElementProperties
             string ModelPartName)
         {
             var integration_point_results = new List<string> { };
-            if (ThisOutputOptions.cauchy_stress)
-                integration_point_results.Add("CAUCHY_STRESS");
-            if (ThisOutputOptions.pk2_stress)
-                integration_point_results.Add("PK2_STRESS");
-            if (ThisOutputOptions.moments)
-                integration_point_results.Add("INTERNAL_MOMENT");
+            if (mShellProperties.mType == "Shell5pHierarchicElement"
+                || mShellProperties.mType == "Shell3pElement")
+            {
+                if (ThisOutputOptions.cauchy_stress)
+                    integration_point_results.Add("CAUCHY_STRESS");
+                if (ThisOutputOptions.pk2_stress)
+                    integration_point_results.Add("PK2_STRESS");
+                if (ThisOutputOptions.moments)
+                    integration_point_results.Add("INTERNAL_MOMENT");
+            }
+            if (mShellProperties.mOutputMaterialIds)
+                integration_point_results.Add("MATERIAL_ID");
 
             integration_point_results.AddRange(
                 CocodriloPlugIn.Instance.GetMaterial(mMaterialId).GetKratosOutputValuesIntegrationPoints(ThisOutputOptions));

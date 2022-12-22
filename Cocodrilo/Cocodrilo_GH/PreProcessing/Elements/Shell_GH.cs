@@ -25,9 +25,10 @@ namespace Cocodrilo_GH.PreProcessing.Elements
     {
         private FormulationType mFormulationType = FormulationType.Shell3p;
         private bool mCoupleRotations = true;
-        private double mPrestress1 = 1.0;
-        private double mPrestress2 = 1.0;
+        private double mPrestress1 = 1e7;
+        private double mPrestress2 = 1e7;
         private bool mUniqueProperty = false;
+        private bool mOutputMaterialIds = false;
 
         public Shell_GH()
           : base("Shell", "Shell", "Shell Element", "Cocodrilo", "Elements")
@@ -70,7 +71,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             }
             else if (mFormulationType == FormulationType.Shell3p)
             {
-                ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell3pElement");
+                ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell3pElement", mOutputMaterialIds);
                 foreach (var brep in breps)
                 {
                     geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, new PropertyShell(material.Id, shell_properties, mUniqueProperty)));
@@ -78,7 +79,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             }
             else if (mFormulationType == FormulationType.Shell3pStressBased)
             {
-                ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell3pStressBasedElement");
+                ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell3pStressBasedElement", mOutputMaterialIds);
                 foreach (var brep in breps)
                 {
                     geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, new PropertyShell(material.Id, shell_properties, mUniqueProperty)));
@@ -86,7 +87,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             }
             else if (mFormulationType == FormulationType.Shell5pHierarchic)
             {
-                ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell5pHierarchicElement");
+                ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell5pHierarchicElement", mOutputMaterialIds);
                 foreach (var brep in breps)
                 {
                     geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, new PropertyShell(material.Id, shell_properties, mUniqueProperty)));
@@ -94,7 +95,7 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             }
             else if (mFormulationType == FormulationType.Shell5p)
             {
-                ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell5pElement");
+                ShellProperties shell_properties = new ShellProperties(thickness, mCoupleRotations, "Shell5pElement", mOutputMaterialIds);
                 foreach (var brep in breps)
                 {
                     geometries.breps.Add(new KeyValuePair<Brep, Property>(brep, new PropertyShell(material.Id, shell_properties, mUniqueProperty)));
@@ -123,10 +124,12 @@ namespace Cocodrilo_GH.PreProcessing.Elements
                 Menu_AppendItem(menu, "Couple Rotations", Menu_DoClick_CoupleRotations, true, mCoupleRotations);
             }
             Menu_AppendItem(menu, "Add Unique Properties", Menu_DoClick_AddUniqueProperties, true, mUniqueProperty);
+            Menu_AppendItem(menu, "Ouput Material Ids", Menu_DoClick_AddMaterialIds, true, mOutputMaterialIds);
         }
 
         private void Menu_DoClick_CoupleRotations(object sender, EventArgs e) { mCoupleRotations = !mCoupleRotations; ExpireSolution(true); }
         private void Menu_DoClick_AddUniqueProperties(object sender, EventArgs e) { mUniqueProperty = !mUniqueProperty; ExpireSolution(true); }
+        private void Menu_DoClick_AddMaterialIds(object sender, EventArgs e) { mOutputMaterialIds = !mOutputMaterialIds; ExpireSolution(true); }
 
         private void Menu_Prestress1_EventHandler(GH_MenuTextBox sender, string newText)
         {

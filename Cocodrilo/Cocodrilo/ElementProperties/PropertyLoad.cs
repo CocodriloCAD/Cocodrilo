@@ -25,6 +25,16 @@ namespace Cocodrilo.ElementProperties
             mTimeInterval = ThisTimeInterval;
         }
 
+        public PropertyLoad(
+            PropertyLoad previousPropertyLoad)
+            : base(previousPropertyLoad)
+        {
+            mLoad = previousPropertyLoad.mLoad;
+            mTimeInterval = previousPropertyLoad.mTimeInterval;
+        }
+        public override Property Clone() =>
+            new PropertyLoad(this);
+
         public override string ToString()
         {
             return "load property";

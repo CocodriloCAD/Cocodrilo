@@ -70,7 +70,7 @@ namespace Cocodrilo
         /// <summary>
         /// Global penalty factor
         /// </summary>
-        public double GlobPenaltyFactor = 1e7;
+        public double GlobPenaltyFactor = 1e10;
         /// <summary>
         /// Global coupling method
         /// </summary>

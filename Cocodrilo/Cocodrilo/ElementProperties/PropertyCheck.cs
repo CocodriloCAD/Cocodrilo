@@ -13,14 +13,20 @@ namespace Cocodrilo.ElementProperties
         public bool mDISP_Y { get; set; }
         public bool mDISP_Z { get; set; }
         public bool mLAGRANGE_MP { get; set; }
+        List<string> mAdditionalOuputs { get; set; }
 
         public CheckProperties(
-            bool DISP_X, bool DISP_Y, bool DISP_Z, bool LAGRANGE_MP)
+            bool DISP_X,
+            bool DISP_Y,
+            bool DISP_Z,
+            bool LAGRANGE_MP,
+            List<string> AdditionalOuputs)
         {
             mDISP_X = DISP_X;
             mDISP_Y = DISP_Y;
             mDISP_Z = DISP_Z;
             mLAGRANGE_MP = LAGRANGE_MP;
+            mAdditionalOuputs = AdditionalOuputs;
         }
         
 
@@ -29,7 +35,8 @@ namespace Cocodrilo.ElementProperties
             return comp.mDISP_X == mDISP_X &&
                    comp.mDISP_Y == mDISP_Y &&
                    comp.mDISP_Z == mDISP_Z &&
-                   comp.mLAGRANGE_MP == mLAGRANGE_MP;
+                   comp.mLAGRANGE_MP == mLAGRANGE_MP &&
+                   comp.mAdditionalOuputs == mAdditionalOuputs;
         }
     }
 
@@ -38,9 +45,9 @@ namespace Cocodrilo.ElementProperties
     public class PropertyCheck : Property
     {
         //private CheckProperties mCheckProperties { get; set; }
-        CheckProperties mCheckProperties { get; set; }
+        public CheckProperties mCheckProperties { get; set; }
         public TimeInterval mTimeInterval { get; set; }
-        bool mOnNode { get; set;}
+        public bool mOnNode { get; set;}
 
         public PropertyCheck() : base()
         {
@@ -57,7 +64,17 @@ namespace Cocodrilo.ElementProperties
 
             mOnNode = OnNode;
         }
+        public PropertyCheck(
+            PropertyCheck previousPropertyCheck)
+            : base(previousPropertyCheck)
+        {
+            mCheckProperties = previousPropertyCheck.mCheckProperties;
+            mTimeInterval = previousPropertyCheck.mTimeInterval;
 
+            mOnNode = previousPropertyCheck.mOnNode;
+        }
+        public override Property Clone() =>
+            new PropertyCheck(this);
         public override bool Equals(Property OtherProperty)
         {
             var other_property = OtherProperty as PropertyCheck;
@@ -130,21 +147,26 @@ namespace Cocodrilo.ElementProperties
                 { "output_frequency", 0.1 }
             };
 
-
-                List<string> results = new List<string>();
-                if (mCheckProperties.mDISP_X && mCheckProperties.mDISP_Y && mCheckProperties.mDISP_Z)
-                results.Add( "DISPLACEMENT" );
-                else
-                {
-                    if (mCheckProperties.mDISP_X)
+            List<string> results = new List<string>();
+            if (mCheckProperties.mDISP_X && mCheckProperties.mDISP_Y && mCheckProperties.mDISP_Z)
+            {
+                results.Add("DISPLACEMENT");
+            }
+            else
+            {
+                if (mCheckProperties.mDISP_X)
                     results.Add("DISPLACEMENT_X");
-                    if (mCheckProperties.mDISP_Y)
+                if (mCheckProperties.mDISP_Y)
                     results.Add("DISPLACEMENT_Y");
-                    if (mCheckProperties.mDISP_Z)
+                if (mCheckProperties.mDISP_Z)
                     results.Add("DISPLACEMENT_Z");
-                }
-                if(mCheckProperties.mLAGRANGE_MP)
+            }
+
+            if (mCheckProperties.mLAGRANGE_MP)
+            {
                 results.Add("VECTOR_LAGRANGE_MULTIPLIER");
+            }
+
             if (mOnNode)
             {
                 output_process_parameters.Add("nodal_results", results);
@@ -156,16 +178,15 @@ namespace Cocodrilo.ElementProperties
                 output_process_parameters.Add("integration_point_results", results);
             }
 
-
             return new List<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>
                 {
-                    new Dictionary<string, object>
-                    {
-                        {"kratos_module", "IgaApplication"},
-                        {"python_module", "iga_output_process"},
-                        {"Parameters", output_process_parameters}
-                    }
-                };
+                    {"kratos_module", "IgaApplication"},
+                    {"python_module", "iga_output_process"},
+                    {"Parameters", output_process_parameters}
+                }
+            };
         }
 
         public override string GetKratosModelPart()

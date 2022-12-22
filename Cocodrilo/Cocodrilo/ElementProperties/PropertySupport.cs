@@ -35,6 +35,18 @@ namespace Cocodrilo.ElementProperties
             mActiveSupport = ActiveSupport;
         }
 
+        public PropertySupport(
+            PropertySupport previousPropertySupport)
+            : base(previousPropertySupport)
+        {
+            mSupport = previousPropertySupport.mSupport;
+            mTimeInterval = previousPropertySupport.mTimeInterval;
+            mOutputReactions = previousPropertySupport.mOutputReactions;
+            mActiveSupport = previousPropertySupport.mActiveSupport;
+        }
+        public override Property Clone() =>
+            new PropertySupport(this);
+
         public override string ToString()
         {
             return "support property";

@@ -58,7 +58,14 @@ namespace Cocodrilo.ElementProperties
         {
             mMembraneProperties = ThisMembraneProperties;
         }
-
+        public PropertyMembrane(
+            PropertyMembrane previousPropertyMembrane)
+            : base(previousPropertyMembrane)
+        {
+            mMembraneProperties = previousPropertyMembrane.mMembraneProperties;
+        }
+        public override Property Clone() =>
+            new PropertyMembrane(this);
         public override List<Dictionary<string, object>> GetKratosPhysic(List<int> BrepIds)
         {
             string[] variables = new[] { "INTEGRATION_WEIGHT" };
@@ -101,20 +108,6 @@ namespace Cocodrilo.ElementProperties
             return "StructuralAnalysis_" + mPropertyId;
         }
 
-        public override List<string> GetKratosOutputValuesIntegrationPoints(
-            Cocodrilo.IO.OutputOptions ThisOutputOptions)
-        {
-            var variable_list = new List<string> { };
-            if (ThisOutputOptions.cauchy_stress)
-            {
-                variable_list.Add("CAUCHY_STRESS");
-            }
-            if (ThisOutputOptions.pk2_stress)
-            {
-                variable_list.Add("PK2_STRESS");
-            }
-            return variable_list;
-        }
         public override Dictionary<string, object> GetKratosOutputIntegrationDomainProcess(
             Cocodrilo.IO.OutputOptions ThisOutputOptions,
             string AnalysisName,

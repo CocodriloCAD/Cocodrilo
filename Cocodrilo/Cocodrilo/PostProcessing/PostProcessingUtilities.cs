@@ -129,6 +129,9 @@ namespace Cocodrilo.PostProcessing
         {
             List<string> result_indices = new List<string>();
 
+            if (ResultInfo.Results == null)
+                return new List<string>();
+
             if (ResultInfo.NodeOrGauss == "OnNodes" || ResultInfo.NodeOrGauss == "\"OnNodes\"")
             {
                 result_indices.Add("X");
