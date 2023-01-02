@@ -806,14 +806,18 @@ namespace Cocodrilo.IO
                 /// Fixed end-time for linear Analysis
                 problem_data.Add("end_time", 1.0);
 
+                /// Fixed timestep for linear Analysis since so far no the class Linear analysis does not contain an attribute 'timestep'
+                time_stepping.Add("time_step", 1.0);
+                solver_settings.Add("time_stepping", time_stepping);
+
                 solver_settings.Add("solver_type", "Static");
                 solver_settings.Add("model_part_name", "MPM_Material");
                 solver_settings.Add("domain_size", 2);
                 solver_settings.Add("echo_level", 1);
-                solver_settings.Add("analysis_type", "linear");
+                solver_settings.Add("analysis_type", "non_linear");
 
-                /// Fixed timestep for linear Analysis since so far no the class Linear analysis does not contain an attribute 'timestep'
-                time_stepping.Add("time_step", 1.0);
+               
+               
                 //RhinoApp.WriteLine("")
                 // Cocodrilo Warnung
             }
@@ -843,7 +847,6 @@ namespace Cocodrilo.IO
             /// until now LinearSolversApplication is hardcoded; discuss if other options should be available -> No 22.06
             var linear_solver_settings =
                 new Dict {
-                            { "time_stepping", time_stepping },
                             { "solver_type", "LinearSolversApplication.sparse_lu" },
                             { "max_iteration", 500 },
                             { "tolerance", 1e-9 },
@@ -851,7 +854,6 @@ namespace Cocodrilo.IO
                             { "verbosity", 1 } 
                 };
 
-            //     solver_settings.Add("time_stepping", time_stepping);
             solver_settings.Add("model_import_settings", model_import_settings);
             solver_settings.Add("material_import_settings", material_import_settings);
             solver_settings.Add("convergence_criterion", "residual_criterion");

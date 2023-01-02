@@ -49,7 +49,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 		/// </summary>
 		protected override void RegisterOutputParams(GH_OutputParamManager pManager)
 		{
-			pManager.AddGenericParameter("Analysis", "A", "MPM_new", GH_ParamAccess.item);
+			pManager.AddGenericParameter("Analysis", "Ana", "MPM_new", GH_ParamAccess.item);
 		}
 
 		/// <summary>

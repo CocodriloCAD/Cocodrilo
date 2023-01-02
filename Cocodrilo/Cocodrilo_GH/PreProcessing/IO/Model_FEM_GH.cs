@@ -45,7 +45,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             Cocodrilo.Analyses.Analysis this_analysis = null;
-            //DA.GetData(0)
+            DA.GetData(0,ref this_analysis);
             if ((!DA.GetData(0, ref this_analysis)))
             { RhinoApp.WriteLine("Typecast not possible");
                 return;
