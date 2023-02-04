@@ -763,6 +763,8 @@ namespace Cocodrilo.IO
         // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
         public string WriteProjectParameters(string ProjectPath, ref Cocodrilo.Analyses.AnalysisMpm_new analysis)
         {
+
+            string model_part_name = "MPM_Material";
             var problem_data = new Dict
                     {
                         { "problem_name", analysis.Name},
@@ -789,7 +791,7 @@ namespace Cocodrilo.IO
 
                 solver_settings.Add("time_stepping", time_stepping);
                 solver_settings.Add("solver_type", "Dynamic");
-                solver_settings.Add("model_part_name", "MPM_Material");
+                solver_settings.Add("model_part_name", model_part_name);
                 solver_settings.Add("domain_size", 2);
                 solver_settings.Add("echo_level", 1);
                 solver_settings.Add("analysis_type", "non_linear");
@@ -811,7 +813,7 @@ namespace Cocodrilo.IO
                 solver_settings.Add("time_stepping", time_stepping);
 
                 solver_settings.Add("solver_type", "Static");
-                solver_settings.Add("model_part_name", "MPM_Material");
+                solver_settings.Add("model_part_name", model_part_name);
                 solver_settings.Add("domain_size", 2);
                 solver_settings.Add("echo_level", 1);
                 solver_settings.Add("analysis_type", "non_linear");
@@ -944,7 +946,7 @@ namespace Cocodrilo.IO
 
             var gravity_parameters = new Dict
                         {
-                            { "model_part_name", "MPM_Material" },
+                            { "model_part_name", model_part_name },
                             { "variable_name", "MP_VOLUME_ACCELERATION" },
                             { "modulus", 9.81 },
                             { "direction", gravity_direction }
@@ -1027,7 +1029,7 @@ namespace Cocodrilo.IO
 
             var body_output_process_parameters = new Dict()
                         {
-                            {"model_part_name", "MPM_Material" },
+                            {"model_part_name", model_part_name },
                             {"output_name", analysis.Name },
                             {"postprocess_parameters", postprocess_parameters }
                         };

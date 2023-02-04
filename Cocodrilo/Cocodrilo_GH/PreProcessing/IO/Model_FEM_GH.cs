@@ -46,10 +46,13 @@ namespace Cocodrilo_GH.PreProcessing.IO
         {
             Cocodrilo.Analyses.Analysis this_analysis = null;
             DA.GetData(0,ref this_analysis);
-            if ((!DA.GetData(0, ref this_analysis)))
-            { RhinoApp.WriteLine("Typecast not possible");
+            if (this_analysis==null)
+            { RhinoApp.WriteLine("Typecast not possible. Error in Model_FEM_GH.cs");
+              Message = "Typecast error";
                 return;
-            }; 
+            };
+
+            
 
             List<Mesh> mesh_list = new List<Mesh>();
             DA.GetDataList(1, mesh_list);
