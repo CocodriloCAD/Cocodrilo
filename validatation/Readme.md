@@ -11,3 +11,18 @@ The static analysis of the cantilever example, which has been used for the valid
 
 
 For more complex geometries, boundary conditions and other analyses no validation was conducted so far. Therefore, errors are likely to occur. 
+
+## Documentation: How to use Rhino/Grasshopper & Cocodrilo to generate simulation files for the KRATOS Multiphysics MPM Application
+
+Table of contents:
+
+1) General User Interface
+2) Define analysis
+3) Set up geometry 
+4) Define boundary conditions
+5) Choose material
+6) Define mesh
+7) Generate calcualtion files
+8) Remove errors
+9) Limitations of the current software version
+
