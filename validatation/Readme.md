@@ -12,7 +12,10 @@ The static analysis of the cantilever example, which has been used for the valid
 
 For more complex geometries, boundary conditions and other analyses no validation was conducted so far. Therefore, errors are likely to occur. 
 
-## Documentation: How to use Rhino/Grasshopper & Cocodrilo to generate simulation files for the KRATOS Multiphysics MPM Application
+# Documentation: How to use Rhino/Grasshopper & Cocodrilo to generate simulation files for the KRATOS Multiphysics MPM Application
+
+## Linear Analysis example
+This how-to shows how to set up simulation files for a linear static analysis with the KRATOS Multiphysics (Link einfügen) MPM Application (Link einfügen) with Cocodrilo, a plug in for Grasshopper/ Rhino. For that purpose a cantilever beam is modeled and analyzed with MPM. The results of the analysis based on the *Cocodrilo* files are compared to the results of an analysis based on GiD (Link einfügen).
 
 Table of contents:
 
@@ -26,3 +29,29 @@ Table of contents:
 8) Remove errors
 9) Limitations of the current software version
 
+#### 1) General User Interface
+
+The graphical user interface of Cocodrilo/Grasshopper/Rhino is depicted in the figure below: 
+![grafik](https://user-images.githubusercontent.com/51473791/221424826-ef5c6955-fe54-47cc-8d4e-202bc5510391.png)
+
+To see the menues *Analyses, DEM, Elements, Geometry, Materials, Models and Postproessing* of Cocodrilo, click on *Cocodrilo* in  the line above, as indicated by the red rectangle. 
+
+### 2) Define analysis method
+To create a new model resp. analysis, set up a new, empty canvas in Grasshopper. For a MPM analysis, add the *Material point method* analyis from the *Analyses*-menu to the canvas by clicking on *MPM* firstly, and clicking on the canvas secondly.
+
+![grafik](https://user-images.githubusercontent.com/51473791/221428808-4b6fa96e-aacd-490e-9ba7-17c0a627cfa6.png)
+
+![grafik](https://user-images.githubusercontent.com/51473791/221428914-228ebd5c-2b22-419c-a88d-2e94d2b1bd7d.png)
+
+For a linear, static analysis (LSA) of the cantilever, add a linear static analysis in a next step:
+
+![grafik](https://user-images.githubusercontent.com/51473791/221426370-610b969b-788d-434d-891a-4ffafd053a62.png)
+
+![grafik](https://user-images.githubusercontent.com/51473791/221427289-a2cd1b8e-8a22-4c9d-84c0-429a7c10ca04.png)
+
+When both fields (*MPM Analysis and LSA*) are present, connect them with a line: 
+
+![grafik](https://user-images.githubusercontent.com/51473791/221429003-4f8f0e8d-05ca-4b31-a62c-9a47a5aef40e.png)
+
+
+Now the desired analysis field is present on the canvas. In the next step we weill add the geometry.
