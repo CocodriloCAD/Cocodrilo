@@ -39,7 +39,7 @@ To see the menues *Analyses, DEM, Elements, Geometry, Materials, Models and Post
 ### 2) Define analysis method
 To create a new model resp. analysis, set up a new, empty canvas in Grasshopper. For a MPM analysis, add the *Material point method* analyis from the *Analyses*-menu to the canvas by clicking on *MPM* firstly, and clicking on the canvas secondly.
 
-![grafik](https://user-images.githubusercontent.com/51473791/221428808-4b6fa96e-aacd-490e-9ba7-17c0a627cfa6.png)
+![grafik](https://user-images.githubusercontent.com/51473791/221430285-af621478-7425-4302-b9d2-bc8d66afc1a1.png)
 
 ![grafik](https://user-images.githubusercontent.com/51473791/221428914-228ebd5c-2b22-419c-a88d-2e94d2b1bd7d.png)
 
@@ -54,4 +54,6 @@ When both fields (*MPM Analysis and LSA*) are present, connect them with a line:
 ![grafik](https://user-images.githubusercontent.com/51473791/221429003-4f8f0e8d-05ca-4b31-a62c-9a47a5aef40e.png)
 
 
-Now the desired analysis field is present on the canvas. In the next step we weill add the geometry.
+Now the desired analysis field is present on the canvas. In the next step we will add the geometry.
+
+### 3) Geometry
