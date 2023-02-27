@@ -57,3 +57,23 @@ When both fields (*MPM Analysis and LSA*) are present, connect them with a line:
 Now the desired analysis field is present on the canvas. In the next step we will add the geometry.
 
 ### 3) Geometry
+The basis for setting up the geometry is the *Geo*-node within the *MPM*-field. Due to the internal data structure of *Cocodrilo*, a lot of information of the modelled problem is entered via the *Geo*-node. For example, later we will see that the input data for material parameters, boundary conditions and the body-mesh are entered via the *Geo*-node.
+
+#### Cantilever beam
+In order to modell the cantilever beam which is depicted below, we have to add a *solid*-element. However, this element is not an element in the sense of a finite-element, e.g. a plate element with 2 dofs at each corner, but rather an object in the sense of object-oriented-programming which has the mesh, the material and the thickness of the structure which shall be modelled as member variables. 
+
+![grafik](https://user-images.githubusercontent.com/51473791/221550075-c992e18d-27a5-4cc2-a193-49205816d817.png)
+
+![grafik](https://user-images.githubusercontent.com/51473791/221549704-cd9d943b-44da-43e6-b77b-a39d0ffac3ec.png)
+
+After adding the *solid*-element, a *MPM-Material* and *MPlane*-filed for the meshing have to added. For that purpose, choose the 
+
+![grafik](https://user-images.githubusercontent.com/51473791/221550515-558ef1c6-e860-4be5-91f5-12007b9b39e5.png)
+
+Add all these fields to the plane and connect them as shown in the picture below:
+
+![grafik](https://user-images.githubusercontent.com/51473791/221551013-b48299e0-be5e-426a-bee3-9904fefad170.png)
+
+
+
+
