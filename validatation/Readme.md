@@ -93,6 +93,11 @@ Finally, confirm the coordinates by hitting "enter" and the Grasshopper-canvas w
 
 ![grafik](https://user-images.githubusercontent.com/51473791/221571181-b220da8a-a3d4-40dc-adf2-01e86d39a26c.png)
 
+### 4) Meshing of the cantilever
+In this example we want to mesh the cantilever with a quadrilateral mesh with a length of 0.1m. For that purpose, right click *w* and "Set integer". Here, enter 15, as we have a cantilever with a length of 1.5m and with 15 elements in the x-direction, each element has length of 0.1m in the x-direction.
+Subsequently, set analogously *n* to 10.
+
+
 
 
 
