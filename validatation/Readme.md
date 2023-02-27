@@ -97,8 +97,27 @@ Finally, confirm the coordinates by hitting "enter" and the Grasshopper-canvas w
 ![grafik](https://user-images.githubusercontent.com/51473791/221571181-b220da8a-a3d4-40dc-adf2-01e86d39a26c.png)
 
 ### 4) Meshing of the cantilever
-In this example we want to mesh the cantilever with a quadrilateral mesh with a length of 0.1m. For that purpose, right click *w* and "Set integer". Here, enter 15, as we have a cantilever with a length of 1.5m and with 15 elements in the x-direction, each element has length of 0.1m in the x-direction.
-Subsequently, set analogously *n* to 10.
+In this example we want to mesh the cantilever with a quadrilateral mesh with a length of 0.1m. For that purpose, right click *w* (=Width Count: Number of faces along x-direction) and "Set integer". Here, enter 15, as we have a cantilever with a length of 1.5m and with 15 elements in the x-direction, each element has length of 0.1m in the x-direction.
+Subsequently, set analogously *h* (=Height Count: Number of faces in y-direction) to 10.
+
+
+### 5) Material 
+The material parameters for the steel plate can be entered in the *MPM Material* field. The default parameters of *MPM Material* are the ones from steel.
+XXX Bild anpassenXXX
+
+The material nodes correspond to the following parameters:
+- N: Name, e.g. Steel
+- CL: Constitutive Law, e.g. LinearElasticIsotropicPlaneStrain2DLaw
+- rho: Density
+- E: Young's Modulous 
+- nue: Poisson ratio
+- c: Cohesion
+- phi: Internal friction angle
+- psi: Internal dilatancy angle
+- n: Number of particles per element
+- t: thickness of the element XXX Check which thickness is considered internallyXX
+
+As the default parameters are the parameters of the clamped plate of the example, only n, the number of particles per element, must be adapted. The default value of n is 3, but here a quadrilateral mesh is used. Therefore, the number of particles per element can be increased to 4.
 
 
 
