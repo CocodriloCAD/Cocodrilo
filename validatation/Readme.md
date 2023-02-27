@@ -17,6 +17,9 @@ For more complex geometries, boundary conditions and other analyses no validatio
 ## Linear Analysis example
 This how-to shows how to set up simulation files for a linear static analysis with the KRATOS Multiphysics (Link einfügen) MPM Application (Link einfügen) with Cocodrilo, a plug in for Grasshopper/ Rhino. For that purpose a cantilever beam is modeled and analyzed with MPM. The results of the analysis based on the *Cocodrilo* files are compared to the results of an analysis based on GiD (Link einfügen).
 
+![grafik](https://user-images.githubusercontent.com/51473791/221582986-856d6c0f-cadf-46e5-9573-78aa4f81ea42.png)
+
+
 Table of contents:
 
 1) General User Interface
