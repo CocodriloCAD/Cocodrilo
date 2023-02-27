@@ -60,19 +60,40 @@ Now the desired analysis field is present on the canvas. In the next step we wil
 The basis for setting up the geometry is the *Geo*-node within the *MPM*-field. Due to the internal data structure of *Cocodrilo*, a lot of information of the modelled problem is entered via the *Geo*-node. For example, later we will see that the input data for material parameters, boundary conditions and the body-mesh are entered via the *Geo*-node.
 
 #### Cantilever beam
-In order to modell the cantilever beam which is depicted below, we have to add a *solid*-element. However, this element is not an element in the sense of a finite-element, e.g. a plate element with 2 dofs at each corner, but rather an object in the sense of object-oriented-programming which has the mesh, the material and the thickness of the structure which shall be modelled as member variables. 
+In order to model the cantilever beam which is depicted below, we have to add a *solid*-element. However, this element is not an element in the sense of a finite-element, e.g. a plate element with 2 dofs at each corner, but rather an object in the sense of object-oriented-programming which has the mesh, the material and the thickness of the structure which shall be modelled as member variables. 
 
 ![grafik](https://user-images.githubusercontent.com/51473791/221550075-c992e18d-27a5-4cc2-a193-49205816d817.png)
 
+After adding the *solid*-element, a *MPM-Material*- as well as a *MPlane*-field have to be added. 
+
 ![grafik](https://user-images.githubusercontent.com/51473791/221549704-cd9d943b-44da-43e6-b77b-a39d0ffac3ec.png)
 
-After adding the *solid*-element, a *MPM-Material* and *MPlane*-filed for the meshing have to added. For that purpose, choose the 
+For the *MPlane*(=mesh plane)-field click on the section "Mesh":
 
 ![grafik](https://user-images.githubusercontent.com/51473791/221550515-558ef1c6-e860-4be5-91f5-12007b9b39e5.png)
 
 Add all these fields to the plane and connect them as shown in the picture below:
 
 ![grafik](https://user-images.githubusercontent.com/51473791/221551013-b48299e0-be5e-426a-bee3-9904fefad170.png)
+
+To set the width and length of the beam, right click the *B*-node of the *MPlane* field. Then the subsequent depicted menu opens:
+
+![grafik](https://user-images.githubusercontent.com/51473791/221567498-e5cfb713-e7a0-46c1-825f-73c8a330cae0.png)
+
+Choose "Set one rectangle", as indicated by the red rectangle. Subsequently, the GUI of Rhino will appear where the dimensions of the cantilever beam can be entered.
+
+![grafik](https://user-images.githubusercontent.com/51473791/221569196-23fdf884-f1d1-4a2e-9b56-940ca21382d2.png)
+
+Add in the line which is indicated by the red rectangle the coordinates for the cantilever beam in the following way:
+- Point 1: 0.0,0.5 
+- Point 2: 1.5,0.5
+- Point 3: 1.5,1.5
+
+Finally, confirm the coordinates by hitting "enter" and the Grasshopper-canvas will appear again. If you click once a again on "Set one rectangle", you should see the following rectangle in Rhino:
+
+![grafik](https://user-images.githubusercontent.com/51473791/221571181-b220da8a-a3d4-40dc-adf2-01e86d39a26c.png)
+
+
 
 
 
