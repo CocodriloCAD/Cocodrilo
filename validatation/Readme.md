@@ -15,7 +15,7 @@ For more complex geometries, boundary conditions and other analyses no validatio
 # Documentation: How to use Rhino/Grasshopper & Cocodrilo to generate simulation files for the KRATOS Multiphysics MPM Application
 
 ## Linear Analysis example
-This tutorial explains how to set up the computation files of a linear static analysis with the [KRATOS Multiphysics] (https://github.com/KratosMultiphysics/Kratos/wiki) [Particle Mechanics Application] (https://github.com/KratosMultiphysics/Kratos/tree/master/applications/ParticleMechanicsApplication) and [Cocodrilo] (https://github.com/CocodriloCAD/Cocodrilo), a plug in for Grasshopper/ Rhino. For that purpose a plate element, clamped at one side, is modeled and analyzed with the material point method. The results of the analysis based on the *Cocodrilo* files are compared to the results of an analysis based on GiD (Link einfügen).
+This tutorial explains how to set up the computation files of a linear static analysis with the [KRATOS Multiphysics](https://github.com/KratosMultiphysics/Kratos/wiki) [Particle Mechanics Application](https://github.com/KratosMultiphysics/Kratos/tree/master/applications/ParticleMechanicsApplication) and [Cocodrilo](https://github.com/CocodriloCAD/Cocodrilo), a plug in for Grasshopper/ Rhino. For that purpose a plate element, clamped at one side, is modeled and analyzed with the material point method. The results of the analysis based on the *Cocodrilo* files are compared to the results of an analysis based on GiD (Link einfügen).
 
 ![grafik](https://user-images.githubusercontent.com/51473791/221582986-856d6c0f-cadf-46e5-9573-78aa4f81ea42.png)
 
@@ -60,7 +60,7 @@ When both fields (*MPM Analysis and LSA*) are present, connect them with a line:
 Now the desired analysis field is present on the canvas. In the next step we will add the geometry.
 
 ### 3) Geometry
-The basis for setting up the geometry is the *Geo*-node within the *MPM*-field. Due to the internal data structure of *Cocodrilo*, a lot of information of the modelled problem is entered via the *Geo*-node. For example, later we will see that the input data for material parameters, boundary conditions and the body-mesh are entered via the *Geo*-node.
+The basis for setting up the geometry is the *Geo*-node within the *MPM*-field. Due to the internal data structure of *Cocodrilo*, a lot of information of the modelled problem is entered via the *Geo*-node. For example, later we will see that the input data from material parameters, boundary conditions and the body-mesh are entered via the *Geo*-node.
 
 #### Cantilever beam
 In order to model the cantilever beam which is depicted below, we have to add a *solid*-element. However, this element is not an element in the sense of a finite-element, e.g. a plate element with 2 dofs at each corner, but rather an object in the sense of object-oriented-programming which has the mesh, the material and the thickness of the structure which shall be modelled as member variables. 
@@ -97,7 +97,7 @@ Finally, confirm the coordinates by hitting "enter" and the Grasshopper-canvas w
 ![grafik](https://user-images.githubusercontent.com/51473791/221571181-b220da8a-a3d4-40dc-adf2-01e86d39a26c.png)
 
 ### 4) Meshing of the cantilever
-In this example we want to mesh the cantilever with a quadrilateral mesh with a length of 0.1m. For that purpose, right click *w* (=Width Count: Number of faces along x-direction) and "Set integer". Here, enter 15, as we have a cantilever with a length of 1.5m and with 15 elements in the x-direction, each element has length of 0.1m in the x-direction.
+In this example we want to mesh the cantilever with a quadrilateral mesh. The edge lenghts of the elements should be 0.1m. For that purpose, right click *w* (=Width Count: Number of faces along x-direction) and "Set integer". Here, enter 15, as we have a cantilever with a length of 1.5m and with 15 elements in the x-direction, each element has length of 0.1m in the x-direction.
 Subsequently, set analogously *h* (=Height Count: Number of faces in y-direction) to 10.
 
 
@@ -115,10 +115,17 @@ The material nodes correspond to the following parameters:
 - phi: Internal friction angle
 - psi: Internal dilatancy angle
 - n: Number of particles per element
-- t: thickness of the element XXX Check which thickness is considered internallyXX
+- t: thickness of the element XXX Check which thickness is considered internallyXX!
+
 
 As the default parameters are the parameters of the clamped plate of the example, only n, the number of particles per element, must be adapted. The default value of n is 3, but here a quadrilateral mesh is used. Therefore, the number of particles per element can be increased to 4.
 
+### 6) Boundary Conditions 
+To add a boundary condition on the background grid, click on the support icon as shown in the picture below:
+
+| [support_icon_of_Cocodrilo](https://user-images.githubusercontent.com/51473791/224542007-1cfc054b-8490-45e1-953e-381f70252fe9.jpg) | 
+|:--:| 
+| *test caption* |
 
 
 
