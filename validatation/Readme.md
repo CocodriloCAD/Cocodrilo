@@ -133,6 +133,22 @@ Although we haven't added any boundary conditions for the body domain yet, we wi
     <em>Figure XX: FEM-model and MPlane for background domain are present on canvas.</em>
 </p>
 
+To create a background domain and a background mesh, we proceed analogously as in section (Link to mesh generation). Firstly, we right click on the *MPlane* field and click afterwards *Set on rectangle* in the appearing menu. Then the GUI of Rhino should appear. Here we enter, as done previously, the coordinates of the rectangle that will be the background domain. Now we enter:
+
+- Point 1: 0.0,0.0 
+- Point 2: 2.0,0.0
+- Point 3: 2.0,2.0
+
+After entering the three points and confirming with "enter", the Rhino GUI will close again. If you reopen it (by clicking again on set on rectangle), the created rectangles should look the following way in the topview:
+
+<p align="center" width="100%">
+    <img width="50%" src="https://user-images.githubusercontent.com/51473791/224571659-2ede6755-fa40-40b0-b6f1-aa4ba4c5ad4d.jpg">
+    <br>
+    <em>Figure XX: Support Icon in Cocodrilo-menu</em>
+
+</p>
+
+To obtain a quadrilateral mesh with elements with an edge length of 0.2m, we have to set *W* (number of faces along x-direction) and *H* (number of faces along y-direction) to 10. Now we set up a background mesh.
 
 
 ### 8) Boundary Conditions 
