@@ -15,7 +15,7 @@ For more complex geometries, boundary conditions and other analyses no validatio
 # Documentation: How to use Rhino/Grasshopper & Cocodrilo to generate simulation files for the KRATOS Multiphysics MPM Application
 
 ## Linear Analysis example
-This tutorial explains how to set up the computation files of a linear static analysis with the KRATOS Multiphysics (Link einfügen) MPM Application (Link einfügen) and Cocodrilo, a plug in for Grasshopper/ Rhino. For that purpose a plate element, clamped at one side, is modeled and analyzed with MPM. The results of the analysis based on the *Cocodrilo* files are compared to the results of an analysis based on GiD (Link einfügen).
+This tutorial explains how to set up the computation files of a linear static analysis with the [KRATOS Multiphysics] (https://github.com/KratosMultiphysics/Kratos/wiki) [Particle Mechanics Application] (https://github.com/KratosMultiphysics/Kratos/tree/master/applications/ParticleMechanicsApplication) and [Cocodrilo] (https://github.com/CocodriloCAD/Cocodrilo), a plug in for Grasshopper/ Rhino. For that purpose a plate element, clamped at one side, is modeled and analyzed with the material point method. The results of the analysis based on the *Cocodrilo* files are compared to the results of an analysis based on GiD (Link einfügen).
 
 ![grafik](https://user-images.githubusercontent.com/51473791/221582986-856d6c0f-cadf-46e5-9573-78aa4f81ea42.png)
 
