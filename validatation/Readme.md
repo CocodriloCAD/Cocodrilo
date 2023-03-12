@@ -123,9 +123,11 @@ As the default parameters are the parameters of the clamped plate of the example
 ### 6) Boundary Conditions 
 To add a boundary condition on the background grid, click on the support icon as shown in the picture below:
 
-| [support_icon_of_Cocodrilo](https://user-images.githubusercontent.com/51473791/224542007-1cfc054b-8490-45e1-953e-381f70252fe9.jpg) | 
+| ![support_icon_of_Cocodrilo](https://user-images.githubusercontent.com/51473791/224542007-1cfc054b-8490-45e1-953e-381f70252fe9.jpg) | 
 |:--:| 
-| *test caption* |
+| Figure XX: Support Icon in Cocodrilo-menu |
+
+Subsequently, add a support and a curve field to the canvas. A curve may be added the following way: double clicking on a free space on the canvas and entering 
 
 
 
