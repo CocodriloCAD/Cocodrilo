@@ -127,10 +127,19 @@ To add a boundary condition on the background grid, click on the support icon as
 |:--:| 
 | Figure XX: Support Icon in Cocodrilo-menu |
 
+<p align="center" width="100%">
+    <img width="50%" src="https://user-images.githubusercontent.com/51473791/224542007-1cfc054b-8490-45e1-953e-381f70252fe9.jpg">
+    <br>
+    <em>Figure XX: Support Icon in Cocodrilo-menu</em>
+</p>
+
 Subsequently, add a support and a curve field to the canvas. A curve may be added the following way: double clicking on a free space on the canvas and entering 
 
-
-
+<p align="center" width="100%">
+    <img width="50%" src="https://user-images.githubusercontent.com/51473791/224545525-d6409ca4-e05c-4c5c-b4b8-62607ccba771.jpg">
+    <br>
+    <em>Figure XX: Grasshopper set up for body inlcuding fields for supports and curve</em>
+</p>
 
 
 
