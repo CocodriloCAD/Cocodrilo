@@ -15,9 +15,13 @@ For more complex geometries, boundary conditions and other analyses no validatio
 # Documentation: How to use Rhino/Grasshopper & Cocodrilo to generate simulation files for the KRATOS Multiphysics MPM Application
 
 ## Linear Analysis example
-This tutorial explains how to set up the computation files of a linear static analysis with the [KRATOS Multiphysics](https://github.com/KratosMultiphysics/Kratos/wiki) [Particle Mechanics Application](https://github.com/KratosMultiphysics/Kratos/tree/master/applications/ParticleMechanicsApplication) and [Cocodrilo](https://github.com/CocodriloCAD/Cocodrilo), a plug in for Grasshopper/ Rhino. For that purpose a plate element, clamped at one side, is modeled and analyzed with the material point method. The results of the analysis based on the *Cocodrilo* files are compared to the results of an analysis based on GiD (Link einfügen).
+This tutorial explains how to set up the computation files of a linear static analysis with the [KRATOS Multiphysics](https://github.com/KratosMultiphysics/Kratos/wiki) [Particle Mechanics Application](https://github.com/KratosMultiphysics/Kratos/tree/master/applications/ParticleMechanicsApplication) and [Cocodrilo](https://github.com/CocodriloCAD/Cocodrilo), a plug in for Grasshopper/ Rhino. For that purpose a plate element (see fig. 1), clamped at one side, is modeled and analyzed with the material point method. The results of the analysis based on the *Cocodrilo* files are compared to the results of an analysis based on GiD (Link einfügen).
 
-![grafik](https://user-images.githubusercontent.com/51473791/221582986-856d6c0f-cadf-46e5-9573-78aa4f81ea42.png)
+<p align="center" width="100%">
+    <img width="50%" src="https://user-images.githubusercontent.com/51473791/221582986-856d6c0f-cadf-46e5-9573-78aa4f81ea42.png">
+    <br>
+    <em>Figure 1: Clamped plate that is analyzed in this tutorial.</em>
+</p>
 
 Table of contents:
 
@@ -120,12 +124,19 @@ The material nodes correspond to the following parameters:
 
 As the default parameters are the parameters of the clamped plate of the example, only n, the number of particles per element, must be adapted. The default value of n is 3, but here a quadrilateral mesh is used. Therefore, the number of particles per element can be increased to 4.
 
-### 6) Boundary Conditions 
-To add a boundary condition on the background grid, click on the support icon as shown in the picture below:
+### 6) Background domain
+Although we haven't added any boundary conditions for the body domain yet, we will proceed with the background domain. The boundary conditions of the problem will be added in the last step, as they are imposed on the background mesh. For that purpose, of course, a background mesh has to be created beforehand. Therefore, we will continue with the background domain now. We start by adding a *FEM* model to the canvas (see fig. XX). You can find it in the **Models** section of *Cocodrilo*. Moreover, add as previiously shown, a mesh plane (*MPlane*) field to mesh the background domain to the canvas. Connect the *MPM*, *FEM* and *MPlane* fields as shown below in fig. XX.
 
-| ![support_icon_of_Cocodrilo](https://user-images.githubusercontent.com/51473791/224542007-1cfc054b-8490-45e1-953e-381f70252fe9.jpg) | 
-|:--:| 
-| Figure XX: Support Icon in Cocodrilo-menu |
+<p align="center" width="100%">
+    <img width="80%" src="https://user-images.githubusercontent.com/51473791/224546430-0432ddc0-15a1-4938-b733-99691c7a07ef.jpg">
+    <br>
+    <em>Figure XX: FEM-model and MPlane for background domain are present on canvas.</em>
+</p>
+
+
+
+### 8) Boundary Conditions 
+To add a boundary condition on the background grid, click on the support icon as shown in the picture below:
 
 <p align="center" width="100%">
     <img width="50%" src="https://user-images.githubusercontent.com/51473791/224542007-1cfc054b-8490-45e1-953e-381f70252fe9.jpg">
@@ -133,13 +144,15 @@ To add a boundary condition on the background grid, click on the support icon as
     <em>Figure XX: Support Icon in Cocodrilo-menu</em>
 </p>
 
-Subsequently, add a support and a curve field to the canvas. A curve may be added the following way: double clicking on a free space on the canvas and entering 
+Subsequently, add a support- and a curve-field to the canvas. A curve may be added the following way: double click on a free space on the canvas and wrtie in the appearing line *crv*. Then a curve-field as shown in fig. XX should appear.
 
 <p align="center" width="100%">
     <img width="50%" src="https://user-images.githubusercontent.com/51473791/224545525-d6409ca4-e05c-4c5c-b4b8-62607ccba771.jpg">
     <br>
-    <em>Figure XX: Grasshopper set up for body inlcuding fields for supports and curve</em>
+    <em>Figure XX: Grasshopper set up for body inlcuding a field for support and curve</em>
 </p>
+
+The orange color of the curve field indicates that it is lacking input data. To add input data, right click *curve* and choose *Set one curve*. Ensuilingly, the *Rhino* GUI appears and the a 
 
 
 
