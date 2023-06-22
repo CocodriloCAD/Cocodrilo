@@ -28,7 +28,7 @@ Table of contents:
 1. [General User Interface](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#1-general-user-interface)
 2. [Define analysis](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#2-define-analysis-method)
 3. [Generate clamped plate (body)](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#3-generate-clamped-plate-body) <br /> 
-3.1. Set up body geometry  <br />
+3.1. [Set up body geometry](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#31-setup-body-geometry) <br />
 3.2. Define mesh <br />
 3.3. Define boundary conditions <br />
 3.4. Choose material <br />
@@ -137,6 +137,7 @@ Choose "Set one rectangle", as indicated by the red rectangle in Figure 12. Subs
     <em>Figure 13: Rhino GUI to enter the coordinates of the clamped plate.</em>
 </p>
 Add in the line, which is indicated by the red rectangle in Figure 13, the coordinates for the cantilever beam in the following way:
+
 - Point 1: 0.0,0.5 
 - Point 2: 1.5,0.5
 - Point 3: 1.5,1.5
