@@ -27,7 +27,7 @@ Table of contents:
 
 1. [General User Interface](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#1-general-user-interface)
 2. [Define analysis](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#2-define-analysis-method)
-3. [Generate clamped plate (body)](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#3-geometry)  <br /> 
+3. [Generate clamped plate (body)](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#3-generate-clamped-plate-body) <br /> 
 3.1. Set up body geometry  <br />
 3.2. Define mesh <br />
 3.3. Define boundary conditions <br />
@@ -93,35 +93,33 @@ Now the desired analysis fields are present on the canvas. In the next step we w
 The basis for setting up the geometry is the *Geo*-node within the *MPM*-field. Due to the internal data structure of *Cocodrilo*, a lot of information of the modelled problem is entered via the *Geo*-node: the input data from material parameters, boundary conditions and the body-mesh are entered via the *Geo*-node.
 
 ##### Cantilever beam
-In order to model the cantilever beam, which is depicted in Figure 1, we have to add a *solid*-element. However, this element is not an element in the sense of a finite-element, e.g. a plate element with 2 dofs at each corner, but rather an object in the sense of object-oriented-programming which has the mesh, the material and the thickness of the structure, which is to be modelled, as member variables. 
+In order to model the cantilever beam, which is depicted in Figure 1, we have to add a *solid*-element (see Figure 8). However, this element is not an element in the sense of a finite-element, e.g. a plate element with 2 dofs at each corner, but rather an object in the sense of object-oriented-programming which has the mesh, the material and the thickness of the structure, which is to be modelled, as member variables. After adding the *solid*-element, a *MPM-Material*- as well as a *MPlane*-field have to be added. These are shown in Figures 9 and 10.
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221550075-c992e18d-27a5-4cc2-a193-49205816d817.png">
     <br>
-    <em>Figure 8: the LSA and MPM analysis fields are connected by a line.</em>
+    <em>Figure 8: solid-element icon in "Elements" tab.</em>
 </p>
-
-After adding the *solid*-element, a *MPM-Material*- as well as a *MPlane*-field have to be added. 
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221549704-cd9d943b-44da-43e6-b77b-a39d0ffac3ec.png">
     <br>
-    <em>Figure 8: the LSA and MPM analysis fields are connected by a line.</em>
+    <em>Figure 9: MPM material icon in the "Materials" tab.</em>
 </p>
 For the *MPlane*(=mesh plane)-field click on the section "Mesh":
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221550515-558ef1c6-e860-4be5-91f5-12007b9b39e5.png">
     <br>
-    <em>Figure 8: the LSA and MPM analysis fields are connected by a line.</em>
+    <em>Figure 10: Mesh-plane icon in the "primitives" tab of the "Mesh" tab.</em>
 </p>
 
-Add all these fields to the plane and connect them as shown in the picture below:
+After adding the three new fields to the canvas, they are connected as shown in Figure 11:
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221551013-b48299e0-be5e-426a-bee3-9904fefad170.png">
     <br>
-    <em>Figure 8: the LSA and MPM analysis fields are connected by a line.</em>
+    <em>Figure 11: fields and connections required for the body element.</em>
 </p>
 
 To set the width and length of the beam, right click the *B*-node of the *MPlane* field. Then the subsequent depicted menu opens:
