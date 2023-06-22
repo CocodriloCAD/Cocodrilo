@@ -155,9 +155,7 @@ In this example we want to mesh the cantilever with a quadrilateral mesh. The ed
 
 
 #### 3.4 Define the material 
-The material parameters for the steel plate can be entered in the *MPM Material* field. The default parameters of *MPM Material* are the ones of steel.
-XXX Bild anpassenXXX
-
+The material parameters for the steel plate can be entered in the *MPM Material* field. The default parameters of *MPM Material* field (see Figure 11) are the ones of steel.
 The material nodes correspond to the following parameters:
 - N: Name, e.g. Steel
 - CL: Constitutive Law, e.g. LinearElasticIsotropicPlaneStrain2DLaw
@@ -170,8 +168,11 @@ The material nodes correspond to the following parameters:
 - n: Number of particles per element
 - t: thickness of the element XXX Check which thickness is considered internallyXX!
 
+As the default parameters are the parameters of the clamped plate of the example, only n, the number of particles per element, must be adapted. The default value of n is 3 (corresponding to a triangular mesh), but here a quadrilateral mesh is used. Therefore, we increase the number of particles per element increased to 4.
 
-As the default parameters are the parameters of the clamped plate of the example, only n, the number of particles per element, must be adapted. The default value of n is 3, but here a quadrilateral mesh is used. Therefore, the number of particles per element can be increased to 4.
+#### 3.4 Define a Dirichlet boundary condition 
+
+
 
 ### 6) Background domain
 Although we haven't added any boundary conditions for the body domain yet, we will proceed with the background domain. The boundary conditions of the problem will be added in the last step, as they are imposed on the background mesh. For that purpose, of course, a background mesh has to be created beforehand. Therefore, we will continue with the background domain now. We start by adding a *FEM* model to the canvas (see fig. XX). You can find it in the **Models** section of *Cocodrilo*. Moreover, add as previiously shown, a mesh plane (*MPlane*) field to mesh the background domain to the canvas. Connect the *MPM*, *FEM* and *MPlane* fields as shown below in fig. XX.
