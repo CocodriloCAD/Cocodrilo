@@ -94,6 +94,7 @@ The basis for setting up the geometry is the *Geo*-node within the *MPM*-field. 
 
 ##### Cantilever beam
 In order to model the cantilever beam, which is depicted in Figure 1, we have to add a *solid*-element (see Figure 8). However, this element is not an element in the sense of a finite-element, e.g. a plate element with 2 dofs at each corner, but rather an object in the sense of object-oriented-programming which has the mesh, the material and the thickness of the structure, which is to be modelled, as member variables. After adding the *solid*-element, a *MPM-Material*- as well as a *MPlane*-field have to be added. These are shown in Figures 9 and 10.
+For the *MPlane*(=mesh plane)-field click on the tab *Mesh*.
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221550075-c992e18d-27a5-4cc2-a193-49205816d817.png">
@@ -106,7 +107,6 @@ In order to model the cantilever beam, which is depicted in Figure 1, we have to
     <br>
     <em>Figure 9: MPM material icon in the "Materials" tab.</em>
 </p>
-For the *MPlane*(=mesh plane)-field click on the section "Mesh":
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221550515-558ef1c6-e860-4be5-91f5-12007b9b39e5.png">
