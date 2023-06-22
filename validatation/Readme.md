@@ -15,7 +15,7 @@ For more complex geometries, boundary conditions and other analyses no validatio
 # Documentation: How to use Rhino/Grasshopper & Cocodrilo to generate simulation files for the KRATOS Multiphysics MPM Application
 
 ## Linear Analysis
-This tutorial explains how to generate the computation files of a linear static analysis with the [KRATOS Multiphysics](https://github.com/KratosMultiphysics/Kratos/wiki) [Particle Mechanics Application](https://github.com/KratosMultiphysics/Kratos/tree/master/applications/ParticleMechanicsApplication) and [Cocodrilo](https://github.com/CocodriloCAD/Cocodrilo), a plug in for Grasshopper/ Rhino. For that purpose a plate element (see Figure 1), clamped at one side, is modeled and analyzed with the material point method. 
+This tutorial explains how to generate the computation files of a linear static analysis with the [KRATOS Multiphysics](https://github.com/KratosMultiphysics/Kratos/wiki) [Particle Mechanics Application](https://github.com/KratosMultiphysics/Kratos/tree/master/applications/ParticleMechanicsApplication) and [Cocodrilo](https://github.com/CocodriloCAD/Cocodrilo), a plugin for Grasshopper/ Rhino. For that purpose a plate element (see Figure 1), clamped at one side, is modeled and analyzed with the material point method. 
 
 <p align="center" width="100%">
     <img width="50%" src="https://user-images.githubusercontent.com/51473791/221582986-856d6c0f-cadf-46e5-9573-78aa4f81ea42.png">
@@ -60,32 +60,34 @@ To create a new model, set up a new, empty canvas in Grasshopper. For a MPM anal
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221428914-228ebd5c-2b22-419c-a88d-2e94d2b1bd7d.png">
     <br>
-    <em>Figure 4:MPM analysis field on the canvas of Grasshopper.</em>
+    <em>Figure 4: MPM analysis field on the canvas of Grasshopper.</em>
 </p>
 
-For a linear, static analysis (LSA) of the cantilever, add a linear static analysis in a next step:
+For a linear, static analysis (LSA) of the cantilever, add a linear static analysis field in a next step from the *Analyses* menu (see Figure 5) to 
+the current canvas (see Figure 6).
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221426370-610b969b-788d-434d-891a-4ffafd053a62.png">
     <br>
-    <em>Figure XX: graphical user interface of Grasshopper, field of Cocodrilo is marked with the red rectangle.</em>
+    <em>Figure 5: linear analysis icon in the "Analyses" menu.</em>
 </p>
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221427289-a2cd1b8e-8a22-4c9d-84c0-429a7c10ca04.png">
     <br>
-    <em>Figure XX: graphical user interface of Grasshopper, field of Cocodrilo is marked with the red rectangle.</em>
+    <em>Figure 6: linear analysis field added to the current canvas.</em>
 </p>
 
-When both fields (*MPM Analysis and LSA*) are present, connect them with a line: 
+When both fields (*MPM Analysis and LSA*) are present, connect them by drawing a line from "analysis" of the LSA field to "Analysis type" of the MPM analysis field, as shown in Figure 7.
+Now the desired analysis fields are present on the canvas. In the next step we will add the geometry.
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221429003-4f8f0e8d-05ca-4b31-a62c-9a47a5aef40e.png">
     <br>
-    <em>Figure XX: graphical user interface of Grasshopper, field of Cocodrilo is marked with the red rectangle.</em>
+    <em>Figure 7: the LSA and MPM analysis field are connected by a line.</em>
 </p>
 
-Now the desired analysis field is present on the canvas. In the next step we will add the geometry.
+
 
 ### 3) Geometry
 The basis for setting up the geometry is the *Geo*-node within the *MPM*-field. Due to the internal data structure of *Cocodrilo*, a lot of information of the modelled problem is entered via the *Geo*-node. For example, later we will see that the input data from material parameters, boundary conditions and the body-mesh are entered via the *Geo*-node.
