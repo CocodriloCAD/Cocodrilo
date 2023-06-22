@@ -25,16 +25,16 @@ This tutorial explains how to generate the computation files of a linear static 
 
 Table of contents:
 
-1) [General User Interface](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#1-general-user-interface)
-2) [Define analysis](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#2-define-analysis-method)
-3) Generate Body 
-3.1) Set up body geometry 
-3.1) Define boundary conditions
-5) Choose material
-6) Define mesh
-7) Generate calcualtion files
-8) Remove errors
-9) Limitations of the current software version
+1. [General User Interface](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#1-general-user-interface)
+2. [Define analysis](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#2-define-analysis-method)
+3. [Generate clamped plate (body)](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#3-geometry)  <br /> 
+3.1. Set up body geometry  <br />
+3.2. Define mesh <br />
+3.3. Define boundary conditions <br />
+3.4. Choose material <br />
+4. Generate calcualtion files
+7. Remove errors
+8. Limitations of the current software version
 
 #### 1) General User Interface
 
@@ -84,39 +84,72 @@ Now the desired analysis fields are present on the canvas. In the next step we w
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221429003-4f8f0e8d-05ca-4b31-a62c-9a47a5aef40e.png">
     <br>
-    <em>Figure 7: the LSA and MPM analysis field are connected by a line.</em>
+    <em>Figure 7: the LSA and MPM analysis fields are connected by a line.</em>
 </p>
 
+### 3. Generate clamped plate (body)
 
+#### 3.1. Setup body geometry
+The basis for setting up the geometry is the *Geo*-node within the *MPM*-field. Due to the internal data structure of *Cocodrilo*, a lot of information of the modelled problem is entered via the *Geo*-node: the input data from material parameters, boundary conditions and the body-mesh are entered via the *Geo*-node.
 
-### 3) Geometry
-The basis for setting up the geometry is the *Geo*-node within the *MPM*-field. Due to the internal data structure of *Cocodrilo*, a lot of information of the modelled problem is entered via the *Geo*-node. For example, later we will see that the input data from material parameters, boundary conditions and the body-mesh are entered via the *Geo*-node.
-
-#### Cantilever beam
-In order to model the cantilever beam which is depicted below, we have to add a *solid*-element. However, this element is not an element in the sense of a finite-element, e.g. a plate element with 2 dofs at each corner, but rather an object in the sense of object-oriented-programming which has the mesh, the material and the thickness of the structure which shall be modelled as member variables. 
+##### Cantilever beam
+In order to model the cantilever beam, which is depicted in Figure XX, we have to add a *solid*-element. However, this element is not an element in the sense of a finite-element, e.g. a plate element with 2 dofs at each corner, but rather an object in the sense of object-oriented-programming which has the mesh, the material and the thickness of the structure, which is to be modelled, as member variables. 
 
 ![grafik](https://user-images.githubusercontent.com/51473791/221550075-c992e18d-27a5-4cc2-a193-49205816d817.png)
+
+<p align="center" width="100%">
+    <img width="75%" src="https://user-images.githubusercontent.com/51473791/221550075-c992e18d-27a5-4cc2-a193-49205816d817.png">
+    <br>
+    <em>Figure 8: the LSA and MPM analysis fields are connected by a line.</em>
+</p>
 
 After adding the *solid*-element, a *MPM-Material*- as well as a *MPlane*-field have to be added. 
 
 ![grafik](https://user-images.githubusercontent.com/51473791/221549704-cd9d943b-44da-43e6-b77b-a39d0ffac3ec.png)
 
+<p align="center" width="100%">
+    <img width="75%" src="https://user-images.githubusercontent.com/51473791/221549704-cd9d943b-44da-43e6-b77b-a39d0ffac3ec.png">
+    <br>
+    <em>Figure 8: the LSA and MPM analysis fields are connected by a line.</em>
+</p>
 For the *MPlane*(=mesh plane)-field click on the section "Mesh":
 
 ![grafik](https://user-images.githubusercontent.com/51473791/221550515-558ef1c6-e860-4be5-91f5-12007b9b39e5.png)
+
+<p align="center" width="100%">
+    <img width="75%" src="https://user-images.githubusercontent.com/51473791/221550515-558ef1c6-e860-4be5-91f5-12007b9b39e5.png">
+    <br>
+    <em>Figure 8: the LSA and MPM analysis fields are connected by a line.</em>
+</p>
 
 Add all these fields to the plane and connect them as shown in the picture below:
 
 ![grafik](https://user-images.githubusercontent.com/51473791/221551013-b48299e0-be5e-426a-bee3-9904fefad170.png)
 
+<p align="center" width="100%">
+    <img width="75%" src="https://user-images.githubusercontent.com/51473791/221551013-b48299e0-be5e-426a-bee3-9904fefad170.png">
+    <br>
+    <em>Figure 8: the LSA and MPM analysis fields are connected by a line.</em>
+</p>
+
 To set the width and length of the beam, right click the *B*-node of the *MPlane* field. Then the subsequent depicted menu opens:
 
 ![grafik](https://user-images.githubusercontent.com/51473791/221567498-e5cfb713-e7a0-46c1-825f-73c8a330cae0.png)
 
+<p align="center" width="100%">
+    <img width="75%" src="https://user-images.githubusercontent.com/51473791/221567498-e5cfb713-e7a0-46c1-825f-73c8a330cae0.png">
+    <br>
+    <em>Figure 8: the LSA and MPM analysis fields are connected by a line.</em>
+</p>
 Choose "Set one rectangle", as indicated by the red rectangle. Subsequently, the GUI of Rhino will appear where the dimensions of the cantilever beam can be entered.
 
 ![grafik](https://user-images.githubusercontent.com/51473791/221569196-23fdf884-f1d1-4a2e-9b56-940ca21382d2.png)
 
+<p align="center" width="100%">
+    <img width="75%" src="https://user-images.githubusercontent.com/51473791/221569196-23fdf884-f1d1-4a2e-9b56-940ca21382d2.png">
+    <br>
+    <em>Figure 8: the LSA and MPM analysis fields are connected by a line.</em>
+</p>
 Add in the line which is indicated by the red rectangle the coordinates for the cantilever beam in the following way:
 - Point 1: 0.0,0.5 
 - Point 2: 1.5,0.5
@@ -125,6 +158,12 @@ Add in the line which is indicated by the red rectangle the coordinates for the 
 Finally, confirm the coordinates by hitting "enter" and the Grasshopper-canvas will appear again. If you click once a again on "Set one rectangle", you should see the following rectangle in Rhino:
 
 ![grafik](https://user-images.githubusercontent.com/51473791/221571181-b220da8a-a3d4-40dc-adf2-01e86d39a26c.png)
+
+<p align="center" width="100%">
+    <img width="75%" src="https://user-images.githubusercontent.com/51473791/221571181-b220da8a-a3d4-40dc-adf2-01e86d39a26c.png">
+    <br>
+    <em>Figure 8: the LSA and MPM analysis fields are connected by a line.</em>
+</p>
 
 ### 4) Meshing of the cantilever
 In this example we want to mesh the cantilever with a quadrilateral mesh. The edge lenghts of the elements should be 0.1m. For that purpose, right click *w* (=Width Count: Number of faces along x-direction) and "Set integer". Here, enter 15, as we have a cantilever with a length of 1.5m and with 15 elements in the x-direction, each element has length of 0.1m in the x-direction.
