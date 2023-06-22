@@ -114,7 +114,7 @@ For the *MPlane*(=mesh plane)-field click on the tab *Mesh*.
     <em>Figure 10: Mesh-plane icon in the "primitives" tab of the "Mesh" tab.</em>
 </p>
 
-After adding the three new fields to the canvas, they are connected as shown in Figure 11:
+After adding the three new fields to the canvas, they have to be connected as shown in Figure 11:
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221551013-b48299e0-be5e-426a-bee3-9904fefad170.png">
@@ -125,31 +125,31 @@ After adding the three new fields to the canvas, they are connected as shown in 
 To set the width and length of the beam, right click the *B*-node of the *MPlane* field. Then the subsequent depicted menu opens:
 
 <p align="center" width="100%">
-    <img width="75%" src="https://user-images.githubusercontent.com/51473791/221567498-e5cfb713-e7a0-46c1-825f-73c8a330cae0.png">
+    <img width="50%" src="https://user-images.githubusercontent.com/51473791/221567498-e5cfb713-e7a0-46c1-825f-73c8a330cae0.png">
     <br>
-    <em>Figure 8: the LSA and MPM analysis fields are connected by a line.</em>
+    <em>Figure 12: menu to change parameters of the *MPlane* field</em>
 </p>
-Choose "Set one rectangle", as indicated by the red rectangle. Subsequently, the GUI of Rhino will appear where the dimensions of the cantilever beam can be entered.
+Choose "Set one rectangle", as indicated by the red rectangle in Figure 12. Subsequently, the GUI of Rhino will appear where the dimensions of the cantilever beam can be entered (see Figure 13).
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221569196-23fdf884-f1d1-4a2e-9b56-940ca21382d2.png">
     <br>
-    <em>Figure 8: the LSA and MPM analysis fields are connected by a line.</em>
+    <em>Figure 13: Rhino GUI to enter the coordinates of the clamped plate.</em>
 </p>
-Add in the line which is indicated by the red rectangle the coordinates for the cantilever beam in the following way:
+Add in the line, which is indicated by the red rectangle in Figure 13, the coordinates for the cantilever beam in the following way:
 - Point 1: 0.0,0.5 
 - Point 2: 1.5,0.5
 - Point 3: 1.5,1.5
 
-Finally, confirm the coordinates by hitting "enter" and the Grasshopper-canvas will appear again. If you click once a again on "Set one rectangle", you should see the following rectangle in Rhino:
+Finally, confirm the coordinates by hitting "enter" and the Grasshopper-canvas will appear again. If you click once a again on "Set one rectangle", you should see the following rectangle in Rhino (see Figure 14):
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221571181-b220da8a-a3d4-40dc-adf2-01e86d39a26c.png">
     <br>
-    <em>Figure 8: the LSA and MPM analysis fields are connected by a line.</em>
+    <em>Figure 14: geometry of the clamped plate, which was entered in the step before.</em>
 </p>
 
-### 4) Meshing of the cantilever
+#### 3.3 Definition of  the mesh
 In this example we want to mesh the cantilever with a quadrilateral mesh. The edge lenghts of the elements should be 0.1m. For that purpose, right click *w* (=Width Count: Number of faces along x-direction) and "Set integer". Here, enter 15, as we have a cantilever with a length of 1.5m and with 15 elements in the x-direction, each element has length of 0.1m in the x-direction.
 Subsequently, set analogously *h* (=Height Count: Number of faces in y-direction) to 10.
 
