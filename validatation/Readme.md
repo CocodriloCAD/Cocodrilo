@@ -49,7 +49,7 @@ The graphical user interface of Cocodrilo/Grasshopper/Rhino is depicted in Figur
 To see the menues *Analyses, DEM, Elements, Geometry, Materials, Models* and *Postprocessing* of Cocodrilo, click on *Cocodrilo* in  the line above, as indicated by the red rectangle in Figure 2.
 
 ### 2) Define analysis method
-To create a new model, set up a new, empty canvas in Grasshopper. For a MPM analysis, add the *Material point method* analyis from the *Analyses*-menu to the canvas by clicking first on *MPM*, and then on the canvas.
+To create a new model, set up a new, empty canvas in Grasshopper. For a MPM analysis, add the *Material point method* analyis from the *Analyses*-menu (see Figure 3) to the canvas by clicking first on *MPM*, and then on the canvas.
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221430285-af621478-7425-4302-b9d2-bc8d66afc1a1.png">
