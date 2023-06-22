@@ -43,24 +43,24 @@ The graphical user interface of Cocodrilo/Grasshopper/Rhino is depicted in Figur
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221424826-ef5c6955-fe54-47cc-8d4e-202bc5510391.png">
     <br>
-    <em>Figure 2: graphical user interface of Grasshopper, field of Cocodrilo is marked with the red rectangle.</em>
+    <em>Figure 2: graphical user interface of Grasshopper; the tab of Cocodrilo is marked with the red rectangle.</em>
 </p>
 
-To see the menues *Analyses, DEM, Elements, Geometry, Materials, Models* and *Postprocessing* of Cocodrilo, click on *Cocodrilo* in  the line above, as indicated by the red rectangle in Figure 2.
+To see the menues *Analyses, DEM, Elements, Geometry, Materials, Models* and *Postprocessing* of Cocodrilo, click on the *Cocodrilo*-tab, as indicated by the red rectangle in Figure 2.
 
 ### 2) Define analysis method
-To create a new model, set up a new, empty canvas in Grasshopper. For a MPM analysis, add the *Material point method* analyis from the *Analyses*-menu (see Figure 3) to the canvas by clicking first on *MPM*, and then on the canvas.
+To create a new model, set up a new, empty canvas in Grasshopper. For a MPM analysis, add the *Material point method* analysis field from the *Analyses*-menu (see Figure 3) to the canvas by clicking first on *MPM*, and then on the canvas.
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221430285-af621478-7425-4302-b9d2-bc8d66afc1a1.png">
     <br>
-    <em>Figure 3: Icon of the analysis field of a MPM analysis.</em>
+    <em>Figure 3: icon of the the MPM analysis field in the "Analyses" menu.</em>
 </p>
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221428914-228ebd5c-2b22-419c-a88d-2e94d2b1bd7d.png">
     <br>
-    <em>Figure XX: graphical user interface of Grasshopper, field of Cocodrilo is marked with the red rectangle.</em>
+    <em>Figure 4:MPM analysis field on the canvas of Grasshopper.</em>
 </p>
 
 For a linear, static analysis (LSA) of the cantilever, add a linear static analysis in a next step:
