@@ -15,18 +15,18 @@ For more complex geometries, boundary conditions and other analyses no validatio
 # Documentation: How to use Rhino/Grasshopper & Cocodrilo to generate simulation files for the KRATOS Multiphysics MPM Application
 
 ## Linear Analysis
-This tutorial explains how to set up the computation files of a linear static analysis with the [KRATOS Multiphysics](https://github.com/KratosMultiphysics/Kratos/wiki) [Particle Mechanics Application](https://github.com/KratosMultiphysics/Kratos/tree/master/applications/ParticleMechanicsApplication) and [Cocodrilo](https://github.com/CocodriloCAD/Cocodrilo), a plug in for Grasshopper/ Rhino. For that purpose a plate element (see fig. 1), clamped at one side, is modeled and analyzed with the material point method. The results of the analysis based on the *Cocodrilo* files are compared to the results of an analysis based on GiD (Link einfügen).
+This tutorial explains how to set up the computation files of a linear static analysis with the [KRATOS Multiphysics](https://github.com/KratosMultiphysics/Kratos/wiki) [Particle Mechanics Application](https://github.com/KratosMultiphysics/Kratos/tree/master/applications/ParticleMechanicsApplication) and [Cocodrilo](https://github.com/CocodriloCAD/Cocodrilo), a plug in for Grasshopper/ Rhino. For that purpose a plate element (see Figure 1), clamped at one side, is modeled and analyzed with the material point method. The results of the analysis based on the *Cocodrilo* files are compared to the results of an analysis based on GiD (Link einfügen).
 
 <p align="center" width="100%">
     <img width="50%" src="https://user-images.githubusercontent.com/51473791/221582986-856d6c0f-cadf-46e5-9573-78aa4f81ea42.png">
     <br>
-    <em>Figure 1: Clamped plate that is analyzed in this tutorial.</em>
+    <em>Figure 1: clamped plate that is analyzed in this tutorial.</em>
 </p>
 
 Table of contents:
 
-1) [General User Interface](https://github.com/CocodriloCAD/Cocodrilo/edit/MPM_GH/validatation/Readme.md#1-general-user-interface)
-2) [Define analysis](https://github.com/CocodriloCAD/Cocodrilo/edit/MPM_GH/validatation/Readme.md#2-define-analysis-method)
+1) [General User Interface](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#1-general-user-interface)
+2) [Define analysis](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#2-define-analysis-method)
 3) Generate Body 
 3.1) Set up body geometry 
 3.1) Define boundary conditions
@@ -38,14 +38,14 @@ Table of contents:
 
 #### 1) General User Interface
 
-The graphical user interface of Cocodrilo/Grasshopper/Rhino is depicted in the figure below: 
+The graphical user interface of Cocodrilo/Grasshopper/Rhino is depicted in Figure 2: 
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221424826-ef5c6955-fe54-47cc-8d4e-202bc5510391.png">
     <br>
-    <em>Figure XX: graphical user interface of Grasshopper, field of Cocodrilo is marked with the red rectangle.</em>
+    <em>Figure 2: graphical user interface of Grasshopper, field of Cocodrilo is marked with the red rectangle.</em>
 </p>
-To see the menues *Analyses, DEM, Elements, Geometry, Materials, Models and Postproessing* of Cocodrilo, click on *Cocodrilo* in  the line above, as indicated by the red rectangle in Figure XX.
+To see the menues *Analyses, DEM, Elements, Geometry, Materials, Models and Postproessing* of Cocodrilo, click on *Cocodrilo* in  the line above, as indicated by the red rectangle in Figure 2.
 
 ### 2) Define analysis method
 To create a new model resp. analysis, set up a new, empty canvas in Grasshopper. For a MPM analysis, add the *Material point method* analyis from the *Analyses*-menu to the canvas by clicking on *MPM* firstly, and clicking on the canvas secondly.
