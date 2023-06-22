@@ -64,13 +64,25 @@ To create a new model resp. analysis, set up a new, empty canvas in Grasshopper.
 
 For a linear, static analysis (LSA) of the cantilever, add a linear static analysis in a next step:
 
-![grafik](https://user-images.githubusercontent.com/51473791/221426370-610b969b-788d-434d-891a-4ffafd053a62.png)
+<p align="center" width="100%">
+    <img width="75%" src="https://user-images.githubusercontent.com/51473791/221426370-610b969b-788d-434d-891a-4ffafd053a62.png">
+    <br>
+    <em>Figure XX: graphical user interface of Grasshopper, field of Cocodrilo is marked with the red rectangle.</em>
+</p>
 
-![grafik](https://user-images.githubusercontent.com/51473791/221427289-a2cd1b8e-8a22-4c9d-84c0-429a7c10ca04.png)
+<p align="center" width="100%">
+    <img width="75%" src="https://user-images.githubusercontent.com/51473791/221427289-a2cd1b8e-8a22-4c9d-84c0-429a7c10ca04.png">
+    <br>
+    <em>Figure XX: graphical user interface of Grasshopper, field of Cocodrilo is marked with the red rectangle.</em>
+</p>
 
 When both fields (*MPM Analysis and LSA*) are present, connect them with a line: 
 
-![grafik](https://user-images.githubusercontent.com/51473791/221429003-4f8f0e8d-05ca-4b31-a62c-9a47a5aef40e.png)
+<p align="center" width="100%">
+    <img width="75%" src="https://user-images.githubusercontent.com/51473791/221429003-4f8f0e8d-05ca-4b31-a62c-9a47a5aef40e.png">
+    <br>
+    <em>Figure XX: graphical user interface of Grasshopper, field of Cocodrilo is marked with the red rectangle.</em>
+</p>
 
 
 Now the desired analysis field is present on the canvas. In the next step we will add the geometry.
