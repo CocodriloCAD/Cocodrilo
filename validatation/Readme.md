@@ -29,7 +29,7 @@ Table of contents:
 2. [Define analysis](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#2-define-analysis-method)
 3. [Generate clamped plate (body)](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#3-generate-clamped-plate-body) <br /> 
 3.1. [Set up body geometry](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#31-setup-body-geometry) <br />
-3.2. Define mesh <br />
+3.2. [Define mesh](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#33-definition-of--the-mesh) <br />
 3.3. Define boundary conditions <br />
 3.4. Choose material <br />
 4. Generate calcualtion files
@@ -151,12 +151,11 @@ Finally, confirm the coordinates by hitting "enter" and the Grasshopper-canvas w
 </p>
 
 #### 3.3 Definition of  the mesh
-In this example we want to mesh the cantilever with a quadrilateral mesh. The edge lenghts of the elements should be 0.1m. For that purpose, right click *w* (=Width Count: Number of faces along x-direction) and "Set integer". Here, enter 15, as we have a cantilever with a length of 1.5m and with 15 elements in the x-direction, each element has length of 0.1m in the x-direction.
-Subsequently, set analogously *h* (=Height Count: Number of faces in y-direction) to 10.
+In this example we want to mesh the cantilever with a quadrilateral mesh. The edge lenghts of the elements should be 0.1m. For that purpose, right click the paramter *w* (=Width Count: Number of faces along x-direction) of the *MPlane* field and click "Set integer" of the appearing menu. Here, enter 15, as we have a cantilever with a length of 1.5m and with 15 elements in the x-direction, each element has length of 0.1m in the x-direction. Subsequently, set analogously *h* (=Height Count: Number of faces in y-direction) to 10.
 
 
-### 5) Material 
-The material parameters for the steel plate can be entered in the *MPM Material* field. The default parameters of *MPM Material* are the ones from steel.
+#### 3.4 Define the material 
+The material parameters for the steel plate can be entered in the *MPM Material* field. The default parameters of *MPM Material* are the ones of steel.
 XXX Bild anpassenXXX
 
 The material nodes correspond to the following parameters:
