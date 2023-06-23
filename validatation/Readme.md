@@ -29,7 +29,7 @@ Table of contents:
 2. [Define the analysis](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#2-define-analysis-method)
 3. [Generate clamped plate (body)](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#3-generate-clamped-plate-body) <br /> 
 3.1. [Set up body geometry](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#31-setup-body-geometry) <br />
-3.2. [Define the mesh](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#32-definition-of--the-mesh) <br />
+3.2. [Define the mesh](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#32-define-the-mesh) <br />
 3.3. [Define the material](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#33-define-the-material) <br />
 3.4. [Loads](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#34-loads) <br />
 4. [Set up background domain](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#4-set-up-background-domain)
