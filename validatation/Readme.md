@@ -29,9 +29,8 @@ Table of contents:
 2. [Define analysis](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#2-define-analysis-method)
 3. [Generate clamped plate (body)](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#3-generate-clamped-plate-body) <br /> 
 3.1. [Set up body geometry](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#31-setup-body-geometry) <br />
-3.2. [Define mesh](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#33-definition-of--the-mesh) <br />
-3.3. Define boundary conditions <br />
-3.4. Choose material <br />
+3.2. [Define mesh](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#32-definition-of--the-mesh) <br />
+3.3. [Define the material](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#33-define-the-material) <br />
 4. Generate calcualtion files
 7. Remove errors
 8. Limitations of the current software version
@@ -150,11 +149,11 @@ Finally, confirm the coordinates by hitting "enter" and the Grasshopper-canvas w
     <em>Figure 14: geometry of the clamped plate, which was entered in the step before.</em>
 </p>
 
-#### 3.3 Definition of  the mesh
+#### 3.2 Definition of  the mesh
 In this example we want to mesh the cantilever with a quadrilateral mesh. The edge lenghts of the elements should be 0.1m. For that purpose, right click the paramter *w* (=Width Count: Number of faces along x-direction) of the *MPlane* field and click "Set integer" of the appearing menu. Here, enter 15, as we have a cantilever with a length of 1.5m and with 15 elements in the x-direction, each element has length of 0.1m in the x-direction. Subsequently, set analogously *h* (=Height Count: Number of faces in y-direction) to 10.
 
 
-#### 3.4 Define the material 
+#### 3.3 Define the material 
 The material parameters for the steel plate can be entered in the *MPM Material* field. The default parameters of *MPM Material* field (see Figure 11) are the ones of steel.
 The material nodes correspond to the following parameters:
 - N: Name, e.g. Steel
@@ -170,35 +169,34 @@ The material nodes correspond to the following parameters:
 
 As the default parameters are the parameters of the clamped plate of the example, only n, the number of particles per element, must be adapted. The default value of n is 3 (corresponding to a triangular mesh), but here a quadrilateral mesh is used. Therefore, we increase the number of particles per element increased to 4.
 
-#### 3.4 Define a Dirichlet boundary condition 
+#### 3.4 Loads
+The structure is only loaded by its dead load. This is considered automatically. Hence, no further steps to model the loads are necessary in this example.
 
-
-
-### 6) Background domain
-Although we haven't added any boundary conditions for the body domain yet, we will proceed with the background domain. The boundary conditions of the problem will be added in the last step, as they are imposed on the background mesh. For that purpose, of course, a background mesh has to be created beforehand. Therefore, we will continue with the background domain now. We start by adding a *FEM* model to the canvas (see fig. XX). You can find it in the **Models** section of *Cocodrilo*. Moreover, add as previiously shown, a mesh plane (*MPlane*) field to mesh the background domain to the canvas. Connect the *MPM*, *FEM* and *MPlane* fields as shown below in fig. XX.
+### 4) Background domain
+Although we haven't added any boundary conditions for the body domain yet, we will proceed with the background domain. The boundary conditions of the problem will be added in the last step, as they are imposed on the background mesh. For that purpose, of course, a background mesh has to be created beforehand. Therefore, we will continue with the background domain now. We start by adding a *FEM*-model field to the canvas (see Figure XX). You can find it in the *Models* tab of *Cocodrilo*. Moreover, add as previously shown, a mesh plane (*MPlane*) field for meshing the background domain to the canvas. Connect the *MPM*, *FEM* and *MPlane* fields as shown below in Figure 15.
 
 <p align="center" width="100%">
     <img width="80%" src="https://user-images.githubusercontent.com/51473791/224546430-0432ddc0-15a1-4938-b733-99691c7a07ef.jpg">
     <br>
-    <em>Figure XX: FEM-model and MPlane for background domain are present on canvas.</em>
+    <em>Figure 15: FEM-model and MPlane for background domain are present on canvas.</em>
 </p>
 
-To create a background domain and a background mesh, we proceed analogously as in section (Link to mesh generation). Firstly, we right click on the *MPlane* field and click afterwards *Set on rectangle* in the appearing menu. Then the GUI of Rhino should appear. Here we enter, as done previously, the coordinates of the rectangle that will be the background domain. Now we enter:
+To create a background domain and a background mesh, we proceed analogously as in Section [3.2](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#32-definition-of--the-mesh). Firstly, we right click on the *MPlane* field and click afterwards *Set on rectangle* in the appearing menu (see Figure 12). Then the GUI of Rhino should appear (see Figure 13). Here we enter, as done previously, the coordinates of the rectangle that will be the background domain. We use the following values:
 
 - Point 1: 0.0,0.0 
 - Point 2: 2.0,0.0
 - Point 3: 2.0,2.0
 
-After entering the three points and confirming with "enter", the Rhino GUI will close again. If you reopen it (by clicking again on set on rectangle), the created rectangles should look the following way in the topview:
+After entering the three points and confirming with "enter", the Rhino GUI will close again. If you reopen it (by clicking again on set on rectangle), the created rectangles should look as shown in Figure 16 in the topview:
 
 <p align="center" width="100%">
     <img width="50%" src="https://user-images.githubusercontent.com/51473791/224571659-2ede6755-fa40-40b0-b6f1-aa4ba4c5ad4d.jpg">
     <br>
-    <em>Figure XX: Support Icon in Cocodrilo-menu</em>
+    <em>Figure 16: topview of the body and background rectangles</em>
 
 </p>
 
-To obtain a quadrilateral mesh with elements with an edge length of 0.2m, we have to set *W* (number of faces along x-direction) and *H* (number of faces along y-direction) to 10. Now we set up a background mesh.
+To obtain a quadrilateral background mesh with elements with an edge length of 0.2 m, we have to set *W* (number of faces along x-direction) and *H* (number of faces along y-direction) to 10. Thus we created the background mesh.
 
 
 ### 8) Boundary Conditions 
