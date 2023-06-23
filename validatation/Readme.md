@@ -215,7 +215,31 @@ To add a boundary condition on the background grid, click on the support icon as
     <em>Figure 18: Grasshopper set up for body inlcuding a field for support and curve</em>
 </p>
 
-The orange color of the curve field indicates that it is lacking input data. To add input data, right click *curve* and choose *Set one curve*. Ensuilingly, the *Rhino* GUI appears and the a 
+The orange color of the curve field indicates that it is lacking input data. To add input data, right click *curve* and choose *Set one curve*. Ensuilingly, the *Rhino* 
+GUI appears and the a 
+![set_one_curve](https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/31109c3d-1f7f-4b2a-8ee7-12a7f8345594)
 
+<p align="center" width="100%">
+    <img width="50%" src="https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/31109c3d-1f7f-4b2a-8ee7-12a7f8345594">
+    <br>
+    <em>Figure 19: right-click menu of curve-field. To draw a curve choose "Set one Curve".</em>
 
+</p>
 
+![draw_curve](https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/8300216f-414c-49f5-8312-b32e0ff304d7)
+
+<p align="center" width="100%">
+    <img width="50%" src="https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/8300216f-414c-49f5-8312-b32e0ff304d7">
+    <br>
+    <em>Figure 20: topview of the body and background rectangles</em>
+
+</p>
+
+![curve_created_and_chosen](https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/acfdb658-aa34-4d6a-9bcc-f61b720bdd1b)
+
+<p align="center" width="100%">
+    <img width="50%" src="https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/acfdb658-aa34-4d6a-9bcc-f61b720bdd1b">
+    <br>
+    <em>Figure 16: topview of the body and background rectangles</em>
+
+</p>
