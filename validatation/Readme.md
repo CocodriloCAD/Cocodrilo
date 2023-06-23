@@ -34,8 +34,7 @@ Table of contents:
 3.4. [Loads](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#34-loads) <br />
 4. [Set up background domain](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#4-set-up-background-domain)
 5. [Add boundary conditions on background mesh](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#5-add-boundary-conditions-on-background-mesh)
-6. [Create KRATOS computation files](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#5-add-boundary-conditions-on-background-mesh)
-7. Limitations of the current software version
+6. [Create KRATOS computation files](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#6-create-kratos-computation-files)
 
 #### 1. General User Interface
 
@@ -248,7 +247,7 @@ The clamped plate and its background domain has been modeled. Subsequently, we w
 - Body.mdpa
 - Grid.mdpa
 
-We start by naming the analysis. For that purpose, right click on *Name* of the *MPM*-field (see Figure 11). Then select *Set Text" in the dropdown menu which opens subsequently. Enter here the name of your analysis; I use here "LSA_example".
+We start by naming the analysis. For that purpose, right click on "Name" of the *MPM*-field (see Figure 11). Then select "Set Text" in the dropdown menu which opens subsequently. Enter here the name of your analysis; I use here "LSA_example".
 
 ![Name_analysis](https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/1cdd30d9-d78e-425b-b4a7-ed2f0fb1f72e)
 
@@ -258,7 +257,7 @@ We start by naming the analysis. For that purpose, right click on *Name* of the 
     <em>Figure 22: set the name of the analysis</em>
 </p>
 
-After setting the name of the analysis, set the value of *RUN* of the *MPM*-field from *FALSE* to *TRUE* and do the same for *RUN* of the *FEM* field. Thus, the calculation files for KRATOS are generated. At the moment, these are still difficult to find: Open the installation path of Cocodrilo and then under ...\Cocodrilo\Cocodrilo\Cocodrilo\bin\, you can find a folder with the name of the conducted analysis. In this case the name of the folder is "LSA_example". This folder contains the computation files for KRATOS, as shown in Figure 23.
+After setting the name of the analysis, set the value of "Run" of the *MPM*-field from *FALSE* to *TRUE* and do the same for "Run" of the *FEM* field. Thus, the calculation files for KRATOS are generated. At the moment, these are still difficult to find: Open the installation path of Cocodrilo and then under ...\Cocodrilo\Cocodrilo\Cocodrilo\bin\, you can find a folder with the name of the conducted analysis. In this case the name of the folder is "LSA_example". This folder contains the computation files for KRATOS, as shown in Figure 23.
 
 <p align="center" width="100%">
     <img width="50%" src="https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/0bc4a2cc-ff5a-4a92-8e57-29c684a57804">
