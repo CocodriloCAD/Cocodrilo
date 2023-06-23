@@ -217,10 +217,11 @@ To add a boundary condition on the background grid, click on the support icon as
 
 The orange color of the curve field indicates that it is lacking input data. To add input data, right click *curve* and choose *Set one curve*. Ensuilingly, the *Rhino* 
 GUI appears and the a 
+
 ![set_one_curve](https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/31109c3d-1f7f-4b2a-8ee7-12a7f8345594)
 
 <p align="center" width="100%">
-    <img width="50%" src="https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/31109c3d-1f7f-4b2a-8ee7-12a7f8345594">
+    <img width="40%" src="https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/31109c3d-1f7f-4b2a-8ee7-12a7f8345594">
     <br>
     <em>Figure 19: right-click menu of curve-field. To draw a curve choose "Set one Curve".</em>
 
