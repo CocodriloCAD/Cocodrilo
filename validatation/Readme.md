@@ -26,16 +26,18 @@ This tutorial explains how to generate the computation files of a linear static 
 Table of contents:
 
 1. [General User Interface](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#1-general-user-interface)
-2. [Define analysis](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#2-define-analysis-method)
+2. [Define the analysis](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#2-define-analysis-method)
 3. [Generate clamped plate (body)](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#3-generate-clamped-plate-body) <br /> 
 3.1. [Set up body geometry](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#31-setup-body-geometry) <br />
-3.2. [Define mesh](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#32-definition-of--the-mesh) <br />
+3.2. [Define the mesh](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#32-definition-of--the-mesh) <br />
 3.3. [Define the material](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#33-define-the-material) <br />
-4. Generate calcualtion files
+3.4. [Loads](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#34-loads) <br />
+4. [Set up background domain](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#4-background-domain)
+5. [Add boundary conditions on background mesh](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#5-boundary-conditions)
 7. Remove errors
 8. Limitations of the current software version
 
-#### 1) General User Interface
+#### 1. General User Interface
 
 The graphical user interface of Cocodrilo/Grasshopper/Rhino is depicted in Figure 2: 
 
@@ -47,7 +49,7 @@ The graphical user interface of Cocodrilo/Grasshopper/Rhino is depicted in Figur
 
 To see the menues *Analyses, DEM, Elements, Geometry, Materials, Models* and *Postprocessing* of Cocodrilo, click on the *Cocodrilo*-tab, as indicated by the red rectangle in Figure 2.
 
-### 2) Define analysis method
+### 2. Define analysis method
 To create a new model, set up a new, empty canvas in Grasshopper. For a MPM analysis, add the *Material point method* analysis field from the *Analyses*-menu (see Figure 3) to the canvas by clicking first on *MPM*, and then on the canvas.
 
 <p align="center" width="100%">
@@ -149,7 +151,7 @@ Finally, confirm the coordinates by hitting "enter" and the Grasshopper-canvas w
     <em>Figure 14: geometry of the clamped plate, which was entered in the step before.</em>
 </p>
 
-#### 3.2 Definition of  the mesh
+#### 3.2 Define the mesh
 In this example we want to mesh the cantilever with a quadrilateral mesh. The edge lenghts of the elements should be 0.1m. For that purpose, right click the paramter *w* (=Width Count: Number of faces along x-direction) of the *MPlane* field and click "Set integer" of the appearing menu. Here, enter 15, as we have a cantilever with a length of 1.5m and with 15 elements in the x-direction, each element has length of 0.1m in the x-direction. Subsequently, set analogously *h* (=Height Count: Number of faces in y-direction) to 10.
 
 
@@ -172,7 +174,7 @@ As the default parameters are the parameters of the clamped plate of the example
 #### 3.4 Loads
 The structure is only loaded by its dead load. This is considered automatically. Hence, no further steps to model the loads are necessary in this example.
 
-### 4) Background domain
+### 4. Set up background domain
 Although we haven't added any boundary conditions for the body domain yet, we will proceed with the background domain. The boundary conditions of the problem will be added in the last step, as they are imposed on the background mesh. For that purpose, of course, a background mesh has to be created beforehand. Therefore, we will continue with the background domain now. We start by adding a *FEM*-model field to the canvas (see Figure XX). You can find it in the *Models* tab of *Cocodrilo*. Moreover, add as previously shown, a mesh plane (*MPlane*) field for meshing the background domain to the canvas. Connect the *MPM*, *FEM* and *MPlane* fields as shown below in Figure 15.
 
 <p align="center" width="100%">
@@ -199,21 +201,19 @@ After entering the three points and confirming with "enter", the Rhino GUI will 
 To obtain a quadrilateral background mesh with elements with an edge length of 0.2 m, we have to set *W* (number of faces along x-direction) and *H* (number of faces along y-direction) to 10. Thus we created the background mesh.
 
 
-### 8) Boundary Conditions 
-To add a boundary condition on the background grid, click on the support icon as shown in the picture below:
+### 5. Add boundary conditions on background mesh 
+To add a boundary condition on the background grid, click on the support icon as shown in the Figure 17. Subsequently, add a support- and a curve-field to the canvas. A curve may be added the following way: double click on a free space on the canvas and wrtie in the appearing line *crv*. Then a curve-field as shown in Figure 18 should appear.
 
 <p align="center" width="100%">
     <img width="50%" src="https://user-images.githubusercontent.com/51473791/224542007-1cfc054b-8490-45e1-953e-381f70252fe9.jpg">
     <br>
-    <em>Figure XX: Support Icon in Cocodrilo-menu</em>
+    <em>Figure 17: support icon in Cocodrilo-menu</em>
 </p>
-
-Subsequently, add a support- and a curve-field to the canvas. A curve may be added the following way: double click on a free space on the canvas and wrtie in the appearing line *crv*. Then a curve-field as shown in fig. XX should appear.
 
 <p align="center" width="100%">
     <img width="50%" src="https://user-images.githubusercontent.com/51473791/224545525-d6409ca4-e05c-4c5c-b4b8-62607ccba771.jpg">
     <br>
-    <em>Figure XX: Grasshopper set up for body inlcuding a field for support and curve</em>
+    <em>Figure 18: Grasshopper set up for body inlcuding a field for support and curve</em>
 </p>
 
 The orange color of the curve field indicates that it is lacking input data. To add input data, right click *curve* and choose *Set one curve*. Ensuilingly, the *Rhino* GUI appears and the a 
