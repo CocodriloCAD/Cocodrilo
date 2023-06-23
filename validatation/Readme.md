@@ -37,8 +37,7 @@ Table of contents:
 6. [Create KRATOS computation files](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#6-create-kratos-computation-files)
 
 #### 1. General User Interface
-
-The graphical user interface of Cocodrilo/Grasshopper/Rhino is depicted in Figure 2: 
+First of all, start Rhino and open Grasshopper. Then the graphical user interface of Grasshopper with the Cocodrilo Tab, as depicted in Figure 2, should be visible.
 
 <p align="center" width="100%">
     <img width="75%" src="https://user-images.githubusercontent.com/51473791/221424826-ef5c6955-fe54-47cc-8d4e-202bc5510391.png">
