@@ -18,7 +18,7 @@ For more complex geometries, boundary conditions and other analyses no validatio
 This tutorial explains how to generate the computation files of a linear static analysis with the [KRATOS Multiphysics](https://github.com/KratosMultiphysics/Kratos/wiki) [Particle Mechanics Application](https://github.com/KratosMultiphysics/Kratos/tree/master/applications/ParticleMechanicsApplication) and [Cocodrilo](https://github.com/CocodriloCAD/Cocodrilo), a plugin for Grasshopper/ Rhino. For that purpose a plate element (see Figure 1), clamped at one side, is modeled and analyzed with the material point method. 
 
 <p align="center" width="100%">
-    <img width="50%" src="https://user-images.githubusercontent.com/51473791/221582986-856d6c0f-cadf-46e5-9573-78aa4f81ea42.png">
+    <img width="50%" src="https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/a0860ddb-a2ee-47d9-8feb-191a711a3d84">
     <br>
     <em>Figure 1: clamped plate that is analyzed in this tutorial.</em>
 </p>
@@ -201,7 +201,7 @@ To obtain a quadrilateral background mesh with elements with an edge length of 0
 
 
 ### 5. Add boundary conditions on background mesh 
-To add a boundary condition on the background grid, click on the support icon as shown in the Figure 17. Subsequently, add a support- and a curve-field to the canvas. A curve may be added the following way: double click on a free space on the canvas and write in the appearing line *crv*. Then a curve-field as shown in Figure 18 should appear.The orange color of the curve field (Figure 18) indicates that it is lacking input data. To add input data, right click *curve* and choose *Set one curve* (see Figure 19). 
+The plate is clamped along one side. This means all translational dofs of the particles along that line are set to zero. To add this boundary condition, a strong boundary condition on the background grid is chosen in this example. However, there are several possibilities for boundary conditions for MPM. To create a boundary condition, click on the support icon as shown in the Figure 17. Subsequently, add a support- and a curve-field to the canvas. A curve may be added the following way: double click on a free space on the canvas and write in the appearing line *crv*. Then a curve-field as shown in Figure 18 should appear.The orange color of the curve field (Figure 18) indicates that it is lacking input data. To add input data, right click *curve* and choose *Set one curve* (see Figure 19).
 
 <p align="center" width="100%">
     <img width="50%" src="https://user-images.githubusercontent.com/51473791/224542007-1cfc054b-8490-45e1-953e-381f70252fe9.jpg">
