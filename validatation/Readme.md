@@ -242,14 +242,12 @@ After entering the coordinates of the starting and endpoint, hit enter to confir
 ### 6. Create KRATOS computation files
 The clamped plate and its background domain has been modeled. Subsequently, we will create the following files which are required for a compuatation with the Particle Mechanics Application of KRATOS. These are:
 
-- ProjectParametrs.json
+- ProjectParameters.json
 - ParticleMaterials.json
 - Body.mdpa
 - Grid.mdpa
 
 We start by naming the analysis. For that purpose, right click on "Name" of the *MPM*-field (see Figure 11). Then select "Set Text" in the dropdown menu which opens subsequently. Enter here the name of your analysis; I use here "LSA_example".
-
-![Name_analysis](https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/1cdd30d9-d78e-425b-b4a7-ed2f0fb1f72e)
 
 <p align="center" width="100%">
     <img width="50%" src="https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/1cdd30d9-d78e-425b-b4a7-ed2f0fb1f72e">
