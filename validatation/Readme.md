@@ -201,7 +201,7 @@ To obtain a quadrilateral background mesh with elements with an edge length of 0
 
 
 ### 5. Add boundary conditions on background mesh 
-To add a boundary condition on the background grid, click on the support icon as shown in the Figure 17. Subsequently, add a support- and a curve-field to the canvas. A curve may be added the following way: double click on a free space on the canvas and wrtie in the appearing line *crv*. Then a curve-field as shown in Figure 18 should appear.
+To add a boundary condition on the background grid, click on the support icon as shown in the Figure 17. Subsequently, add a support- and a curve-field to the canvas. A curve may be added the following way: double click on a free space on the canvas and write in the appearing line *crv*. Then a curve-field as shown in Figure 18 should appear.
 
 <p align="center" width="100%">
     <img width="50%" src="https://user-images.githubusercontent.com/51473791/224542007-1cfc054b-8490-45e1-953e-381f70252fe9.jpg">
@@ -216,31 +216,27 @@ To add a boundary condition on the background grid, click on the support icon as
 </p>
 
 The orange color of the curve field indicates that it is lacking input data. To add input data, right click *curve* and choose *Set one curve*. Ensuilingly, the *Rhino* 
-GUI appears and the a 
+GUI appears (see Figure 20). To enter a curve, click first on the quadrilateral icon on the left to enter a polyline in Rhino. Then enter the following coordinates of the starting- an endpoint in the line marked by the rectangle above:
 
-![set_one_curve](https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/31109c3d-1f7f-4b2a-8ee7-12a7f8345594)
+- Point 1: 0.0,0.4 
+- Point 2: 0.0,1.65
+
+After entering the coordinates of the starting and endpoint, hit enter to confirm the entered values. Then the Rhino GUI closes and the Grasshopper canvas appears again. So far only a curve, along which a boundary condition is enforced, was created. Now, this curve must also be chosen to be considered. For that purpose right-click again the *Curve*-field and choose *Set a Curve*. Now one can see, as shown in Figure XX, the curve which was created previously as a black line. Click on this black line to select it. Once the line has been selected, it changes its colour from black to green, as visible in Figure XX. Then the Rhino GUI closes again. Now, automatically a Dirichlet boundary condition will be created along this line and based on the mesh of the background grid.  
 
 <p align="center" width="100%">
     <img width="40%" src="https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/31109c3d-1f7f-4b2a-8ee7-12a7f8345594">
     <br>
     <em>Figure 19: right-click menu of curve-field. To draw a curve choose "Set one Curve".</em>
-
 </p>
-
-![draw_curve](https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/8300216f-414c-49f5-8312-b32e0ff304d7)
 
 <p align="center" width="100%">
     <img width="50%" src="https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/8300216f-414c-49f5-8312-b32e0ff304d7">
     <br>
-    <em>Figure 20: topview of the body and background rectangles</em>
-
+    <em>Figure 20: Rhino GUI to enter curve. Click first on the quadrilateral icon on the left to enter a polyline in Rhino. Then enter the coordinates of the starting- an endpoint in the line marked by the rectangle above.</em>
 </p>
-
-![curve_created_and_chosen](https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/acfdb658-aa34-4d6a-9bcc-f61b720bdd1b)
 
 <p align="center" width="100%">
     <img width="50%" src="https://github.com/CocodriloCAD/Cocodrilo/assets/51473791/acfdb658-aa34-4d6a-9bcc-f61b720bdd1b">
     <br>
-    <em>Figure 16: topview of the body and background rectangles</em>
-
+    <em>Figure 21: topview of the body and background rectangles</em>
 </p>
