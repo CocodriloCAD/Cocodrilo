@@ -32,10 +32,9 @@ Table of contents:
 3.2. [Define the mesh](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#32-definition-of--the-mesh) <br />
 3.3. [Define the material](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#33-define-the-material) <br />
 3.4. [Loads](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#34-loads) <br />
-4. [Set up background domain](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#4-background-domain)
-5. [Add boundary conditions on background mesh](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#5-boundary-conditions)
-7. Remove errors
-8. Limitations of the current software version
+4. [Set up background domain](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#4-set-up-background-domain)
+5. [Add boundary conditions on background mesh](https://github.com/CocodriloCAD/Cocodrilo/blob/MPM_GH/validatation/Readme.md#5-add-boundary-conditions-on-background-mesh)
+6. Limitations of the current software version
 
 #### 1. General User Interface
 
