@@ -7,7 +7,7 @@ namespace Cocodrilo_GH.PreProcessing.Materials
 	public class Material_MPM_GH : GH_Component
 	{
 
-        public Material_MPM_GH() : base("Material", "Material", "MPM Material", "Cocodrilo", "Materials")
+        public Material_MPM_GH() : base("MPM Material", "Material", "MPM Material", "Cocodrilo", "Materials")
         { }
 
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
