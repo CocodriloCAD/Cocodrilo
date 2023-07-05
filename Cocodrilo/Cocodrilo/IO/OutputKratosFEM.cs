@@ -215,6 +215,7 @@ namespace Cocodrilo.IO
             Hashtable table_of_edges = new Hashtable();
             Hashtable nodes_of_curves = new Hashtable();
             IDictionary<string, Point3d> nodesCurves = new Dictionary<string, Point3d>();
+            IDictionary<string, Point3d> tableEdges = new Dictionary<string, Point3d>();
 
             //Dictionary<int, List<Point3d>> nodes_of_edges = new Dictionary<int, List<Point3d>>();
 
@@ -238,6 +239,15 @@ namespace Cocodrilo.IO
                         poyline_curve.TryGetPolyline(out polyline);
                                       
                         table_of_edges.Add(curve.GetHashCode(), polyline);
+
+                        foreach (var point in polyline)
+                        {
+                            tableEdges.Add(point.ToString(),point);
+                        }
+
+                        //PolylineCurve test_123 = curve.ToPolyline(-1, 1, 0.1, 0.1, 0.1, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance, 0, max_parameter_segment_length, true);
+                        //Polyline test_456;
+                        //test_123.TryGetPolyline(out test_456);
                     }
                     else
                     {
@@ -284,16 +294,16 @@ namespace Cocodrilo.IO
                             {
                                 nodesCurves.Add(closest_point.ToString(), closest_point);
                             }
-                            if (!nodes_of_curves.ContainsKey(closest_point.GetHashCode()))
-                            {
-                                nodes_of_curves.Add(closest_point.GetHashCode(), closest_point);
-                            }
-                            else
-                            {
-                                string testString = "closest_point.ToString";
-                                RhinoApp.WriteLine("Hashcode already present");
-                                RhinoApp.WriteLine("coordinates: closest_point.ToString");
-                            }
+                            //if (!nodes_of_curves.ContainsKey(closest_point.GetHashCode()))
+                            //{
+                            //    nodes_of_curves.Add(closest_point.GetHashCode(), closest_point);
+                            //}
+                            //else
+                            //{
+                            //    string testString = "closest_point.ToString";
+                            //    RhinoApp.WriteLine("Hashcode already present");
+                            //    RhinoApp.WriteLine("coordinates: closest_point.ToString");
+                            //}
                             
                                    
                         }
@@ -356,6 +366,7 @@ namespace Cocodrilo.IO
             
             string sub_model_part_string = "";
             string sub_model_part_displacement_boundary = "";
+            string sub_model_part_slip = "";
 
             for (int m = 0; m < MeshList.Count; m++)
             {
@@ -369,6 +380,9 @@ namespace Cocodrilo.IO
                 //make modelpartname, group and subtree automatic
                 sub_model_part_displacement_boundary += "Begin SubModelPart DISPLACEMENT_Displacement_Auto1 // Group Displacement Auto1 // Subtree DISPLACEMENT\n" +
                                          "  Begin SubModelPartNodes\n";
+
+                sub_model_part_slip += "Begin SubModelPart Slip2D_Slip_Auto1 // Group Slip Auto1 // Subtree Slip2D\n" +
+                                    " Begin SubModelPartNodes ";
 
                 var mesh = MeshList[m];
 
@@ -454,7 +468,9 @@ namespace Cocodrilo.IO
 
                         }
 
+
                     }
+
 
                 }
 
