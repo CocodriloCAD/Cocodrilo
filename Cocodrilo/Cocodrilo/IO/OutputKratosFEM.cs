@@ -214,6 +214,7 @@ namespace Cocodrilo.IO
 
             Hashtable table_of_edges = new Hashtable();
             Hashtable nodes_of_curves = new Hashtable();
+            IDictionary<string, Point3d> nodesCurves = new Dictionary<string, Point3d>();
 
             //Dictionary<int, List<Point3d>> nodes_of_edges = new Dictionary<int, List<Point3d>>();
 
@@ -271,10 +272,29 @@ namespace Cocodrilo.IO
                         startEndPointsCurve.Add(pol.First());
                         startEndPointsCurve.Add(pol.Last());
                         
+                        
                         foreach (var point in pol)
                         {
                             var closest_point = mesh.ClosestPoint(point);
-                            nodes_of_curves.Add(closest_point.GetHashCode(), closest_point);
+
+                            // it seems that there are some points added twice - or hash codes are not unique.
+                            // therefore, check if point's hashcode is already part of nodes_of_curves before adding
+
+                            if (!nodesCurves.ContainsKey(closest_point.ToString()))
+                            {
+                                nodesCurves.Add(closest_point.ToString(), closest_point);
+                            }
+                            if (!nodes_of_curves.ContainsKey(closest_point.GetHashCode()))
+                            {
+                                nodes_of_curves.Add(closest_point.GetHashCode(), closest_point);
+                            }
+                            else
+                            {
+                                string testString = "closest_point.ToString";
+                                RhinoApp.WriteLine("Hashcode already present");
+                                RhinoApp.WriteLine("coordinates: closest_point.ToString");
+                            }
+                            
                                    
                         }
                     }
@@ -403,10 +423,25 @@ namespace Cocodrilo.IO
                         //        sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "testhash \n";
 
                         //}
-                        if (nodes_of_curves.ContainsKey(testpoint.GetHashCode()))
+                        //if (nodes_of_curves.ContainsKey(testpoint.GetHashCode()))
+                        //{
+                        //    var variable_test = nodes_of_curves[testpoint.GetHashCode()];
+                        //    Point3d node_from_curve = (Point3d)nodes_of_curves[testpoint.GetHashCode()];
+
+                        //    if (node_from_curve == null)
+                        //        continue;
+
+                        //    //maybe try make threshold depended on mesh size
+
+                        //    if (node_from_curve.DistanceToSquared(mesh.Vertices[i]) < 0.01)
+                        //        sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + " \n";
+
+
+                        //}
+                        if (nodesCurves.ContainsKey(testpoint.ToString()))
                         {
-                            var variable_test = nodes_of_curves[testpoint.GetHashCode()];
-                            Point3d node_from_curve = (Point3d)nodes_of_curves[testpoint.GetHashCode()];
+                            var variable_test = nodesCurves[testpoint.ToString()];
+                            Point3d node_from_curve = (Point3d)nodesCurves[testpoint.ToString()];
 
                             if (node_from_curve == null)
                                 continue;
