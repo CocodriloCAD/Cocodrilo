@@ -487,7 +487,7 @@ namespace Cocodrilo.IO
 
                 /// Here the non-conforming bcs are added to the background_mdpa resp. grid_mdpa
                 sub_model_part_slip += "Begin SubModelPart Slip2D_Slip_Auto1 // Group Slip Auto1 // Subtree Slip2D\n" +
-                                    " Begin SubModelPartNodes ";
+                                    " Begin SubModelPartNodes\n";
 
 
                 
@@ -520,11 +520,11 @@ namespace Cocodrilo.IO
                             int startNode = index - 1;
                             int endNode = index;
 
-                            conditions += "    " + numOfLineSegments.ToString() + " " + (0).ToString() + " " + startNode.ToString() + " " + endNode.ToString() + "\n";
+                            conditions += "         " + numOfLineSegments.ToString() + " " + (0).ToString() + " " + startNode.ToString() + " " + endNode.ToString() + "\n";
 
                             /// Add number of segment to list
 
-                            temp += "   " + numOfLineSegments.ToString() + "\n";
+                            temp += "           " + numOfLineSegments.ToString() + "\n";
                             
 
                             numOfLineSegments++;
@@ -533,11 +533,11 @@ namespace Cocodrilo.IO
                     }
                 }
 
-                sub_model_part_slip += "End SubModelPartNodes\n";
+                sub_model_part_slip += "    End SubModelPartNodes\n";
 
-                sub_model_part_slip += "Begin SubModelPartElements\n" + "End SubModelPartElements\n" + "Begin SubModelPartConditions\n";
+                sub_model_part_slip += "    Begin SubModelPartElements\n" + "    End SubModelPartElements\n" + "    Begin SubModelPartConditions\n";
                 sub_model_part_slip += temp;
-                sub_model_part_slip += "End SubModelPartConditions\n";
+                sub_model_part_slip += "    End SubModelPartConditions\n" + "End SubModelPart\n";
 
                 conditions += "End Conditions\n\n";
 
