@@ -210,19 +210,22 @@ namespace Cocodrilo.IO
             //Rhino.Geometry.Collections.MeshTopologyEdgeList mesh_edges = brep.Meshes;
             // Iteration über richtige Netze? 
 
-            // Tables for points belonging to edges and curves
 
-            Hashtable table_of_edges = new Hashtable();
+            /// Tables for points belonging to edges and curves
             Hashtable nodes_of_curves = new Hashtable();
             IDictionary<string, Point3d> nodesCurves = new Dictionary<string, Point3d>();
             IDictionary<string, Point3d> tableEdges = new Dictionary<string, Point3d>();
 
-            //Dictionary<int, List<Point3d>> nodes_of_edges = new Dictionary<int, List<Point3d>>();
+            /// number of non-grid conforming boundary conditions which should be considered
+
+            int numNonConfBC = 0;
+            List<int> EdgeLenths = new List<int>();
+            List<Point3d> ListEdgeNodes = new List<Point3d>();
 
             List<Point3d> startEndPointsCurve = new List<Point3d>();
 
             // couple this somehow with meshlength
-            double max_parameter_segment_length = 0.4; 
+            double max_parameter_segment_length = 0.1; 
 
             foreach (var curve in CurveList)
             {
@@ -230,24 +233,23 @@ namespace Cocodrilo.IO
 
                 
                 if (user_data_edge != null)
-                {                    
+                {
+                    numNonConfBC++;
+
                     if (curve is PolylineCurve)
                     {
                         //Polyline pol = curve.ToPolyline(0.1, 0.1, 0.01, 1.0);
                         PolylineCurve poyline_curve = curve.ToPolyline(-1, 1, 0.1, 0.1, 0.1, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance, 0, max_parameter_segment_length, true);
                         Polyline polyline;
-                        poyline_curve.TryGetPolyline(out polyline);
-                                      
-                        table_of_edges.Add(curve.GetHashCode(), polyline);
-
+                        poyline_curve.TryGetPolyline(out polyline); // (PolylineCurve) cast verwenden/ausprobieren
+                                               
                         foreach (var point in polyline)
                         {
                             tableEdges.Add(point.ToString(),point);
+                            ListEdgeNodes.Add(point);
                         }
-
-                        //PolylineCurve test_123 = curve.ToPolyline(-1, 1, 0.1, 0.1, 0.1, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance, 0, max_parameter_segment_length, true);
-                        //Polyline test_456;
-                        //test_123.TryGetPolyline(out test_456);
+                        EdgeLenths.Add(polyline.Count());
+                                                
                     }
                     else
                     {
@@ -273,7 +275,6 @@ namespace Cocodrilo.IO
                         // Returns undelying polyline or points
                         var poly_curve = polyline.PullToMesh(mesh, 0.05);
 
-
                         // Makes a polyline approximation of the curve and gets the closest point on the
                         // mesh for each point on the curve. Then it "connects the points" so that you have
                         // a polyline on the mesh.
@@ -281,31 +282,24 @@ namespace Cocodrilo.IO
 
                         startEndPointsCurve.Add(pol.First());
                         startEndPointsCurve.Add(pol.Last());
-                        
-                        
+                                                
                         foreach (var point in pol)
                         {
                             var closest_point = mesh.ClosestPoint(point);
 
-                            // it seems that there are some points added twice - or hash codes are not unique.
-                            // therefore, check if point's hashcode is already part of nodes_of_curves before adding
+                            /// check if point's hashcode is already part of nodes_of_curves before adding
 
                             if (!nodesCurves.ContainsKey(closest_point.ToString()))
                             {
                                 nodesCurves.Add(closest_point.ToString(), closest_point);
                             }
-                            //if (!nodes_of_curves.ContainsKey(closest_point.GetHashCode()))
-                            //{
-                            //    nodes_of_curves.Add(closest_point.GetHashCode(), closest_point);
-                            //}
-                            //else
-                            //{
-                            //    string testString = "closest_point.ToString";
-                            //    RhinoApp.WriteLine("Hashcode already present");
-                            //    RhinoApp.WriteLine("coordinates: closest_point.ToString");
-                            //}
-                            
-                                   
+                            else
+                            {
+                                RhinoApp.WriteLine("Key already present in curve dictionary!");
+                                RhinoApp.WriteLine("coordinates: closest_point.ToString");
+                            }
+
+
                         }
                     }
                 }
@@ -366,7 +360,9 @@ namespace Cocodrilo.IO
             
             string sub_model_part_string = "";
             string sub_model_part_displacement_boundary = "";
+            string conditions = "";
             string sub_model_part_slip = "";
+
 
             for (int m = 0; m < MeshList.Count; m++)
             {
@@ -380,16 +376,17 @@ namespace Cocodrilo.IO
                 //make modelpartname, group and subtree automatic
                 sub_model_part_displacement_boundary += "Begin SubModelPart DISPLACEMENT_Displacement_Auto1 // Group Displacement Auto1 // Subtree DISPLACEMENT\n" +
                                          "  Begin SubModelPartNodes\n";
-
-                sub_model_part_slip += "Begin SubModelPart Slip2D_Slip_Auto1 // Group Slip Auto1 // Subtree Slip2D\n" +
-                                    " Begin SubModelPartNodes ";
-
+                              
                 var mesh = MeshList[m];
+
+                int totalNumNodes = id_node_counter-1;
 
                 for (int i = 0; i < mesh.Vertices.Count; i++)
                 {
                     node_string += "    " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
                     sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n";
+
+                    totalNumNodes++;
 
                     // if loop to iterate over different submodelparts 
 
@@ -416,7 +413,6 @@ namespace Cocodrilo.IO
 
                     //create testpoint to see if current mesh-vertex is included in boundary conditions. This seems to be necessary as 
                     //vertices and points seem to have different hash-codes
-
 
                     if (checkForInnerPointOfBoundaryCondition)
                     {
@@ -449,7 +445,6 @@ namespace Cocodrilo.IO
 
                         //    if (node_from_curve.DistanceToSquared(mesh.Vertices[i]) < 0.01)
                         //        sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + " \n";
-
 
                         //}
                         if (nodesCurves.ContainsKey(testpoint.ToString()))
@@ -489,6 +484,64 @@ namespace Cocodrilo.IO
 
                 sub_model_part_string += "End SubModelPartElements\n";
                 sub_model_part_string += "Begin SubModelPartConditions\n";
+
+                /// Here the non-conforming bcs are added to the background_mdpa resp. grid_mdpa
+                sub_model_part_slip += "Begin SubModelPart Slip2D_Slip_Auto1 // Group Slip Auto1 // Subtree Slip2D\n" +
+                                    " Begin SubModelPartNodes ";
+
+
+                
+                int numOfLineSegments = 1;
+                conditions += "Begin Conditions LineCondition2D2N// GUI group identifier: Slip Auto1\n";
+
+                /// List of the node number of the non-conforming BCs
+
+                string temp = "";
+
+                /// helper variable
+                int counter_for_nodes = 1;
+                for(int currentBC = 0; currentBC < numNonConfBC; currentBC++)
+                {
+                    for (int currentNumOfNodes = 0; currentNumOfNodes < EdgeLenths[currentBC]; currentNumOfNodes++)
+                    {
+                        int index = totalNumNodes + counter_for_nodes;
+                        Point3d currentNode = ListEdgeNodes[currentNumOfNodes];
+
+                        node_string += "    " + index.ToString() + " " + currentNode.X + " " + currentNode.Y + " " + currentNode.Z + "\n";
+
+                        sub_model_part_slip += "     " + index.ToString() + "\n";
+
+                        // Add node number to Nodelist
+                        
+                        counter_for_nodes++;
+
+                        if (currentNumOfNodes != 0)
+                        {
+                            int startNode = index - 1;
+                            int endNode = index;
+
+                            conditions += "    " + numOfLineSegments.ToString() + " " + (0).ToString() + " " + startNode.ToString() + " " + endNode.ToString() + "\n";
+
+                            /// Add number of segment to list
+
+                            temp += "   " + numOfLineSegments.ToString() + "\n";
+                            
+
+                            numOfLineSegments++;
+                        }
+
+                    }
+                }
+
+                sub_model_part_slip += "End SubModelPartNodes\n";
+
+                sub_model_part_slip += "Begin SubModelPartElements\n" + "End SubModelPartElements\n" + "Begin SubModelPartConditions\n";
+                sub_model_part_slip += temp;
+                sub_model_part_slip += "End SubModelPartConditions\n";
+
+                conditions += "End Conditions\n\n";
+
+
                 sub_model_part_string += "End SubModelPartConditions\n";
                 sub_model_part_string += "End SubModelPart\n\n";
 
@@ -512,19 +565,14 @@ namespace Cocodrilo.IO
 
             mdpa_file += node_string;
             mdpa_file += element_string;
+            mdpa_file += conditions;
             mdpa_file += sub_model_part_string;
             mdpa_file += sub_model_part_displacement_boundary;
+            mdpa_file += sub_model_part_slip;
 
             return mdpa_file;
         }
-
-        ///
-        /// Function overload of function GetFemMdpaFile
-        /// Reason: To use this function for MPM, the nodes of the bodymesh need to be added to the file grid mdpa, but function shall also be usable 
-        /// to generate mdpa files for fem. Therefore I created this function overload: the function without the List<Mesh> Bodymesh input can be used (maybe needs to be adapted still)
-        /// for FEM mdpa files, the function with the List<Mesh> Bodymesh input argument is to be used for the generation of the grid.mpda for MPM ~ phfranz, Nov '22
-        /// 
-
+                 
         private string GetMPM_MdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary, List<Mesh> BodyMeshList)
         {
             int number_nodes_body_mesh = 0;
@@ -541,37 +589,13 @@ namespace Cocodrilo.IO
                 }
             }
 
+            /// Use GetFemMdpaFile to create background grid. To ensure that the nodes of the body mesh are considered while numerating the nodes
+            /// of the background mesh, this extra function was created.
 
             string basicGridMdpa = GetFemMdpaFile(MeshList, CurveList, ref PropertyIdDictionary, number_nodes_body_mesh, number_of_elements_body_mesh);
-
-
-
-            //public static string getBetween(string strSource, string strStart, string strEnd)
-            //{
-            //    if (strSource.Contains(strStart) && strSource.Contains(strEnd))
-            //    {
-            //        int Start, End;
-            //        Start = strSource.IndexOf(strStart, 0) + strStart.Length;
-            //        End = strSource.IndexOf(strEnd, Start);
-            //        return strSource.Substring(Start, End - Start);
-            //    }
-
-            //    return "";
-            //}
-
+            
             int indexEnd = basicGridMdpa.IndexOf("Begin Nodes");
-
-
-            ///Get index of last node of background grid
-
-            //int number_nodes_background_grid = 0;
-
-            //foreach (var mesh in MeshList)
-            //{
-            //    number_nodes_background_grid += mesh.Vertices.Count;
-
-            //}
-
+                            
             /// The following code is from the function WriteBodyMdpaFile and slightly apated to only add the nodes of the 
             /// body mesh to the grid mdpa file            
 

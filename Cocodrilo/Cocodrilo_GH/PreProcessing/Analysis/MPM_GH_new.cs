@@ -81,7 +81,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 			if (run_analysis)
 			{
 				/// Resets the entire user data stored on the geometries 
-				//ResetUserData(geometries_flat); - not yet implemented
+				ResetUserData(geometries_flat); // look up at shell
 
 				mMeshList = new List<Mesh>();
 				mCurveList = new List<Curve>();
@@ -167,8 +167,12 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 								{
 									var ud2 = old_curve.UserData.Find(typeof(Cocodrilo.UserData.UserDataCurve)) as Cocodrilo.UserData.UserDataCurve;
 
-									if (ReferenceEquals(ud2.GetCurrentElementData(), ud.GetCurrentElementData()))
-										add_curve = false;
+									if (ud2 != null)
+									{
+
+										if (ReferenceEquals(ud2.GetCurrentElementData(), ud.GetCurrentElementData()))
+											add_curve = false;
+									}
 								}
 							}
 
