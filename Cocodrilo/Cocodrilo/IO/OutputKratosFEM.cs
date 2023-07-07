@@ -74,7 +74,7 @@ namespace Cocodrilo.IO
 
                     //call of WriteProjectParameters with downcasted analysis to access class members
 
-                    System.IO.File.WriteAllLines(project_path + "/" + "ProjectParameters.json", new List<string> { WriteProjectParameters(project_path, ref outputCopy) });
+                    System.IO.File.WriteAllLines(project_path + "/" + "ProjectParameters.json", new List<string> { WriteProjectParameters(project_path, ref outputCopy, outputCopy.mCurveList) });
                     
                     System.IO.File.WriteAllLines(project_path + "/" + "ParticleMaterials.json", new List<string> { GetMaterials(property_id_dictionary) });
                               
@@ -234,9 +234,7 @@ namespace Cocodrilo.IO
                 if (user_data_edge != null)
                 {
                     numNonConfBC++;
-
-                    indicator_non_conf_bc = 1;
-
+                    
                     if (curve is PolylineCurve)
                     {
                         //Polyline pol = curve.ToPolyline(0.1, 0.1, 0.01, 1.0);
@@ -830,7 +828,7 @@ namespace Cocodrilo.IO
         #endregion
         // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
-        public string WriteProjectParameters(string ProjectPath, ref Cocodrilo.Analyses.AnalysisMpm_new analysis)
+        public string WriteProjectParameters(string ProjectPath, ref Cocodrilo.Analyses.AnalysisMpm_new analysis, List<Curve> CurveList)
         {
 
             string model_part_name = "MPM_Material";
@@ -988,16 +986,24 @@ namespace Cocodrilo.IO
             //list_other_processes
             var list_other_processes = new DictList();
 
+            int counterCurve = 0;
+            List<int> countCurve = new List<int>();
 
-            if  foreach (var curve in CurveList)
+            foreach (var curve in CurveList)
+            {
+                var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
+
+                if (user_data_edge != null)
                 {
-                    var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
+                    countCurve.Add(counterCurve);
+                    counterCurve++;
+                }
 
-
-                    if (user_data_edge != null)
-                    {
-
-                        var list_other_processes_parameters = new Dict
+            }
+            
+            if (counterCurve != 0)
+            {
+                var list_other_processes_parameters = new Dict
                         {
                             { "model_part_name", "Background_Grid.Slip2D_Slip_Auto1" },
                             { "particles_per_condition", 3 },
@@ -1005,14 +1011,14 @@ namespace Cocodrilo.IO
                             { "constrained", "fixed" }
                         };
 
-            list_other_processes.Add(new Dict
+                list_other_processes.Add(new Dict
                     {
                         {"python_module", "apply_mpm_particle_dirichlet_condition_process" },
                         {"kratos_module", "KratosMultiphysics.ParticleMechanicsApplication" },
                         { "Parameters", list_other_processes_parameters }
 
                     });
-
+            }
                     
 
             //gravity
