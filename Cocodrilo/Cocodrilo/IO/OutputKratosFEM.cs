@@ -195,8 +195,7 @@ namespace Cocodrilo.IO
 
             return body_mdpa_file;
         }
-
-
+                
         private string GetFemMdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary, int number_of_body_mesh_nodes = 1 ,int number_of_body_mesh_elements = 1)
         {
             int brep_ids = 1;
@@ -235,6 +234,8 @@ namespace Cocodrilo.IO
                 if (user_data_edge != null)
                 {
                     numNonConfBC++;
+
+                    indicator_non_conf_bc = 1;
 
                     if (curve is PolylineCurve)
                     {
@@ -633,13 +634,6 @@ namespace Cocodrilo.IO
             return completeGridMdpa;
         }
 
-
-
-
-
-
-
-
         /// <summary>
         /// 
         /// </summary>
@@ -994,7 +988,16 @@ namespace Cocodrilo.IO
             //list_other_processes
             var list_other_processes = new DictList();
 
-            var list_other_processes_parameters = new Dict
+
+            if  foreach (var curve in CurveList)
+                {
+                    var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
+
+
+                    if (user_data_edge != null)
+                    {
+
+                        var list_other_processes_parameters = new Dict
                         {
                             { "model_part_name", "Background_Grid.Slip2D_Slip_Auto1" },
                             { "particles_per_condition", 3 },
@@ -1009,6 +1012,8 @@ namespace Cocodrilo.IO
                         { "Parameters", list_other_processes_parameters }
 
                     });
+
+                    
 
             //gravity
             var gravity = new DictList();
