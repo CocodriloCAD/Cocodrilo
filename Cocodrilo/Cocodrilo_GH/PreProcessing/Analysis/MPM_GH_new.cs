@@ -111,8 +111,13 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 								{
 									var ud2 = old_mesh.UserData.Find(typeof(Cocodrilo.UserData.UserDataCurve)) as Cocodrilo.UserData.UserDataMesh;
 
-									if (ReferenceEquals(ud2.GetCurrentElementData(), ud.GetCurrentElementData()))
-										add_mesh = false;
+									/// why is this check there??
+									if (ud2 != null) 
+									{
+										if (ReferenceEquals(ud2.GetCurrentElementData(), ud.GetCurrentElementData()))
+											add_mesh = false;
+
+									}
 								}
 							}
 

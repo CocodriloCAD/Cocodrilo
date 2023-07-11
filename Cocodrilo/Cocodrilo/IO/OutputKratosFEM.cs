@@ -122,13 +122,18 @@ namespace Cocodrilo.IO
                         + "//  VARIABLE_NAME value\n"
                         + "End ModelPartData\n\n";
 
-            
+            // propertyID zur BrepId  
+
             foreach (var mesh in MeshList)
             {
                 var user_data_mesh = mesh.UserData.Find(typeof(UserDataMesh)) as UserDataMesh;
 
                 user_data_mesh.TryGetKratosPropertyIdsBrepIds(
                     ref rPropertyIdsBrepsIds);
+
+                // has geometry property of type z.B. solid, 
+                // falls ja, schreiben
+                // 129 - 131 
                         
             }
 
@@ -141,7 +146,10 @@ namespace Cocodrilo.IO
 
             string node_string = "Begin Nodes\n";
 
-
+            /// Unterscheiden: get userData -> schaue bei Schale; Solid Element oder Mesh fragen
+            /// updated Langrangian aus UserData
+            /// 2D gegeben, 4 Node -> Anzahl der Knoten abhängig vom Face
+            /// MeshList[0].
             string element_string = "Begin Elements UpdatedLagrangian2D4N// ";
 
             //assign correct model part name to model: still hardcoded - remove in later version!
@@ -156,11 +164,15 @@ namespace Cocodrilo.IO
 
             for (int m = 0; m < MeshList.Count; m++)
             {
+                var mesh = MeshList[m];
+
+
+                // 129 -131 hier einbauen 
+                // propertyType userdata.getporpertytype solid, falls true dann weiter
+                // user data holen -> string 
 
                 sub_model_part_string += "Begin SubModelPart Parts_Solid_Solid_Auto1 // Group Solid Auto1 // Subtree Parts_Solid\n";
                 sub_model_part_string += "  Begin SubModelPartNodes\n";
-
-                var mesh = MeshList[m];
 
                 for (int i = 0; i < mesh.Vertices.Count; i++)
                 {
@@ -230,7 +242,6 @@ namespace Cocodrilo.IO
             {
                 var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
 
-                
                 if (user_data_edge != null)
                 {
                     numNonConfBC++;
@@ -496,6 +507,11 @@ namespace Cocodrilo.IO
                 /// List of the node number of the non-conforming BCs
 
                 string temp = "";
+
+                // loop über curves bzw. edges 
+                // hole user data edges
+                // von userdataedge hole getModelPartName.. 
+                // generisch einbauen; Listen sparen
 
                 /// helper variable
                 int counter_for_nodes = 1;
