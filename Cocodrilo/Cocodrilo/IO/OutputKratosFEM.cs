@@ -54,6 +54,7 @@ namespace Cocodrilo.IO
             try
             {
                 PropertyIdDict property_id_dictionary = new PropertyIdDict();
+                PropertyIdDict property_id_dictionary_grid = new PropertyIdDict();
                 PropertyIdDict rPropertyIdsBrepsIds = new PropertyIdDict();
                          
                 ///Different output files for FEM and MPM
@@ -79,7 +80,7 @@ namespace Cocodrilo.IO
                     System.IO.File.WriteAllLines(project_path + "/" + "ParticleMaterials.json", new List<string> { GetMaterials(property_id_dictionary) });
                               
                     System.IO.File.WriteAllLines(project_path + "/" + outputCopy.Name + "_Grid.mdpa",
-                        new List<string> { GetMPM_MdpaFile(MeshList, outputCopy.mCurveList, ref property_id_dictionary, outputCopy.mBodyMesh) });
+                        new List<string> { GetMPM_MdpaFile(MeshList, outputCopy.mCurveList, ref property_id_dictionary , outputCopy.mBodyMesh) });
                                         
                 }
                 else
@@ -230,7 +231,6 @@ namespace Cocodrilo.IO
             int numNonConfBC = 0;
             List<int> EdgeLenths = new List<int>();
             List<Point3d> ListEdgeNodes = new List<Point3d>();
-
             List<Point3d> startEndPointsCurve = new List<Point3d>();
 
             // couple this somehow with meshlength
@@ -246,7 +246,6 @@ namespace Cocodrilo.IO
                     
                     if (curve is PolylineCurve)
                     {
-                        //Polyline pol = curve.ToPolyline(0.1, 0.1, 0.01, 1.0);
                         PolylineCurve poyline_curve = curve.ToPolyline(-1, 1, 0.1, 0.1, 0.1, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance, 0, max_parameter_segment_length, true);
                         Polyline polyline;
                         poyline_curve.TryGetPolyline(out polyline); // (PolylineCurve) cast verwenden/ausprobieren
@@ -304,7 +303,7 @@ namespace Cocodrilo.IO
                             else
                             {
                                 RhinoApp.WriteLine("Key already present in curve dictionary!");
-                                RhinoApp.WriteLine("coordinates: closest_point.ToString");
+                                RhinoApp.WriteLine("coordinates: "+ closest_point.ToString());
                             }
 
 
@@ -313,13 +312,7 @@ namespace Cocodrilo.IO
                 }
             }
 
-            foreach (var mesh in MeshList)
-            {
-                var user_data_mesh = mesh.UserData.Find(typeof(UserDataMesh)) as UserDataMesh;
-
-                user_data_mesh.TryGetKratosPropertyIdsBrepIds(
-                    ref PropertyIdDictionary);
-            }
+            /// Creation of string
 
             string mdpa_file;
 
@@ -327,19 +320,14 @@ namespace Cocodrilo.IO
                         + "//  VARIABLE_NAME value\n"
                         + "End ModelPartData\n\n";
 
-            //Why does for-loop start at two here? In GiD -.mdpa file, starts at properties 0
-
-            for (int i = 0; i < MeshList.Count; i++)
-            {
-                mdpa_file += "Begin Properties " + i.ToString() + "\n End Properties \n";
-            }
-            mdpa_file += "\n\n";
-
-            string node_string = "Begin Nodes\n";
-            string element_string = "Begin Elements Element2D4N// GUI group identifier: Grid Auto1 \n";
-
-            int id_node_counter = 0;
-            int id_element_counter = 0;
+                     
+            mdpa_file += "Begin Properties " + 0.ToString() + "\n End Properties \n";
+            
+            /// Introduction of variables to ensure continous counting of nodes, elements and submodelparts
+            
+            int id_node_counter;
+            int id_element_counter;
+            int sub_model_part_counter = 0;
 
             if (number_of_body_mesh_nodes != 1)
                 id_node_counter = number_of_body_mesh_nodes + 1;
@@ -350,31 +338,45 @@ namespace Cocodrilo.IO
                 id_element_counter = number_of_body_mesh_elements + 1;
             else
                 id_element_counter = 1;
-           
+                                
 
-            int sub_model_part_counter = 1;
-            //How to get total number of submodelparts?
+            string node_string = "Begin Nodes\n";
+            string element_string = "";  
 
-            List<string> submodelparts = new List<string>();
-
-            foreach (var property_id in PropertyIdDictionary.Keys)
-            {
-                var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
-
-                submodelparts.Add(this_property.GetKratosModelPart());
-            };
-
-
-            
             string sub_model_part_string = "";
             string sub_model_part_displacement_boundary = "";
             string conditions = "";
             string sub_model_part_slip = "";
 
-
-            for (int m = 0; m < MeshList.Count; m++)
+            foreach (var mesh in MeshList)
             {
+                var user_data_mesh = mesh.UserData.Find(typeof(UserDataMesh)) as UserDataMesh;
 
+                /// check somehow that mesh belongs to a solid-element and not to something else 
+                /// Unterscheiden: get userData -> schaue bei Schale; Solid Element oder Mesh fragen
+                /// updated Langrangian aus UserData     
+                /// find propertyID of corresponding BrepId and get Krats Model Part
+
+                user_data_mesh.TryGetKratosPropertyIdsBrepIds(
+                    ref PropertyIdDictionary);
+
+                var property_id = PropertyIdDictionary.ElementAt(sub_model_part_counter).Key;
+
+                var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
+
+                /// Get type of mesh elements: quads or triangles
+                var face_test = mesh.Faces[0];
+                if (face_test.IsQuad)
+                    element_string += "Begin Elements UpdatedLagrangian2D4N//";
+                else if (face_test.IsTriangle)
+                    element_string += "Begin Elements UpdatedLagrangian2D3N//";
+
+                /// assign correct model part name to model: still hardcoded - remove in later version!
+                element_string += " GUI group identifier: Grid Auto" + property_id + " \n";
+
+                sub_model_part_string += "Begin SubModelPart Parts_Grid" + this_property.GetKratosModelPart() + " // Group Solid Auto" + property_id + " // Subtree Parts_Solid\n";
+
+                element_string += "Begin Elements Element2D4N// GUI group identifier: Grid Auto1 \n"; 
                 // Group Name and Submodelpart Name must become dynamic parameters
                 // use here "Begin"+CocodriloPlugIn.Instance.GetProperty(property_id, out bool success)+"...
 
@@ -385,8 +387,6 @@ namespace Cocodrilo.IO
                 sub_model_part_displacement_boundary += "Begin SubModelPart DISPLACEMENT_Displacement_Auto1 // Group Displacement Auto1 // Subtree DISPLACEMENT\n" +
                                          "  Begin SubModelPartNodes\n";
                               
-                var mesh = MeshList[m];
-
                 int totalNumNodes = id_node_counter-1;
 
                 for (int i = 0; i < mesh.Vertices.Count; i++)
@@ -645,48 +645,50 @@ namespace Cocodrilo.IO
                 }
             }
 
+            string basicGridMdpa = GetFemMdpaFile(MeshList, CurveList, ref PropertyIdDictionary, number_nodes_body_mesh, number_of_elements_body_mesh);
+
             /// Use GetFemMdpaFile to create background grid. To ensure that the nodes of the body mesh are considered while numerating the nodes
             /// of the background mesh, this extra function was created.
+            // NOT NECESSARY ANYMORE
+            //
 
-            string basicGridMdpa = GetFemMdpaFile(MeshList, CurveList, ref PropertyIdDictionary, number_nodes_body_mesh, number_of_elements_body_mesh);
-            
-            int indexEnd = basicGridMdpa.IndexOf("Begin Nodes");
-                            
+            //int indexEnd = basicGridMdpa.IndexOf("Begin Nodes");
+
             /// The following code is from the function WriteBodyMdpaFile and slightly apated to only add the nodes of the 
             /// body mesh to the grid mdpa file            
 
-            int brep_ids = 1;
+            //int brep_ids = 1;
 
-            //value of brep_ids should be changed after calling GeomteryUtilities.AssignBrepIds
-            GeometryUtilities.AssignBrepIdToMesh(MeshList, ref brep_ids);
+            ////value of brep_ids should be changed after calling GeomteryUtilities.AssignBrepIds
+            //GeometryUtilities.AssignBrepIdToMesh(MeshList, ref brep_ids);
 
-            string nodes_of_body_mdpa_file= " \n";
-                   
-            string node_string = null;
-                        
-            int id_node_counter = 1;
-            
-            for (int m = 0; m < BodyMeshList.Count; m++)
-            {
-                var mesh = BodyMeshList[m];
+            //string nodes_of_body_mdpa_file= " \n";
 
-                for (int i = 0; i < mesh.Vertices.Count-1; i++)
-                {
-                    node_string += "    " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
-                }
+            //string node_string = null;
 
-                node_string += "    " + (id_node_counter + mesh.Vertices.Count-1).ToString() + " " + mesh.Vertices[mesh.Vertices.Count-1].X + " " + mesh.Vertices[mesh.Vertices.Count - 1].Y + " " + mesh.Vertices[mesh.Vertices.Count - 1].Z;
+            //int id_node_counter = 1;
 
-                id_node_counter += mesh.Vertices.Count;
-            }
+            //for (int m = 0; m < BodyMeshList.Count; m++)
+            //{
+            //    var mesh = BodyMeshList[m];
 
-            nodes_of_body_mdpa_file += node_string;
+            //    for (int i = 0; i < mesh.Vertices.Count-1; i++)
+            //    {
+            //        node_string += "    " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
+            //    }
 
-            // now basicGridMpda is completed by adding the nodes of the body mesh
+            //    node_string += "    " + (id_node_counter + mesh.Vertices.Count-1).ToString() + " " + mesh.Vertices[mesh.Vertices.Count-1].X + " " + mesh.Vertices[mesh.Vertices.Count - 1].Y + " " + mesh.Vertices[mesh.Vertices.Count - 1].Z;
 
-            string completeGridMdpa = basicGridMdpa.Insert(indexEnd+11, nodes_of_body_mdpa_file);
+            //    id_node_counter += mesh.Vertices.Count;
+            //}
 
-            return completeGridMdpa;
+            //nodes_of_body_mdpa_file += node_string;
+
+            //// now basicGridMpda is completed by adding the nodes of the body mesh
+
+            //string completeGridMdpa = basicGridMdpa.Insert(indexEnd+11, nodes_of_body_mdpa_file);
+
+            return basicGridMdpa;
         }
 
         /// <summary>
