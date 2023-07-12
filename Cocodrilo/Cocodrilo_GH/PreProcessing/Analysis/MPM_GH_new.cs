@@ -16,6 +16,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
 	{
 		private List<Mesh> mMeshList = new List<Mesh>();
 		private List<Curve> mCurveList = new List<Curve>();
+		
 		public Cocodrilo.Analyses.AnalysisMpm_new mNewAnalysis = new Cocodrilo.Analyses.AnalysisMpm_new();
 
 		/// empty constructor to override base class constructor

@@ -44,7 +44,7 @@ namespace Cocodrilo.ElementProperties
         {
             //base.GetKratosModelPart(); // überschriebene base class function
 
-            return "Support_" + mPropertyId; //anpassen
+            return "Solid_" + mPropertyId; //anpassen
                        
         }
     }

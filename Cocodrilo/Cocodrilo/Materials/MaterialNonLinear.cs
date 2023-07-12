@@ -45,8 +45,7 @@ namespace Cocodrilo.Materials
             this.particlesPerElement = NumberOfParticles;
             this.thickness = Thickness;
         }
-
-        
+                
         public override Dictionary<string, object> GetKratosVariables()
         {
             return new Dictionary<string, object>

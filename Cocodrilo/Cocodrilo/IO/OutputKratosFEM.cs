@@ -207,8 +207,8 @@ namespace Cocodrilo.IO
 
             return body_mdpa_file;
         }
-                
-        private string GetFemMdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary, int number_of_body_mesh_nodes = 1 ,int number_of_body_mesh_elements = 1)
+
+        private string GetFemMdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary, int number_of_body_mesh_nodes = 1, int number_of_body_mesh_elements = 1 )
         {
             int brep_ids = 1;
 
@@ -514,7 +514,50 @@ namespace Cocodrilo.IO
                 // generisch einbauen; Listen sparen
 
                 /// helper variable
-                int counter_for_nodes = 1;
+                /// 
+
+                int counter_for_nodes = 1; /// to gives nodes from non-conforming (weak boundary conditions) right numbering
+
+                //foreach (var curve in CurveList)
+                //{
+                //    var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
+
+                //        var id = user_data_edge.TryGetKratosPropertyIdsBrepIds(ref PropertyIdDictionary);
+
+                //        var this_property = CocodriloPlugIn.Instance.GetProperty(id, out bool success);
+
+                //        string test = id.GetKratosModelPart();
+
+                //    if (user_data_edge != null)
+                //    {
+                //        string sub_model_part_name = user_data_edge()
+
+                //        var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
+
+                //        if (curve is PolylineCurve)
+                //        {
+                //            PolylineCurve poyline_curve = curve.ToPolyline(-1, 1, 0.1, 0.1, 0.1, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance, 0, max_parameter_segment_length, true);
+                //            Polyline polyline;
+                //            poyline_curve.TryGetPolyline(out polyline); // (PolylineCurve) cast verwenden/ausprobieren
+
+                //            curve.UserData.
+
+                //            foreach (var point in polyline)
+                //            {
+                                
+                //            }
+                            
+
+                //        }
+                //        else
+                //        {
+                //            //throw error alert in Rhino
+                //        }
+                //    }
+
+                //}
+
+                
                 for(int currentBC = 0; currentBC < numNonConfBC; currentBC++)
                 {
                     for (int currentNumOfNodes = 0; currentNumOfNodes < EdgeLenths[currentBC]; currentNumOfNodes++)
@@ -654,7 +697,7 @@ namespace Cocodrilo.IO
         /// <param name="ElementConditionDictionary"></param>
         /// <returns></returns>
         /// 
-        public string GetMaterials(PropertyIdDict ElementConditionDictionary)
+        public string GetMaterials(PropertyIdDict ElementConditionDictionary )
         {
             var property_dict_list = new DictList();
             foreach (var property_id in ElementConditionDictionary.Keys)
@@ -671,22 +714,29 @@ namespace Cocodrilo.IO
                     continue;
 
                 var variables = this_property.GetKratosVariables();
+                int material_id = this_property.GetMaterialId();
 
                 var property_dict = new Dict
                     {
-                        {"model_part_name", "Initial_MPM_Material.Parts_Solid_Solid_Auto1" },// + this_property.GetKratosModelPart()},
+                        {"model_part_name", "Initial_MPM_Material." + this_property.GetKratosModelPart() },
                         {"properties_id", this_property.mPropertyId},
+
+                         
                     };
 
                 var material_dict = new Dict { };
-
-                int material_id = this_property.GetMaterialId();
+                                
                 if (material_id >= 0)
                 {
                     var material = CocodriloPlugIn.Instance.GetMaterial(material_id);
                     var material_variables = material.GetKratosVariables();
                     foreach (var material_variable in material_variables)
                         variables.Add(material_variable.Key, material_variable.Value);
+
+                    // cast of material to material non-linear
+                    Cocodrilo.Materials.MaterialNonLinear downcast_material_for_particles = (Cocodrilo.Materials.MaterialNonLinear)material;
+                    //property_dict.Add("PARTICLES_PER_ELEMENT", downcast_material_for_particles.particlesPerElement);
+                   variables.Add("PARTICLES_PER_ELEMENT", downcast_material_for_particles.particlesPerElement);
 
                     //material_dict.Add("name", material.Name);
                     //material_dict.Add("material_id", material.Id);
@@ -695,9 +745,7 @@ namespace Cocodrilo.IO
                     if (material.HasKratosSubProperties())
                     {
                         property_dict.Add("sub_properties", material.GetKratosSubProperties());
-
-                        //make number of particles variable
-                        property_dict.Add("PARTICLES_PER_ELEMENT", 3);
+                                             
                     }
                 }
 
