@@ -118,17 +118,21 @@ namespace Cocodrilo.IO
             //value of brep_ids should be changed after calling GeomteryUtilities.AssignBrepIds
             GeometryUtilities.AssignBrepIdToMesh(MeshList, ref brep_ids);
 
-            string body_mdpa_file;
+            string bodyMdpaFile;
 
-            body_mdpa_file = "Begin ModelPartData\n"
+            bodyMdpaFile = "Begin ModelPartData\n"
                         + "//  VARIABLE_NAME value\n"
                         + "End ModelPartData\n\n";
-                                
-            body_mdpa_file += "Begin Properties " + 0.ToString() + "\n End Properties \n";
+
+            bodyMdpaFile += "Begin Properties " + 0.ToString() + "\n End Properties \n";
             
+            /// variables to ensure continouos numbering of nodes, elements and submodelparts
+
             int id_node_counter = 1;
             int id_element_counter = 1;
             int sub_model_part_counter = 0;
+
+            /// strings to collect nodes, elements and submodelparts
 
             string node_string = "Begin Nodes\n";
             string sub_model_part_string = "";
@@ -138,18 +142,18 @@ namespace Cocodrilo.IO
             {
                 var user_data_mesh = mesh.UserData.Find(typeof(UserDataMesh)) as UserDataMesh;
 
+                /// check somehow that mesh belongs to a solid-element and not to something else 
+                /// Unterscheiden: get userData -> schaue bei Schale; Solid Element oder Mesh fragen
+                /// updated Langrangian aus UserData     
                 /// find propertyID of corresponding BrepId and get Krats Model Part
-                
+
                 user_data_mesh.TryGetKratosPropertyIdsBrepIds(
                     ref PropertyIdDictionary);
 
                 var property_id = PropertyIdDictionary.ElementAt(sub_model_part_counter).Key;
 
                 var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
-                  
-                /// Unterscheiden: get userData -> schaue bei Schale; Solid Element oder Mesh fragen
-                /// updated Langrangian aus UserData                   
-                
+                                 
                 /// Get type of mesh elements: quads or triangles
                 var face_test = mesh.Faces[0];
                 if (face_test.IsQuad)
@@ -196,10 +200,10 @@ namespace Cocodrilo.IO
             }
 
             node_string += "End Nodes\n\n";
-            body_mdpa_file += node_string;
-            body_mdpa_file += element_string;
-            body_mdpa_file += sub_model_part_string;
-            return body_mdpa_file;
+            bodyMdpaFile += node_string;
+            bodyMdpaFile += element_string;
+            bodyMdpaFile += sub_model_part_string;
+            return bodyMdpaFile;
         }
 
         private string GetFemMdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary, int number_of_body_mesh_nodes = 1, int number_of_body_mesh_elements = 1 )
