@@ -69,7 +69,7 @@ namespace Cocodrilo.IO
                     Mesh bodyMesh = null;
                     
                     System.IO.File.WriteAllLines(project_path + "/"+ outputCopy.Name + "_Body.mdpa", new List<string> {
-                        WriteBodyMdpaFile(outputCopy.mBodyMesh, outputCopy.mCurveList, ref property_id_dictionary, ref bodyMesh) });
+                        WriteBodyMdpaFile(outputCopy.mBodyMesh, outputCopy.mCurveList, ref property_id_dictionary, ref bodyMesh, property_id_dictionary) });
                     
 
                     //call of WriteProjectParameters with downcasted analysis to access class members
@@ -107,8 +107,10 @@ namespace Cocodrilo.IO
         private string WriteBodyMdpaFile(
             List<Mesh> MeshList,
             List<Curve> CurveList,
-            ref PropertyIdDict rPropertyIdsBrepsIds,
-            ref Mesh bodyMesh)
+            ref PropertyIdDict PropertyIdDictionary,
+            ref Mesh bodyMesh,
+            PropertyIdDict ElementConditionDictionary
+            )
 
         {
             int brep_ids = 1;
@@ -121,90 +123,82 @@ namespace Cocodrilo.IO
             body_mdpa_file = "Begin ModelPartData\n"
                         + "//  VARIABLE_NAME value\n"
                         + "End ModelPartData\n\n";
+                                
+            body_mdpa_file += "Begin Properties " + 0.ToString() + "\n End Properties \n";
+            
+            int id_node_counter = 1;
+            int id_element_counter = 1;
+            int sub_model_part_counter = 0;
 
-            // propertyID zur BrepId  
+            string node_string = "Begin Nodes\n";
+            string sub_model_part_string = "";
+            string element_string = "";
 
             foreach (var mesh in MeshList)
             {
                 var user_data_mesh = mesh.UserData.Find(typeof(UserDataMesh)) as UserDataMesh;
 
+                /// find propertyID of corresponding BrepId and get Krats Model Part
+                
                 user_data_mesh.TryGetKratosPropertyIdsBrepIds(
-                    ref rPropertyIdsBrepsIds);
+                    ref PropertyIdDictionary);
 
-                // has geometry property of type z.B. solid, 
-                // falls ja, schreiben
-                // 129 - 131 
-                        
+                var property_id = PropertyIdDictionary.ElementAt(sub_model_part_counter).Key;
+
+                var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
+                  
+                /// Unterscheiden: get userData -> schaue bei Schale; Solid Element oder Mesh fragen
+                /// updated Langrangian aus UserData                   
+                
+                /// Get type of mesh elements: quads or triangles
+                var face_test = mesh.Faces[0];
+                if (face_test.IsQuad)
+                    element_string += "Begin Elements UpdatedLagrangian2D4N//"; 
+                else if (face_test.IsTriangle)
+                    element_string += "Begin Elements UpdatedLagrangian2D3N//";
+
+                /// assign correct model part name to model: still hardcoded - remove in later version!
+                element_string += " GUI group identifier: Solid Auto" + property_id + " \n";
+                                
+                sub_model_part_string += "Begin SubModelPart Parts_"+ this_property.GetKratosModelPart() + " // Group Solid Auto"+ property_id + " // Subtree Parts_Solid\n";
+                    
+                sub_model_part_string += "   Begin SubModelPartNodes\n";
+
+                    for (int i = 0; i < mesh.Vertices.Count; i++)
+                    {
+                        node_string += "      " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
+                        sub_model_part_string += "      " + (id_node_counter + i).ToString() + "\n";
+                    }
+
+                    sub_model_part_string += "  End SubModelPartNodes\n";
+                    sub_model_part_string += "  Begin SubModelPartElements\n";
+
+                    foreach (var face in mesh.Faces)
+                    {
+                        element_string += "      " + id_element_counter + "  " + (0).ToString() + "  " + (face.A + id_node_counter) + "  " + (face.B + id_node_counter) + "  " + (face.C + id_node_counter) + "   " + (face.D + id_node_counter) + "\n";
+                        sub_model_part_string += "      " + id_element_counter.ToString() + "\n";
+                        id_element_counter++;
+                    }
+
+                 sub_model_part_string += "  End SubModelPartElements\n";
+                 sub_model_part_string += "  Begin SubModelPartConditions\n";
+                 sub_model_part_string += "  End SubModelPartConditions\n";
+                 sub_model_part_string += "End SubModelPart\n\n";
+
+                 id_node_counter += mesh.Vertices.Count;
+                 sub_model_part_counter++;
+
+                 
+                 element_string += "End Elements\n\n";
+
+                 
+                   
             }
 
-            for (int i = 0; i < MeshList.Count; i++)
-            {
-                body_mdpa_file += "Begin Properties " + i.ToString() + "\n End Properties \n";
-            }
-            body_mdpa_file += "\n\n";
-
-
-            string node_string = "Begin Nodes\n";
-
-            /// Unterscheiden: get userData -> schaue bei Schale; Solid Element oder Mesh fragen
-            /// updated Langrangian aus UserData
-            /// 2D gegeben, 4 Node -> Anzahl der Knoten abhängig vom Face
-            /// MeshList[0].
-            string element_string = "Begin Elements UpdatedLagrangian2D4N// ";
-
-            //assign correct model part name to model: still hardcoded - remove in later version!
-            element_string += "GUI group identifier: Solid Auto1 \n";
-
-            int id_node_counter = 1;
-            int id_element_counter = 1;
-
-            int sub_model_part_counter = 1;
-
-            string sub_model_part_string = "";
-
-            for (int m = 0; m < MeshList.Count; m++)
-            {
-                var mesh = MeshList[m];
-
-
-                // 129 -131 hier einbauen 
-                // propertyType userdata.getporpertytype solid, falls true dann weiter
-                // user data holen -> string 
-
-                sub_model_part_string += "Begin SubModelPart Parts_Solid_Solid_Auto1 // Group Solid Auto1 // Subtree Parts_Solid\n";
-                sub_model_part_string += "  Begin SubModelPartNodes\n";
-
-                for (int i = 0; i < mesh.Vertices.Count; i++)
-                {
-                    node_string += "    " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
-                    sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n";
-                }
-
-                sub_model_part_string += "  End SubModelPartNodes\n";
-                sub_model_part_string += "  Begin SubModelPartElements\n";
-
-                foreach (var face in mesh.Faces)
-                {
-                    element_string += "    " + id_element_counter + "  " + (0).ToString() + "  " + (face.A + id_node_counter) + "  " + (face.B + id_node_counter) + "  " + (face.C + id_node_counter) + "   " + (face.D + id_node_counter) + "\n";
-                    sub_model_part_string += "     " + id_element_counter.ToString() + "\n";
-                    id_element_counter++;
-                }
-
-                sub_model_part_string += "  End SubModelPartElements\n";
-                sub_model_part_string += "  Begin SubModelPartConditions\n";
-                sub_model_part_string += "  End SubModelPartConditions\n";
-                sub_model_part_string += "End SubModelPart\n\n";
-
-                id_node_counter += mesh.Vertices.Count;
-                sub_model_part_counter++;
-            }
             node_string += "End Nodes\n\n";
-            element_string += "End Elements\n\n";
-
             body_mdpa_file += node_string;
             body_mdpa_file += element_string;
             body_mdpa_file += sub_model_part_string;
-
             return body_mdpa_file;
         }
 
@@ -699,6 +693,7 @@ namespace Cocodrilo.IO
         /// 
         public string GetMaterials(PropertyIdDict ElementConditionDictionary )
         {
+            
             var property_dict_list = new DictList();
             foreach (var property_id in ElementConditionDictionary.Keys)
             {
@@ -733,13 +728,10 @@ namespace Cocodrilo.IO
                     foreach (var material_variable in material_variables)
                         variables.Add(material_variable.Key, material_variable.Value);
 
-                    // cast of material to material non-linear
+                    // cast of material to material non-linear to access material parameters
                     Cocodrilo.Materials.MaterialNonLinear downcast_material_for_particles = (Cocodrilo.Materials.MaterialNonLinear)material;
-                    //property_dict.Add("PARTICLES_PER_ELEMENT", downcast_material_for_particles.particlesPerElement);
-                   variables.Add("PARTICLES_PER_ELEMENT", downcast_material_for_particles.particlesPerElement);
-
-                    //material_dict.Add("name", material.Name);
-                    //material_dict.Add("material_id", material.Id);
+                    variables.Add("PARTICLES_PER_ELEMENT", downcast_material_for_particles.particlesPerElement);
+                                        
                     material_dict.Add("constitutive_law", material.GetKratosConstitutiveLaw());
 
                     if (material.HasKratosSubProperties())
@@ -766,68 +758,7 @@ namespace Cocodrilo.IO
 
             return json;
         }
-        //public string GetMaterials(PropertyIdDict ElementConditionDictionary)
-        //{
-        //    var property_dict_list = new DictList();
-        //    foreach (var property_id in ElementConditionDictionary.Keys)
-        //    {
-        //        var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
-        //        if (!success)
-        //        {
-        //            RhinoApp.WriteLine("InputJSON::GetMaterials: Property with Id: " + property_id + " does not exist.");
-        //            continue;
-        //        }
-
-        //        //some properties do not need materials and properties
-        //        if (!this_property.HasKratosMaterial())
-        //            continue;
-
-        //        var variables = this_property.GetKratosVariables();
-
-        //        var property_dict = new Dict
-        //            {
-        //                {"model_part_name", "IgaModelPart." + this_property.GetKratosModelPart()},
-        //                {"properties_id", this_property.mPropertyId},
-        //            };
-
-        //        var material_dict = new Dict { };
-
-        //        int material_id = this_property.GetMaterialId();
-        //        if (material_id >= 0)
-        //        {
-        //            var material = CocodriloPlugIn.Instance.GetMaterial(material_id);
-        //            var material_variables = material.GetKratosVariables();
-        //            foreach (var material_variable in material_variables)
-        //                variables.Add(material_variable.Key, material_variable.Value);
-
-        //            material_dict.Add("name", material.Name);
-        //            material_dict.Add("material_id", material.Id);
-        //            material_dict.Add("constitutive_law", material.GetKratosConstitutiveLaw());
-
-        //            if (material.HasKratosSubProperties())
-        //            {
-        //                property_dict.Add("sub_properties", material.GetKratosSubProperties());
-        //            }
-        //        }
-
-        //        material_dict.Add("Variables", variables);
-        //        material_dict.Add("Tables", new Dict { });
-
-        //        property_dict.Add("Material", material_dict);
-
-        //        property_dict_list.Add(property_dict);
-        //    }
-
-        //    var dict = new Dict
-        //    {
-        //        {"properties", property_dict_list }
-        //    };
-        //    var serializer = new JavaScriptSerializer();
-        //    string json = serializer.Serialize((object)dict);
-
-        //    return json;
-        //}
-
+        
         #region CO SIMULATION
         public override Dictionary<string, object> GetCouplingSequence(
             List<Analyses.Analysis> InputAnalyses,
