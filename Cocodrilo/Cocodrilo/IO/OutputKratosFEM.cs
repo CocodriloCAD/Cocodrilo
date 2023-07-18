@@ -550,13 +550,9 @@ namespace Cocodrilo.IO
                 id_node_counter += mesh.Vertices.Count;
                 sub_model_part_counter++;
             }
+
             /// Here the NON-CONFORMING boundary conditions are added to the background_mdpa resp. grid_mdpa
-            
-
-            // int numOfLineSegments = 1;
-            //sub_model_slip_conditions += "Begin Conditions LineCondition2D2N// GUI group identifier: Slip Auto1\n";
-
-
+                             
             int num_Of_non_conf_BCs = 0;
             string model_part_name_slip;
             string group_identifier_slip;
@@ -647,119 +643,7 @@ namespace Cocodrilo.IO
                         }
                     }
                 }
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                //sub_model_part_slip += "Begin SubModelPart Slip2D_Slip_Auto1 // Group Slip Auto1 // Subtree Slip2D\n" +
-                //                    " Begin SubModelPartNodes\n";
-
-                //// int numOfLineSegments = 1;
-                //sub_model_slip_conditions += "Begin Conditions LineCondition2D2N// GUI group identifier: Slip Auto1\n";
-
-                /// List of the node number of the non-conforming BCs
-
-                //string temp = "";
-
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                /// Implementierung unter Verwendung von PropertyIds und GetKratosModelPartName()
-
-                // loop über curves bzw. edges 
-                // hole user data edges
-                // von userdataedge hole getModelPartName.. 
-                // generisch einbauen; Listen sparen
-
-                /// helper variable
-                /// 
-                /// user_data_mesh.TryGetKratosPropertyIdsBrepIds(
-                //ref PropertyIdDictionary);
-
-                //var property_id = PropertyIdDictionary.ElementAt(sub_model_part_counter).Key;
-
-                //var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
-                /// 
-
-                //int counter_for_nodes = 1; /// to gives nodes from non-conforming (weak boundary conditions) right numbering
-
-
-
-
-                
-                //PropertyIdDict property_id_dictionary2 = new PropertyIdDict();
-                //foreach (var curve in CurveList)
-                //{
-                //    var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
-
-                //    if (user_data_edge != null)
-                //    {
-                //        user_data_edge.TryGetKratosPropertyIdsBrepIds(ref PropertyIdDictionary);
-
-                //        var property_id_edge = PropertyIdDictionary.ElementAt(sub_model_part_counter).Key;
-
-                //        // -> welches element der liste soll ich auslesen??
-                //    }
-                //}
-
-                //foreach (var property_id in ElementConditionDictionary.Keys)
-                //    {
-                //        var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
-                //        if (!success)
-                //        {
-                //            RhinoApp.WriteLine("InputJSON::GetMaterials: Property with Id: " + property_id + " does not exist.");
-                //            continue;
-                //        }
-
-
-
-                //    }
-
-                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                
-                /// now: working implementation
-
-                //for (int currentBC = 0; currentBC < numNonConfBC; currentBC++)
-                //{
-                //    for (int currentNumOfNodes = 0; currentNumOfNodes < EdgeLenths[currentBC]; currentNumOfNodes++)
-                //    {
-                //        int index = totalNumNodes + counter_for_nodes;
-                //        Point3d currentNode = ListEdgeNodes[currentNumOfNodes];
-
-                //        node_string += "    " + index.ToString() + " " + currentNode.X + " " + currentNode.Y + " " + currentNode.Z + "\n";
-
-                //        sub_model_part_slip += "     " + index.ToString() + "\n";
-
-                //        // Add node number to Nodelist
-                        
-                //        counter_for_nodes++;
-
-                //        if (currentNumOfNodes != 0)
-                //        {
-                //            int startNode = index - 1;
-                //            int endNode = index;
-
-                //            conditions += "         " + numOfLineSegments.ToString() + " " + (0).ToString() + " " + startNode.ToString() + " " + endNode.ToString() + "\n";
-
-                //            /// Add number of segment to list
-
-                //            temp += "           " + numOfLineSegments.ToString() + "\n";
-                            
-
-                //            numOfLineSegments++;
-                //        }
-
-                //    }
-                //}
-
-                //sub_model_part_slip += "    End SubModelPartNodes\n";
-
-                //sub_model_part_slip += "    Begin SubModelPartElements\n" + "    End SubModelPartElements\n" + "    Begin SubModelPartConditions\n";
-                //sub_model_part_slip += temp;
-                //sub_model_part_slip += "    End SubModelPartConditions\n" + "End SubModelPart\n";
-
-                //conditions += "End Conditions\n\n";
-
-
-               
-                               
-            
             node_string += "End Nodes\n\n";
             element_string += "End Elements\n\n";
 
@@ -771,6 +655,43 @@ namespace Cocodrilo.IO
             mdpa_file += sub_model_part_slip;
 
             return mdpa_file;
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// Implementierung unter Verwendung von PropertyIds und GetKratosModelPartName()
+
+            // loop über curves bzw. edges 
+            // hole user data edges
+            // von userdataedge hole getModelPartName.. 
+            // generisch einbauen; Listen sparen
+
+            /// helper variable
+            /// 
+            /// user_data_mesh.TryGetKratosPropertyIdsBrepIds(
+            //ref PropertyIdDictionary);
+
+            //var property_id = PropertyIdDictionary.ElementAt(sub_model_part_counter).Key;
+
+            //var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
+            /// 
+
+            //int counter_for_nodes = 1; /// to gives nodes from non-conforming (weak boundary conditions) right numbering
+
+
+            //PropertyIdDict property_id_dictionary2 = new PropertyIdDict();
+            //foreach (var curve in CurveList)
+            //{
+            //    var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
+
+            //    if (user_data_edge != null)
+            //    {
+            //        user_data_edge.TryGetKratosPropertyIdsBrepIds(ref PropertyIdDictionary);
+
+            //        var property_id_edge = PropertyIdDictionary.ElementAt(sub_model_part_counter).Key;
+
+            //        // -> welches element der liste soll ich auslesen??
+            //    }
+            //}                       
+
+
         }
                  
         private string GetMPM_MdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary, List<Mesh> BodyMeshList) //, ref PropertyIdDict PropertyIDDictionary_Edges)
