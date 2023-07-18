@@ -55,6 +55,7 @@ namespace Cocodrilo.IO
             {
                 PropertyIdDict property_id_dictionary = new PropertyIdDict();
                 PropertyIdDict property_id_dictionary_grid = new PropertyIdDict();
+                //PropertyIdDict PropertyIDDictionary_Edges = new PropertyIdDict();
                 PropertyIdDict rPropertyIdsBrepsIds = new PropertyIdDict();
                          
                 ///Different output files for FEM and MPM
@@ -78,15 +79,15 @@ namespace Cocodrilo.IO
                     System.IO.File.WriteAllLines(project_path + "/" + "ProjectParameters.json", new List<string> { WriteProjectParameters(project_path, ref outputCopy, outputCopy.mCurveList) });
                     
                     System.IO.File.WriteAllLines(project_path + "/" + "ParticleMaterials.json", new List<string> { GetMaterials(property_id_dictionary) });
-                              
+
                     System.IO.File.WriteAllLines(project_path + "/" + outputCopy.Name + "_Grid.mdpa",
-                        new List<string> { GetMPM_MdpaFile(MeshList, outputCopy.mCurveList, ref property_id_dictionary , outputCopy.mBodyMesh) });
+                        new List<string> { GetMPM_MdpaFile(MeshList, outputCopy.mCurveList, ref property_id_dictionary, outputCopy.mBodyMesh) }); //, ref PropertyIDDictionary_Edges) });
                                         
                 }
                 else
                 {
                     System.IO.File.WriteAllLines(project_path + "/" + "Grid.mdpa",
-                       new List<string> { GetFemMdpaFile(MeshList, new List<Curve>(), ref property_id_dictionary) });
+                       new List<string> { GetFemMdpaFile(MeshList, new List<Curve>(), ref property_id_dictionary) }); //  , ref PropertyIDDictionary_Edges) });
                     System.IO.File.WriteAllLines(project_path + "/" + "Materials.json",
                         new List<string> { "" });
                     //Overload writeProjectParameters to work also with objects of type Analysis
@@ -178,12 +179,29 @@ namespace Cocodrilo.IO
                     sub_model_part_string += "  End SubModelPartNodes\n";
                     sub_model_part_string += "  Begin SubModelPartElements\n";
 
+                /// write correct number of nodes of each element into mdpa file. So far, only working for triangles and quads. Modify below to print also different element types.
+                if (face_test.IsQuad)
+                {
                     foreach (var face in mesh.Faces)
                     {
                         element_string += "      " + id_element_counter + "  " + (0).ToString() + "  " + (face.A + id_node_counter) + "  " + (face.B + id_node_counter) + "  " + (face.C + id_node_counter) + "   " + (face.D + id_node_counter) + "\n";
                         sub_model_part_string += "      " + id_element_counter.ToString() + "\n";
                         id_element_counter++;
                     }
+                }
+                else if (face_test.IsTriangle)
+                {
+                    foreach (var face in mesh.Faces)
+                    {
+                        element_string += "      " + id_element_counter + "  " + (0).ToString() + "  " + (face.A + id_node_counter) + "  " + (face.B + id_node_counter) + "  " + (face.C + id_node_counter) + "\n";
+                        sub_model_part_string += "      " + id_element_counter.ToString() + "\n";
+                        id_element_counter++;
+                    }
+                }
+                else
+                {
+                    RhinoApp.WriteLine("Element type of unknown format (not triangles or quads) is used! MDPA generation for such meshes is not yet implemented!");
+                }
 
                  sub_model_part_string += "  End SubModelPartElements\n";
                  sub_model_part_string += "  Begin SubModelPartConditions\n";
@@ -207,7 +225,7 @@ namespace Cocodrilo.IO
             return bodyMdpaFile;
         }
 
-        private string GetFemMdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary, int number_of_body_mesh_nodes = 1, int number_of_body_mesh_elements = 1 )
+        private string GetFemMdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary, int number_of_body_mesh_nodes = 1, int number_of_body_mesh_elements = 1) // ref PropertyIdDict PropertyIDDictionary_Edges,
         {
             int brep_ids = 1;
 
@@ -218,16 +236,13 @@ namespace Cocodrilo.IO
             GeometryUtilities.AssignBrepIdToMesh(MeshList, ref brep_ids);
 
             //Rhino.Geometry.Collections.MeshTopologyEdgeList mesh_edges = brep.Meshes;
-            // Iteration über richtige Netze? 
-
-
+            
             /// Tables for points belonging to edges and curves
             Hashtable nodes_of_curves = new Hashtable();
             IDictionary<string, Point3d> nodesCurves = new Dictionary<string, Point3d>();
             IDictionary<string, Point3d> tableEdges = new Dictionary<string, Point3d>();
 
             /// number of non-grid conforming boundary conditions which should be considered
-
             int numNonConfBC = 0;
             List<int> EdgeLenths = new List<int>();
             List<Point3d> ListEdgeNodes = new List<Point3d>();
@@ -341,12 +356,18 @@ namespace Cocodrilo.IO
                                 
 
             string node_string = "Begin Nodes\n";
-            string element_string = "";  
+            string element_string = "";
+            string group_identifier = ""; // belongs to element_string
 
             string sub_model_part_string = "";
             string sub_model_part_displacement_boundary = "";
-            string conditions = "";
+
+            //overall strings for all slip submodel parts
             string sub_model_part_slip = "";
+            string sub_model_slip_conditions = "";
+
+            // helper variables
+            int totalNumNodes = 0;
 
             foreach (var mesh in MeshList)
             {
@@ -371,12 +392,14 @@ namespace Cocodrilo.IO
                 else if (face_test.IsTriangle)
                     element_string += "Begin Elements UpdatedLagrangian2D3N//";
 
-                /// assign correct model part name to model: still hardcoded - remove in later version!
-                element_string += " GUI group identifier: Grid Auto" + property_id + " \n";
+                /// assign correct model part name to model: still hardcoded - remove in later version! -> there is only one submodelpart for background grid. So this might be okay so far.
+                //element_string += " GUI group identifier: Grid Auto" + property_id + " \n";
 
                 sub_model_part_string += "Begin SubModelPart Parts_Grid" + this_property.GetKratosModelPart() + " // Group Solid Auto" + property_id + " // Subtree Parts_Solid\n";
 
-                element_string += "Begin Elements Element2D4N// GUI group identifier: Grid Auto1 \n"; 
+                group_identifier += "GUI group identifier: Grid Auto1 \n";
+
+                element_string += group_identifier;
                 // Group Name and Submodelpart Name must become dynamic parameters
                 // use here "Begin"+CocodriloPlugIn.Instance.GetProperty(property_id, out bool success)+"...
 
@@ -386,12 +409,12 @@ namespace Cocodrilo.IO
                 //make modelpartname, group and subtree automatic
                 sub_model_part_displacement_boundary += "Begin SubModelPart DISPLACEMENT_Displacement_Auto1 // Group Displacement Auto1 // Subtree DISPLACEMENT\n" +
                                          "  Begin SubModelPartNodes\n";
-                              
-                int totalNumNodes = id_node_counter-1;
+
+                totalNumNodes = id_node_counter - 1;
 
                 for (int i = 0; i < mesh.Vertices.Count; i++)
                 {
-                    node_string += "    " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
+                    node_string += "     " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
                     sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n";
 
                     totalNumNodes++;
@@ -483,120 +506,35 @@ namespace Cocodrilo.IO
                 sub_model_part_string += "Begin SubModelPartElements\n";
                 sub_model_part_displacement_boundary += "Begin SubModelPartElements\n";
 
-                foreach (var face in mesh.Faces)
+
+                /// Check if faces are quads or triangles: write three or four nodes in the mdpa - file
+                if (face_test.IsQuad)
                 {
-                    element_string += "    " + id_element_counter + "  " + (0).ToString() + "  " + (face.A + id_node_counter) + "  " + (face.B + id_node_counter) + "  " + (face.C + id_node_counter) + "   " + (face.D + id_node_counter) + "\n";
-                    sub_model_part_string += "     " + id_element_counter.ToString() + "\n";
-                    id_element_counter++;
+                    foreach (var face in mesh.Faces)
+                    {
+                        element_string += "    " + id_element_counter + "  " + (0).ToString() + "  " + (face.A + id_node_counter) + "  " + (face.B + id_node_counter) + "  " + (face.C + id_node_counter) + "   " + (face.D + id_node_counter) + "\n";
+                        sub_model_part_string += "     " + id_element_counter.ToString() + "\n";
+                        id_element_counter++;
+                    }
                 }
+                else if (face_test.IsTriangle)
+                {
+                    foreach (var face in mesh.Faces)
+                    {
+                        element_string += "    " + id_element_counter + "  " + (0).ToString() + "  " + (face.A + id_node_counter) + "  " + (face.B + id_node_counter) + "  " + (face.C + id_node_counter) + "\n";
+                        sub_model_part_string += "     " + id_element_counter.ToString() + "\n";
+                        id_element_counter++;
+                    }
+                }
+                else
+                {
+                    RhinoApp.WriteLine("Element type of unknown format (not triangles or quads) is used! MDPA generation for such meshes is not yet implemented!");
+                }
+
+
 
                 sub_model_part_string += "End SubModelPartElements\n";
                 sub_model_part_string += "Begin SubModelPartConditions\n";
-
-                /// Here the non-conforming bcs are added to the background_mdpa resp. grid_mdpa
-                sub_model_part_slip += "Begin SubModelPart Slip2D_Slip_Auto1 // Group Slip Auto1 // Subtree Slip2D\n" +
-                                    " Begin SubModelPartNodes\n";
-
-
-                
-                int numOfLineSegments = 1;
-                conditions += "Begin Conditions LineCondition2D2N// GUI group identifier: Slip Auto1\n";
-
-                /// List of the node number of the non-conforming BCs
-
-                string temp = "";
-
-                // loop über curves bzw. edges 
-                // hole user data edges
-                // von userdataedge hole getModelPartName.. 
-                // generisch einbauen; Listen sparen
-
-                /// helper variable
-                /// 
-
-                int counter_for_nodes = 1; /// to gives nodes from non-conforming (weak boundary conditions) right numbering
-
-                //foreach (var curve in CurveList)
-                //{
-                //    var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
-
-                //        var id = user_data_edge.TryGetKratosPropertyIdsBrepIds(ref PropertyIdDictionary);
-
-                //        var this_property = CocodriloPlugIn.Instance.GetProperty(id, out bool success);
-
-                //        string test = id.GetKratosModelPart();
-
-                //    if (user_data_edge != null)
-                //    {
-                //        string sub_model_part_name = user_data_edge()
-
-                //        var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
-
-                //        if (curve is PolylineCurve)
-                //        {
-                //            PolylineCurve poyline_curve = curve.ToPolyline(-1, 1, 0.1, 0.1, 0.1, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance, 0, max_parameter_segment_length, true);
-                //            Polyline polyline;
-                //            poyline_curve.TryGetPolyline(out polyline); // (PolylineCurve) cast verwenden/ausprobieren
-
-                //            curve.UserData.
-
-                //            foreach (var point in polyline)
-                //            {
-                                
-                //            }
-                            
-
-                //        }
-                //        else
-                //        {
-                //            //throw error alert in Rhino
-                //        }
-                //    }
-
-                //}
-
-                
-                for(int currentBC = 0; currentBC < numNonConfBC; currentBC++)
-                {
-                    for (int currentNumOfNodes = 0; currentNumOfNodes < EdgeLenths[currentBC]; currentNumOfNodes++)
-                    {
-                        int index = totalNumNodes + counter_for_nodes;
-                        Point3d currentNode = ListEdgeNodes[currentNumOfNodes];
-
-                        node_string += "    " + index.ToString() + " " + currentNode.X + " " + currentNode.Y + " " + currentNode.Z + "\n";
-
-                        sub_model_part_slip += "     " + index.ToString() + "\n";
-
-                        // Add node number to Nodelist
-                        
-                        counter_for_nodes++;
-
-                        if (currentNumOfNodes != 0)
-                        {
-                            int startNode = index - 1;
-                            int endNode = index;
-
-                            conditions += "         " + numOfLineSegments.ToString() + " " + (0).ToString() + " " + startNode.ToString() + " " + endNode.ToString() + "\n";
-
-                            /// Add number of segment to list
-
-                            temp += "           " + numOfLineSegments.ToString() + "\n";
-                            
-
-                            numOfLineSegments++;
-                        }
-
-                    }
-                }
-
-                sub_model_part_slip += "    End SubModelPartNodes\n";
-
-                sub_model_part_slip += "    Begin SubModelPartElements\n" + "    End SubModelPartElements\n" + "    Begin SubModelPartConditions\n";
-                sub_model_part_slip += temp;
-                sub_model_part_slip += "    End SubModelPartConditions\n" + "End SubModelPart\n";
-
-                conditions += "End Conditions\n\n";
-
 
                 sub_model_part_string += "End SubModelPartConditions\n";
                 sub_model_part_string += "End SubModelPart\n\n";
@@ -607,21 +545,227 @@ namespace Cocodrilo.IO
                 sub_model_part_displacement_boundary += "End SubModelPartConditions\n";
                 sub_model_part_displacement_boundary += "End SubModelPart\n\n";
 
-
-
-
                 // Add displacement boundary conditions resp. grid-conforming boundary conditions HERE!
 
                 id_node_counter += mesh.Vertices.Count;
                 sub_model_part_counter++;
-                               
             }
+            /// Here the NON-CONFORMING boundary conditions are added to the background_mdpa resp. grid_mdpa
+            
+
+            // int numOfLineSegments = 1;
+            //sub_model_slip_conditions += "Begin Conditions LineCondition2D2N// GUI group identifier: Slip Auto1\n";
+
+
+            int num_Of_non_conf_BCs = 0;
+            string model_part_name_slip;
+            string group_identifier_slip;
+            string group_part_name_slip;
+            string temp = "";
+            string sub_model_part_slip_temp;
+            string sub_model_slip_conditions_temp;
+
+            int numOfLineSegments_slip = 1;
+            int counter_for_nodes = 1;
+
+            foreach (var curve in CurveList)
+            {
+                 var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
+
+                 if (user_data_edge != null)
+                 {
+                     num_Of_non_conf_BCs++;
+
+                     group_part_name_slip = "Group Slip Auto" + num_Of_non_conf_BCs + " //";
+                     model_part_name_slip = "Slip2D_Slip_Auto" + num_Of_non_conf_BCs + " // "; 
+                     group_identifier_slip = "GUI group identifier: Slip Auto" + num_Of_non_conf_BCs + "\n";
+
+                    // add headers to general string
+
+                    sub_model_part_slip_temp = null;
+                     sub_model_part_slip_temp = "Begin SubModelPart " + model_part_name_slip + group_part_name_slip + " Subtree Slip2D\n"+
+                                 "    Begin SubModelPartNodes\n";
+
+                     sub_model_slip_conditions_temp = "Begin Conditions LineCondition2D2N// " + group_identifier_slip;
+
+                     temp = "    Begin SubModelPartElements \n    End SubModelPartElements \n" + "    Begin SubModelPartConditions \n";
+                    if (curve is PolylineCurve)
+                     {
+                         PolylineCurve poyline_curve = curve.ToPolyline(-1, 1, 0.1, 0.1, 0.1, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance, 0, max_parameter_segment_length, true);
+                         Polyline polyline_edge;
+                         poyline_curve.TryGetPolyline(out polyline_edge);
+
+                         int help_node_counter = 0;
+                         foreach (var point in polyline_edge)
+                         {
+                             // Add node number to Nodelist
+
+                            int index = totalNumNodes + counter_for_nodes;
+
+                            node_string += "     " + index.ToString() + " " + point.X + " " + point.Y + " " + point.Z + "\n";
+
+                            sub_model_part_slip_temp += "     " + index.ToString() + "\n";
+                                               
+                            counter_for_nodes++;
+
+                            if (help_node_counter != 0)
+                            {
+                                 int startNode = index - 1;
+                                 int endNode = index;
+                                
+                                 sub_model_slip_conditions_temp += "         " + numOfLineSegments_slip.ToString() + " " + (0).ToString() + " " + startNode.ToString() + " " + endNode.ToString() + "\n";
+
+                                    /// Add number of segment to list
+
+                                 temp += "           " + numOfLineSegments_slip.ToString() + "\n";
+
+
+                                    numOfLineSegments_slip++;
+                                };
+
+                            help_node_counter++;
+
+                            };
+
+                        sub_model_part_slip_temp += "    End SubModelPartNodes \n";
+                        temp += "   End SubModelPartConditions \n";
+
+                        sub_model_part_slip_temp += temp;
+                            
+                        sub_model_slip_conditions_temp += "End Conditions\n";
+                        sub_model_part_slip_temp += "End SubModelPart\n \n";
+
+
+
+                        sub_model_part_slip += sub_model_part_slip_temp;
+                        sub_model_slip_conditions += sub_model_slip_conditions_temp;
+                            
+                        }
+                        else
+                        {
+                            RhinoApp.WriteLine("Edge has wrong datatype. Choose a curve for imposing non-grid conforming bcs.");
+                        }
+                    }
+                }
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                //sub_model_part_slip += "Begin SubModelPart Slip2D_Slip_Auto1 // Group Slip Auto1 // Subtree Slip2D\n" +
+                //                    " Begin SubModelPartNodes\n";
+
+                //// int numOfLineSegments = 1;
+                //sub_model_slip_conditions += "Begin Conditions LineCondition2D2N// GUI group identifier: Slip Auto1\n";
+
+                /// List of the node number of the non-conforming BCs
+
+                //string temp = "";
+
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                /// Implementierung unter Verwendung von PropertyIds und GetKratosModelPartName()
+
+                // loop über curves bzw. edges 
+                // hole user data edges
+                // von userdataedge hole getModelPartName.. 
+                // generisch einbauen; Listen sparen
+
+                /// helper variable
+                /// 
+                /// user_data_mesh.TryGetKratosPropertyIdsBrepIds(
+                //ref PropertyIdDictionary);
+
+                //var property_id = PropertyIdDictionary.ElementAt(sub_model_part_counter).Key;
+
+                //var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
+                /// 
+
+                //int counter_for_nodes = 1; /// to gives nodes from non-conforming (weak boundary conditions) right numbering
+
+
+
+
+                
+                //PropertyIdDict property_id_dictionary2 = new PropertyIdDict();
+                //foreach (var curve in CurveList)
+                //{
+                //    var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
+
+                //    if (user_data_edge != null)
+                //    {
+                //        user_data_edge.TryGetKratosPropertyIdsBrepIds(ref PropertyIdDictionary);
+
+                //        var property_id_edge = PropertyIdDictionary.ElementAt(sub_model_part_counter).Key;
+
+                //        // -> welches element der liste soll ich auslesen??
+                //    }
+                //}
+
+                //foreach (var property_id in ElementConditionDictionary.Keys)
+                //    {
+                //        var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
+                //        if (!success)
+                //        {
+                //            RhinoApp.WriteLine("InputJSON::GetMaterials: Property with Id: " + property_id + " does not exist.");
+                //            continue;
+                //        }
+
+
+
+                //    }
+
+                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                
+                /// now: working implementation
+
+                //for (int currentBC = 0; currentBC < numNonConfBC; currentBC++)
+                //{
+                //    for (int currentNumOfNodes = 0; currentNumOfNodes < EdgeLenths[currentBC]; currentNumOfNodes++)
+                //    {
+                //        int index = totalNumNodes + counter_for_nodes;
+                //        Point3d currentNode = ListEdgeNodes[currentNumOfNodes];
+
+                //        node_string += "    " + index.ToString() + " " + currentNode.X + " " + currentNode.Y + " " + currentNode.Z + "\n";
+
+                //        sub_model_part_slip += "     " + index.ToString() + "\n";
+
+                //        // Add node number to Nodelist
+                        
+                //        counter_for_nodes++;
+
+                //        if (currentNumOfNodes != 0)
+                //        {
+                //            int startNode = index - 1;
+                //            int endNode = index;
+
+                //            conditions += "         " + numOfLineSegments.ToString() + " " + (0).ToString() + " " + startNode.ToString() + " " + endNode.ToString() + "\n";
+
+                //            /// Add number of segment to list
+
+                //            temp += "           " + numOfLineSegments.ToString() + "\n";
+                            
+
+                //            numOfLineSegments++;
+                //        }
+
+                //    }
+                //}
+
+                //sub_model_part_slip += "    End SubModelPartNodes\n";
+
+                //sub_model_part_slip += "    Begin SubModelPartElements\n" + "    End SubModelPartElements\n" + "    Begin SubModelPartConditions\n";
+                //sub_model_part_slip += temp;
+                //sub_model_part_slip += "    End SubModelPartConditions\n" + "End SubModelPart\n";
+
+                //conditions += "End Conditions\n\n";
+
+
+               
+                               
+            
             node_string += "End Nodes\n\n";
             element_string += "End Elements\n\n";
 
             mdpa_file += node_string;
             mdpa_file += element_string;
-            mdpa_file += conditions;
+            mdpa_file += sub_model_slip_conditions;
             mdpa_file += sub_model_part_string;
             mdpa_file += sub_model_part_displacement_boundary;
             mdpa_file += sub_model_part_slip;
@@ -629,7 +773,7 @@ namespace Cocodrilo.IO
             return mdpa_file;
         }
                  
-        private string GetMPM_MdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary, List<Mesh> BodyMeshList)
+        private string GetMPM_MdpaFile(List<Mesh> MeshList, List<Curve> CurveList, ref PropertyIdDict PropertyIdDictionary, List<Mesh> BodyMeshList) //, ref PropertyIdDict PropertyIDDictionary_Edges)
         {
             int number_nodes_body_mesh = 0;
 
@@ -645,7 +789,7 @@ namespace Cocodrilo.IO
                 }
             }
 
-            string basicGridMdpa = GetFemMdpaFile(MeshList, CurveList, ref PropertyIdDictionary, number_nodes_body_mesh, number_of_elements_body_mesh);
+            string basicGridMdpa = GetFemMdpaFile(MeshList, CurveList, ref PropertyIdDictionary, number_nodes_body_mesh, number_of_elements_body_mesh); //ref PropertyIDDictionary_Edges,
 
             /// Use GetFemMdpaFile to create background grid. To ensure that the nodes of the body mesh are considered while numerating the nodes
             /// of the background mesh, this extra function was created.
