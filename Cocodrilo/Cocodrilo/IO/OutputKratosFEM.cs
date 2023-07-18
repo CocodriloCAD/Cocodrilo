@@ -237,97 +237,95 @@ namespace Cocodrilo.IO
 
             //Rhino.Geometry.Collections.MeshTopologyEdgeList mesh_edges = brep.Meshes;
             
-            /// Tables for points belonging to edges and curves
-            Hashtable nodes_of_curves = new Hashtable();
+            /// Variables for grid-conforming bcs (curves)
             IDictionary<string, Point3d> nodesCurves = new Dictionary<string, Point3d>();
-            IDictionary<string, Point3d> tableEdges = new Dictionary<string, Point3d>();
+            int numConfBC = 0; // number of grid-conforming bcs that should be considered
+            List<Point3d> startEndPointsCurve = new List<Point3d>();
+            List<int> num_of_line_segments_non_grid_conforming_bcs = new List<int>();
+
+            List<IDictionary<string, Point3d>> Dict_list_conf_bc = new List<IDictionary<string, Point3d>>();
 
             /// number of non-grid conforming boundary conditions which should be considered
             int numNonConfBC = 0;
-            List<int> EdgeLenths = new List<int>();
-            List<Point3d> ListEdgeNodes = new List<Point3d>();
-            List<Point3d> startEndPointsCurve = new List<Point3d>();
+            
 
             // couple this somehow with meshlength
             double max_parameter_segment_length = 0.1; 
 
             foreach (var curve in CurveList)
             {
+                /// Grid non-conforming boundary conditions are of type "UserDataEdge"
+                /// Grid conforming boundary conditions (=boundary conditions on the background grid) are represented by 
+                /// the type "UserDataCurve"
+                
                 var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
 
-                if (user_data_edge != null)
-                {
-                    numNonConfBC++;
-                    
-                    if (curve is PolylineCurve)
+                    if (user_data_edge != null)
                     {
-                        PolylineCurve poyline_curve = curve.ToPolyline(-1, 1, 0.1, 0.1, 0.1, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance, 0, max_parameter_segment_length, true);
-                        Polyline polyline;
-                        poyline_curve.TryGetPolyline(out polyline); // (PolylineCurve) cast verwenden/ausprobieren
-                                               
-                        foreach (var point in polyline)
-                        {
-                            tableEdges.Add(point.ToString(),point);
-                            ListEdgeNodes.Add(point);
-                        }
-                        EdgeLenths.Add(polyline.Count());
-                                                
+                        // count how many non-conforming bcs are present
+                        numNonConfBC++;
                     }
-                    else
-                    {
-                        //throw error alert in Rhino
-                    }
-                }                     
-                                                                           
+
                 var user_data_curve = curve.UserData.Find(typeof(UserDataCurve)) as UserDataCurve;
 
-                if (user_data_curve != null)
-                {
-                    foreach (var mesh in MeshList)
+                    if (user_data_curve != null)
                     {
-                        // Gets a polyline approximation of the input curve and then moves its control points
-                        // to the closest point on the mesh. Then it "connects the points" over edges so
-                        // that a polyline on the mesh is formed.
-                        var polyline = mesh.PullCurve(curve, 0.05);
+                        /// count how many non-conforming bcs are present
+                        numConfBC++;
 
-                        // get PropertyIds and BrepIds used by Kratos of the element user_data_edge
-                        user_data_curve.TryGetKratosPropertyIdsBrepIds(
-                            ref PropertyIdDictionary);
-
-                        // Returns undelying polyline or points
-                        var poly_curve = polyline.PullToMesh(mesh, 0.05);
-
-                        // Makes a polyline approximation of the curve and gets the closest point on the
-                        // mesh for each point on the curve. Then it "connects the points" so that you have
-                        // a polyline on the mesh.
-                        Polyline pol = poly_curve.ToPolyline();
-
-                        startEndPointsCurve.Add(pol.First());
-                        startEndPointsCurve.Add(pol.Last());
-                                                
-                        foreach (var point in pol)
+                        foreach (var mesh in MeshList)
                         {
-                            var closest_point = mesh.ClosestPoint(point);
+                            /// Gets a polyline approximation of the input curve and then moves its control points
+                            /// to the closest point on the mesh. Then it "connects the points" over edges so
+                            /// that a polyline on the mesh is formed.
+                            var polyline = mesh.PullCurve(curve, 0.05);
 
-                            /// check if point's hashcode is already part of nodes_of_curves before adding
+                            /// get PropertyIds and BrepIds used by Kratos of the element user_data_edge
+                            user_data_curve.TryGetKratosPropertyIdsBrepIds(
+                                ref PropertyIdDictionary);
 
-                            if (!nodesCurves.ContainsKey(closest_point.ToString()))
+                            /// Returns underlying polyline or points
+                            var poly_curve = polyline.PullToMesh(mesh, 0.05);
+
+                            /// Makes a polyline approximation of the curve and gets the closest point on the
+                            /// mesh for each point on the curve. Then it "connects the points" so that you have
+                            /// a polyline on the mesh.
+                            Polyline polyline_grid_conforming_bc = poly_curve.ToPolyline();
+
+                            startEndPointsCurve.Add(polyline_grid_conforming_bc.First());
+                            startEndPointsCurve.Add(polyline_grid_conforming_bc.Last());
+
+                            IDictionary<string, Point3d> nodes_curves_temp = new Dictionary<string, Point3d>();
+
+                            foreach (var point in polyline_grid_conforming_bc)
                             {
-                                nodesCurves.Add(closest_point.ToString(), closest_point);
-                            }
-                            else
-                            {
-                                RhinoApp.WriteLine("Key already present in curve dictionary!");
-                                RhinoApp.WriteLine("coordinates: "+ closest_point.ToString());
+                                var closest_point = mesh.ClosestPoint(point);
+
+                                /// check if point's key is already part of nodes_curves_temp before adding
+
+                            if (!nodes_curves_temp.ContainsKey(closest_point.ToString()))
+                                {
+                                    nodes_curves_temp.Add(closest_point.ToString(), closest_point);
+                                }
+                                else
+                                {
+                                    RhinoApp.WriteLine("Key already present in curve dictionary!");
+                                    RhinoApp.WriteLine("coordinates: "+ closest_point.ToString());
+                                }
+
                             }
 
+                        Dict_list_conf_bc.Add(nodes_curves_temp);
+
+                        /// add number of line segments of grid-conforming bc
+
+                        num_of_line_segments_non_grid_conforming_bcs.Add(polyline_grid_conforming_bc.Count());
 
                         }
                     }
-                }
             }
 
-            /// Creation of string
+            /// Creation of overall string for grid mdpa-file
 
             string mdpa_file;
 
@@ -344,6 +342,8 @@ namespace Cocodrilo.IO
             int id_element_counter;
             int sub_model_part_counter = 0;
 
+            /// check if elements from body mesh (from MPM) exist
+           
             if (number_of_body_mesh_nodes != 1)
                 id_node_counter = number_of_body_mesh_nodes + 1;
             else
@@ -356,18 +356,20 @@ namespace Cocodrilo.IO
                                 
 
             string node_string = "Begin Nodes\n";
-            string element_string = "";
-            string group_identifier = ""; // belongs to element_string
+            string element_string = null;
+            string group_identifier = null; // belongs to element_string
 
-            string sub_model_part_string = "";
-            string sub_model_part_displacement_boundary = "";
+            string sub_model_part_string = null;
+            string sub_model_part_displacement_boundary = null;
 
-            //overall strings for all slip submodel parts
-            string sub_model_part_slip = "";
-            string sub_model_slip_conditions = "";
+            /// overall strings for all slip submodel parts
+            string sub_model_part_slip = null;
+            string sub_model_slip_conditions = null;
 
-            // helper variables
+            /// overall helper variables
             int totalNumNodes = 0;
+
+            /// iterate over all meshes in MeshList
 
             foreach (var mesh in MeshList)
             {
@@ -386,29 +388,22 @@ namespace Cocodrilo.IO
                 var this_property = CocodriloPlugIn.Instance.GetProperty(property_id, out bool success);
 
                 /// Get type of mesh elements: quads or triangles
+                
                 var face_test = mesh.Faces[0];
                 if (face_test.IsQuad)
                     element_string += "Begin Elements UpdatedLagrangian2D4N//";
                 else if (face_test.IsTriangle)
                     element_string += "Begin Elements UpdatedLagrangian2D3N//";
-
-                /// assign correct model part name to model: still hardcoded - remove in later version! -> there is only one submodelpart for background grid. So this might be okay so far.
-                //element_string += " GUI group identifier: Grid Auto" + property_id + " \n";
-
-                sub_model_part_string += "Begin SubModelPart Parts_Grid" + this_property.GetKratosModelPart() + " // Group Solid Auto" + property_id + " // Subtree Parts_Solid\n";
-
-                group_identifier += "GUI group identifier: Grid Auto1 \n";
-
-                element_string += group_identifier;
-                // Group Name and Submodelpart Name must become dynamic parameters
-                // use here "Begin"+CocodriloPlugIn.Instance.GetProperty(property_id, out bool success)+"...
+                                
+                /// so far only ONE background mesh can be created. To be able to use more background meshes change function in the next lines.
 
                 sub_model_part_string += "Begin SubModelPart Parts_Grid_Grid_Auto1 // Group Grid Auto1 // Subtree Parts_Grid\n" +
                                          "  Begin SubModelPartNodes\n";
 
+                element_string += " GUI group identifier: Grid Auto1 \n";
+
                 //make modelpartname, group and subtree automatic
-                sub_model_part_displacement_boundary += "Begin SubModelPart DISPLACEMENT_Displacement_Auto1 // Group Displacement Auto1 // Subtree DISPLACEMENT\n" +
-                                         "  Begin SubModelPartNodes\n";
+
 
                 totalNumNodes = id_node_counter - 1;
 
@@ -418,91 +413,79 @@ namespace Cocodrilo.IO
                     sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n";
 
                     totalNumNodes++;
-
-                    // if loop to iterate over different submodelparts 
-
-                    //if(==) hashcode is in the hashtable of a submodelpart, then do check for index of the respective node in overall node numbering
-                    //    sub_model_list(indexer ==).Add(sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n")
-
-
+                    
                     // bool to decide whether to check if current vertex corresponds to an inner point of a 
                     // boundary condition
 
                     bool checkForInnerPointOfBoundaryCondition = true;
 
-                    //Get node fo mesh that is closest to 1st and last point of curve
 
-                    foreach (Point3d startEndPoint in startEndPointsCurve)
+                    /// GO OVER ALL CURVES HERE
+
+                    // Get node from mesh that is closest to 1st and last point of curve
+
+                    for (int current_conf_bc = 0; current_conf_bc < numConfBC; current_conf_bc++)
                     {
-                        if (startEndPoint.DistanceToSquared(mesh.Vertices[i]) < 0.01)
+                        string group_part_name_disp = null;
+                        string model_part_name_disp = null;
+                        string group_identifier_disp = null;
+
+                        group_part_name_disp = "Group Displacement Auto" + (current_conf_bc + 1).ToString() + " //";
+                        model_part_name_disp = "DISPLACEMENT_Displacement_Auto" + (current_conf_bc + 1).ToString() + " // ";
+                        group_identifier_disp = "GUI group identifier: Slip Auto" + (current_conf_bc+1).ToString() + "\n";
+
+                        string sub_model_part_displacement_boundary_temp = null;
+
+                        sub_model_part_displacement_boundary_temp = "Begin SubModelPart " + model_part_name_disp + group_part_name_disp +" Subtree DISPLACEMENT\n" +
+                                         "  Begin SubModelPartNodes\n";
+
+                        /// get current start and endpoint
+                        List<Point3d> current_startEndPointsCurve = new List<Point3d>();
+
+                        current_startEndPointsCurve.Add(startEndPointsCurve[2 * current_conf_bc]);
+                        current_startEndPointsCurve.Add(startEndPointsCurve[2 * current_conf_bc +1]);
+
+                        foreach (Point3d startEndPoint in current_startEndPointsCurve)
                         {
-                            sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "\n";
-                            checkForInnerPointOfBoundaryCondition = false;
-                        }
-
-                    }
-
-                    //create testpoint to see if current mesh-vertex is included in boundary conditions. This seems to be necessary as 
-                    //vertices and points seem to have different hash-codes
-
-                    if (checkForInnerPointOfBoundaryCondition)
-                    {
-                        Point3d testpoint = mesh.Vertices[i];
-
-                        // Add correct submodelpart for nodes from edges
-                        //if (nodes_of_edges.ContainsKey(testpoint.GetHashCode()))
-                        //{
-                        //    var variable_test = nodes_of_edges[testpoint.GetHashCode()];
-                        //    Point3d node_from_edge = (Point3d)nodes_of_edges[testpoint.GetHashCode()];
-
-                        //    if (node_from_edge == null)
-                        //        continue;
-
-                        //    //maybe try make threshold depended on mesh size
-
-                        //    if (node_from_edge.DistanceToSquared(mesh.Vertices[i]) < 0.01)
-                        //        sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + "testhash \n";
-
-                        //}
-                        //if (nodes_of_curves.ContainsKey(testpoint.GetHashCode()))
-                        //{
-                        //    var variable_test = nodes_of_curves[testpoint.GetHashCode()];
-                        //    Point3d node_from_curve = (Point3d)nodes_of_curves[testpoint.GetHashCode()];
-
-                        //    if (node_from_curve == null)
-                        //        continue;
-
-                        //    //maybe try make threshold depended on mesh size
-
-                        //    if (node_from_curve.DistanceToSquared(mesh.Vertices[i]) < 0.01)
-                        //        sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + " \n";
-
-                        //}
-                        if (nodesCurves.ContainsKey(testpoint.ToString()))
-                        {
-                            var variable_test = nodesCurves[testpoint.ToString()];
-                            Point3d node_from_curve = (Point3d)nodesCurves[testpoint.ToString()];
-
-                            if (node_from_curve == null)
-                                continue;
-
-                            //maybe try make threshold depended on mesh size
-
-                            if (node_from_curve.DistanceToSquared(mesh.Vertices[i]) < 0.01)
-                                sub_model_part_displacement_boundary += "     " + (id_node_counter + i).ToString() + " \n";
-
+                            if (startEndPoint.DistanceToSquared(mesh.Vertices[i]) < 0.01)
+                            {
+                                sub_model_part_displacement_boundary_temp += "     " + (id_node_counter + i).ToString() + "\n";
+                                checkForInnerPointOfBoundaryCondition = false;
+                            }
 
                         }
 
+                        // create testpoint to see if current mesh-vertex is included in boundary conditions. This seems to be necessary as 
+                        // vertices and points seem to have different hash-codes
 
+                        if (checkForInnerPointOfBoundaryCondition)
+                        {
+                            Point3d testpoint = mesh.Vertices[i];
+
+                            if (Dict_list_conf_bc[current_conf_bc].ContainsKey(testpoint.ToString()))
+                            {
+                                var variable_test = Dict_list_conf_bc[current_conf_bc][testpoint.ToString()];
+                                Point3d node_from_curve = (Point3d)Dict_list_conf_bc[current_conf_bc][testpoint.ToString()];
+
+                                if (node_from_curve == null)
+                                    continue;
+
+                                //maybe try make threshold depended on mesh size
+
+                                if (node_from_curve.DistanceToSquared(mesh.Vertices[i]) < 0.01)
+                                    sub_model_part_displacement_boundary_temp += "     " + (id_node_counter + i).ToString() + " \n";
+
+                            }
+
+                        }
+
+                        sub_model_part_displacement_boundary_temp += "End SubModelPartNodes\n";
+                        sub_model_part_displacement_boundary += sub_model_part_displacement_boundary_temp;
                     }
-
-
                 }
 
                 sub_model_part_string += "End SubModelPartNodes\n";
-                sub_model_part_displacement_boundary += "End SubModelPartNodes\n";
-
+                
                 sub_model_part_string += "Begin SubModelPartElements\n";
                 sub_model_part_displacement_boundary += "Begin SubModelPartElements\n";
 
@@ -531,18 +514,15 @@ namespace Cocodrilo.IO
                     RhinoApp.WriteLine("Element type of unknown format (not triangles or quads) is used! MDPA generation for such meshes is not yet implemented!");
                 }
 
-
-
-                sub_model_part_string += "End SubModelPartElements\n";
-                sub_model_part_string += "Begin SubModelPartConditions\n";
-
-                sub_model_part_string += "End SubModelPartConditions\n";
+                sub_model_part_string += "    End SubModelPartElements\n";
+                sub_model_part_string += "    Begin SubModelPartConditions\n";
+                sub_model_part_string += "    End SubModelPartConditions\n";
                 sub_model_part_string += "End SubModelPart\n\n";
 
 
-                sub_model_part_displacement_boundary += "End SubModelPartElements\n";
-                sub_model_part_displacement_boundary += "Begin SubModelPartConditions\n";
-                sub_model_part_displacement_boundary += "End SubModelPartConditions\n";
+                sub_model_part_displacement_boundary += "    End SubModelPartElements\n";
+                sub_model_part_displacement_boundary += "    Begin SubModelPartConditions\n";
+                sub_model_part_displacement_boundary += "    End SubModelPartConditions\n";
                 sub_model_part_displacement_boundary += "End SubModelPart\n\n";
 
                 // Add displacement boundary conditions resp. grid-conforming boundary conditions HERE!
@@ -551,8 +531,10 @@ namespace Cocodrilo.IO
                 sub_model_part_counter++;
             }
 
+            ////////////////////////////////////////////////////////////////////////////////////////////////
             /// Here the NON-CONFORMING boundary conditions are added to the background_mdpa resp. grid_mdpa
-                             
+            ////////////////////////////////////////////////////////////////////////////////////////////////
+            
             int num_Of_non_conf_BCs = 0;
             string model_part_name_slip;
             string group_identifier_slip;
@@ -572,9 +554,9 @@ namespace Cocodrilo.IO
                  {
                      num_Of_non_conf_BCs++;
 
-                     group_part_name_slip = "Group Slip Auto" + num_Of_non_conf_BCs + " //";
-                     model_part_name_slip = "Slip2D_Slip_Auto" + num_Of_non_conf_BCs + " // "; 
-                     group_identifier_slip = "GUI group identifier: Slip Auto" + num_Of_non_conf_BCs + "\n";
+                     group_part_name_slip = "Group Slip Auto" + (num_Of_non_conf_BCs+numConfBC).ToString() + " //";
+                     model_part_name_slip = "Slip2D_Slip_Auto" + (num_Of_non_conf_BCs + numConfBC).ToString() + " // "; 
+                     group_identifier_slip = "GUI group identifier: Slip Auto" + (num_Of_non_conf_BCs + numConfBC).ToString() + "\n";
 
                     // add headers to general string
 
