@@ -929,12 +929,8 @@ namespace Cocodrilo.IO
                 solver_settings.Add("model_part_name", model_part_name);
                 solver_settings.Add("domain_size", 2);
                 solver_settings.Add("echo_level", 1);
-                solver_settings.Add("analysis_type", "non_linear");
-
-               
-               
-                //RhinoApp.WriteLine("")
-                // Cocodrilo Warnung
+                solver_settings.Add("analysis_type", "non_linear");                                  
+                
             }
 
             /// Add further cases/exceptions for analysis-types that cannot be handled
@@ -984,6 +980,48 @@ namespace Cocodrilo.IO
                     
             //Processes block
 
+            
+
+
+            //load_process_list
+            var load_process_list = new DictList();
+            // up to now empty; has to be adopted
+
+            //list_other_processes
+            var list_other_processes = new DictList();
+
+            int counter_curves = 0;
+            int counter_edges = 0;
+            
+
+
+            foreach (var curve in CurveList)
+            {
+                /// Grid non-conforming boundary conditions are of type "UserDataEdge"
+                /// Grid conforming boundary conditions (=boundary conditions on the background grid) are represented by 
+                /// the type "UserDataCurve"
+                var user_data_curve = curve.UserData.Find(typeof(UserDataCurve)) as UserDataCurve;
+
+                if (user_data_curve != null)
+                {
+                    /// count how many grid-conforming bcs are present
+                    counter_curves++;
+                                        
+                }
+
+                var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
+
+                    if (user_data_edge != null)
+                    {
+                        // count how many non-conforming bcs are present
+                        counter_edges++;
+                    }
+                                    
+                
+            }
+
+            /// create constraints processes
+
             //constraint_process_list
             var constraints_process_list = new DictList();
 
@@ -1005,17 +1043,22 @@ namespace Cocodrilo.IO
                                    0.0, 0.0, 0.0
                 };
 
+            if (counter_curves != 0)
+            {
+                for (int curve_index = 0; curve_index < counter_curves; curve_index++)
+                {
+                    string name = "Background_Grid.DISPLACEMENT_Displacement_Auto" + (curve_index + 1).ToString();
 
-            var constraint_process_list_parameters = new Dict
+                    var constraint_process_list_parameters = new Dict
                         {
-                            { "model_part_name", "Background_Grid.DISPLACEMENT_Displacement_Auto1" },
+                            { "model_part_name", name },
                             { "variable_name", "DISPLACEMENT" },
                             { "interval", constraint_process_list_interval },
                             { "constrained", constraint_process_list_constrained },
                             { "value", constraint_process_list_value }
                         };
 
-            constraints_process_list.Add(new Dict
+                    constraints_process_list.Add(new Dict
                     {
                         {"python_module", "assign_vector_variable_process" },
                         {"kratos_module", "KratosMultiphysics" },
@@ -1023,50 +1066,37 @@ namespace Cocodrilo.IO
                         { "Parameters", constraint_process_list_parameters }
 
                     });
-
-
-            //load_process_list
-            var load_process_list = new DictList();
-            // up to now empty; has to be adopted
-
-            //list_other_processes
-            var list_other_processes = new DictList();
-
-            int counterCurve = 0;
-            List<int> countCurve = new List<int>();
-
-            foreach (var curve in CurveList)
-            {
-                var user_data_edge = curve.UserData.Find(typeof(UserDataEdge)) as UserDataEdge;
-
-                if (user_data_edge != null)
-                {
-                    countCurve.Add(counterCurve);
-                    counterCurve++;
                 }
-
             }
             
-            if (counterCurve != 0)
+            /// here the other processes for non-grid conforming bcs are created
+            
+            if (counter_edges != 0)
             {
-                var list_other_processes_parameters = new Dict
-                        {
-                            { "model_part_name", "Background_Grid.Slip2D_Slip_Auto1" },
-                            { "particles_per_condition", 3 },
-                            { "penalty_factor", 1e10 },
-                            { "constrained", "fixed" }
-                        };
+               
 
-                list_other_processes.Add(new Dict
+                for (int edge_index = 0; edge_index < counter_edges; edge_index++)
+                {
+                    var list_other_processes_parameters = new Dict();
+                    string name = "Background_Grid.Slip2D_Slip_Auto" + (counter_curves + edge_index+1).ToString();
+                    list_other_processes_parameters.Add("model_part_name", name);
+                    list_other_processes_parameters.Add("particles_per_condition", 3);
+                    list_other_processes_parameters.Add("penalty_factor", 1e10);
+                    list_other_processes_parameters.Add("constrained", "fixed");
+                    list_other_processes.Add(new Dict
                     {
                         {"python_module", "apply_mpm_particle_dirichlet_condition_process" },
                         {"kratos_module", "KratosMultiphysics.ParticleMechanicsApplication" },
                         { "Parameters", list_other_processes_parameters }
 
                     });
-            }
-                    
+                }
+                
+                        
 
+                
+            }
+            
             //gravity
             var gravity = new DictList();
 
