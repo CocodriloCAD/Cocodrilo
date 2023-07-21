@@ -244,6 +244,7 @@ namespace Cocodrilo.IO
             List<int> num_of_line_segments_non_grid_conforming_bcs = new List<int>();
 
             List<IDictionary<string, Point3d>> Dict_list_conf_bc = new List<IDictionary<string, Point3d>>();
+            List<List<int>> List_of_nodes = new List<List<int>>();
 
             /// number of non-grid conforming boundary conditions which should be considered
             int numNonConfBC = 0;
@@ -272,6 +273,8 @@ namespace Cocodrilo.IO
                     {
                         /// count how many non-conforming bcs are present
                         numConfBC++;
+                        List<int> new_List = new List<int>();
+                        List_of_nodes.Add(new_List);
 
                         foreach (var mesh in MeshList)
                         {
@@ -412,13 +415,7 @@ namespace Cocodrilo.IO
                     node_string += "     " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
                     sub_model_part_string += "     " + (id_node_counter + i).ToString() + "\n";
 
-                    totalNumNodes++;
-                    
-                    // bool to decide whether to check if current vertex corresponds to an inner point of a 
-                    // boundary condition
-
-                    bool checkForInnerPointOfBoundaryCondition = true;
-
+                    totalNumNodes++;                                       
 
                     /// GO OVER ALL CURVES HERE
 
@@ -426,18 +423,23 @@ namespace Cocodrilo.IO
 
                     for (int current_conf_bc = 0; current_conf_bc < numConfBC; current_conf_bc++)
                     {
-                        string group_part_name_disp = null;
-                        string model_part_name_disp = null;
-                        string group_identifier_disp = null;
+                        // bool to decide whether to check if current vertex corresponds to an inner point of a 
+                        // boundary condition
 
-                        group_part_name_disp = "Group Displacement Auto" + (current_conf_bc + 1).ToString() + " //";
-                        model_part_name_disp = "DISPLACEMENT_Displacement_Auto" + (current_conf_bc + 1).ToString() + " // ";
-                        group_identifier_disp = "GUI group identifier: Slip Auto" + (current_conf_bc+1).ToString() + "\n";
+                        bool checkForInnerPointOfBoundaryCondition = true;
 
-                        string sub_model_part_displacement_boundary_temp = null;
+                        //string group_part_name_disp = null;
+                        //string model_part_name_disp = null;
+                        //string group_identifier_disp = null;
 
-                        sub_model_part_displacement_boundary_temp = "Begin SubModelPart " + model_part_name_disp + group_part_name_disp +" Subtree DISPLACEMENT\n" +
-                                         "  Begin SubModelPartNodes\n";
+                        //group_part_name_disp = "Group Displacement Auto" + (current_conf_bc + 1).ToString() + " //";
+                        //model_part_name_disp = "DISPLACEMENT_Displacement_Auto" + (current_conf_bc + 1).ToString() + " // ";
+                        //group_identifier_disp = "GUI group identifier: Slip Auto" + (current_conf_bc+1).ToString() + "\n";
+
+                        //string sub_model_part_displacement_boundary_temp = null;
+
+                        //sub_model_part_displacement_boundary_temp = "Begin SubModelPart " + model_part_name_disp + group_part_name_disp +" Subtree DISPLACEMENT\n" +
+                        //                 "  Begin SubModelPartNodes\n";
 
                         /// get current start and endpoint
                         List<Point3d> current_startEndPointsCurve = new List<Point3d>();
@@ -447,9 +449,11 @@ namespace Cocodrilo.IO
 
                         foreach (Point3d startEndPoint in current_startEndPointsCurve)
                         {
-                            if (startEndPoint.DistanceToSquared(mesh.Vertices[i]) < 0.01)
+                            /// make this 0.001 value dependend on mesh-size
+                            if (startEndPoint.DistanceToSquared(mesh.Vertices[i]) < 0.001)
                             {
-                                sub_model_part_displacement_boundary_temp += "     " + (id_node_counter + i).ToString() + "\n";
+                                //sub_model_part_displacement_boundary_temp += "     " + (id_node_counter + i).ToString() + "\n";
+                                List_of_nodes[current_conf_bc].Add(id_node_counter + i);
                                 checkForInnerPointOfBoundaryCondition = false;
                             }
 
@@ -470,24 +474,25 @@ namespace Cocodrilo.IO
                                 if (node_from_curve == null)
                                     continue;
 
-                                //maybe try make threshold depended on mesh size
+                                //make threshold 0.001 depended on mesh size
 
-                                if (node_from_curve.DistanceToSquared(mesh.Vertices[i]) < 0.01)
-                                    sub_model_part_displacement_boundary_temp += "     " + (id_node_counter + i).ToString() + " \n";
-
+                                if (node_from_curve.DistanceToSquared(mesh.Vertices[i]) < 0.001)
+                                {//sub_model_part_displacement_boundary_temp += "     " + (id_node_counter + i).ToString() + " \n";
+                                    List_of_nodes[current_conf_bc].Add(id_node_counter + i);
+                                }
                             }
 
                         }
 
-                        sub_model_part_displacement_boundary_temp += "End SubModelPartNodes\n";
-                        sub_model_part_displacement_boundary += sub_model_part_displacement_boundary_temp;
+                        //sub_model_part_displacement_boundary_temp += "End SubModelPartNodes\n";
+                        //sub_model_part_displacement_boundary += sub_model_part_displacement_boundary_temp;
                     }
                 }
 
                 sub_model_part_string += "End SubModelPartNodes\n";
                 
-                sub_model_part_string += "Begin SubModelPartElements\n";
-                sub_model_part_displacement_boundary += "Begin SubModelPartElements\n";
+                //sub_model_part_string += "Begin SubModelPartElements\n";
+                
 
 
                 /// Check if faces are quads or triangles: write three or four nodes in the mdpa - file
@@ -520,21 +525,57 @@ namespace Cocodrilo.IO
                 sub_model_part_string += "End SubModelPart\n\n";
 
 
-                sub_model_part_displacement_boundary += "    End SubModelPartElements\n";
-                sub_model_part_displacement_boundary += "    Begin SubModelPartConditions\n";
-                sub_model_part_displacement_boundary += "    End SubModelPartConditions\n";
-                sub_model_part_displacement_boundary += "End SubModelPart\n\n";
+                //sub_model_part_displacement_boundary += "    End SubModelPartElements\n";
+                //sub_model_part_displacement_boundary += "    Begin SubModelPartConditions\n";
+                //sub_model_part_displacement_boundary += "    End SubModelPartConditions\n";
+                //sub_model_part_displacement_boundary += "End SubModelPart\n\n";
 
                 // Add displacement boundary conditions resp. grid-conforming boundary conditions HERE!
 
                 id_node_counter += mesh.Vertices.Count;
                 sub_model_part_counter++;
             }
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+            /// Go through all curves and add nodes from grid conforming boundary conditions to background_mdpa
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+            for (int current_conf_bc = 0; current_conf_bc < numConfBC; current_conf_bc++)
+            {                                            
+                string group_part_name_disp = null;
+                string model_part_name_disp = null;
+                string group_identifier_disp = null;
+
+                group_part_name_disp = "Group Displacement Auto" + (current_conf_bc + 1).ToString() + " //";
+                model_part_name_disp = "DISPLACEMENT_Displacement_Auto" + (current_conf_bc + 1).ToString() + " // ";
+                group_identifier_disp = "GUI group identifier: Slip Auto" + (current_conf_bc + 1).ToString() + "\n";
+
+                string sub_model_part_displacement_boundary_temp = null;
+
+                sub_model_part_displacement_boundary_temp = "Begin SubModelPart " + model_part_name_disp + group_part_name_disp + " Subtree DISPLACEMENT\n" +
+                                 "  Begin SubModelPartNodes\n";
+
+                foreach (int node_id in List_of_nodes[current_conf_bc])
+                {
+                    sub_model_part_displacement_boundary_temp += "     " + (node_id).ToString() + "\n";
+                }
+
+                sub_model_part_displacement_boundary_temp += "    End SubModelPartNodes\n";
+                sub_model_part_displacement_boundary_temp += "    Begin SubModelPartElements\n" + "    End SubModelPartElements\n";
+                       
+                sub_model_part_displacement_boundary_temp += "    Begin SubModelPartConditions\n" + "    End SubModelPartConditions\n";
+                sub_model_part_displacement_boundary_temp += "End SubModelPart\n\n";
+
+                sub_model_part_displacement_boundary += sub_model_part_displacement_boundary_temp;
+
+            }
+            
+
 
             ////////////////////////////////////////////////////////////////////////////////////////////////
             /// Here the NON-CONFORMING boundary conditions are added to the background_mdpa resp. grid_mdpa
             ////////////////////////////////////////////////////////////////////////////////////////////////
-            
+
             int num_Of_non_conf_BCs = 0;
             string model_part_name_slip;
             string group_identifier_slip;
