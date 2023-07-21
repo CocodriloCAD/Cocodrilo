@@ -490,8 +490,7 @@ namespace Cocodrilo.IO
                 }
 
                 sub_model_part_string += "End SubModelPartNodes\n";
-                
-                //sub_model_part_string += "Begin SubModelPartElements\n";
+                sub_model_part_string += "Begin SubModelPartElements\n";
                 
 
 
@@ -538,7 +537,6 @@ namespace Cocodrilo.IO
             ///////////////////////////////////////////////////////////////////////////////////////////////
             /// Go through all curves and add nodes from grid conforming boundary conditions to background_mdpa
             ///////////////////////////////////////////////////////////////////////////////////////////////
-
 
             for (int current_conf_bc = 0; current_conf_bc < numConfBC; current_conf_bc++)
             {                                            
@@ -734,48 +732,7 @@ namespace Cocodrilo.IO
             }
 
             string basicGridMdpa = GetFemMdpaFile(MeshList, CurveList, ref PropertyIdDictionary, number_nodes_body_mesh, number_of_elements_body_mesh); //ref PropertyIDDictionary_Edges,
-
-            /// Use GetFemMdpaFile to create background grid. To ensure that the nodes of the body mesh are considered while numerating the nodes
-            /// of the background mesh, this extra function was created.
-            // NOT NECESSARY ANYMORE
-            //
-
-            //int indexEnd = basicGridMdpa.IndexOf("Begin Nodes");
-
-            /// The following code is from the function WriteBodyMdpaFile and slightly apated to only add the nodes of the 
-            /// body mesh to the grid mdpa file            
-
-            //int brep_ids = 1;
-
-            ////value of brep_ids should be changed after calling GeomteryUtilities.AssignBrepIds
-            //GeometryUtilities.AssignBrepIdToMesh(MeshList, ref brep_ids);
-
-            //string nodes_of_body_mdpa_file= " \n";
-
-            //string node_string = null;
-
-            //int id_node_counter = 1;
-
-            //for (int m = 0; m < BodyMeshList.Count; m++)
-            //{
-            //    var mesh = BodyMeshList[m];
-
-            //    for (int i = 0; i < mesh.Vertices.Count-1; i++)
-            //    {
-            //        node_string += "    " + (id_node_counter + i).ToString() + " " + mesh.Vertices[i].X + " " + mesh.Vertices[i].Y + " " + mesh.Vertices[i].Z + "\n";
-            //    }
-
-            //    node_string += "    " + (id_node_counter + mesh.Vertices.Count-1).ToString() + " " + mesh.Vertices[mesh.Vertices.Count-1].X + " " + mesh.Vertices[mesh.Vertices.Count - 1].Y + " " + mesh.Vertices[mesh.Vertices.Count - 1].Z;
-
-            //    id_node_counter += mesh.Vertices.Count;
-            //}
-
-            //nodes_of_body_mdpa_file += node_string;
-
-            //// now basicGridMpda is completed by adding the nodes of the body mesh
-
-            //string completeGridMdpa = basicGridMdpa.Insert(indexEnd+11, nodes_of_body_mdpa_file);
-
+                        
             return basicGridMdpa;
         }
 
@@ -807,7 +764,7 @@ namespace Cocodrilo.IO
 
                 var property_dict = new Dict
                     {
-                        {"model_part_name", "Initial_MPM_Material." + this_property.GetKratosModelPart() },
+                        {"model_part_name", "Initial_MPM_Material.Parts_" + this_property.GetKratosModelPart() },
                         {"properties_id", this_property.mPropertyId},
 
                          
