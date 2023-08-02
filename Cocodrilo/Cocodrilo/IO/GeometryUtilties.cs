@@ -104,6 +104,19 @@ namespace Cocodrilo.IO
                     .BrepId = rBrepId;
                 rBrepId++;
             }
+            
+        }
+        ///Additional function to assign a brep-id to a mesh
+        ///to avoid changing all the other occurences of AssignBrepIds
+
+        public static void AssignBrepIdToMesh(List<Mesh> rMeshes, ref int rBrepId)
+        {
+            foreach (var mesh in rMeshes)
+            {
+                var user_data_brep = UserDataUtilities.GetOrCreateUserDataMesh(mesh);
+                user_data_brep.BrepId = rBrepId;
+                rBrepId++;
+            }
         }
 
         /// <summary>
@@ -140,7 +153,7 @@ namespace Cocodrilo.IO
                 }
             }
 
-            return elements_with_user_data;
+             return elements_with_user_data;
         }
 
 

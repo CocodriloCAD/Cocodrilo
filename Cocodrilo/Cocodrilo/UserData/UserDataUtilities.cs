@@ -146,5 +146,25 @@ namespace Cocodrilo.UserData
             }
             return ud;
         }
+      
+        /// <summary>
+        /// New function for geometry parameter(mesh) in MPM_Analysis_new()
+        /// </summary>
+        /// <param name="ThisMesh"></param>
+        /// <returns></returns>
+        public static UserDataMesh GetOrCreateUserDataMesh(
+            Mesh ThisMesh)
+        {
+            var ud = ThisMesh.UserData.Find(typeof(UserDataMesh)) as UserDataMesh;
+            if (ud == null)
+            {
+                ud = new UserData.UserDataMesh();
+                ThisMesh.UserData.Add(ud);
+                RhinoApp.WriteLine("New mesh user data added.");
+            }
+
+            return ud;
+        }
+
     }
 }

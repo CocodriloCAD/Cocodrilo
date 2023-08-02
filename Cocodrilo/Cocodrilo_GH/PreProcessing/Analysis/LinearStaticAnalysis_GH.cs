@@ -34,7 +34,9 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Spaces removed.");
             }
 
-            DA.SetData(0, new Cocodrilo.Analyses.AnalysisLinear(Name));
+            var analysis2 = new Cocodrilo.Analyses.AnalysisLinear(Name);
+
+            DA.SetData(0, analysis2);
         }
 
         protected override System.Drawing.Bitmap Icon

@@ -1,0 +1,13 @@
+Main file to modify: OutputKratosFem.cs
+
+In this file the generation of the body mesh, background mesh, project parameters and material parameters 
+file takes place.
+
+Next steps for implementation:
+- correct "name" of material laws
+- dropdown menu for material laws -> modify for these purposes the file "Material_MPM_GH.cs"
+
+- implement dropdown menu for supports to allow choosing of the slip condition in the support field -> modify for this purpose suport_GH.cs and property_support.cs
+- rewrite WriteFEMmdpa function with using correct Grasshopper datastructure
+
+- implement everything for 3D
