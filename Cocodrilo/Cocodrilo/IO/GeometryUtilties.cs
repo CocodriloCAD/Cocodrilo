@@ -286,22 +286,22 @@ namespace Cocodrilo.IO
                 }
             }
 
-            /// Edge - Edge intersection (Join)
-            //if (Panels.UserControlCocodriloPanel.Instance.getIsEdgeCoupling())
-            //{
-            //    foreach (var brep in Breps)
-            //    {
-            //        Rhino.Geometry.Collections.BrepEdgeList edges = brep.Edges;
-            //        foreach (var edge in edges)
-            //        {               
-            //            if (edge.TrimIndices().Count() > 1)
-            //            {
-            //                GeometryUtilties.GetEdgeEdgeIntersection(edge, brep, brep, ref IntersectionPointList, PreviousIntersectionPointList);                      
-            //                IntersectionCurveList.Add(edge);
-            //            }
-            //        }
-            //    }
-            //}   
+            // Edge - Edge intersection (Join)
+            if (Panels.UserControlCocodriloPanel.Instance.getIsEdgeCoupling())
+            {
+               foreach (var brep in Breps)
+               {
+                   Rhino.Geometry.Collections.BrepEdgeList edges = brep.Edges;
+                   foreach (var edge in edges)
+                   {               
+                       if (edge.TrimIndices().Count() > 1)
+                       {
+                           GetEdgeEdgeIntersection(edge, brep, brep, ref IntersectionPointList, PreviousIntersectionPointList);                      
+                           IntersectionCurveList.Add(edge);
+                       }
+                   }
+               }
+            }   
         }
 
         public static void GetBrepBrepIntersections(
@@ -367,10 +367,10 @@ namespace Cocodrilo.IO
 
                 IntersectionCurveList.Add(overlap_curve);
 
-                //if(Panels.UserControlCocodriloPanel.Instance.getIsEdgeCoupling())
-                //{
-                //    GetEdgeEdgeIntersection(overlap_curve, Brep1, Brep2, ref IntersectionPointList, PreviousIntersectionPointList);
-                //}
+                if(Panels.UserControlCocodriloPanel.Instance.getIsEdgeCoupling())
+                {
+                   GetEdgeEdgeIntersection(overlap_curve, Brep1, Brep2, ref IntersectionPointList, PreviousIntersectionPointList);
+                }
             }
 
             for (var i = 0; i < intersection_points.Length; i++)
