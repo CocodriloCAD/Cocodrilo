@@ -192,7 +192,7 @@ namespace Cocodrilo
 
             Materials.Add(material);
 
-            //materialUpdate?.Invoke();
+            materialUpdate?.Invoke();
         }
 
         public Material GetMaterial(int Id)
