@@ -259,9 +259,13 @@ namespace Cocodrilo.PostProcessing
                 }
                 // Get closed edges around face.
                 List<List<Point3d>> closed_edges = new List<List<Point3d>>();
-                foreach (var brep_edge_index in brep_face.AdjacentEdges())
+                var adjacent_edges = brep_face.AdjacentEdges();
+                HashSet<int> set = new HashSet<int>(adjacent_edges);
+                var unique_adjacent_edges = set;
+
+                foreach (var brep_edge_index in unique_adjacent_edges)
                 {
-                    var adjacent_edges = brep_face.AdjacentEdges();
+                    
                     var edge = brep_face.Brep.Edges[brep_edge_index];
 
    
@@ -289,9 +293,8 @@ namespace Cocodrilo.PostProcessing
                     //line_segment_last.Add(point1_last);
                     //line_segment_last.Add(point2_last);
                     //closed_edges.Add(line_segment_last);
-                    //}
                 }
-                
+
                 if (closed_edges[0][0].DistanceTo(closed_edges.Last()[1]) > RhinoDoc.ActiveDoc.ModelAbsoluteTolerance)
                 {
                     closed_edges.Add(new List<Point3d> {

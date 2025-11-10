@@ -342,7 +342,7 @@ namespace Cocodrilo.PostProcessing
                 this_brep.Compact();
 
                 this_brep.IsValidWithLog(out string texty);
-                this_brep.Repair(Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance);
+                //this_brep.Repair(Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance);
 
                 rBrepList.Add(brep_id_entire_brep, this_brep);
             }
