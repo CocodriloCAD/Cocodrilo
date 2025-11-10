@@ -77,7 +77,7 @@ namespace Cocodrilo.PostProcessing
         public PostProcessing()
         {
         }
-        public PostProcessing(string path)
+        public PostProcessing(string path, bool DrawInitialGeometries)
         {
             var layer_post_processing = RhinoDoc.ActiveDoc.Layers.FindName("PostProcessing");
             if (layer_post_processing == null)
@@ -86,7 +86,10 @@ namespace Cocodrilo.PostProcessing
             }
 
             ReadData(path);
-            UpdateInitialGeometry(true);
+            if (DrawInitialGeometries)
+            {
+                UpdateInitialGeometry(true);
+            }
 
             RhinoDoc.ActiveDoc.Views.Redraw();
         }
@@ -136,11 +139,35 @@ namespace Cocodrilo.PostProcessing
                     try
                     {
                         if (File.Exists(file))
-                            ResultList.AddRange(PostProcessingImportUtilities.LoadResults(file));
+                        {
+                            var result_infos = PostProcessingImportUtilities.LoadResults(file);
+                            foreach (var result_unit in result_infos)
+                            {
+                                var result_info_index = ResultList.FindIndex(item => item.Equals(result_unit));
+                                if (result_info_index != -1)
+                                {
+                                    foreach (var result_item in result_unit.Results)
+                                    {
+                                        try
+                                        {
+                                            ResultList[result_info_index].Results.Add(result_item.Key, result_item.Value);
+                                        }
+                                        catch
+                                        {
+                                            RhinoApp.WriteLine("Entry duplicated.");
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    ResultList.Add(result_unit);
+                                }
+                            }
+                        }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        RhinoApp.WriteLine("ERROR: could not read results from file: " + file);
+                        RhinoApp.WriteLine("ERROR: could not read results from file: " + file + ". Error message is: " + ex.ToString());
                     }
                 }
 
@@ -173,9 +200,8 @@ namespace Cocodrilo.PostProcessing
             }
             if (!ResultList.Exists(p => p.LoadCaseNumber == 0))
             {
-                var Results = new Dictionary<int, double[]>();
-                Results.Add(0, new double[] { 0, 0, 0 });
-                var default_result_info = new RESULT_INFO() { LoadCaseType = "Load Case", LoadCaseNumber = 0, ResultType = "\"DISPLACEMENT\"", NodeOrGauss = "\"OnNodes\"", VectorOrScalar = "Vector", Results = Results };
+                var result_list = new Dictionary<int, double[]> { { 0, new double[] { 0, 0, 0 } } };
+                var default_result_info = new RESULT_INFO() { LoadCaseType = "Load Case", LoadCaseNumber = 0, ResultType = "\"DISPLACEMENT\"", NodeOrGauss = "\"OnNodes\"", VectorOrScalar = "Vector", Results = result_list };
                 ResultList.Add(default_result_info);
 
                 /// Set initial values.
@@ -1011,21 +1037,24 @@ namespace Cocodrilo.PostProcessing
             bool Deformed,
             double ResultScaling)
         {
-            var stress_result_tangent_1_info = ResultList.Find(r => r.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber &&
-                                                          r.ResultType == "\"PENALTY_FACTOR_TANGENT_1\"");
-            var stress_result_tangent_2_info = ResultList.Find(r => r.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber &&
-                                                          r.ResultType == "\"PENALTY_FACTOR_TANGENT_2\"");
-            var stress_result_normal_info = ResultList.Find(r => r.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber &&
-                                                          r.ResultType == "\"PENALTY_FACTOR_NORMAL\"");
+            var penalty_force = ResultList.Find(r => r.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber &&
+                                                          r.ResultType == "\"PENALTY_REACTION_FORCE\"");
 
-            double current_min_tangent_1 = stress_result_tangent_1_info.Results.Min(p => p.Value.Min());
-            double current_max_tangent_1 = stress_result_tangent_1_info.Results.Max(p => p.Value.Max());
+            //var stress_result_tangent_1_info = ResultList.Find(r => r.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber &&
+            //                                              r.ResultType == "\"PENALTY_FACTOR_TANGENT_1\"");
+            //var stress_result_tangent_2_info = ResultList.Find(r => r.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber &&
+            //                                              r.ResultType == "\"PENALTY_FACTOR_TANGENT_2\"");
+            //var stress_result_normal_info = ResultList.Find(r => r.LoadCaseNumber == mCurrentResultInfo.LoadCaseNumber &&
+            //                                              r.ResultType == "\"PENALTY_FACTOR_NORMAL\"");
 
-            double current_min_tangent_2 = stress_result_tangent_2_info.Results.Min(p => p.Value.Min());
-            double current_max_tangent_2 = stress_result_tangent_2_info.Results.Max(p => p.Value.Max());
+            double current_min_tangent_1 = penalty_force.Results.Min(p => p.Value[0]);
+            double current_max_tangent_1 = penalty_force.Results.Max(p => p.Value[0]);
 
-            double current_min_normal = stress_result_normal_info.Results.Min(p => p.Value.Min());
-            double current_max_normal = stress_result_normal_info.Results.Max(p => p.Value.Max());
+            double current_min_tangent_2 = penalty_force.Results.Min(p => p.Value[1]);
+            double current_max_tangent_2 = penalty_force.Results.Max(p => p.Value[1]);
+
+            double current_min_normal = penalty_force.Results.Min(p => p.Value[2]);
+            double current_max_normal = penalty_force.Results.Max(p => p.Value[2]);
 
             Interval min_max_interval_tangent_1 = new Interval(current_min_tangent_1, current_max_tangent_1);
             Interval min_max_interval_tangent_2 = new Interval(current_min_tangent_2, current_max_tangent_2);
@@ -1048,9 +1077,9 @@ namespace Cocodrilo.PostProcessing
 
                     foreach (var evaluation_point in brep_ids.Value)
                     {
-                        var result_tangent_1 = stress_result_tangent_1_info.Results[evaluation_point.Key];
-                        var result_tangent_2 = stress_result_tangent_2_info.Results[evaluation_point.Key];
-                        var result_normal = stress_result_normal_info.Results[evaluation_point.Key];
+                        var result_tangent_1 = penalty_force.Results[evaluation_point.Key][0];
+                        var result_tangent_2 = penalty_force.Results[evaluation_point.Key][1];
+                        var result_normal = penalty_force.Results[evaluation_point.Key][2];
 
                         nurbs_surface_1.Evaluate(evaluation_point.Value[0], evaluation_point.Value[1], 0, out Point3d point_1, out _);
                         var surface_normal = nurbs_surface_1.NormalAt(evaluation_point.Value[0], evaluation_point.Value[1]);
@@ -1071,19 +1100,19 @@ namespace Cocodrilo.PostProcessing
 
                             var tangent_1 = Vector3d.CrossProduct(surface_normal, tangent_2);
 
-                            var line_1 = new Rhino.Geometry.Line(point_1, point_1 + tangent_1 * result_tangent_1[0] * ResultScaling);
+                            var line_1 = new Rhino.Geometry.Line(point_1, point_1 + tangent_1 * result_tangent_1 * ResultScaling);
 
-                            var attributes_tangent_1 = PostProcessingUtilities.GetStressPatternObjectAttributes(result_tangent_1[0], min_max_interval_tangent_1);
+                            var attributes_tangent_1 = PostProcessingUtilities.GetStressPatternObjectAttributes(result_tangent_1, min_max_interval_tangent_1);
                             PostprocessingObjectsForcePatterns.Add(RhinoDoc.ActiveDoc.Objects.AddLine(line_1, attributes_tangent_1));
 
-                            var line_2 = new Rhino.Geometry.Line(point_1, point_1 + tangent_2 * result_tangent_2[0] * ResultScaling);
+                            var line_2 = new Rhino.Geometry.Line(point_1, point_1 + tangent_2 * result_tangent_2 * ResultScaling);
 
-                            var attributes_tangent_2 = PostProcessingUtilities.GetStressPatternObjectAttributes(result_tangent_2[0], min_max_interval_tangent_2);
+                            var attributes_tangent_2 = PostProcessingUtilities.GetStressPatternObjectAttributes(result_tangent_2, min_max_interval_tangent_2);
                             PostprocessingObjectsForcePatterns.Add(RhinoDoc.ActiveDoc.Objects.AddLine(line_2, attributes_tangent_2));
 
-                            var line_3 = new Rhino.Geometry.Line(point_1, point_1 + surface_normal * result_normal[0] * ResultScaling);
+                            var line_3 = new Rhino.Geometry.Line(point_1, point_1 + surface_normal * result_normal * ResultScaling);
 
-                            var attributes_normal = PostProcessingUtilities.GetStressPatternObjectAttributes(result_normal[0], min_max_interval_normal);
+                            var attributes_normal = PostProcessingUtilities.GetStressPatternObjectAttributes(result_normal, min_max_interval_normal);
                             PostprocessingObjectsForcePatterns.Add(RhinoDoc.ActiveDoc.Objects.AddLine(line_3, attributes_normal));
                         }
                     }

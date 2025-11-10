@@ -14,7 +14,7 @@ namespace Cocodrilo_GH.PreProcessing.Analysis
         {
             pManager.AddTextParameter("Name", "Nam", "Name of Analysis", GH_ParamAccess.item, "Formfinding");
             pManager.AddIntegerParameter("Formfinding Steps", "Ste", "Number of Formfinding Iterations", GH_ParamAccess.item, 10);
-            pManager.AddIntegerParameter("Iterations", "Ite", "Number of Iterations per Formfinding Step", GH_ParamAccess.item, 15);
+            pManager.AddIntegerParameter("Iterations", "Ite", "Number of Iterations per Formfinding Step", GH_ParamAccess.item, 1);
         }
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)

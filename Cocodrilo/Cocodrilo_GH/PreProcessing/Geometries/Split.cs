@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Grasshopper.Kernel;
+using Rhino;
 using Rhino.Geometry;
 
 namespace Cocodrilo_GH.PreProcessing.Geometries
@@ -39,10 +40,11 @@ namespace Cocodrilo_GH.PreProcessing.Geometries
             double tolerance = 0.0;
             DA.GetData(2, ref tolerance);
 
-            List<Brep> new_breps = new List<Brep>();
+            Vector3d normal = new Vector3d(0, 0, 1.0);
+            var new_breps = new List<Brep>();
             foreach (var brep in breps)
             {
-                new_breps.AddRange(brep.Split(curves, 0.01));
+                new_breps.AddRange(brep.Split(curves, normal, false, tolerance));
             }
 
             DA.SetDataList(0, new_breps);

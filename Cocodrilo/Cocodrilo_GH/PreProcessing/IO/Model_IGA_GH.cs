@@ -99,14 +99,14 @@ namespace Cocodrilo_GH.PreProcessing.IO
                                             if (ReferenceEquals(ud_old.GetCurrentElementData(), ud.GetCurrentElementData()))
                                             {
                                                 add_brep = false;
-                                                ud_old.AddNumericalElement(brep.Value);
+                                                ud_old.AddNumericalElement(brep.Value.Clone());
                                             }
                                         }
                                     }
                                 }
                                 if (add_brep)
                                 {
-                                    ud.AddNumericalElement(brep.Value);
+                                    ud.AddNumericalElement(brep.Value.Clone());
                                 }
                             }
                             if (add_brep)
@@ -134,7 +134,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
                                 }
                             }
 
-                            ud.AddNumericalElement(curve.Value);
+                            ud.AddNumericalElement(curve.Value.Clone());
 
                             if (add_curve)
                             {
@@ -161,7 +161,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
                                 }
                             }
 
-                            ud.AddNumericalElement(edge.Value);
+                            ud.AddNumericalElement(edge.Value.Clone());
 
                             if (add_edge)
                             {
@@ -190,7 +190,7 @@ namespace Cocodrilo_GH.PreProcessing.IO
                                 }
                             }
 
-                            ud.AddNumericalElement(point.Value);
+                            ud.AddNumericalElement(point.Value.Clone());
 
                             if (add_point)
                             {

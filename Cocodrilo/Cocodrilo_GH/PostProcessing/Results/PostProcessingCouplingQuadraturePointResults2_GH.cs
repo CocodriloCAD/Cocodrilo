@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
@@ -40,7 +40,7 @@ namespace Cocodrilo_GH.PostProcessing
         {
             pManager.AddNumberParameter("QP Results", "R", "Results at Coupling Quadrature Point", GH_ParamAccess.tree);
             pManager.AddNumberParameter("Min Max", "M", "Min and Max values of selected result type.", GH_ParamAccess.list);
-            pManager.AddPointParameter("Coupling Quadrature Points", "Q", "Coupling quadrature points on the master geometry only.", GH_ParamAccess.tree);
+            pManager.AddPointParameter("Coupling Quadrature Points", "Q", "Coupling quadrature points.", GH_ParamAccess.tree);
         }
 
         /// <summary>
@@ -65,13 +65,14 @@ namespace Cocodrilo_GH.PostProcessing
                 item => item.NodeOrGauss == "OnGaussPoints"
                      && (item.ResultType.Contains("PENALTY_FACTOR_TANGENT_1")
                       || item.ResultType.Contains("PENALTY_FACTOR_TANGENT_2")
-                      || item.ResultType.Contains("PENALTY_FACTOR_NORMAL"))).Select(item => item.ResultType).Distinct().ToList();
+                      || item.ResultType.Contains("PENALTY_FACTOR_NORMAL")
+                      || item.ResultType.Contains("PENALTY_REACTION_FORCE"))).Select(item => item.ResultType).Distinct().ToList();
 
             SetResultTypes(result_types);
 
             int ResultTypeIndex = 0;
             if (!DA.GetData(2, ref ResultTypeIndex)) return;
-            if (result_types.Count <= ResultTypeIndex) return;
+            if (result_types.Count <= ResultTypeIndex) ResultTypeIndex = result_types.Count - 1;
 
             int ResultDirectionIndex = 0;
             if (!DA.GetData(3, ref ResultDirectionIndex)) return;
@@ -79,37 +80,10 @@ namespace Cocodrilo_GH.PostProcessing
             var this_result_info = ThisPostProcessing.ResultList.Find(item => 
                 item.LoadCaseNumber == StepIndex && item.ResultType == result_types[ResultTypeIndex]);
             var result_indices = Cocodrilo.PostProcessing.PostProcessingUtilities.GetResultIndices(this_result_info);
-            SetResultIndices(result_indices);
-            if (ResultDirectionIndex >= result_indices.Count) ResultDirectionIndex = result_indices.Count - 2;
+            SetResultIndices(result_indices, ResultDirectionIndex);
+            if (ResultDirectionIndex >= result_indices.Count) ResultDirectionIndex = result_indices.Count - 1;
 
             Grasshopper.DataTree<double> result_tree = new Grasshopper.DataTree<double>();
-            //foreach (var patch in ThisPostProcessing.mEvaluationPointList)
-            //{
-            //    Grasshopper.Kernel.Data.GH_Path path = new Grasshopper.Kernel.Data.GH_Path(patch.Key);
-
-            //    foreach (var evaluation_point in patch.Value)
-            //    {
-            //        if (this_result_info.Results.ContainsKey(evaluation_point.Key))
-            //        {
-            //            if (this_result_info.Results.First().Value.Length <= ResultDirectionIndex)
-            //            {
-            //                if (this_result_info.ResultType == "\"DISPLACEMENT\"")
-            //                {
-            //                    result_tree.Add(Cocodrilo.PostProcessing.PostProcessingUtilities.GetArrayLength(this_result_info.Results[evaluation_point.Key]), path);
-            //                }
-            //                else
-            //                {
-            //                    result_tree.Add(Cocodrilo.PostProcessing.PostProcessingUtilities.GetVonMises(this_result_info.Results[evaluation_point.Key]), path);
-            //                }
-            //            }
-            //            else
-            //            {
-            //                result_tree.Add(this_result_info.Results[evaluation_point.Key][ResultDirectionIndex], path);
-            //            }
-            //        }
-            //    }
-            //}
-
 
             var min_max = ThisPostProcessing.GetMinMax(this_result_info, ResultDirectionIndex);
             DA.SetDataList(1, min_max);
@@ -117,59 +91,48 @@ namespace Cocodrilo_GH.PostProcessing
             bool Deformed = false;
 
             Grasshopper.DataTree<Point3d> list_of_coupling_points = new Grasshopper.DataTree<Point3d>();
-            //List<Point3d> list_of_coupling_points = new List<Point3d>();
-            foreach (var evaluation_point in ThisPostProcessing.mCouplingEvaluationPointList)
+            if (this_result_info.Results != null)
             {
-                List<Point3d> evaluation_point_list = new List<Point3d>();
-                List<Line> line_list = new List<Line>();
-
-                var geometry_1 = ThisPostProcessing.GetGeometry(evaluation_point.Key[0], Deformed);
-                var geometry_2 = ThisPostProcessing.GetGeometry(evaluation_point.Key[1], Deformed);
-                if (geometry_1 == null) continue;
-
-                Grasshopper.Kernel.Data.GH_Path path_1 = new Grasshopper.Kernel.Data.GH_Path(evaluation_point.Key[0]);
-                Grasshopper.Kernel.Data.GH_Path path_2 = new Grasshopper.Kernel.Data.GH_Path(evaluation_point.Key[1]);
-
-                int evaluation_point_index = evaluation_point.Value[0].Key;
-
-                double result = 0.0;
-                if (this_result_info.Results.ContainsKey(evaluation_point_index))
+                foreach (var evaluation_point in ThisPostProcessing.mCouplingEvaluationPointList)
                 {
-                    if (this_result_info.Results.First().Value.Length <= ResultDirectionIndex)
+                    List<Point3d> evaluation_point_list = new List<Point3d>();
+                    List<Line> line_list = new List<Line>();
+
+                    var geometry_1 = ThisPostProcessing.GetGeometry(evaluation_point.Key[0], Deformed);
+                    var geometry_2 = ThisPostProcessing.GetGeometry(evaluation_point.Key[1], Deformed);
+                    if (geometry_1 == null) continue;
+
+                    Grasshopper.Kernel.Data.GH_Path path_1 = new Grasshopper.Kernel.Data.GH_Path(evaluation_point.Key[0]);
+                    Grasshopper.Kernel.Data.GH_Path path_2 = new Grasshopper.Kernel.Data.GH_Path(evaluation_point.Key[1]);
+
+                    int evaluation_point_index = evaluation_point.Value[0].Key;
+
+                    double result = 0.0;
+                    if (this_result_info.Results.ContainsKey(evaluation_point_index))
                     {
-                        //if (this_result_info.ResultType == "\"DISPLACEMENT\"")
-                        //{
-                        //    result_tree.Add(Cocodrilo.PostProcessing.PostProcessingUtilities.GetArrayLength(this_result_info.Results[evaluation_point_index]), path);
-                        //}
-                        //else
-                        //{
-                        //    result_tree.Add(Cocodrilo.PostProcessing.PostProcessingUtilities.GetVonMises(this_result_info.Results[evaluation_point_index]), path);
-                        //}
+                        result = (this_result_info.Results.First().Value.Length <= ResultDirectionIndex)
+                            ? Cocodrilo.PostProcessing.PostProcessingUtilities.GetArrayLength(this_result_info.Results[evaluation_point_index])
+                            : this_result_info.Results[evaluation_point_index][ResultDirectionIndex];
                     }
-                    else
+
+                    if (geometry_1 is BrepFace)
                     {
-                        result = this_result_info.Results[evaluation_point_index][ResultDirectionIndex];
-                        //result_tree.Add(this_result_info.Results[evaluation_point_index][ResultDirectionIndex], path);
+                        var nurbs_surface_1 = (geometry_1 as BrepFace).ToNurbsSurface();
+                        var brep = (geometry_1 as BrepFace).Brep;
+
+                        nurbs_surface_1.Evaluate(evaluation_point.Value[0].Value[0], evaluation_point.Value[0].Value[1], 0, out Point3d point_1, out _);
+                        list_of_coupling_points.Add(point_1, path_1);
+                        result_tree.Add(result, path_1);
                     }
-                }
+                    if (geometry_2 is BrepFace)
+                    {
+                        var nurbs_surface_2 = (geometry_2 as BrepFace).ToNurbsSurface();
+                        var brep = (geometry_2 as BrepFace).Brep;
 
-                if (geometry_1 is BrepFace)
-                {
-                    var nurbs_surface_1 = (geometry_1 as BrepFace).ToNurbsSurface();
-                    var brep = (geometry_1 as BrepFace).Brep;
-
-                    nurbs_surface_1.Evaluate(evaluation_point.Value[0].Value[0], evaluation_point.Value[0].Value[1], 0, out Point3d point_1, out _);
-                    list_of_coupling_points.Add(point_1, path_1);
-                    result_tree.Add(result, path_1);
-                }
-                if (geometry_2 is BrepFace)
-                {
-                    var nurbs_surface_2 = (geometry_2 as BrepFace).ToNurbsSurface();
-                    var brep = (geometry_2 as BrepFace).Brep;
-
-                    nurbs_surface_2.Evaluate(evaluation_point.Value[0].Value[2], evaluation_point.Value[0].Value[3], 0, out Point3d point_2, out _);
-                    list_of_coupling_points.Add(point_2, path_2);
-                    result_tree.Add(result, path_2);
+                        nurbs_surface_2.Evaluate(evaluation_point.Value[0].Value[2], evaluation_point.Value[0].Value[3], 0, out Point3d point_2, out _);
+                        list_of_coupling_points.Add(point_2, path_2);
+                        result_tree.Add(result, path_2);
+                    }
                 }
             }
 
@@ -215,7 +178,7 @@ namespace Cocodrilo_GH.PostProcessing
             }
         }
 
-        private void SetResultIndices(List<string> ResultIndices)
+        private void SetResultIndices(List<string> ResultIndices, int ResultIndex)
         {
             if (this.Params.Input[3].SourceCount == 1)
             {
@@ -226,14 +189,40 @@ namespace Cocodrilo_GH.PostProcessing
 
                     if (ValueList.ListItems.Count != ResultIndices.Count)
                     {
-                        ValueList.ListItems.Clear();
-                        for (int i = 0; i < ResultIndices.Count; i++)
+                        // The following sequence is required to not accidentally reset the value list which would call ExpireSolution.
+                        // First true in case that the ValueList is empty.
+                        bool reset_list = true;
+                        for (int i = 0; i < ValueList.ListItems.Count; i++)
                         {
-                            ValueList.ListItems.Add(new Grasshopper.Kernel.Special.GH_ValueListItem(ResultIndices[i], i.ToString()));
+                            // it now checks if the entries are similar.
+                            reset_list = false;
+                            if (ResultIndices.Count != ValueList.ListItems.Count)
+                            {
+                                reset_list = true;
+                            }
+                            else
+                            {
+                                if (ValueList.ListItems[i].ToString() != ResultIndices[i].ToString())
+                                {
+                                    reset_list = true;
+                                }
+                            }
+                        }
+                        if (reset_list)
+                        {
+                            ValueList.ListItems.Clear();
+
+                            for (int i = 0; i < ResultIndices.Count; i++)
+                            {
+                                ValueList.ListItems.Add(new Grasshopper.Kernel.Special.GH_ValueListItem(ResultIndices[i], i.ToString()));
+                            }
+
+                            ValueList.SelectItem(ResultIndex);
                         }
                     }
                 }
             }
+
         }
 
         /// <summary>

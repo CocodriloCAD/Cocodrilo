@@ -45,7 +45,7 @@ namespace Cocodrilo_GH.PostProcessing
                 string[] files = System.IO.Directory.GetFiles(path, "*.georhino.json");
                 if (files.Length > 0)
                 {
-                    mPostProcessing = new Cocodrilo.PostProcessing.PostProcessing(files[0]);
+                    mPostProcessing = new Cocodrilo.PostProcessing.PostProcessing(files[0], false);
                 }
                 else
                 {

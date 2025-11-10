@@ -1182,7 +1182,8 @@ namespace Cocodrilo.Panels
             return new ShellProperties(
                 Convert.ToDouble(textBoxShellThick.Text),
                 true,
-                comboBoxShellType.Text);
+                comboBoxShellType.Text,
+                false);
         }
 
         public CableProperties GetCableProperties()
@@ -1640,7 +1641,8 @@ namespace Cocodrilo.Panels
                 checkBoxOutputDispX.Checked,
                 checkBoxOutputDispY.Checked,
                 checkBoxOutputDispZ.Checked,
-                checkBoxOutputLagrangeMP.Checked);
+                checkBoxOutputLagrangeMP.Checked,
+                new List<string>());
         }
 
         public GeometryType getGeometryTypeCheck()
@@ -1737,7 +1739,7 @@ namespace Cocodrilo.Panels
                 return;
             }
 
-            CocodriloPlugIn.Instance.PostProcessingCocodrilo = new Cocodrilo.PostProcessing.PostProcessing(open_file_name);
+            CocodriloPlugIn.Instance.PostProcessingCocodrilo = new Cocodrilo.PostProcessing.PostProcessing(open_file_name, true);
 
             UpdatePostProcessingVariables();
 

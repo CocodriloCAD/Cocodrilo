@@ -26,7 +26,15 @@ namespace Cocodrilo.ElementProperties
             mSupport = ThisSupport;
             mTimeInterval = ThisTimeInterval;
         }
-
+        public PropertyCoupling(
+            PropertyCoupling previousPropertyCoupling)
+            : base(previousPropertyCoupling)
+        {
+            mSupport = previousPropertyCoupling.mSupport;
+            mTimeInterval = previousPropertyCoupling.mTimeInterval;
+        }
+        public override Property Clone() =>
+            new PropertyCoupling(this);
         public override bool Equals(Property ThisProperty)
         {
             if (!(ThisProperty is PropertyCoupling))

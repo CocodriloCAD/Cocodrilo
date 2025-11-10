@@ -558,7 +558,11 @@ namespace Cocodrilo.PostProcessing
             var current_results = mCurrentResultInfo.Results;
             var evaluation_point_id = mEvaluationPointList[PatchId][point_index].Key;
             //if (current_results == null) { return 0.0; }
-            var current_result = current_results[evaluation_point_id];
+            var current_result = (current_results != null)
+                ? (current_results.ContainsKey(evaluation_point_id))
+                    ? current_results[evaluation_point_id]
+                    : new double[] { 0.0, 0.0, 0.0 }
+                : new double[] { 0.0, 0.0, 0.0 };
             return (ResultIndex >= current_result.Length)
                     ? PostProcessingUtilities.GetVonMises(current_result)
                     : current_result[ResultIndex];
@@ -582,7 +586,16 @@ namespace Cocodrilo.PostProcessing
                 }
             }
             //if (current_results == null) { return 0.0; }
-            var closest_result = current_results[evaluation_point_id];
+            //var closest_result = (current_results.ContainsKey(evaluation_point_id))
+            //    ? current_results[evaluation_point_id]
+            //    : new double[] { 0.0, 0.0, 0.0 };
+
+            var closest_result = (current_results != null)
+                ? (current_results.ContainsKey(evaluation_point_id))
+                    ? current_results[evaluation_point_id]
+                    : new double[] { 0.0, 0.0, 0.0 }
+                : new double[] { 0.0, 0.0, 0.0 };
+            //var closest_result = current_results[evaluation_point_id];
             return (ResultIndex >= closest_result.Length)
                 ? PostProcessingUtilities.GetVonMises(closest_result)
                 : closest_result[ResultIndex];
@@ -612,7 +625,7 @@ namespace Cocodrilo.PostProcessing
 
                     if (current_results.ContainsKey(node_id))
                     {
-                        var nodal_result = current_results[nodes_per_patch_list[control_point_id].Key];
+                        var nodal_result = current_results[node_id];
                         double result = (ResultIndex >= nodal_result.Length)
                             ? PostProcessingUtilities.GetArrayLength(nodal_result)
                             : nodal_result[ResultIndex];

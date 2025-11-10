@@ -84,6 +84,7 @@
     <Compile Include="IO\OutputKratosFEM.cs" />
     <Compile Include="IO\GeometryUtilties.cs" />
     <Compile Include="IO\Output.cs" />
+    <Compile Include="IO\OutputKratosModuleOptimization.cs" />
     <Compile Include="IO\OutputKratosIGA.cs" />
     <Compile Include="IO\OutputPythonScripts.cs" />
     <Compile Include="IO\OutputUtilitiesJSON.cs" />
@@ -120,13 +121,13 @@
     <Compile Include="ElementProperties\PropertyLoad.cs" />
     <Compile Include="ElementProperties\PropertyMembrane.cs" />
     <Compile Include="ElementProperties\PropertyShell.cs" />
-    <Compile Include="ElementProperties\PropertySurfaceLoadLoop.cs" />
     <Compile Include="ElementProperties\PropertyUtilities.cs" />
     <Compile Include="Elements\NumericalElementPoint.cs" />
     <Compile Include="Elements\NumericalElement.cs" />
     <Compile Include="EventWatcher.cs" />
     <Compile Include="Materials\Material.cs" />
     <Compile Include="Materials\MaterialDem.cs" />
+    <Compile Include="Materials\MaterialMultiElasticityAdvanced.cs" />
     <Compile Include="Materials\MaterialLinearElasticIsotropicAdvanced.cs" />
     <Compile Include="Materials\MaterialMasonryOrthotropicDamage.cs" />
     <Compile Include="Materials\MaterialLinearElasticIsotropic.cs" />

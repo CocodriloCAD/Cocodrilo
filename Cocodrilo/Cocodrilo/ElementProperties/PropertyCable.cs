@@ -50,7 +50,14 @@ namespace Cocodrilo.ElementProperties
         {
             mCableProperties = ThisCableProperties;
         }
-
+        public PropertyCable(
+            PropertyCable previousPropertyCable)
+            : base(previousPropertyCable)
+        {
+            mCableProperties = previousPropertyCable.mCableProperties;
+        }
+        public override Property Clone() =>
+            new PropertyCable(this);
         public override List<Dictionary<string, object>> GetKratosPhysic(List<int> BrepIds)
         {
             Dictionary<string, object> Parameters = new Dictionary<string, object>{};

@@ -36,6 +36,18 @@ namespace Cocodrilo.ElementProperties
             mIsUniqueProperty = IsUniqueProperty;
         }
 
+        protected Property(
+            Property previousProperty)
+        {
+            mGeometryType = previousProperty.mGeometryType;
+            mMaterialId = previousProperty.mMaterialId;
+            mIsFormFinding = previousProperty.mIsFormFinding;
+            mIsUniqueProperty = previousProperty.mIsUniqueProperty;
+        }
+
+        public virtual Property Clone() =>
+            new Property(this);
+
         public virtual bool Equals(Property ThisProperty)
         {
             return false;
@@ -104,8 +116,6 @@ namespace Cocodrilo.ElementProperties
             return true;
         }
         public virtual List<string> GetKratosOutputValuesNodes(Cocodrilo.IO.OutputOptions ThisOutputOptions)
-            => new List<string> { };
-        public virtual List<string> GetKratosOutputValuesIntegrationPoints(Cocodrilo.IO.OutputOptions ThisOutputOptions)
             => new List<string> { };
         public virtual Dictionary<string, object> GetKratosOutputIntegrationDomainProcess(
             Cocodrilo.IO.OutputOptions ThisOutputOptions,

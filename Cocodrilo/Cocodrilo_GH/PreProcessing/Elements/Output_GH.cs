@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Windows.Forms;
 using Cocodrilo.ElementProperties;
 
 using Grasshopper.Kernel;
@@ -10,6 +10,9 @@ namespace Cocodrilo_GH.PreProcessing.Elements
 {
     public class Output_GH : GH_Component
     {
+        private bool mDisplacements = true;
+        private bool mLagrangeMultipliers = false;
+
         public Output_GH()
           : base("Output", "Output",
               "Output Condition",
@@ -27,6 +30,8 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             pManager[2].Optional = true;
             pManager.AddPointParameter("Points", "Pts", "Geometries", GH_ParamAccess.list);
             pManager[3].Optional = true;
+            pManager.AddTextParameter("Ádditional Outputs", "O", "Variable names of additional outputs.", GH_ParamAccess.list);
+            pManager[4].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
@@ -47,9 +52,13 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             List<Point3d> points = new List<Point3d>();
             DA.GetDataList(3, points);
 
+            List<string> additional_outputs = new List<string>();
+            DA.GetDataList(4, additional_outputs);
+
             var geometries = new Geometries.Geometries();
 
-            var check_properties = new CheckProperties(true, true, true, true);
+            var check_properties = new CheckProperties(
+                mDisplacements, mDisplacements, mDisplacements, mLagrangeMultipliers, additional_outputs);
             foreach (var brep in breps)
             {
                 var check_property = new PropertyCheck(
@@ -85,6 +94,31 @@ namespace Cocodrilo_GH.PreProcessing.Elements
             }
 
             DA.SetData(0, geometries);
+        }
+
+        #region Menu Items
+        protected override void AppendAdditionalComponentMenuItems(ToolStripDropDown menu)
+        {
+            Menu_AppendItem(menu, "DISPLACEMENT", Menu_DoClick_Displacements, true, mDisplacements);
+            Menu_AppendItem(menu, "VECTOR_LAGRANGE_MULTIPLIER", Menu_DoClick_LagrangeMultipliers, true, mLagrangeMultipliers);
+        }
+
+        private void Menu_DoClick_Displacements(object sender, EventArgs e) { mDisplacements = !mDisplacements; ExpireSolution(true); }
+        private void Menu_DoClick_LagrangeMultipliers(object sender, EventArgs e) { mLagrangeMultipliers = !mLagrangeMultipliers; ExpireSolution(true); }
+        #endregion
+
+        public override bool Write(GH_IO.Serialization.GH_IWriter writer)
+        {
+            writer.SetBoolean("Displacements", mDisplacements);
+            writer.SetBoolean("LagrangeMultipliers", mLagrangeMultipliers);
+            return base.Write(writer);
+        }
+
+        public override bool Read(GH_IO.Serialization.GH_IReader reader)
+        {
+            reader.TryGetBoolean("Displacements", ref mDisplacements);
+            reader.TryGetBoolean("LagrangeMultipliers", ref mLagrangeMultipliers);
+            return base.Read(reader);
         }
 
         /// <summary>

@@ -50,6 +50,14 @@ namespace Cocodrilo.ElementProperties
         {
             mConnectorProperties = ThisConnectorProperties;
         }
+        public PropertyConnector(
+            PropertyConnector previousPropertyConnector)
+            : base(previousPropertyConnector)
+        {
+            mConnectorProperties = previousPropertyConnector.mConnectorProperties;
+        }
+        public override Property Clone() =>
+            new PropertyConnector(this);
         public override bool Equals(Property ThisProperty)
         {
             if (!(ThisProperty is PropertyConnector))
