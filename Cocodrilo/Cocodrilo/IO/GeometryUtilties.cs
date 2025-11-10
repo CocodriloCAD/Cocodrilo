@@ -422,65 +422,6 @@ namespace Cocodrilo.IO
 
                     IntersectionPointList.Add(intersection_point);
                 }
-                else
-                {
-                    user_data_edge.DeleteNumericalElementOfPropertyType(typeof(PropertyCoupling));
-                }
-
-                IntersectionCurveList.Add(overlap_curve);
-
-                if(Panels.UserControlCocodriloPanel.Instance.getIsEdgeCoupling())
-                {
-                   GetEdgeEdgeIntersection(overlap_curve, Brep1, Brep2, ref IntersectionPointList, PreviousIntersectionPointList);
-                }
-            }
-
-            for (var i = 0; i < intersection_points.Length; i++)
-            {
-                var user_data_surface_1 = GetIntersectedSurface(intersection_points[i], Brep1);
-                var user_data_surface_2 = GetIntersectedSurface(intersection_points[i], Brep2);
-
-                Point intersection_point = new Point(intersection_points[i]);
-                foreach (var previous_point in PreviousIntersectionPointList)
-                {
-                    if (previous_point.Location.Equals(intersection_points[i]))
-                        intersection_point = previous_point;
-                }
-                
-                var user_data_point = UserDataUtilities.GetOrCreateUserDataPoint(
-                    intersection_point);
-
-                user_data_point.AddCoupling(
-                    user_data_surface_1.BrepId,
-                    user_data_surface_2.BrepId);
-
-                if (user_data_surface_1.IsBrepGroupCoupledWith(
-                        user_data_surface_2.GetThisBrepGroupCouplingId())
-                 && user_data_surface_2.IsBrepGroupCoupledWith(
-                        user_data_surface_1.GetThisBrepGroupCouplingId()))
-                {
-                    bool rotational_continuity = user_data_surface_1.CheckRotationalContinuity()
-                                                 && user_data_surface_2.CheckRotationalContinuity();
-
-                    var this_support = new Support(
-                        true, true, true,
-                        "0.0", "0.0", "0.0",
-                        rotational_continuity, false);
-
-                    var property_coupling = new PropertyCoupling(
-                        GeometryType.SurfaceEdgeSurfaceEdge,
-                        this_support,
-                        new TimeInterval());
-
-                    user_data_point.AddNumericalElement(property_coupling);
-                }
-                else
-                {
-                    user_data_point.DeleteNumericalElementOfPropertyType(typeof(PropertyCoupling));
-                }
-
-                IntersectionPointList.Add(intersection_point);
-            }
         }
 
 
