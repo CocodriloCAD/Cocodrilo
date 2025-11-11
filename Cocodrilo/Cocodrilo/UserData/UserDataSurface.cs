@@ -16,7 +16,7 @@ namespace Cocodrilo.UserData
 
         public UserDataSurface() : base()
         {
-            mRefinement = new RefinementSurface(1,1,0,0,0);
+            mRefinement = new RefinementSurface(0,0,0,0,0);
         }
 
         public override void AddNumericalElement(

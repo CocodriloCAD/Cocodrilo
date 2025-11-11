@@ -1176,7 +1176,6 @@ namespace Cocodrilo.Panels
                 prestress_1,
                 prestress_2);
         }
-        public bool getIsMembraneFormFinding() => checkBoxElementMembraneFofi.Checked;
 
         public ShellProperties GetShellProperties()
         {

@@ -675,7 +675,7 @@ namespace Cocodrilo.PostProcessing
                         }
                         int surface_index = new_brep.AddSurface(nurbs_surface);
                         new_brep_face.ChangeSurface(surface_index);
-                        new_brep_face.RebuildEdges(0.001, false, true);
+                        new_brep_face.RebuildEdges(0.00001, false, true);
                         new_brep.CullUnusedSurfaces();
                     }
                     deformed_breps.Add(ud.BrepId, new_brep);
