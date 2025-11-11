@@ -13,6 +13,8 @@ namespace Cocodrilo_GH.PreProcessing.Geometries
         public List<KeyValuePair<Curve, Cocodrilo.ElementProperties.Property>> curves = new List<KeyValuePair<Curve, Cocodrilo.ElementProperties.Property>>();
         public List<KeyValuePair<Curve, Cocodrilo.ElementProperties.Property>> edges = new List<KeyValuePair<Curve, Cocodrilo.ElementProperties.Property>>();
         public List<KeyValuePair<Point, Cocodrilo.ElementProperties.Property>> points = new List<KeyValuePair<Point, Cocodrilo.ElementProperties.Property>>();
+        public List<KeyValuePair<Mesh, Cocodrilo.ElementProperties.Property>> meshes = new List<KeyValuePair<Mesh, Cocodrilo.ElementProperties.Property>>();
+
 
         //public Cocodrilo.Refinement.RefinementSurface RefinementSurface = new Cocodrilo.Refinement.RefinementSurface();
         public Geometries()

@@ -76,9 +76,11 @@
     <Compile Include="Analyses\AnalysisDem.cs" />
     <Compile Include="Analyses\AnalysisFormfinding.cs" />
     <Compile Include="Analyses\AnalysisMpm.cs" />
+    <Compile Include="Analyses\AnalysisMPM_new.cs" />
     <Compile Include="Analyses\AnalysisShapeOptimization.cs" />
     <Compile Include="ElementProperties\PropertyConnector.cs" />
     <Compile Include="ElementProperties\PropertyDem.cs" />
+    <Compile Include="ElementProperties\PropertySolidElement.cs" />
     <Compile Include="Elements\ParameterLocation.cs" />
     <Compile Include="IO\OutputKratosCO_SIM.cs" />
     <Compile Include="IO\OutputKratosFEM.cs" />
@@ -137,6 +139,7 @@
     <Compile Include="GUI\UserControlCocodriloPanel.Designer.cs">
       <DependentUpon>UserControlCocodriloPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Materials\MaterialNonLinear.cs" />
     <Compile Include="PostProcessing\CppWrapper.cs" />
     <Compile Include="PostProcessing\PostProcessingUtilities.cs" />
     <Compile Include="PostProcessing\PostProcessing.cs" />
@@ -150,6 +153,7 @@
     <Compile Include="Refinement\Refinement.cs" />
     <Compile Include="Refinement\RefinementCurve.cs" />
     <Compile Include="Refinement\RefinementEdge.cs" />
+    <Compile Include="Refinement\RefinementMesh.cs" />
     <Compile Include="Refinement\RefinementSurface.cs" />
     <Compile Include="CocodriloPlugIn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -157,6 +161,7 @@
     <Compile Include="UserData\UserDataCocodrilo.cs" />
     <Compile Include="UserData\UserDataCurve.cs" />
     <Compile Include="UserData\UserDataEdge.cs" />
+    <Compile Include="UserData\UserDataMesh.cs" />
     <Compile Include="UserData\UserDataPoint.cs" />
     <Compile Include="UserData\UserDataBrep.cs" />
     <Compile Include="UserData\UserDataSurface.cs" />
