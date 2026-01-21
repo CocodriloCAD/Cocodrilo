@@ -227,32 +227,32 @@ namespace Cocodrilo.ElementProperties
             Analyses.Analysis Analysis,
             string ModelPartName)
         {
-            if (ThisOutputOptions.conditions)
-            {
-                var integration_point_results = new List<string> { "PENALTY_REACTION_FORCE" };
-                string[] nodal_results = new string[] { };
+            //if (ThisOutputOptions.conditions)
+            //{
+            //     var integration_point_results = new List<string> { "PENALTY_REACTION_FORCE" };
+            //     string[] nodal_results = new string[] { };
 
-                var output_process_parameters = new Dictionary<string, object>
-                {
-                    { "nodal_results", nodal_results },
-                    { "integration_point_results", integration_point_results},
-                    { "output_file_name", Analysis.Name + "_kratos_coupling_" + mPropertyId + ".post.res"},
-                    { "model_part_name", ModelPartName + "." + GetKratosModelPart() },
-                    { "file_label", "step" },
-                    { "output_control_type", "time" },
-                    { "output_frequency", CocodriloPlugIn.Instance.OutputOptions.output_frequency }
-                };
-                return new Dictionary<string, object>
-                {
-                    { "kratos_module", "IgaApplication"},
-                    { "python_module", "iga_output_process"},
-                    { "Parameters", output_process_parameters}
-                };
-            }
-            else
-            {
+            //     var output_process_parameters = new Dictionary<string, object>
+            //     {
+            //         { "nodal_results", nodal_results },
+            //         { "integration_point_results", integration_point_results},
+            //         { "output_file_name", Analysis.Name + "_kratos_coupling_" + mPropertyId + ".post.res"},
+            //         { "model_part_name", ModelPartName + "." + GetKratosModelPart() },
+            //         { "file_label", "step" },
+            //         { "output_control_type", "time" },
+            //         { "output_frequency", CocodriloPlugIn.Instance.OutputOptions.output_frequency }
+            //     };
+            //     return new Dictionary<string, object>
+            //     {
+            //         { "kratos_module", "IgaApplication"},
+            //         { "python_module", "iga_output_process"},
+            //         { "Parameters", output_process_parameters}
+            //     };
+            // }
+            // else
+            // {
                 return new Dictionary<string, object>();
-            }
+            //}
         }
     }
 }

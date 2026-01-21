@@ -57,8 +57,8 @@ namespace Cocodrilo.ElementProperties
             var condition_variable_list = new List<string>();
             if (mSupport.mIsSupportStrong == true)
                 condition_variable_list.Add("REACTION");
-            else if (mSupport.mSupportType == "SupportPenaltyCondition")
-                condition_variable_list.Add("PENALTY_REACTION_FORCE");
+            // else if (mSupport.mSupportType == "SupportPenaltyCondition")
+            //     condition_variable_list.Add("PENALTY_REACTION_FORCE");
             else if (mSupport.mSupportType == "SupportLagrangeCondition")
                 condition_variable_list.Add("VECTOR_LAGRANGE_MULTIPLIER");
 
