@@ -70,7 +70,9 @@ namespace Cocodrilo.ElementProperties
             {
             };
 
-            if (GetCouplingType() == CouplingType.CouplingPenaltyCondition)
+            if (GetCouplingType() == CouplingType.CouplingPenaltyCondition || 
+                GetCouplingType() == CouplingType.CouplingLagrangeCondition ||
+                GetCouplingType() == CouplingType.CouplingNitscheCondition)
             {
                 processes_list.Add(new Dictionary<string, object>
                 {
