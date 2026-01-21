@@ -60,7 +60,6 @@ namespace Cocodrilo.ElementProperties
 
             var parameters_displacements = new Dictionary<string, object>
             {
-                {"mesh_id", 0},
                 {"model_part_name", "IgaModelPart." + GetKratosModelPart()},
                 {"variable_name", "DISPLACEMENT"},
                 {"value", displacements},
@@ -86,7 +85,6 @@ namespace Cocodrilo.ElementProperties
                 var rotations = new object[] { 0.0, 0.0, 0.0 };
                 var parameters_rotations = new Dictionary<string, object>
                 {
-                    {"mesh_id", 0},
                     {"model_part_name", "IgaModelPart." + GetKratosModelPart()},
                     {"variable_name", "ROTATION"},
                     {"value", rotations},

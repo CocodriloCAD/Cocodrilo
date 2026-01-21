@@ -106,7 +106,6 @@ namespace Cocodrilo.ElementProperties
             
             var parameters = new Dictionary<string, object>
             {
-                {"mesh_id", 0 },
                 {"model_part_name", "IgaModelPart." + GetKratosModelPart() },
                 {"variable_name", variable_name },
                 {"value", value },
