@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
+using Rhino;
 
 using Cocodrilo.IO;
 
@@ -24,7 +25,9 @@ namespace Cocodrilo_GH.PreProcessing.IO
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
+            pManager.AddGenericParameter("Analysis", "Ana", "Analysis", GH_ParamAccess.item);
             pManager.AddMeshParameter("Wall", "Mesh", "DEM Wall", GH_ParamAccess.list);
+            pManager.AddBooleanParameter("Run", "Run", "Run output", GH_ParamAccess.item, false);
         }
 
         /// <summary>
@@ -41,11 +44,21 @@ namespace Cocodrilo_GH.PreProcessing.IO
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            Cocodrilo.Analyses.Analysis this_analysis = null;
+            DA.GetData(0,ref this_analysis);
+            if (this_analysis==null)
+            { RhinoApp.WriteLine("Typecast not possible. Error in Model_FEM_GH.cs");
+              Message = "Typecast error";
+                return;
+            };
+
+            
+
             List<Mesh> mesh_list = new List<Mesh>();
-            DA.GetDataList(0, mesh_list);
+            DA.GetDataList(1, mesh_list);
 
             var output_fem = new OutputKratosFEM();
-            output_fem.StartAnalysis(mesh_list);
+            output_fem.StartAnalysis(mesh_list, ref this_analysis);
 
             DA.SetData(0, output_fem);
         }

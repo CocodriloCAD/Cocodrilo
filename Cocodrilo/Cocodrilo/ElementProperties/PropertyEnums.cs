@@ -19,7 +19,8 @@
         SurfacePointCurvePoint,
         CurveEdgeCurveEdge,
         CurvePointCurvePoint,
-        ErrorType
+        ErrorType,
+        Mesh
     }
 
     public enum CheckType

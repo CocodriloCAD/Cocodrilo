@@ -1,0 +1,21 @@
+{
+  "properties": 
+  [
+    {
+      "model_part_name": "Initial_MPM_Material.Parts_Solid_Solid_Auto1",
+      "properties_id": 1,
+      "Material": {
+        "constitutive_law": { "name": "LinearElasticIsotropicPlaneStrain2DLaw" },
+        "Variables": {
+          "THICKNESS": 1,
+          "YOUNG_MODULUS": 206900000000,
+          "POISSON_RATIO": 0.29,
+          "DENSITY": 7850,
+          "COHESION": 0,
+          "INTERNAL_FRICTION_ANGLE": 0,
+          "INTERNAL_DILATANCY_ANGLE": 0
+        },
+        "Tables": {}
+      }
+    }
+  ]}

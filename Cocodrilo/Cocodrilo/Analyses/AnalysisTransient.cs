@@ -3,11 +3,11 @@
     public class AnalysisTransient : Analysis
     {
         public double tolerance { get; set; }
-        public int Time { get; set; }
-        public double Value { get; set; }
+        public double Time { get; set; }
+        public double mValue { get; set; }
         public int NumStep { get; set; }
         public int MaxIter { get; set; }
-        public int Adaptive_Max_Level { get; set; }
+        public int mAdaptiveMaxLevel { get; set; }
         public double RayleighAlpha { get; set; }
         public double RayleighBeta { get; set; }
         public string TimeInteg { get; set; }
@@ -27,7 +27,7 @@
             int NumStep,
             int NumIter,
             double _acc,
-            int Time,
+            double Time,
             double Value,
             int Adaptive_Max_Level,
             double RayleighAlpha,
@@ -44,9 +44,9 @@
             this.NumStep = NumStep;
             this.MaxIter = NumIter;
             this.Time = Time;
-            this.Value = Value;
-            tolerance = _acc;
-            this.Adaptive_Max_Level = Adaptive_Max_Level;
+            this.mValue = Value;
+            this.tolerance = _acc;
+            this.mAdaptiveMaxLevel = Adaptive_Max_Level;
             this.RayleighAlpha = RayleighAlpha;
             this.RayleighBeta = RayleighBeta;
             this.TimeInteg = TimeInteg;
@@ -55,7 +55,6 @@
             this.DampingRatio0 = DampingRatio0;
             this.DampingRatio1 = DampingRatio1;
             this.NumEigen = NumEigen;
-
             this.mStepSize = StepSize;
         }
     }

@@ -19,7 +19,6 @@ namespace Cocodrilo.UserData
             mNumericalElements = new List<NumericalElement>();
         }
 
-
         public void AddBrepGroupCouplingId(int BrepCouplingId)
         {
             if (mBrepGroupCouplingIds.Contains(BrepCouplingId))
