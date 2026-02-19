@@ -24,6 +24,12 @@ namespace Cocodrilo.ElementProperties
             : base(GeometryType.GeometryCurve, MaterialId)
         {
         }
+        public PropertyBeam(
+           PropertyBeam previousPropertyBeam)
+           : base(previousPropertyBeam)
+        {
+            mBeamProperties = previousPropertyBeam.mBeamProperties;
+        }
 
         public override bool Equals(Property ThisProperty)
         {
@@ -31,6 +37,31 @@ namespace Cocodrilo.ElementProperties
             return mBeamProperties.Equals(beam.mBeamProperties)
                    && mMaterialId == beam.mMaterialId
                    && mIsFormFinding == beam.mIsFormFinding;
+        }
+        public override Property Clone() =>
+           new PropertyBeam(this);
+
+        public override string ToString()
+        {
+            return "beam property";
+        }
+        public override List<Dictionary<string, object>> GetKratosPhysic(List<int> BrepIds)
+        {
+            Dictionary<string, object> Parameters = new Dictionary<string, object>
+            {
+                { "type", "element"},
+                { "name", mBeamProperties.mBeamFormulation.ToString() },
+                { "shape_function_derivatives_order", 3}
+            };
+
+            Dictionary<string, object> property_element = new Dictionary<string, object>
+            {
+                {"brep_ids", BrepIds},
+                {"geometry_type", GeometryTypeString},
+                {"iga_model_part", GetKratosModelPart() },
+                {"parameters", Parameters}
+            };
+            return new List<Dictionary<string, object>> { property_element };
         }
     }
 }

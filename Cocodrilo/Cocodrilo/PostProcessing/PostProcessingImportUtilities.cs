@@ -290,6 +290,8 @@ namespace Cocodrilo.PostProcessing
                                 var parameter_knot_vector = (from object u in (System.Collections.ArrayList)one_parameter_curve_dict["knot_vector"] select Convert.ToDouble(u)).ToList();
                                 var active_range = (from object i in (System.Collections.ArrayList)one_parameter_curve_dict["active_range"] select Convert.ToDouble(i)).ToList();
 
+                                Rhino.Geometry.Interval newDomain = new Rhino.Geometry.Interval(active_range[0], active_range[1]);
+
                                 List<List<double>> parameter_control_points = new List<List<double>>();
                                 foreach (var cp in (System.Collections.ArrayList)one_parameter_curve_dict["control_points"])
                                 {
@@ -312,6 +314,7 @@ namespace Cocodrilo.PostProcessing
 
                                 nurbs_curve_2d.IsValidWithLog(out string agaga);
 
+                                nurbs_curve_2d = nurbs_curve_2d.Trim(newDomain).ToNurbsCurve();
                                 nurbs_curves.Add(nurbs_curve_2d);
                             }
                             //var joined_curves = Rhino.Geometry.Curve.JoinCurves(nurbs_curves);
