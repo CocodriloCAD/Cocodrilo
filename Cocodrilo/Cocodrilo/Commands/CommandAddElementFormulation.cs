@@ -123,7 +123,24 @@ namespace Cocodrilo.Commands
             }
             else if (ElementType == "Beam")
             {
-                RhinoApp.WriteLine("Adding of a Beam formulation is not provided yet.");
+                var beam_properties = panel.GetCableProperties();
+                var geometry_type = panel.getCableTopologyType();
+                //var is_formfinding = true;
+                if (geometry_type == GeometryType.GeometryCurve)
+                {
+                    if (CommandUtilities.TryGetUserDataCurve(out List<UserDataCurve> UserDataCurveList))
+                    {
+                        //var property_beam = new PropertyBeam(
+                        //    geometry_type,
+                        //    material_id,
+                        //    beam_properties,
+                        //    is_formfinding);
+                        //foreach (var user_data_curve in UserDataCurveList)
+                        //{
+                        //    user_data_curve.AddNumericalElement(property_beam);
+                        //}
+                    }
+                }
             }
 
             return Result.Success;
