@@ -8,16 +8,22 @@ using System.Threading.Tasks;
 namespace Cocodrilo.ElementProperties
 {
 
-    public enum BeamType
+    public enum BeamCrossSectionType
     {
         Standard,
         Circular,
         Rectangular
     }
+
+    public enum BeamFormulationType
+    {
+        BeamThinElement2D,
+        BeamThickElement2D
+    }
     public struct BeamProperties : IEquatable<BeamProperties>
     {
-        public BeamType mCrossSection { get; set; }   // 0 - no special cross section type, 1 - circular cross section, 2 - rectangular cross section
-
+        public BeamCrossSectionType mCrossSection { get; set; }   // 0 - no special cross section type, 1 - circular cross section, 2 - rectangular cross section
+        public BeamFormulationType mBeamFormulation { get; set; }
         public int mTorsionType { get; set; }
 
         public double mDiameter { get; set; }
@@ -42,7 +48,8 @@ namespace Cocodrilo.ElementProperties
         public List<double[]> mBaseVectors { get; set; }
 
         public BeamProperties(
-            BeamType CrossSection,
+            BeamCrossSectionType CrossSection,
+            BeamFormulationType BeamFormulation,
             int TorsionType,
             double Diameter,
             double Height,
@@ -63,7 +70,9 @@ namespace Cocodrilo.ElementProperties
             double IntegrationV
             )
         {
-            mCrossSection = BeamType.Standard;
+            mCrossSection = BeamCrossSectionType.Standard;
+
+            mBeamFormulation = BeamFormulation;
 
             mTorsionType = TorsionType;
 
@@ -77,7 +86,7 @@ namespace Cocodrilo.ElementProperties
             mIt = It;
             if (Height > 0.0 &&
                 Width > 0.0 &&
-                CrossSection == BeamType.Rectangular)
+                CrossSection == BeamCrossSectionType.Rectangular)
             {
                 mCrossSection = CrossSection;
                 mDiameter = 0.0;
@@ -87,7 +96,7 @@ namespace Cocodrilo.ElementProperties
                 mIt = Math.Pow(Math.Min(Width, Height), 3) * Math.Max(Width, Height);
             }
             else if (Diameter > 0.0 &&
-                     CrossSection == BeamType.Circular)
+                     CrossSection == BeamCrossSectionType.Circular)
             {
                 mCrossSection = CrossSection;
                 mHeight = 0.0;
@@ -113,6 +122,7 @@ namespace Cocodrilo.ElementProperties
         public bool Equals(BeamProperties comp)
         {
             return comp.mCrossSection == mCrossSection &&
+                   comp.mBeamFormulation == mBeamFormulation &&
                    comp.mTorsionType == mTorsionType &&
                    comp.mDiameter == mDiameter &&
                    comp.mHeight == mHeight &&

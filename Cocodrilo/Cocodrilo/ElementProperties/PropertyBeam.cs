@@ -10,24 +10,6 @@ namespace Cocodrilo.ElementProperties
     public class PropertyBeam : Property, IEquatable<Property>
     {
         public BeamProperties mBeamProperties { get; set; }
-        //public int type { get; set; }   // 0 - no special cross section type, 1 - circular cross section, 2 - rectangular cross section
-        //public double diameter { get; set; }
-        //public double height { get; set; }
-        //public double width { get; set; }
-        //public double area { get; set; }
-        //public double iy { get; set; }
-        //public double iz { get; set; }
-        //public double it { get; set; }
-        //public bool is_prestress_bend1_auto { get; set; }
-        //public bool is_prestress_bend2_auto { get; set; }
-        //public bool is_prestress_tor_auto { get; set; }
-        //public double prestress { get; set; }
-        //public double prestress_bend1 { get; set; }
-        //public double prestress_bend2 { get; set; }
-        //public double prestress_tor { get; set; }
-        //public double[] gauss { get; set; }
-        //public List<double[]> base_vecs { get; set; }
-
         public PropertyBeam(
             GeometryType ThisGeometryType,
             int MaterialId,
@@ -42,7 +24,6 @@ namespace Cocodrilo.ElementProperties
             : base(GeometryType.GeometryCurve, MaterialId)
         {
         }
-
 
         public override bool Equals(Property ThisProperty)
         {
