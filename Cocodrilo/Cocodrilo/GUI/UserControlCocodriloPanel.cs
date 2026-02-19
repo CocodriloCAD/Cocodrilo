@@ -1193,6 +1193,63 @@ namespace Cocodrilo.Panels
                 Convert.ToDouble(textBoxCableArea.Text),
                 CableCouplingType.EntireCurve);
         }
+
+        public BeamProperties GetBeamProperties()
+        {
+            if (comboBoxBeamType.Text.ToString() == "Circular")
+            {
+                //var diameter = Convert.ToDouble(labelBeamDiameter.Text);
+                //var diameter = Convert.ToDouble(textBoxBeamDiameter.Text);
+                //return new BeamProperties(
+                //    BeamCrossSectionType.Circular,
+                //    BeamFormulationType.BeamThinElement2D,
+                //    0,
+                //    diameter,
+                //    0,
+                //    0,
+                //    Math.PI * diameter * diameter / 4,
+                //    Math.PI * Math.Pow(diameter, 4) / 64,
+                //    Math.PI * Math.Pow(diameter, 4) / 64,
+                //    Math.PI * Math.Pow(diameter, 4) / 32,
+                //    true,
+                //    true,
+                //    true,
+                //    0,
+                //    0,
+                //    0,
+                //    new Vector2d(2, 2),
+                //    null);
+            }
+            else if (comboBoxBeamType.Text.ToString() == "Rectangular")
+            {
+                //var height = Convert.ToDouble(textBoxBeamHeight.Text);
+                //var width = Convert.ToDouble(textBoxBeamWidth.Text);
+                //return new BeamProperties(
+                //    BeamCrossSectionType.Rectangular,
+                //    BeamFormulationType.BeamThinElement2D,
+                //    0,
+                //    0,
+                //    height,
+                //    width,
+                //    height * width,
+                //    width * Math.Pow(height, 3) / 12,
+                //    height * Math.Pow(width, 3) / 12,
+                //    (height * Math.Pow(width, 3) + width * Math.Pow(height, 3)) / 12,
+                //    true,
+                //    true,
+                //    true,
+                //    0,
+                //    0,
+                //    0,
+                //    new Vector2d(2, 2),
+                //    null);
+            }
+            else if (comboBoxBeamType.Text.ToString() == "Undefined")
+            {
+            }
+
+            return new BeamProperties();
+        }
         public string getSelectedElementType() => tabControlElement.SelectedTab.Text.ToString();
         public GeometryType getCableTopologyType()
         {
@@ -1207,6 +1264,11 @@ namespace Cocodrilo.Panels
 
             RhinoApp.WriteLine("WARNING: comboBoxCableType.Text not Curve or Edge");
             return GeometryType.CurveEdge;
+        }
+
+        public GeometryType getBeamTopologyType()
+        {
+            return GeometryType.GeometryCurve;
         }
 
         public bool getIsCableFormFinding() => checkBoxElementCableFofi.Checked;
