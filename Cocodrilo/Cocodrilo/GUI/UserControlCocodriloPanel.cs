@@ -1199,52 +1199,63 @@ namespace Cocodrilo.Panels
             if (comboBoxBeamType.Text.ToString() == "Circular")
             {
                 var diameter = Convert.ToDouble(textBoxBeamDiameter.Text);
-                //return new BeamProperties(
-                //    BeamCrossSectionType.Circular,
-                //    BeamFormulationType.BeamThinElement2D,
-                //    0,
-                //    diameter,
-                //    0,
-                //    0,
-                //    Math.PI * diameter * diameter / 4,
-                //    Math.PI * Math.Pow(diameter, 4) / 64,
-                //    Math.PI * Math.Pow(diameter, 4) / 64,
-                //    Math.PI * Math.Pow(diameter, 4) / 32,
-                //    true,
-                //    true,
-                //    true,
-                //    0,
-                //    0,
-                //    0,
-                //    new Vector2d(2, 2),
-                //    null);
+                BeamFormulationType beam_formulation = BeamFormulationType.BeamThinElement2D;
+                if (comboBoxBeamFormulation.Text == "BeamThickElement2D")
+                    beam_formulation = BeamFormulationType.BeamThickElement2D;
+                // We just construct the properties with the cross section, beam formulation and diameter
+                return new BeamProperties(
+                    BeamCrossSectionType.Circular,
+                    beam_formulation,
+                    0,
+                    diameter,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0);
             }
             else if (comboBoxBeamType.Text.ToString() == "Rectangular")
             {
                 var height = Convert.ToDouble(textBoxBeamHeight.Text);
                 var width = Convert.ToDouble(textBoxBeamWidth.Text);
-                //return new BeamProperties(
-                //    BeamCrossSectionType.Rectangular,
-                //    BeamFormulationType.BeamThinElement2D,
-                //    0,
-                //    0,
-                //    height,
-                //    width,
-                //    height * width,
-                //    width * Math.Pow(height, 3) / 12,
-                //    height * Math.Pow(width, 3) / 12,
-                //    (height * Math.Pow(width, 3) + width * Math.Pow(height, 3)) / 12,
-                //    true,
-                //    true,
-                //    true,
-                //    0,
-                //    0,
-                //    0,
-                //    new Vector2d(2, 2),
-                //    null);
+                BeamFormulationType beam_formulation = BeamFormulationType.BeamThinElement2D;
+                if (comboBoxBeamFormulation.Text == "BeamThickElement2D")
+                    beam_formulation = BeamFormulationType.BeamThickElement2D;
+                // We just construct the properties with the cross section, beam formulation, height and width
+                return new BeamProperties(
+                    BeamCrossSectionType.Rectangular,
+                    beam_formulation,
+                    0,
+                    0.0,
+                    height,
+                    width,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0);
             }
             else if (comboBoxBeamType.Text.ToString() == "Undefined")
             {
+                var Iy = Convert.ToDouble(textBoxBeamIy.Text);
+                var Iz = Convert.ToDouble(textBoxBeamIz.Text);
+                var It = Convert.ToDouble(textBoxBeamIt.Text);
+                var area = Convert.ToDouble(textBoxBeamArea.Text);
+                BeamFormulationType beam_formulation = BeamFormulationType.BeamThinElement2D;
+                if (comboBoxBeamFormulation.Text == "BeamThickElement2D")
+                    beam_formulation = BeamFormulationType.BeamThickElement2D;
+                // We just construct the properties with the cross section, beam formulation, height and width
+                return new BeamProperties(
+                    BeamCrossSectionType.Undefined,
+                    beam_formulation,
+                    0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    area,
+                    Iy,
+                    Iz,
+                    It);
             }
 
             return new BeamProperties();
