@@ -1051,7 +1051,7 @@ namespace Cocodrilo.Panels
             {
                 //circular
                 labelBeamDiameter.Visible = false;
-                //textBoxBeamDiameter.Visible = false;
+                textBoxBeamDiameter.Visible = false;
                 //rectangular
                 labelBeamHeight.Visible = false;
                 //textBoxBeamHeight.Visible = false;
@@ -1071,12 +1071,12 @@ namespace Cocodrilo.Panels
             {
                 //circular
                 labelBeamDiameter.Visible = true;
-                //textBoxBeamDiameter.Visible = true;
+                textBoxBeamDiameter.Visible = true;
                 //rectangular
                 labelBeamHeight.Visible = false;
-                //textBoxBeamHeight.Visible = false;
+                textBoxBeamHeight.Visible = false;
                 labelBeamWidth.Visible = false;
-                //textBoxBeamWidth.Visible = false;
+                textBoxBeamWidth.Visible = false;
                 //undefined
                 labelBeamArea.Visible = false;
                 textBoxBeamArea.Visible = false;
@@ -1091,12 +1091,12 @@ namespace Cocodrilo.Panels
             {
                 //circular
                 labelBeamDiameter.Visible = false;
-                //textBoxBeamDiameter.Visible = false;
+                textBoxBeamDiameter.Visible = false;
                 //rectangular
                 labelBeamHeight.Visible = true;
-                //textBoxBeamHeight.Visible = true;
+                textBoxBeamHeight.Visible = true;
                 labelBeamWidth.Visible = true;
-                //textBoxBeamWidth.Visible = true;
+                textBoxBeamWidth.Visible = true;
                 //undefined
                 labelBeamArea.Visible = false;
                 textBoxBeamArea.Visible = false;
@@ -1111,12 +1111,12 @@ namespace Cocodrilo.Panels
             {
                 //circular
                 labelBeamDiameter.Visible = false;
-                //textBoxBeamDiameter.Visible = false;
+                textBoxBeamDiameter.Visible = false;
                 //rectangular
                 labelBeamHeight.Visible = false;
-                //textBoxBeamHeight.Visible = false;
+                textBoxBeamHeight.Visible = false;
                 labelBeamWidth.Visible = false;
-                //textBoxBeamWidth.Visible = false;
+                textBoxBeamWidth.Visible = false;
                 //undefined
                 labelBeamArea.Visible = true;
                 textBoxBeamArea.Visible = true;
@@ -1198,8 +1198,7 @@ namespace Cocodrilo.Panels
         {
             if (comboBoxBeamType.Text.ToString() == "Circular")
             {
-                //var diameter = Convert.ToDouble(labelBeamDiameter.Text);
-                //var diameter = Convert.ToDouble(textBoxBeamDiameter.Text);
+                var diameter = Convert.ToDouble(textBoxBeamDiameter.Text);
                 //return new BeamProperties(
                 //    BeamCrossSectionType.Circular,
                 //    BeamFormulationType.BeamThinElement2D,
@@ -1222,8 +1221,8 @@ namespace Cocodrilo.Panels
             }
             else if (comboBoxBeamType.Text.ToString() == "Rectangular")
             {
-                //var height = Convert.ToDouble(textBoxBeamHeight.Text);
-                //var width = Convert.ToDouble(textBoxBeamWidth.Text);
+                var height = Convert.ToDouble(textBoxBeamHeight.Text);
+                var width = Convert.ToDouble(textBoxBeamWidth.Text);
                 //return new BeamProperties(
                 //    BeamCrossSectionType.Rectangular,
                 //    BeamFormulationType.BeamThinElement2D,
