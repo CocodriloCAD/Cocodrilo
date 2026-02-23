@@ -63,5 +63,26 @@ namespace Cocodrilo.ElementProperties
             };
             return new List<Dictionary<string, object>> { property_element };
         }
+
+        public override string GetKratosModelPart()
+        {
+            return "StructuralAnalysis_" + mPropertyId;
+        }
+
+        public override int GetMaterialId()
+        {
+            return mMaterialId;
+        }
+
+        public override Dictionary<string, object> GetKratosVariables()
+        {
+            return new Dictionary<string, object>
+            {
+                { "CROSS_AREA", mBeamProperties.mArea},
+                { "TORSIONAL_INERTIA", mBeamProperties.mIt},
+                { "I22", mBeamProperties.mIy},
+                { "I33", mBeamProperties.mIz}
+            };
+        }
     }
 }
