@@ -68,7 +68,8 @@ namespace Cocodrilo.IO
                         list.Add(ToWeaklyTyped(item));
                     return list;
                 case JTokenType.Integer:
-                    return token.Value<long>();
+                    var l = token.Value<long>();
+                    return (l >= int.MinValue && l <= int.MaxValue) ? (object)(int)l : l;
                 case JTokenType.Float:
                     return token.Value<double>();
                 case JTokenType.String:
