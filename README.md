@@ -1,12 +1,42 @@
 # Cocodrilo
 
+## Build & Install
+
+Requires the [.NET SDK](https://dotnet.microsoft.com/download) (8.0+) and Rhino 8.
+
+### Build
+
+```bash
+cd Cocodrilo/Cocodrilo
+dotnet build -f net7.0      # Mac
+dotnet build -f net48       # Windows
+```
+
+Output:
+- `Cocodrilo/Cocodrilo/bin/Debug/<net7.0|net48>/Cocodrilo.rhp`
+- `Cocodrilo/Cocodrilo_GH/bin/Debug/<net7.0|net48>/Cocodrilo_GH.gha` (build from `Cocodrilo/Cocodrilo_GH` the same way; it references `Cocodrilo` via project reference and rebuilds it automatically)
+
+### Install (Mac)
+
+1. Quit Rhino — it only scans for new plugins at launch.
+2. Create the plugin folder and copy the build output into it:
+   ```bash
+   TARGET="$HOME/Library/Application Support/McNeel/Rhinoceros/8.0/MacPlugIns/Cocodrilo"
+   SRC="Cocodrilo/Cocodrilo/bin/Debug/net7.0"
+   mkdir -p "$TARGET"
+   cp "$SRC/Cocodrilo.rhp" "$SRC/Newtonsoft.Json.dll" "$SRC/System.Resources.Extensions.dll" "$TARGET/"
+   ```
+3. Relaunch Rhino. Verify with **Window → Panels** (look for "Cocodrilo") or by running the `Cocodrilo_OpenPanel` command.
+
+### Install (Windows)
+
+Drag `Cocodrilo.rhp` onto a running Rhino window, or **Options → Plug-ins → Install...** and select it.
+
 ## Benchmarks
 
 Please run benchmarks before commiting:
 
 Rhino Command Line: `RunPythonScript -> ../Cocodrilo/Benchmarks/run_benchmarks.py`
-
-If relevant critical code is added, according tests should be added to ensure future changes will not conflict.
 
 ## Reference
 
