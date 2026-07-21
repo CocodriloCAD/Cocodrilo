@@ -4,7 +4,6 @@ using System.Linq;
 using System.IO;
 using Rhino;
 using Rhino.Geometry;
-using System.Windows;
 using Cocodrilo.UserData;
 using System.Threading.Tasks;
 

@@ -23,7 +23,6 @@ namespace Cocodrilo.Commands
         {
             var panelType = typeof(Panels.UserControlCocodriloPanel);
             Rhino.UI.Panels.OpenPanel(panelType.GUID);
-
             return Result.Success;
         }
     }
