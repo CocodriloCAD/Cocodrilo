@@ -138,18 +138,21 @@ namespace Cocodrilo.Panels
 
         Control BuildPreProcessingTab()
         {
-            return new StackLayout
+            return new Scrollable
             {
-                Orientation = Orientation.Vertical,
-                Spacing = 6,
-                Padding = 6,
-                HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                Items =
+                Content = new StackLayout
                 {
-                    BuildAnalysesGroup(),
-                    BuildOptionsGroup(),
-                    BuildMaterialsGroup(),
-                    BuildPropertiesGroup()
+                    Orientation = Orientation.Vertical,
+                    Spacing = 6,
+                    Padding = 6,
+                    HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                    Items =
+                    {
+                        BuildAnalysesGroup(),
+                        BuildOptionsGroup(),
+                        BuildMaterialsGroup(),
+                        BuildPropertiesGroup()
+                    }
                 }
             };
         }
@@ -1913,7 +1916,7 @@ namespace Cocodrilo.Panels
         }
 
         public bool getIsCableFormFinding() => checkBoxElementCableFofi.Checked == true;
-        public int getMaterialIdElement() => Convert.ToInt32(comboBoxElementMat.SelectedValue);
+        public int getMaterialIdElement() => (comboBoxElementMat.SelectedValue as Materials.Material)?.Id ?? 0;
         public bool getIsFormFindingElement() => checkBoxElementMembraneFofi.Checked == true;
         public bool getIsEdgeCoupling() => checkBoxElementMembraneEdgeCoupling.Checked == true;
 
@@ -2224,8 +2227,8 @@ namespace Cocodrilo.Panels
         void open_file_Click(object sender, EventArgs e)
         {
             string open_file_name = "";
-            var openFileDialog1 = new Eto.Forms.OpenFileDialog { Filters = { new FileFilter("Postprocessing Files", new[] { ".georhino.txt", ".georhino.json" }) } };
-            var result = openFileDialog1.ShowDialog(this);
+            var openFileDialog1 = new Eto.Forms.OpenFileDialog { Filters = { new FileFilter("Postprocessing Files", new[] { ".txt", ".json" }) } };
+            var result = openFileDialog1.ShowDialog(RhinoEtoApp.MainWindow);
 
             if (result == DialogResult.Ok)
             {

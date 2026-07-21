@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -5,15 +6,10 @@ using Newtonsoft.Json.Linq;
 
 namespace Cocodrilo.IO
 {
-    /// <summary>
     /// Cross-platform replacement for System.Web.Script.Serialization.JavaScriptSerializer,
     /// which only exists on net48/Windows. Newtonsoft.Json works identically on net48 and net7.0.
-    /// </summary>
     public static class JsonUtilities
     {
-        // TypeNameHandling.Auto embeds "$type" metadata for polymorphic members/collections
-        // (e.g. List<Material>, List<Analysis>) so they deserialize back to their concrete
-        // subclass, matching what JavaScriptSerializer's SimpleTypeResolver used to do.
         static readonly JsonSerializerSettings PolymorphicSettings = new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.Auto
@@ -25,16 +21,35 @@ namespace Cocodrilo.IO
         public static T DeserializePolymorphic<T>(string json)
             => JsonConvert.DeserializeObject<T>(json, PolymorphicSettings);
 
+        static readonly JsonSerializerSettings KratosSettings = new JsonSerializerSettings
+        {
+            Converters = { new WholeNumberDoubleConverter() }
+        };
+
         // Plain JSON with no .NET type metadata - used for Kratos solver input files,
         // which must stay clean, external-tool-readable JSON.
         public static string Serialize(object value)
-            => JsonConvert.SerializeObject(value);
+            => JsonConvert.SerializeObject(value, KratosSettings);
 
-        // Deserializes loosely-typed JSON (e.g. Kratos-produced geometry/result files) the way
-        // JavaScriptSerializer used to: JSON objects become Dictionary<string, object>, JSON
-        // arrays become ArrayList. Newtonsoft's own default for "object" members is JObject/
-        // JArray, which existing call sites (expecting ArrayList via "as" casts) don't understand,
-        // so this walks the parsed token tree and converts it to match the old shape.
+        class WholeNumberDoubleConverter : JsonConverter
+        {
+            public override bool CanConvert(Type objectType) => objectType == typeof(double) || objectType == typeof(double?);
+            public override bool CanRead => false;
+
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+            {
+                if (value == null) { writer.WriteNull(); return; }
+                var d = (double)value;
+                if (!double.IsInfinity(d) && !double.IsNaN(d) && d == Math.Floor(d) && Math.Abs(d) < 1e15)
+                    writer.WriteValue((long)d);
+                else
+                    writer.WriteValue(d);
+            }
+
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+                => throw new NotSupportedException();
+        }
+
         public static Dictionary<string, object> DeserializeWeaklyTyped(string json)
             => (Dictionary<string, object>)ToWeaklyTyped(JToken.Parse(json));
 
