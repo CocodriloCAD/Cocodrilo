@@ -1,26 +1,46 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-	
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFrameworks>net48;net7.0</TargetFrameworks>
     <Version>1.0</Version>
     <Title>Cocodrilo_GH</Title>
     <Description>Description of Cocodrilo_GH</Description>
     <TargetExt>.gha</TargetExt>
+    <NoWarn>NU1701</NoWarn>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
   </PropertyGroup>
-	
+
   <ItemGroup>
-    <PackageReference Include="Grasshopper" Version="7.12.21313.6341" />
+    <PackageReference Include="Grasshopper" Version="8.21.25188.17001" ExcludeAssets="runtime" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <Reference Include="Cocodrilo">
-      <HintPath>..\Cocodrilo\bin\Cocodrilo.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows.Forms">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Windows.Forms.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Cocodrilo\Cocodrilo.csproj">
+      <Private>false</Private>
+    </ProjectReference>
   </ItemGroup>
-  
+
+  <!-- Grasshopper's own component-menu API (AppendAdditionalComponentMenuItems etc.) is typed
+       against System.Windows.Forms on both platforms - Grasshopper ships its own cross-platform
+       compatibility implementation of that surface, so these files don't need to change for Mac.
+       UseWindowsForms just restores the net48 reference that SDK-style projects don't add
+       implicitly. -->
+  <PropertyGroup Condition="'$(TargetFramework)'=='net48'">
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <!-- McNeel's own Grasshopper NuGet package declares a FrameworkReference to
+       Microsoft.WindowsDesktop.App.WindowsForms for its net7.0 build (its component-menu API is
+       typed against System.Windows.Forms even on Mac - see note above). That targeting pack's
+       reference assemblies are Windows-only by default even though they're just compile-time
+       metadata; EnableWindowsTargeting lets the SDK resolve them when building from macOS/Linux,
+       same as it's commonly used to cross-compile Windows-targeted projects in CI. This only
+       affects what can compile here - Grasshopper.dll always resolves the real implementation
+       from Rhino's own bundled System.Windows.Forms.dll at runtime, on every platform. -->
+  <PropertyGroup Condition="'$(TargetFramework)'=='net7.0'">
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -28,16 +48,16 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
-  
+
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  
+
   <PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
-    <StartProgram>C:\Program Files\Rhino 7\System\Rhino.exe</StartProgram>
+    <StartProgram>C:\Program Files\Rhino 8\System\Rhino.exe</StartProgram>
     <StartArguments></StartArguments>
     <StartAction>Program</StartAction>
   </PropertyGroup>
