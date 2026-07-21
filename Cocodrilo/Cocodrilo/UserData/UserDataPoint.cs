@@ -5,8 +5,6 @@ using System.Text;
 using Rhino;
 using Cocodrilo.Elements;
 using System.Runtime.InteropServices;
-using System.Web.Script.Serialization;
-using System.Web.UI.WebControls;
 using Rhino.DocObjects;
 using Cocodrilo.ElementProperties;
 

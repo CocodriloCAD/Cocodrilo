@@ -5,7 +5,6 @@ using System.Linq;
 using Rhino;
 using Rhino.Geometry;
 using System.IO;
-using System.Web.Script.Serialization;
 using Cocodrilo.ElementProperties;
 using Cocodrilo.UserData;
 using Cocodrilo.Analyses;
@@ -336,14 +335,12 @@ namespace Cocodrilo.IO
                 { "version_number", 1.0 },
                 { "breps", breps } };
 
-            var serializer = new JavaScriptSerializer();
-            serializer.MaxJsonLength = 2147483643;
-            var geometry_string = serializer.Serialize(dict);
+            var geometry_string = JsonUtilities.Serialize(dict);
             System.IO.File.WriteAllLines(ProjectPath + "/" + "geometry.cad.json",
                 new List<string> { geometry_string });
 
             var refinement_dict = new Dict { { "refinements", all_refinements_dict } };
-            var refinement_string = serializer.Serialize(refinement_dict);
+            var refinement_string = JsonUtilities.Serialize(refinement_dict);
             System.IO.File.WriteAllLines(ProjectPath + "/" + "refinements.iga.json",
                 new List<string> { refinement_string });
         }
@@ -412,8 +409,7 @@ namespace Cocodrilo.IO
             {
                 {"properties", property_dict_list }
             };
-            var serializer = new JavaScriptSerializer();
-            string json = serializer.Serialize((object)dict);
+            string json = JsonUtilities.Serialize((object)dict);
 
             return json;
         }
@@ -439,8 +435,7 @@ namespace Cocodrilo.IO
             var dict = new Dict
             {{ "element_condition_list", element_condition_list }};
 
-            var serializer = new JavaScriptSerializer();
-            string json = serializer.Serialize((object)dict);
+            string json = JsonUtilities.Serialize((object)dict);
 
             return json;
         }
@@ -799,8 +794,7 @@ namespace Cocodrilo.IO
                 {"output_processes", output_processes}
             };
 
-            var serializer = new JavaScriptSerializer();
-            string project_parameters_json = serializer.Serialize((object)dict);
+            string project_parameters_json = JsonUtilities.Serialize((object)dict);
 
             System.IO.File.WriteAllLines(ProjectPath + "/" + "ProjectParameters.json",
                 new List<string> { project_parameters_json });

@@ -106,8 +106,7 @@ namespace Cocodrilo.Analyses
                 }
             };
 
-            var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-            string optimization_settings_string = serializer.Serialize((object)optimization_settings);
+            string optimization_settings_string = IO.JsonUtilities.Serialize((object)optimization_settings);
 
             System.IO.File.WriteAllLines(ProjectPath + "/optimization_parameters.json",
                 new List<string> { optimization_settings_string });

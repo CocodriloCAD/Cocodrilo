@@ -5,7 +5,6 @@ using System.Linq;
 using Rhino;
 using Rhino.Geometry;
 using System.IO;
-using System.Web.Script.Serialization;
 using Cocodrilo.ElementProperties;
 using Cocodrilo.UserData;
 using Cocodrilo.Analyses;
@@ -83,8 +82,7 @@ namespace Cocodrilo.IO
                 {"properties", property_dict_list }
             };
 
-            var serializer = new JavaScriptSerializer();
-            string json = serializer.Serialize((object)dict);
+            string json = JsonUtilities.Serialize((object)dict);
 
             return json;
         }

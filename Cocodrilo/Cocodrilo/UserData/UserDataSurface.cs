@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using Cocodrilo.Elements;
 using System.Runtime.InteropServices;
-using System.Web.Script.Serialization;
 using Cocodrilo.ElementProperties;
 using Cocodrilo.Refinement;
 
@@ -307,7 +306,6 @@ namespace Cocodrilo.UserData
 
         protected override bool Read(Rhino.FileIO.BinaryArchiveReader archive)
         {
-            var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
             var dict = archive.ReadDictionary();
 
             if (dict.ContainsKey("RefinementSurface"))
@@ -319,10 +317,9 @@ namespace Cocodrilo.UserData
         }
         protected override bool Write(Rhino.FileIO.BinaryArchiveWriter archive)
         {
-            var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
             var dict = new Rhino.Collections.ArchivableDictionary(1, "Physical");
 
-            string RefinementSurfaceString = serializer.Serialize((object)mRefinement);
+            string RefinementSurfaceString = IO.JsonUtilities.SerializePolymorphic((object)mRefinement);
             dict.Set("RefinementSurface", RefinementSurfaceString);
 
             archive.WriteDictionary(dict);

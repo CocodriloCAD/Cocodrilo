@@ -2,7 +2,6 @@
 using Cocodrilo.Elements;
 using System;
 using System.Collections.Generic;
-using System.Web.Script.Serialization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -219,7 +218,6 @@ namespace Cocodrilo.UserData
 
         protected override bool Read(Rhino.FileIO.BinaryArchiveReader archive)
         {
-            var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
             Rhino.Collections.ArchivableDictionary dict = archive.ReadDictionary();
             if (dict.ContainsKey("BrepId"))
             {
@@ -233,7 +231,7 @@ namespace Cocodrilo.UserData
                     foreach (var element_data_string in element_data_dict)
                     {
                         string StageElementDataString = (String)element_data_string.Value;
-                        var stage_element_data = serializer.Deserialize<ElementData>(StageElementDataString);
+                        var stage_element_data = IO.JsonUtilities.DeserializePolymorphic<ElementData>(StageElementDataString);
                         mStageElementData.Add(Convert.ToInt32(element_data_string.Key), stage_element_data);
                     }
                 }
@@ -241,14 +239,12 @@ namespace Cocodrilo.UserData
             if (dict.ContainsKey("Couping"))
             {
                 string CouplingString = (String)dict["Couping"];
-                mCoupling = serializer.Deserialize<Coupling>(CouplingString);
+                mCoupling = IO.JsonUtilities.DeserializePolymorphic<Coupling>(CouplingString);
             }
             return true;
         }
         protected override bool Write(Rhino.FileIO.BinaryArchiveWriter archive)
         {
-            var serializer = new JavaScriptSerializer();
-
             var dict = new Rhino.Collections.ArchivableDictionary(1, "Physical");
 
             dict.Set("BrepId", BrepId);
@@ -258,13 +254,13 @@ namespace Cocodrilo.UserData
             {
                 foreach (var element_data in mStageElementData)
                 {
-                    string StageElementData = serializer.Serialize((object)element_data.Value);
+                    string StageElementData = IO.JsonUtilities.Serialize((object)element_data.Value);
                     element_data_dict.Set(element_data.Key.ToString(), StageElementData);
                 }
             }
             dict.Set("ElementDataDict", element_data_dict);
 
-            string Couping = serializer.Serialize(mCoupling);
+            string Couping = IO.JsonUtilities.Serialize(mCoupling);
             dict.Set("Couping", Couping);
 
             archive.WriteDictionary(dict);

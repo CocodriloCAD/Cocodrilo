@@ -5,7 +5,6 @@ using System.Text;
 using Rhino;
 using Cocodrilo.Elements;
 using System.Runtime.InteropServices;
-using System.Web.Script.Serialization;
 using Rhino.Geometry;
 using Cocodrilo.ElementProperties;
 using Cocodrilo.Refinement;
@@ -88,7 +87,6 @@ namespace Cocodrilo.UserData
 
         protected override bool Read(Rhino.FileIO.BinaryArchiveReader archive)
         {
-            var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
             var dict = archive.ReadDictionary();
 
             if (dict.ContainsKey("RefinementCurve"))
@@ -100,10 +98,9 @@ namespace Cocodrilo.UserData
         }
         protected override bool Write(Rhino.FileIO.BinaryArchiveWriter archive)
         {
-            var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
             var dict = new Rhino.Collections.ArchivableDictionary(1, "Physical");
 
-            string RefinementCurveString = serializer.Serialize((object)mRefinement);
+            string RefinementCurveString = IO.JsonUtilities.SerializePolymorphic((object)mRefinement);
             dict.Set("RefinementCurve", RefinementCurveString);
 
             archive.WriteDictionary(dict);

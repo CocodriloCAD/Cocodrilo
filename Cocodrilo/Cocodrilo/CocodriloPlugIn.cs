@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Rhino;
 using System.Drawing;
 using System.Linq;
-using System.Web.Script.Serialization;
 using Cocodrilo.Analyses;
 using Cocodrilo.ElementProperties;
 using Cocodrilo.Materials;
@@ -335,52 +334,45 @@ namespace Cocodrilo
             Rhino.Collections.ArchivableDictionary dict = archive.ReadDictionary();
             if (dict.ContainsKey("Materials"))
             {
-                var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
                 string StringJsonMaterials = (String)dict["Materials"];
-                Materials = serializer.Deserialize<List<Material>>(StringJsonMaterials);
+                Materials = IO.JsonUtilities.DeserializePolymorphic<List<Material>>(StringJsonMaterials);
 
                 materialUpdate?.Invoke();
             }
             if (dict.ContainsKey("Analyses"))
             {
-                var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
                 string StringJsonAnalyses = (String)dict["Analyses"];
-                Analyses = serializer.Deserialize<List<Analyses.Analysis>>(StringJsonAnalyses);
+                Analyses = IO.JsonUtilities.DeserializePolymorphic<List<Analyses.Analysis>>(StringJsonAnalyses);
 
                 analysisUpdate?.Invoke();
             }
             if (dict.ContainsKey("Properties"))
             {
-                var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
                 string StringJsonProperties = (String)dict["Properties"];
-                Properties = serializer.Deserialize<List<Property>>(StringJsonProperties);
+                Properties = IO.JsonUtilities.DeserializePolymorphic<List<Property>>(StringJsonProperties);
             }
             if (dict.ContainsKey("Output"))
             {
-                var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
                 string StringJsonOutput = (String)dict["Output"];
-                OutputOptions = serializer.Deserialize<IO.OutputOptions>(StringJsonOutput);
+                OutputOptions = IO.JsonUtilities.DeserializePolymorphic<IO.OutputOptions>(StringJsonOutput);
             }
             if (dict.ContainsKey("Glob_Penalty_Fac"))
             {
-                var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
                 string StringJsonGlobPenFac = (String)dict["Glob_Penalty_Fac"];
-                GlobPenaltyFactor = serializer.Deserialize<double>(StringJsonGlobPenFac);
+                GlobPenaltyFactor = IO.JsonUtilities.DeserializePolymorphic<double>(StringJsonGlobPenFac);
             }
             if (dict.ContainsKey("Coupling_Tolerance"))
             {
-                var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
                 string StringCoupTol = (String)dict["Coupling_Tolerance"];
             }
         }
         protected override void WriteDocument(RhinoDoc doc, Rhino.FileIO.BinaryArchiveWriter archive, Rhino.FileIO.FileWriteOptions options)
         {
-            var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
-            string StringJsonMaterials = serializer.Serialize(Materials);
-            string StringJsonAnalyses = serializer.Serialize(Analyses);
-            string StringJsonProperties = serializer.Serialize(Properties);
-            string StringJsonOutput = serializer.Serialize(OutputOptions);
-            string StringGlobPenFac = serializer.Serialize(GlobPenaltyFactor);
+            string StringJsonMaterials = IO.JsonUtilities.SerializePolymorphic(Materials);
+            string StringJsonAnalyses = IO.JsonUtilities.SerializePolymorphic(Analyses);
+            string StringJsonProperties = IO.JsonUtilities.SerializePolymorphic(Properties);
+            string StringJsonOutput = IO.JsonUtilities.SerializePolymorphic(OutputOptions);
+            string StringGlobPenFac = IO.JsonUtilities.SerializePolymorphic(GlobPenaltyFactor);
 
             var dict = new Rhino.Collections.ArchivableDictionary(1, "Physical");
             dict.Set("Materials", StringJsonMaterials);

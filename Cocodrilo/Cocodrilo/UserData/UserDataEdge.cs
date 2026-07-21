@@ -5,7 +5,6 @@ using System.Text;
 using Rhino;
 using Cocodrilo.Elements;
 using System.Runtime.InteropServices;
-using System.Web.Script.Serialization;
 using Cocodrilo.ElementProperties;
 using Cocodrilo.Refinement;
 

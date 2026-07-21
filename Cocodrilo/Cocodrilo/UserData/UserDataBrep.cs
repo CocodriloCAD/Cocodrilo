@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Cocodrilo.Elements;
 using System.Runtime.InteropServices;
-using System.Web.Script.Serialization;
 using Cocodrilo.ElementProperties;
 
 namespace Cocodrilo.UserData
@@ -40,7 +39,6 @@ namespace Cocodrilo.UserData
 
         protected override bool Read(Rhino.FileIO.BinaryArchiveReader archive)
         {
-            var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
             var dict = archive.ReadDictionary();
 
             if (dict.ContainsKey("BrepId"))

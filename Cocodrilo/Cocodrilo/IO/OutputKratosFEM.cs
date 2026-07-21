@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Script.Serialization;
 
 namespace Cocodrilo.IO
 {
@@ -173,8 +172,7 @@ namespace Cocodrilo.IO
             {
                 {"properties", property_dict_list }
             };
-            var serializer = new JavaScriptSerializer();
-            string json = serializer.Serialize((object)dict);
+            string json = JsonUtilities.Serialize((object)dict);
 
             return json;
         }

@@ -3,7 +3,6 @@ using Rhino.Geometry;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Web.Script.Serialization;
 using Cocodrilo.UserData;
 
 namespace Cocodrilo.IO
@@ -185,8 +184,7 @@ End Properties
                 { "material_assignation_table", material_assignation_table_list_dict },
             };
 
-            var serializer = new JavaScriptSerializer();
-            string json = serializer.Serialize((object)materials_dict);
+            string json = JsonUtilities.Serialize((object)materials_dict);
 
             return json;
         }
@@ -262,8 +260,7 @@ End Properties
                 {"post_vtk_option"                , true}
             };
 
-            var serializer = new JavaScriptSerializer();
-            string json = serializer.Serialize((object)project_parameters_dict);
+            string json = JsonUtilities.Serialize((object)project_parameters_dict);
 
             return json;
         }

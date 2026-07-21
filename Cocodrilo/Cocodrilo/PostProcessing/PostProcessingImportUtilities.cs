@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace Cocodrilo.PostProcessing
 {
@@ -130,13 +129,11 @@ namespace Cocodrilo.PostProcessing
             ref Dictionary<int, List<KeyValuePair<int, List<double>>>> rEvaluationPointList,
             ref Dictionary<int[], List<KeyValuePair<int, List<double>>>> rCouplingEvaluationPointList)
         {
-            var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
-            serializer.MaxJsonLength = 100000000;
             Dictionary<string, object> dict;
             using (System.IO.StreamReader reader = System.IO.File.OpenText(path))
             {
                 string StringJsonProperties = reader.ReadToEnd();
-                dict = serializer.Deserialize<Dictionary<string, object>>(StringJsonProperties);
+                dict = IO.JsonUtilities.DeserializeWeaklyTyped(StringJsonProperties);
             }
             foreach (System.Collections.ArrayList evaluation_point in (dict["geometry_integration_points"] as System.Collections.ArrayList))
             {
@@ -184,15 +181,13 @@ namespace Cocodrilo.PostProcessing
             ref Dictionary<int, Rhino.Geometry.Brep> rBrepList,
             ref Dictionary<int, List<KeyValuePair<int, List<double>>>> rBrepId_NodeId_Coordinates)
         {
-            var serializer = new JavaScriptSerializer(new SimpleTypeResolver());
-            serializer.MaxJsonLength = 2147483643;
             System.IO.File.Exists(path);
             string StringJsonProperties;
             using (System.IO.StreamReader reader = System.IO.File.OpenText(path))
             {
                 StringJsonProperties = reader.ReadToEnd();
             }
-            Dictionary<string, object> geometry = serializer.Deserialize<Dictionary<string, object>>(StringJsonProperties);
+            Dictionary<string, object> geometry = IO.JsonUtilities.DeserializeWeaklyTyped(StringJsonProperties);
 
             int brep_counter = 0;
 

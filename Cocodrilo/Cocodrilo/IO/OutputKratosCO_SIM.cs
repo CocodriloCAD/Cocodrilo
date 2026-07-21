@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Script.Serialization;
 
 namespace Cocodrilo.IO
 {
@@ -64,8 +63,7 @@ namespace Cocodrilo.IO
                 { "solver_settings", solver_settings }
             };
 
-            var serializer = new JavaScriptSerializer();
-            string json = serializer.Serialize((object)project_parameters);
+            string json = JsonUtilities.Serialize((object)project_parameters);
 
             return json;
         }
