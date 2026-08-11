@@ -18,15 +18,14 @@ Output:
 
 ### Install (Mac)
 
-1. Quit Rhino — it only scans for new plugins at launch.
-2. Create the plugin folder and copy the build output into it:
+1. Create the plugin folder and copy the build output into it:
    ```bash
    TARGET="$HOME/Library/Application Support/McNeel/Rhinoceros/8.0/MacPlugIns/Cocodrilo"
    SRC="Cocodrilo/Cocodrilo/bin/Debug/net7.0"
    mkdir -p "$TARGET"
    cp "$SRC/Cocodrilo.rhp" "$SRC/Newtonsoft.Json.dll" "$SRC/System.Resources.Extensions.dll" "$TARGET/"
    ```
-3. Relaunch Rhino. Verify with **Window → Panels** (look for "Cocodrilo") or by running the `Cocodrilo_OpenPanel` command.
+2. Relaunch Rhino. Verify with **Window → Panels** (look for "Cocodrilo") or by running the `Cocodrilo_OpenPanel` command.
 
 ### Install (Windows)
 
